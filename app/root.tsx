@@ -1,29 +1,20 @@
-import React from 'react';
-import { useLocation, useMatches } from '@remix-run/react';
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import React from "react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration,useLocation, useMatches } from "@remix-run/react";
 
-import styles from './styles/app.css';
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
+
+import styles from "./styles/app.css";
 
 export const links: LinksFunction = () => {
-  return [
-    { rel: "stylesheet", href: styles },
-  ]
-}
+  return [{ rel: "stylesheet", href: styles }];
+};
 
 let isMount = true;
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "New Remix App",
-  viewport: "width=device-width,initial-scale=1",
+  viewport: "width=device-width,initial-scale=1"
 });
 
 export default function App() {
@@ -40,7 +31,7 @@ export default function App() {
           isMount: mounted,
           location,
           matches,
-          manifest: window.__remixManifest,
+          manifest: window.__remixManifest
         });
       } else {
         let listener = async () => {
@@ -50,15 +41,12 @@ export default function App() {
             isMount: mounted,
             location,
             matches,
-            manifest: window.__remixManifest,
+            manifest: window.__remixManifest
           });
         };
         navigator.serviceWorker.addEventListener("controllerchange", listener);
         return () => {
-          navigator.serviceWorker.removeEventListener(
-            "controllerchange",
-            listener
-          );
+          navigator.serviceWorker.removeEventListener("controllerchange", listener);
         };
       }
     }
@@ -66,15 +54,16 @@ export default function App() {
 
   return (
     <html lang="en">
-       
       <head>
-         
-        <Meta /> <Links /> 
-      </head> 
+        <Meta /> 
+        <Links />
+      </head>
       <body>
-         
-        <Outlet /> <ScrollRestoration /> <Scripts /> <LiveReload /> 
-      </body> 
+        <Outlet /> 
+        <ScrollRestoration /> 
+        <Scripts /> 
+        <LiveReload />
+      </body>
     </html>
   );
 }

@@ -32,7 +32,7 @@ async function handleSyncRemixManifest(event: ExtendableMessageEvent) {
   const [dataCache, documentCache, assetCache] = await Promise.all([
     caches.open(DATA_CACHE),
     caches.open(DOCUMENT_CACHE),
-    caches.open(ASSET_CACHE),
+    caches.open(ASSET_CACHE)
   ]);
   const manifest: AssetsManifest = event.data.manifest;
   const routes = Object.values(manifest.routes);
@@ -73,7 +73,7 @@ async function handleSyncRemixManifest(event: ExtendableMessageEvent) {
       pathname,
       documentCache.add(pathname).catch((error) => {
         console.debug(`Failed to cache document ${pathname}:`, error);
-      }),
+      })
     );
   }
 
@@ -88,7 +88,7 @@ async function handleSyncRemixManifest(event: ExtendableMessageEvent) {
         url,
         dataCache.add(url).catch((error) => {
           console.debug(`Failed to cache data for ${url}:`, error);
-        }),
+        })
       );
     }
   }
@@ -126,7 +126,7 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
     const cached = await caches.match(event.request, {
       cacheName: ASSET_CACHE,
       ignoreVary: true,
-      ignoreSearch: true,
+      ignoreSearch: true
     });
     if (cached) {
       debug("Serving asset from cache", url.pathname);
@@ -161,8 +161,8 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
         { message: "Network Error" },
         {
           status: 500,
-          headers: { "X-Remix-Catch": "yes", "X-Remix-Worker": "yes" },
-        },
+          headers: { "X-Remix-Catch": "yes", "X-Remix-Worker": "yes" }
+        }
       );
     }
   }
@@ -183,7 +183,7 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
             throw error;
           }
           return response;
-        }),
+        })
     );
   }
 
@@ -200,11 +200,11 @@ const handlePush = (event: PushEvent) => {
     badge: data.badge ? data.badge : "/icons/android-icon-48x48.png",
     dir: data.dir ? data.dir : "auto",
     image: data.image ? data.image : undefined,
-    silent: data.silent ? data.silent : false,
+    silent: data.silent ? data.silent : false
   };
 
   self.registration.showNotification(title, {
-    ...options,
+    ...options
   });
 };
 
@@ -241,7 +241,7 @@ self.addEventListener("message", (event) => {
 self.addEventListener("push", (event) => {
   // self.clients.matchAll().then(function (c) {
   // if (c.length === 0) {
-  event.waitUntil(handlePush(event));
+  // event.waitUntil(handlePush(event));
   // } else {
   //   console.log("Application is already open!");
   // }
@@ -259,13 +259,13 @@ self.addEventListener("fetch", (event) => {
       }
 
       return appHandleFetch(event, result);
-    })(),
+    })()
   );
 });
 
 async function appHandleFetch(
   event: FetchEvent,
-  { error, response }: { error: unknown; response: Response } | { error: undefined; response: Response },
+  { error, response }: { error: unknown; response: Response } | { error: undefined; response: Response }
 ): Promise<Response> {
   return response;
 }
