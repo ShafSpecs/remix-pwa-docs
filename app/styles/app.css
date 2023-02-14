@@ -512,3 +512,7 @@ video {
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+
+.w-full {
+  width: 100%;
+}
