@@ -1,5 +1,5 @@
 import React from "react";
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration,useLocation, useMatches } from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLocation, useMatches } from "@remix-run/react";
 
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 
@@ -55,13 +55,17 @@ export default function App() {
   return (
     <html lang="en">
       <head>
-        <Meta /> 
+        <Meta />
         <Links />
       </head>
       <body>
-        <Outlet /> 
-        <ScrollRestoration /> 
-        <Scripts /> 
+        <nav className="w-full">
+          <h1>Remix PWA</h1>
+        </nav>
+        {location.pathname == "/" && <div>Home</div>}
+        <Outlet />
+        <ScrollRestoration />
+        <Scripts />
         <LiveReload />
       </body>
     </html>
