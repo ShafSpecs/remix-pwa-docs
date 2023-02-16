@@ -1,15 +1,18 @@
 import React, { Fragment } from "react";
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLocation, useMatches } from "@remix-run/react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { SunIcon, MoonIcon, ComputerDesktopIcon } from "@heroicons/react/20/solid";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import theme from "prism-react-renderer/themes/vsDark";
+import { useLocalStorage } from "usehooks-ts";
 
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 
 import styles from "./styles/app.css";
+
+type userTheme = "light" | "dark" | "system";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -23,21 +26,33 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1"
 });
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-const exampleCode = `
-const func = () => {
-  console.log("Welcome to Remix PWA!");
-
-  return "Hello World!";
-}
-`.trim();
-
 export default function App() {
   let location = useLocation();
   let matches = useMatches();
+
+  const themes: {
+    name: string;
+    value: userTheme;
+    icon: React.ReactNode;
+  }[] = [
+    {
+      name: "Light",
+      value: "light",
+      icon: <SunIcon className="w-4 h-4 text-current" aria-hidden="true" />
+    },
+    {
+      name: "Dark",
+      value: "dark",
+      icon: <MoonIcon className="w-4 h-4 text-current" aria-hidden="true" />
+    },
+    {
+      name: "System",
+      value: "system",
+      icon: <ComputerDesktopIcon className="w-4 h-4 text-current" aria-hidden="true" />
+    }
+  ];
+
+  const [selectedTheme, setSelectedTheme] = useLocalStorage<string>("theme", themes[2].value);
 
   React.useEffect(() => {
     let mounted = isMount;
@@ -69,6 +84,34 @@ export default function App() {
       }
     }
   }, [location]);
+
+  React.useEffect(() => {
+    if (document && document.documentElement) {
+      if (
+        selectedTheme === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) ||
+        (selectedTheme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+        setSelectedTheme("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        setSelectedTheme("light");
+      }
+    }
+  }, [selectedTheme, setSelectedTheme]);
+
+  function classNames(...classes: string[]) {
+    return classes.filter(Boolean).join(" ");
+  }
+
+  const exampleCode = `
+  const func = () => {
+    console.log("Welcome to Remix PWA!");
+  
+    return "Hello World!";
+  }
+  `.trim();
 
   return (
     <html lang="en" className="antialiased" data-theme="light">
@@ -133,65 +176,63 @@ export default function App() {
               </div>
               <div className="relative flex justify-end gap-6 basis-0 sm:gap-8 md:flex-grow">
                 <div className="relative flex justify-end gap-6 basis-0 sm:gap-8 md:flex-grow">
-                  <Menu as="div" className="relative z-10">
-                    <div>
-                      <Menu.Button className="flex items-center justify-center w-6 h-6 rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5">
-                        <label className="sr-only">Theme</label>
-                        <SunIcon className="fill-sky-400" />
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              Your Profile
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              Settings
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              Sign out
-                            </a>
-                          )}
-                        </Menu.Item>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                  <Listbox value={selectedTheme} onChange={setSelectedTheme}>
+                    {({ open }) => (
+                      <>
+                        <Listbox.Label className="sr-only">Theme</Listbox.Label>
+                        <div className="relative mt-1">
+                          <Listbox.Button className="flex items-center justify-center w-6 h-6 rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5">
+                            {selectedTheme === "light" ? (
+                              <SunIcon className="w-4 h-4 fill-sky-400" />
+                            ) : (
+                              <MoonIcon className="w-4 h-4 fill-sky-400" />
+                            )}
+                          </Listbox.Button>
+
+                          <Transition
+                            show={open}
+                            as={Fragment}
+                            leave="transition ease-in duration-100"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <Listbox.Options className="-translate-x-[50%] absolute top-full left-1/2 mt-3 w-36 space-y-1 rounded-xl bg-white p-3 text-sm font-medium shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-800 dark:ring-white/5">
+                              {themes.map((theme) => (
+                                <Listbox.Option
+                                  key={theme.value}
+                                  value={theme.value}
+                                  className={({ active, selected }) =>
+                                    classNames(
+                                      active ? "bg-slate-100 dark:bg-slate-900/40" : "",
+                                      (active && selected) || (!active && selected)
+                                        ? "text-sky-500"
+                                        : active && !selected
+                                        ? "text-slate-900 dark:text-white"
+                                        : "text-slate-700 dark:text-slate-400",
+                                      "flex cursor-pointer select-none items-center rounded-[0.625rem] p-1"
+                                    )
+                                  }
+                                >
+                                  {({ selected, active }) => (
+                                    <>
+                                      <div
+                                        className={classNames(
+                                          "rounded-md bg-white p-1 shadow ring-1 ring-slate-900/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5"
+                                        )}
+                                      >
+                                        {theme.icon}
+                                      </div>
+                                      <div className="ml-3">{theme.name}</div>
+                                    </>
+                                  )}
+                                </Listbox.Option>
+                              ))}
+                            </Listbox.Options>
+                          </Transition>
+                        </div>
+                      </>
+                    )}
+                  </Listbox>
                   <a
                     className="group"
                     aria-label="GitHub"
@@ -228,7 +269,7 @@ export default function App() {
                     style={{ color: "transparent" }}
                   />
                   <div className="relative">
-                    <p className="inline text-5xl tracking-tight text-transparent bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display">
+                    <p className="inline text-5xl font-medium tracking-tight text-transparent bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display">
                       Never miss the cache again.
                     </p>
                     <p className="mt-3 text-2xl tracking-tight text-slate-400">
