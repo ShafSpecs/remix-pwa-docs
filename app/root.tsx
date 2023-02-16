@@ -61,16 +61,15 @@ export default function App() {
   }, [location]);
 
   return (
-    <html lang="en">
+    <html lang="en" className="antialiased" data-theme="light">
       <head>
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-white dark:bg-slate-900">
         <Disclosure
           as="header"
-          // sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 dark:bg-transparent
-          className="sticky top-0 z-50 flex flex-wrap items-center justify-between px-4 py-5 transition duration-500 bg-white shadow-md shadow-slate-900/5 dark:shadow-none sm:px-6 lg:px-8 dark:bg-transparent"
+          className="sticky top-0 z-50 flex flex-wrap items-center justify-between px-4 py-5 transition duration-500 bg-white shadow-md shadow-slate-900/5 dark:shadow-none sm:px-6 lg:px-8 dark:bg-transparent dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75"
         >
           {({ open }) => (
             <>
@@ -183,7 +182,13 @@ export default function App() {
                       </Menu.Items>
                     </Transition>
                   </Menu>
-                  <a className="group" aria-label="GitHub" href="https://github.com">
+                  <a
+                    className="group"
+                    aria-label="GitHub"
+                    href="https://github.com/ShafSpecs/remix-pwa"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 16 16"
