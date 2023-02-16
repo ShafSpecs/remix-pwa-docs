@@ -1,5 +1,3 @@
 export default function DocPage() {
-  return(
-    <div>Introduction</div>
-  )
+  return <div>Introduction</div>;
 }

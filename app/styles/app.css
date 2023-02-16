@@ -1446,12 +1446,13 @@ video {
 }
 
 html {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, Roboto, Ubuntu, 'Open Sans', sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Roboto, Ubuntu, "Open Sans", sans-serif;
   font-feature-settings: "ss01";
 }
 
 .font-display {
-  font-family: Lexend, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  font-family: Lexend, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue,
+    Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 
 .before\:pointer-events-none::before {
