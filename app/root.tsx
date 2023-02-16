@@ -98,6 +98,8 @@ export default function App() {
         document.documentElement.classList.remove("dark");
         setSelectedTheme("light");
       }
+    } else {
+      setSelectedTheme("system")
     }
   }, [selectedTheme, setSelectedTheme]);
 
