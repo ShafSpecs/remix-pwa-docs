@@ -239,27 +239,24 @@ const func = () => {
                       <div className="flex items-center rounded-full px-2.5">package.json</div>
                     </div>
                   </div>
-                  <div className="flex items-start px-1 mt-6 text-sm">
+                  <div className="flex items-start px-1 pb-6 mt-6 text-sm">
                     <div
                       aria-hidden="true"
                       className="pr-4 font-mono border-r select-none border-slate-300/5 text-slate-600"
                     >
-                      01
-                      <br />
-                      02
-                      <br />
-                      03
-                      <br />
-                      04
-                      <br />
-                      05
-                      <br />
+                      {["01", "02", "03", "04", "05"].map((i) => {
+                        return (
+                          <div key={i} className="leading-6">
+                            {i}
+                          </div>
+                        );
+                      })}
                     </div>
                     <Highlight {...defaultProps} theme={theme} code={exampleCode} language="tsx">
                       {({ tokens, getLineProps, getTokenProps, className }) => (
-                        <pre className={`${className} overflow-x-auto pb-6 px-3`}>
+                        <pre className={`${className} overflow-x-auto leading-6 px-3`}>
                           {tokens.map((line, i) => (
-                            <div {...getLineProps({ line, key: i })}>
+                            <div key={i} {...getLineProps({ line, key: i })}>
                               {line.map((token, key) => (
                                 <span {...getTokenProps({ token, key })} />
                               ))}
@@ -268,65 +265,6 @@ const func = () => {
                         </pre>
                       )}
                     </Highlight>
-                    {/* <pre className="flex pb-6 overflow-x-auto prism-code language-javascript">
-                            <code className="px-4">
-                              <div className="token-line">
-                                <span className="token keyword module">export</span>
-                                <span className="token plain"> </span>
-                                <span className="token keyword module">default</span>
-                                <span className="token plain"> </span>
-                                <span className="token punctuation">{"{"}</span>
-                                <span className="token plain" />
-                              </div>
-                              <div className="token-line">
-                                <span className="token plain">{"  "}</span>
-                                <span className="token literal-property property">strategy</span>
-                                <span className="token operator">:</span>
-                                <span className="token plain"> </span>
-                                <span className="token string">'predictive'</span>
-                                <span className="token punctuation">,</span>
-                                <span className="token plain" />
-                              </div>
-                              <div className="token-line">
-                                <span className="token plain">{"  "}</span>
-                                <span className="token literal-property property">engine</span>
-                                <span className="token operator">:</span>
-                                <span className="token plain"> </span>
-                                <span className="token punctuation">{"{"}</span>
-                                <span className="token plain" />
-                              </div>
-                              <div className="token-line">
-                                <span className="token plain">{"    "}</span>
-                                <span className="token literal-property property">cpus</span>
-                                <span className="token operator">:</span>
-                                <span className="token plain"> </span>
-                                <span className="token number">12</span>
-                                <span className="token punctuation">,</span>
-                                <span className="token plain" />
-                              </div>
-                              <div className="token-line">
-                                <span className="token plain">{"    "}</span>
-                                <span className="token literal-property property">backups</span>
-                                <span className="token operator">:</span>
-                                <span className="token plain"> </span>
-                                <span className="token punctuation">[</span>
-                                <span className="token string">'./storage/cache.wtf'</span>
-                                <span className="token punctuation">]</span>
-                                <span className="token punctuation">,</span>
-                                <span className="token plain" />
-                              </div>
-                              <div className="token-line">
-                                <span className="token plain">{"  "}</span>
-                                <span className="token punctuation">{"}"}</span>
-                                <span className="token punctuation">,</span>
-                                <span className="token plain" />
-                              </div>
-                              <div className="token-line">
-                                <span className="token plain" />
-                                <span className="token punctuation">{"}"}</span>
-                              </div>
-                            </code>
-                          </pre> */}
                   </div>
                 </div>
               </div>

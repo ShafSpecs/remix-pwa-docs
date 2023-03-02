@@ -12,6 +12,8 @@ type HeaderProps = {
   scrollTop: number;
   selectedTheme: string | null;
   setSelectedTheme: React.Dispatch<React.SetStateAction<string | null>>;
+  closed: boolean;
+  setClosed: React.Dispatch<React.SetStateAction<boolean>>;
 };
 type userTheme = "light" | "dark";
 
@@ -36,8 +38,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default ({ scrollTop, selectedTheme, setSelectedTheme }: HeaderProps) => {
-  const [closed, setClosed] = useState(true);
+export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed }: HeaderProps) => {
   const sidebarRef = useRef(null);
 
   useOnClickOutside(sidebarRef, () => {
@@ -48,14 +49,14 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme }: HeaderProps) => 
     <Disclosure
       as="header"
       className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 ${
-        scrollTop > 80 && selectedTheme == "dark"
+        scrollTop > 20 && selectedTheme == "dark"
           ? "dark:bg-transparentsticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75"
           : "dark:bg-transparent"
       }`}
     >
       {({ open }) => (
         <>
-          <div className="mr-6 lg:hidden">
+          <div className="mr-6 lg:hidden flex content-center">
             {/* Mobile menu button*/}
             <Disclosure.Button className="relative focus:outline-none focus:ring-0" onClick={() => setClosed(false)}>
               <span className="sr-only">Open main menu</span>
@@ -65,13 +66,16 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme }: HeaderProps) => 
 
           {/* Mobile Sidebar */}
           {!closed && (
-            <div className="fixed inset-0 w-full z-50 flex items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur lg:hidden">
+            <div className="fixed top-0 left-0 w-screen h-screen inset-0 w-screen z-50 flex items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur lg:hidden">
               <div
                 ref={sidebarRef}
                 className="z-50 min-h-full w-full max-w-xs bg-white px-4 pt-5 pb-12 dark:bg-slate-900 sm:px-6"
               >
                 <div className="flex items-center">
-                  <Disclosure.Button className="relative focus:outline-none focus:ring-0" onClick={() => setClosed(true)}>
+                  <Disclosure.Button
+                    className="relative focus:outline-none focus:ring-0"
+                    onClick={() => setClosed(true)}
+                  >
                     <XMarkIcon
                       className="block w-6 h-6 stroke-2 stroke-slate-500"
                       aria-hidden="true"
@@ -87,6 +91,195 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme }: HeaderProps) => 
                     </svg>
                   </Link>
                 </div>
+                <nav className="text-base lg:text-sm mt-5 px-1">
+                  <ul className="space-y-9">
+                    <li>
+                      <h2 className="font-display font-medium text-slate-900 dark:text-white">Introduction</h2>
+                      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full font-semibold text-sky-500 before:bg-sky-500"
+                            href="/"
+                          >
+                            Getting started
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/installation"
+                          >
+                            Installation
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <h2 className="font-display font-medium text-slate-900 dark:text-white">Core concepts</h2>
+                      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/understanding-caching"
+                          >
+                            Understanding caching
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/predicting-user-behavior"
+                          >
+                            Predicting user behavior
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/basics-of-time-travel"
+                          >
+                            Basics of time-travel
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/introduction-to-string-theory"
+                          >
+                            Introduction to string theory
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/the-butterfly-effect"
+                          >
+                            The butterfly effect
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <h2 className="font-display font-medium text-slate-900 dark:text-white">Advanced guides</h2>
+                      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/writing-plugins"
+                          >
+                            Writing plugins
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/neuralink-integration"
+                          >
+                            Neuralink integration
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/temporal-paradoxes"
+                          >
+                            Temporal paradoxes
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/testing"
+                          >
+                            Testing
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/compile-time-caching"
+                          >
+                            Compile-time caching
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/predictive-data-generation"
+                          >
+                            Predictive data generation
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <h2 className="font-display font-medium text-slate-900 dark:text-white">API reference</h2>
+                      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/cacheadvance-predict"
+                          >
+                            CacheAdvance.predict()
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/cacheadvance-flush"
+                          >
+                            CacheAdvance.flush()
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/cacheadvance-revert"
+                          >
+                            CacheAdvance.revert()
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/cacheadvance-regret"
+                          >
+                            CacheAdvance.regret()
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <h2 className="font-display font-medium text-slate-900 dark:text-white">Contributing</h2>
+                      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/how-to-contribute"
+                          >
+                            How to contribute
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/architecture-guide"
+                          >
+                            Architecture guide
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a
+                            className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                            href="/docs/design-principles"
+                          >
+                            Design principles
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           )}

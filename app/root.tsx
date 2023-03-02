@@ -25,8 +25,9 @@ export default function App() {
   let matches = useMatches();
 
   const [scrollTop, setScrollTop] = useState(0);
+  const [closed, setClosed] = useState(true);
 
-  const onScroll = (e: any) => {
+  const onScroll = (e: any): void => {
     setScrollTop(e.target.documentElement.scrollTop);
   };
 
@@ -85,13 +86,19 @@ export default function App() {
   }, []);
 
   return (
-    <html lang="en" className="antialiased">
+    <html lang="en" className="antialiased [font-feature-settings:'ss01']">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="bg-white dark:bg-slate-900">
-        <Header selectedTheme={selectedTheme} scrollTop={scrollTop} setSelectedTheme={setSelectedTheme} />
+      <body className={`${!closed && "overflow-hidden"} bg-white font-inter font-feature-text ss01 dark:bg-slate-900`}>
+        <Header
+          selectedTheme={selectedTheme}
+          scrollTop={scrollTop}
+          setSelectedTheme={setSelectedTheme}
+          closed={closed}
+          setClosed={setClosed}
+        />
         {location.pathname == "/" && <Hero />}
         <div className="relative flex justify-center mx-auto max-w-[88rem] sm:px-2 lg:px-8 xl:px-12">
           <div className="hidden ml-5 lg:relative lg:block lg:flex-none">
@@ -154,72 +161,6 @@ export default function App() {
                 </ul>
               </nav>
             </div>
-          </div>
-          {/* What `Outlet` 'should' technically look like */}
-          <div className="flex-auto max-w-2xl min-w-0 px-4 py-16 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed quae harum sequi ex assumenda alias architecto
-            unde repellat, ullam at, vero asperiores ipsa, ipsam nesciunt blanditiis aut cum autem quisquam? Amet
-            deleniti fugiat quam vero, pariatur dolores sed culpa omnis perspiciatis quisquam? Tenetur, atque deserunt
-            sapiente veritatis velit ad. Ab voluptatibus culpa, iure accusamus hic molestiae omnis. Magni, sapiente
-            officia! Tempore deserunt, autem nihil assumenda minima ab recusandae nesciunt. Omnis eligendi beatae
-            laborum corporis possimus saepe porro, quos est nam necessitatibus hic reiciendis tenetur repellendus
-            officiis consequatur atque deserunt incidunt. Architecto voluptatem excepturi aut aliquid iste sapiente,
-            cupiditate quisquam rerum similique, cumque ex nobis iusto reprehenderit rem doloremque exercitationem
-            facere commodi sit illum expedita eum illo culpa error! Commodi, perspiciatis. Dolores repellendus odio
-            deleniti laboriosam eaque itaque ab natus, hic explicabo dolorem veniam sed est repudiandae assumenda
-            aperiam inventore quia exercitationem placeat voluptas officiis dolor ad modi similique amet. Sit. Eius
-            ullam nostrum blanditiis architecto adipisci labore assumenda consequuntur perspiciatis, possimus dolorum
-            autem, aliquid ducimus rerum quaerat itaque, qui velit optio ex porro debitis sit placeat temporibus
-            quisquam dolores. Repudiandae. Commodi odit soluta sed, animi maiores, aut quasi voluptates nobis beatae vel
-            aperiam dolor deserunt necessitatibus mollitia molestias ipsam hic, suscipit pariatur unde alias odio modi?
-            Commodi ab necessitatibus nostrum. Corrupti ipsum nesciunt autem quidem pariatur aperiam aspernatur
-            praesentium eos, quis, molestiae necessitatibus ea assumenda, incidunt veniam accusamus. Minus pariatur
-            perferendis ut ducimus impedit architecto dolorem doloremque. Quia, tempora consequuntur. Libero quisquam
-            corporis eum magnam consequatur, inventore officiis assumenda maiores tenetur nesciunt accusamus, rem
-            corrupti sunt distinctio nulla nostrum magni quae sapiente illo, dignissimos temporibus fuga eaque
-            laboriosam? Explicabo, corrupti! Reiciendis suscipit harum ducimus maxime id deserunt illo amet architecto
-            consequatur nobis hic delectus eum repellendus laborum dolorem sequi facere vel, nam molestias laudantium.
-            Animi soluta aliquid et eaque reprehenderit. Quam rem nihil qui quo illum eius ipsam quia atque. Dignissimos
-            autem repellendus maxime ducimus corrupti sunt, possimus minus labore, quas repudiandae illum aliquam beatae
-            et iusto nam deleniti laborum? Soluta quisquam ipsam necessitatibus atque officiis nostrum exercitationem?
-            Impedit cum incidunt quos exercitationem rem suscipit dolores assumenda necessitatibus corrupti voluptas
-            facere distinctio odit, vel recusandae perspiciatis consequatur, ratione accusamus fuga. Error non ab soluta
-            at, adipisci ad quia libero. Necessitatibus nisi repellat eum alias accusantium in eius illum ducimus,
-            laudantium sit delectus tempore reiciendis, voluptatibus adipisci distinctio atque sunt nesciunt. Id
-            molestias doloribus nisi porro aperiam impedit nam praesentium saepe quaerat tempore natus, quam,
-            consectetur amet temporibus assumenda distinctio. Veniam repudiandae tempora, quae laboriosam eaque non
-            maxime voluptatum inventore blanditiis. Amet, magni odio quidem quae reprehenderit totam laudantium magnam
-            architecto fugit perferendis modi voluptates omnis veniam explicabo impedit iste nobis? Corporis quo modi
-            doloribus! Ab officia accusamus blanditiis. Necessitatibus, nam? Dolor minima nulla dignissimos dolorem
-            voluptatibus officia itaque laborum aliquid illum, quaerat, adipisci nihil ipsum velit quae provident
-            soluta. Minus quia quidem ducimus. Debitis molestiae, eligendi officiis fugit quasi cum? At fugit,
-            reprehenderit iure, tempore inventore debitis veritatis accusantium architecto, ducimus nihil cumque
-            mollitia aut doloremque voluptates iste aperiam quam exercitationem. Voluptate facere mollitia voluptas
-            tempore provident cupiditate, libero eveniet! Quasi sint quaerat facilis eum consectetur non aperiam
-            provident reprehenderit obcaecati temporibus impedit culpa, fuga, earum ipsam inventore ullam, commodi quos
-            totam ea tempore perferendis illo tenetur amet. Sequi, debitis. Laborum in adipisci facere aliquam porro
-            pariatur aperiam repudiandae culpa quas illum, praesentium velit consectetur rerum reprehenderit earum
-            delectus explicabo cumque excepturi consequuntur repellat doloribus sed, distinctio fugit animi. Et?
-            Provident unde blanditiis cumque suscipit error vel commodi maiores nemo facere nulla? Tenetur amet numquam
-            nam, quae quas ab neque, animi vitae sapiente odio explicabo similique, nobis architecto earum ullam.
-            Reprehenderit voluptatum temporibus nobis ullam aspernatur natus corrupti officiis. Eius repellat ex sequi
-            cum eos animi voluptas ad, autem ducimus tenetur aperiam perferendis assumenda provident, dolorum
-            repellendus quod delectus perspiciatis? Qui voluptatibus maxime consequuntur vitae ipsam iure aliquid libero
-            voluptas voluptatum dicta nemo aperiam velit, natus quis, ad dolorem non nihil obcaecati impedit tempora
-            inventore, nisi tempore eveniet. Labore, quo. Laborum eveniet accusamus aspernatur nemo cupiditate fugit
-            magnam. Repellat error, neque quo rerum unde reprehenderit voluptatem explicabo maiores consectetur qui
-            esse, quasi fugiat consequatur! Consequatur sed omnis minus id. Sequi! Unde, ut aperiam alias dignissimos
-            molestias at accusantium eius fugit quae excepturi, cum pariatur. Explicabo animi facere, libero, ut fuga
-            nemo voluptas ipsa perferendis, quo dolore beatae esse. Sapiente, ipsam. Deleniti, minima dolore quo illo
-            obcaecati eveniet quam nemo perspiciatis, repellendus ad delectus dolorum cum! Obcaecati vitae aliquid
-            voluptas vero voluptatibus soluta numquam quam quidem in, aut sint aliquam ex? Alias voluptas fugiat
-            laboriosam repellendus odio ut minima eaque, suscipit dolore recusandae dolorem minus. Similique maiores
-            dicta sapiente incidunt aspernatur commodi, voluptatibus nostrum quasi quaerat quibusdam blanditiis sequi,
-            obcaecati corporis. Itaque, architecto, repellendus aspernatur qui molestias porro vero doloribus fugit
-            provident hic nam eaque quaerat in voluptatum? Delectus quis ipsa, quibusdam at, ullam neque odit recusandae
-            dolore nulla voluptatum nemo. Eos officiis quis minima, a suscipit fugiat perspiciatis vitae adipisci
-            eveniet laudantium voluptatibus officia perferendis impedit, harum inventore nemo. Provident dolorem ad
-            libero inventore laboriosam sint facere modi non doloribus!
           </div>
           <Outlet />
           <div className="hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6">
