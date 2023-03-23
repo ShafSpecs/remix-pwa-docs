@@ -171,6 +171,21 @@ async function handleFetch(event) {
   }
   return fetch(event.request.clone());
 }
+var handlePush = (event) => {
+  const data = JSON.parse(event == null ? void 0 : event.data.text());
+  const title = data.title ? data.title : "Remix PWA";
+  const options = {
+    body: data.body ? data.body : "Notification Body Text",
+    icon: data.icon ? data.icon : "/icons/android-icon-192x192.png",
+    badge: data.badge ? data.badge : "/icons/android-icon-48x48.png",
+    dir: data.dir ? data.dir : "auto",
+    image: data.image ? data.image : void 0,
+    silent: data.silent ? data.silent : false
+  };
+  self.registration.showNotification(title, {
+    ...options
+  });
+};
 function isMethod(request, methods) {
   return methods.includes(request.method.toLowerCase());
 }
@@ -194,6 +209,7 @@ self.addEventListener("message", (event) => {
   event.waitUntil(handleSyncRemixManifest(event));
 });
 self.addEventListener("push", (event) => {
+  event.waitUntil(handlePush(event));
 });
 self.addEventListener("fetch", (event) => {
   event.respondWith(
@@ -211,3 +227,29 @@ self.addEventListener("fetch", (event) => {
 async function appHandleFetch(event, { error, response }) {
   return response;
 }
+/*! Bundled license information:
+
+@remix-run/server-runtime/dist/esm/responses.js:
+  (**
+   * @remix-run/server-runtime v1.14.3
+   *
+   * Copyright (c) Remix Software Inc.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE.md file in the root directory of this source tree.
+   *
+   * @license MIT
+   *)
+
+@remix-run/server-runtime/dist/esm/index.js:
+  (**
+   * @remix-run/server-runtime v1.14.3
+   *
+   * Copyright (c) Remix Software Inc.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE.md file in the root directory of this source tree.
+   *
+   * @license MIT
+   *)
+*/
