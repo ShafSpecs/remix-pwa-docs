@@ -1,18 +1,18 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLocation, useMatches } from "@remix-run/react";
 import { useLocalStorage } from "usehooks-ts";
 import Hero from "./components/hero";
 import Header from "./components/header";
+import styles from "./styles/app.css";
 
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 
-import styles from "./styles/app.css";
+let isMount = true;
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
-
-let isMount = true;
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -34,37 +34,6 @@ export default function App() {
   const [selectedTheme, setSelectedTheme] = useLocalStorage<string | null>("theme", null);
 
   useEffect(() => {
-    let mounted = isMount;
-    isMount = false;
-    if ("serviceWorker" in navigator) {
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller?.postMessage({
-          type: "REMIX_NAVIGATION",
-          isMount: mounted,
-          location,
-          matches,
-          manifest: window.__remixManifest
-        });
-      } else {
-        let listener = async () => {
-          await navigator.serviceWorker.ready;
-          navigator.serviceWorker.controller?.postMessage({
-            type: "REMIX_NAVIGATION",
-            isMount: mounted,
-            location,
-            matches,
-            manifest: window.__remixManifest
-          });
-        };
-        navigator.serviceWorker.addEventListener("controllerchange", listener);
-        return () => {
-          navigator.serviceWorker.removeEventListener("controllerchange", listener);
-        };
-      }
-    }
-  }, [location]);
-
-  useEffect(() => {
     if (document && document.documentElement) {
       if (
         selectedTheme === "dark" ||
@@ -80,10 +49,67 @@ export default function App() {
       setSelectedTheme("light");
     }
   }, [selectedTheme, setSelectedTheme]);
-
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
   }, []);
+
+  function isPromise(p: any): boolean {
+    if (typeof p === "object" && typeof p.then === "function") {
+      return true;
+    }
+
+    return false;
+  }
+
+  useEffect(() => {
+    let mounted = isMount;
+    isMount = false;
+
+    if ("serviceWorker" in navigator) {
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller?.postMessage({
+          type: "REMIX_NAVIGATION",
+          isMount: mounted,
+          location,
+          matches: matches.filter((route) => {
+            if (route.data) {
+              return (
+                Object.values(route.data!).filter((elem) => {
+                  return isPromise(elem);
+                }).length === 0
+              );
+            }
+            return true;
+          }),
+          manifest: window.__remixManifest
+        });
+      } else {
+        let listener = async () => {
+          await navigator.serviceWorker.ready;
+          navigator.serviceWorker.controller?.postMessage({
+            type: "REMIX_NAVIGATION",
+            isMount: mounted,
+            location,
+            matches: matches.filter((route) => {
+              if (route.data) {
+                return (
+                  Object.values(route.data!).filter((elem) => {
+                    return isPromise(elem);
+                  }).length === 0
+                );
+              }
+              return true;
+            }),
+            manifest: window.__remixManifest
+          });
+        };
+        navigator.serviceWorker.addEventListener("controllerchange", listener);
+        return () => {
+          navigator.serviceWorker.removeEventListener("controllerchange", listener);
+        };
+      }
+    }
+  }, [location]);
 
   return (
     <html lang="en" className="antialiased [font-feature-settings:'ss01']">
