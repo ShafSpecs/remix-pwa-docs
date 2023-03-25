@@ -1,5 +1,6 @@
-import { request } from "@octokit/request";
-const grayMatter = require("gray-matter")
+const { request } = require("@octokit/request");
+const grayMatter = require("gray-matter");
+require('dotenv').config();
 
 const octokit = request.defaults({
   headers: {
@@ -24,10 +25,22 @@ const getAllPostMeta = async () => {
   }))
 }
 
+const getMetaDataSHA = async () => {
+  const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
+    owner: "remix-pwa",
+    repo: "remix-pwa-docs",
+    path: "posts/metadata.json",
+    ref: "main"
+  });
+
+  return meta.data.sha;
+}
+
 const metaData = async () => {
   const metadata = [];
 
   const meta = await getAllPostMeta();
+  const sha = await getMetaDataSHA();
 
   meta.forEach((m) => {
     metadata.push({
@@ -40,14 +53,15 @@ const metaData = async () => {
 
   const content = Buffer.from(JSON.stringify(metadata, null, 2)).toString("base64");
 
-  await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+  await octokit('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/metadata.json",
     ref: "main",
+    sha,
     message: 'chore: Updated metadata.json',
     content: content,
   })
 }
 
-await metaData();
+metaData();
