@@ -4,14 +4,22 @@ import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLocatio
 import { useLocalStorage } from "usehooks-ts";
 import Hero from "./components/hero";
 import Header from "./components/header";
+
 import styles from "./styles/app.css";
+import theme from "./styles/night-owl.css";
+import prism from "./styles/code.css";
+
 
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 
 let isMount = true;
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: styles }];
+  return [
+    { rel: "stylesheet", href: styles },
+    { rel: "stylesheet", href: theme },
+    { rel: "stylesheet", href: prism }
+  ];
 };
 
 export const meta: MetaFunction = () => ({
