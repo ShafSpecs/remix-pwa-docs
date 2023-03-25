@@ -5,7 +5,7 @@ import { ClientOnly } from 'remix-utils';
 import { useLoaderData } from '@remix-run/react';
 
 import type { LoaderFunction } from "@remix-run/node";
-import { getAllPosts } from '~/utils/server/github.server';
+import { getAllPostMeta } from '~/utils/server/github.server';
 
 export const loader: LoaderFunction = async () => {
   const s = `
@@ -67,9 +67,9 @@ tempora libero, fugit excepturi hic nulla quo unde voluptatum aspernatur animi v
   \`\`\`
   `.trim();
 
-  // const posts = await getAllPosts();
+  const p = await getAllPostMeta();
 
-  // console.log(posts.data.filter(e => !e.name.includes("metadata.json")));
+  console.log(p)
 
   const code = await mdxToHtml(s);
 
