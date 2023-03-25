@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "title": "A test post",
+    "description": "Lorem ipsum. A simple description to not blow you away",
+    "section": "Getting Started",
+    "slug": "test-post"
+  }
+]
