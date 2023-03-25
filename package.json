@@ -17,6 +17,8 @@
   "dependencies": {
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.15",
+    "@octokit/core": "^4.2.0",
+    "@octokit/request": "^6.2.3",
     "@remix-run/node": "^1.12.0",
     "@remix-run/react": "^1.12.0",
     "@remix-run/vercel": "^1.12.0",
