@@ -24,6 +24,10 @@ export const getPostContent = async (slug: string) => {
 
   //@ts-ignore
   const content = await fetch(postData.data.download_url).then(res => res.text());
-  
+
   return content;
+}
+
+export const getAllPostMeta = async () => {
+  return "placeholder string"
 }
