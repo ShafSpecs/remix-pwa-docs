@@ -7,10 +7,23 @@ const octokit = request.defaults({
   }
 })
 
-export const getAllPosts = () => {
+export const getAllPosts = async () => {
   return octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: "posts",
     ref: "main"
   })
+}
+
+export const getPostContent = async (slug: string) => {
+  const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
+    ...Repo,
+    path: `posts/${slug}.mdx`,
+    ref: "main"
+  });
+
+  //@ts-ignore
+  const content = await fetch(postData.data.download_url).then(res => res.text());
+  
+  return content;
 }
