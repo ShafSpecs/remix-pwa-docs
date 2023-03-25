@@ -1,8 +1,15 @@
 import { bundleMDX } from "mdx-bundler";
-import { importSlug, importEmoji, importGfm, importAutolink, importPrism } from "../exports/esm-modules";
+import { importSlug, importEmoji, importGfm, importAutolink, importPrism } from "../../exports/esm-modules";
 import { readFileSync } from "fs-extra";
 import { join } from "path";
 import { cwd } from "process"
+
+type FrontMatterTypings = {
+  title: string;
+  description: string;
+  slug: string;
+  section: string;
+}
 
 export async function mdxToHtml(source: string) {
   const { default: gfm } = await importGfm();
@@ -11,7 +18,7 @@ export async function mdxToHtml(source: string) {
   const { default: rehypeAutolinkHeadings } = await importAutolink();
   const { default: rehypePrismCommon } = await importPrism();
 
-  const { code, frontmatter } = await bundleMDX({
+  const { code, frontmatter } = await bundleMDX<FrontMatterTypings>({
     source: source,
     files: {
       "./info.tsx": readFileSync(join(cwd(), "app", "components/mdx/Info.tsx")).toString(),
