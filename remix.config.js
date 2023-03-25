@@ -31,7 +31,8 @@ module.exports = {
     /^fault.*/,
     /^hastscript.*/,
     /^parse-entities.*/,
-    /^is.*/
+    /^is.*/,
+    /^stringify.*/,
   ],
   appDirectory: "app",
   serverBuildPath: "api/index.js"
