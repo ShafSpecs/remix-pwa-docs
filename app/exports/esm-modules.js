@@ -3,7 +3,5 @@ module.exports = {
   importEmoji: async () => import('remark-emoji'),
   importSlug: async () => import('rehype-slug'),
   importPrism: async () => import('rehype-prism-plus/common'),
-  importAutolink: async () => import('rehype-autolink-headings'),
-  importOembed: async () => import('@agentofuser/remark-oembed'),
-  importHint: async () => import('remark-hint'),
+  importAutolink: async () => import('rehype-autolink-headings')
 }
