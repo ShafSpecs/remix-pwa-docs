@@ -3,10 +3,10 @@ import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { SunIcon, MoonIcon } from "@heroicons/react/20/solid";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef, useEffect } from 'react';
 import { ClientOnly } from "remix-utils";
 import { Link } from "@remix-run/react";
-import { useOnClickOutside } from "usehooks-ts";
+import { useOnClickOutside, useWindowSize } from "usehooks-ts";
 
 type HeaderProps = {
   scrollTop: number;
@@ -14,6 +14,13 @@ type HeaderProps = {
   setSelectedTheme: React.Dispatch<React.SetStateAction<string | null>>;
   closed: boolean;
   setClosed: React.Dispatch<React.SetStateAction<boolean>>;
+  list: {
+    topic: string;
+    children: {
+      slug: string;
+      name: string;
+    }[]
+  }[]
 };
 type userTheme = "light" | "dark";
 
@@ -38,12 +45,19 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed }: HeaderProps) => {
+export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed, list }: HeaderProps) => {
+  const { width, height: _ } = useWindowSize();
   const sidebarRef = useRef(null);
 
   useOnClickOutside(sidebarRef, () => {
     setClosed(true);
   });
+
+  useEffect(() => {
+    if (width > 1024) {
+      setClosed(true);
+    }
+  }, [setClosed, width])
 
   return (
     <Disclosure
