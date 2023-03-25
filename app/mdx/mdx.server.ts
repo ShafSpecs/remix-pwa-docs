@@ -1,5 +1,8 @@
 import { bundleMDX } from "mdx-bundler";
-import { importSlug, importEmoji, importGfm, importAutolink, importPrism, importHint, importOembed } from "../exports/esm-modules";
+import { importSlug, importEmoji, importGfm, importAutolink, importPrism } from "../exports/esm-modules";
+import { readFileSync } from "fs-extra";
+import { join } from "path";
+import { cwd } from "process"
 
 export async function mdxToHtml(source: string) {
   const { default: gfm } = await importGfm();
@@ -7,12 +10,19 @@ export async function mdxToHtml(source: string) {
   const { default: slug } = await importSlug();
   const { default: rehypeAutolinkHeadings } = await importAutolink();
   const { default: rehypePrismCommon } = await importPrism();
-  const { default: hint } = await importHint();
-  const { default: oembed } = await importOembed();
 
   const { code, frontmatter } = await bundleMDX({
     source: source,
-    files: {},
+    files: {
+      "./info.tsx": readFileSync(join(cwd(), "app", "components/mdx/Info.tsx")).toString(),
+      "./warn.tsx": readFileSync(join(cwd(), "app", "components/mdx/Warn.tsx")).toString(),
+      "./link.tsx": readFileSync(join(cwd(), "app", "components/mdx/Link.tsx")).toString(),
+      "./grid.tsx": readFileSync(join(cwd(), "app", "components/mdx/Grid.tsx")).toString(),
+      "./arrow.tsx": readFileSync(join(cwd(), "app", "components/icons/Arrow.tsx")).toString(),
+      "./plugin.tsx": readFileSync(join(cwd(), "app", "components/icons/Plugin.tsx")).toString(),
+      "./swatch.tsx": readFileSync(join(cwd(), "app", "components/icons/Swatch.tsx")).toString(),
+      "./widget.tsx": readFileSync(join(cwd(), "app", "components/icons/Widget.tsx")).toString(),
+    },
     mdxOptions(options, frontmatter) {
       options.rehypePlugins = [
         ...(options.rehypePlugins || []),
@@ -23,9 +33,7 @@ export async function mdxToHtml(source: string) {
       options.remarkPlugins = [
         ...(options.remarkPlugins || []),
         gfm,
-        emoji,
-        hint,
-        oembed
+        emoji
       ];
 
       return options;
