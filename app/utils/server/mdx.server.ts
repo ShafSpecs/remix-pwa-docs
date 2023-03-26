@@ -9,6 +9,7 @@ type FrontMatterTypings = {
   description: string;
   slug: string;
   section: string;
+  position: number;
 }
 
 export async function mdxToHtml(source: string) {
