@@ -1478,6 +1478,11 @@ video {
   margin-bottom: 2rem;
 }
 
+.my-0 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
 .-mb-56 {
   margin-bottom: -14rem;
 }
@@ -2225,6 +2230,11 @@ video {
   padding-bottom: 1.25rem;
 }
 
+.py-0 {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
 .pb-12 {
   padding-bottom: 3rem;
 }
@@ -2368,6 +2378,18 @@ video {
 
 .leading-10 {
   line-height: 2.5rem;
+}
+
+.leading-\[21px\] {
+  line-height: 21px;
+}
+
+.leading-\[23px\] {
+  line-height: 23px;
+}
+
+.leading-\[22px\] {
+  line-height: 22px;
 }
 
 .tracking-tight {
