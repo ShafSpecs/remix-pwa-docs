@@ -4,8 +4,6 @@ import { mdxToHtml } from '~/utils/server/mdx.server';
 import { ClientOnly } from 'remix-utils';
 import Skeleton from '~/components/layout/Skeleton';
 import { Fragment, useMemo, useRef, useState } from 'react';
-
-import type { LoaderFunction } from '@remix-run/node';
 import { getMDXComponent } from 'mdx-bundler/client';
 import { Link, useLoaderData, useOutletContext } from '@remix-run/react';
 import Grid from '~/components/mdx/Grid';
@@ -14,6 +12,8 @@ import Arrow from '~/components/icons/Arrow';
 import Widget from '~/components/icons/Widget';
 import Swatch from '~/components/icons/Swatch';
 import Plugin from '~/components/icons/Plugin';
+
+import type { LoaderFunction } from '@remix-run/node';
 
 export const loader: LoaderFunction = async () => {
   const doc = await getPostContent("intro");
