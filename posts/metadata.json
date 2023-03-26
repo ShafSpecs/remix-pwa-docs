@@ -6,7 +6,8 @@
       {
         "title": "Test post",
         "description": "Lorem ipsum. A simple description to not blow you away",
-        "slug": "test-post",
+        "section": "Getting Started",
+        "slug": "/docs/test-post",
         "position": 1
       }
     ]
