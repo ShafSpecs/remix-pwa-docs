@@ -9,7 +9,7 @@ import type { LoaderFunction } from '@remix-run/node';
 import { getMDXComponent } from 'mdx-bundler/client';
 import { Link, useLoaderData, useOutletContext } from '@remix-run/react';
 import Grid from '~/components/mdx/Grid';
-import * as Lin from '~/components/mdx/Link';
+import * as CustomLink from '~/components/mdx/Link';
 import Arrow from '~/components/icons/Arrow';
 import Widget from '~/components/icons/Widget';
 import Swatch from '~/components/icons/Swatch';
@@ -66,10 +66,10 @@ const Index = ({ code, frontmatter, next }: any) => {
               Learn how to get Remix PWA set up in your Remix project. More placeholder text.
             </p>
             <Grid>
-              <Lin.default icon={<Arrow />} title={"Installation"} desc={""} />
-              <Lin.default icon={<Widget />} title={"Guide"} desc={""} />
-              <Lin.default icon={<Plugin />} title={"Plugins"} desc={""} />
-              <Lin.default icon={<Swatch />} title={"API Reference"} desc={""} />
+              <CustomLink.default icon={<Arrow />} title={"Installation"} desc={""} />
+              <CustomLink.default icon={<Widget />} title={"Guide"} desc={""} />
+              <CustomLink.default icon={<Plugin />} title={"Plugins"} desc={""} />
+              <CustomLink.default icon={<Swatch />} title={"API Reference"} desc={""} />
             </Grid>
             <p>
               {frontmatter.description}
