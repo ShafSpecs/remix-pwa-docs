@@ -12,7 +12,7 @@ import prism from "./styles/code.css";
 import type { LinksFunction, MetaFunction, LoaderFunction, TypedResponse } from "@remix-run/node";
 import { getPostMetaData } from "./utils/server/github.server";
 import type { MetaDataObject } from "./types/mdx";
-import { FrontMatterTypings } from './types/mdx';
+import type { FrontMatterTypings } from './types/mdx';
 
 type LoaderData = {
   meta: MetaDataObject[];
