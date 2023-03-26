@@ -4,9 +4,10 @@
     "position": 1,
     "children": [
       {
-        "title": "A test post",
+        "title": "Test post",
         "description": "Lorem ipsum. A simple description to not blow you away",
-        "slug": "test-post"
+        "slug": "test-post",
+        "position": 1
       }
     ]
   },
