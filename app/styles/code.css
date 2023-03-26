@@ -45,3 +45,8 @@ pre {
   color: rgb(156, 163, 175); /* Line number color */
   content: attr(line);
 }
+
+.task-list-item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
