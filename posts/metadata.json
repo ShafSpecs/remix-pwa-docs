@@ -1,8 +1,38 @@
 [
   {
-    "title": "A test post",
-    "description": "Lorem ipsum. A simple description to not blow you away",
-    "section": "Getting Started",
-    "slug": "test-post"
+    "name": "Getting Started",
+    "position": 1,
+    "children": [
+      {
+        "title": "A test post",
+        "description": "Lorem ipsum. A simple description to not blow you away",
+        "slug": "test-post"
+      }
+    ]
+  },
+  {
+    "name": "Guides",
+    "position": 2,
+    "children": []
+  },
+  {
+    "name": "Packages",
+    "position": 3,
+    "children": []
+  },
+  {
+    "name": "API Reference",
+    "position": 4,
+    "children": []
+  },
+  {
+    "name": "Examples",
+    "position": 5,
+    "children": []
+  },
+  {
+    "name": "Community",
+    "position": 6,
+    "children": []
   }
 ]
