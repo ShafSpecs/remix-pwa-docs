@@ -28,6 +28,15 @@ export const getPostContent = async (slug: string) => {
   return content;
 }
 
-export const getAllPostMeta = async () => {
-  return "placeholder string"
+export const getPostMetaData = async () => {
+  const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
+    ...Repo,
+    path: "posts/metadata.json",
+    ref: "docs"
+  });
+
+  //@ts-ignore
+  const content = await fetch(meta.data.download_url).then(res => res.text());
+
+  return JSON.parse(content);
 }

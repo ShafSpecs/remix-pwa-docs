@@ -56,6 +56,7 @@ const metaData = async () => {
       section.children.push({
         title: m.title,
         description: m.description,
+        section: m.section,
         slug: m.slug,
         position: m.position
       })

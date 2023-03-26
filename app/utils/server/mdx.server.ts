@@ -2,15 +2,9 @@ import { bundleMDX } from "mdx-bundler";
 import { importSlug, importEmoji, importGfm, importAutolink, importPrism } from "../../exports/esm-modules";
 import { readFileSync } from "fs-extra";
 import { join } from "path";
-import { cwd } from "process"
+import { cwd } from "process";
 
-type FrontMatterTypings = {
-  title: string;
-  description: string;
-  slug: string;
-  section: string;
-  position: number;
-}
+import type { FrontMatterTypings } from "~/types/mdx";
 
 export async function mdxToHtml(source: string) {
   const { default: gfm } = await importGfm();
