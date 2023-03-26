@@ -1,16 +1,8 @@
 [
   {
-    "name": "Getting Started",
+    "name": "Introduction",
     "position": 1,
-    "children": [
-      {
-        "title": "Test post",
-        "description": "Lorem ipsum. A simple description to not blow you away",
-        "section": "Getting Started",
-        "slug": "/docs/test-post",
-        "position": 1
-      }
-    ]
+    "children": []
   },
   {
     "name": "Guides",
