@@ -66,7 +66,7 @@ const Index = ({ code, frontmatter, next }: any) => {
               Learn how to get Remix PWA set up in your Remix project. More placeholder text.
             </p>
             <Grid>
-              <CustomLink.default icon={<Arrow />} title={"Installation"} desc={""} />
+              <CustomLink.default icon={<Arrow />} title={"Installation"} desc={"Set up Remix PWA in your application"} />
               <CustomLink.default icon={<Widget />} title={"Guide"} desc={""} />
               <CustomLink.default icon={<Plugin />} title={"Plugins"} desc={""} />
               <CustomLink.default icon={<Swatch />} title={"API Reference"} desc={""} />

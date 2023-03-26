@@ -9,7 +9,7 @@ export default ({ icon, title, desc }: any) => {
         {icon}
         <h2 className="mt-4 font-display text-base text-slate-900 dark:text-white">
           <Link prefetch="render" to="/">
-            <span className="absolute -inset-px rounded-xl" />
+            <span className="absolute -inset-px font-medium rounded-xl" />
             {title}
           </Link>
         </h2>
