@@ -38,7 +38,7 @@ const getMetaDataSHA = async () => {
 
 const metaData = async () => {
   const metadata = [
-    {"name": "Getting Started", position: 1, children: []},
+    {"name": "Introduction", position: 1, children: []},
     {"name": "Guides", position: 2, children: []},
     {"name": "Packages", position: 3, children: []},
     {"name": "API Reference", position: 4, children: []},
