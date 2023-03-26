@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react"
+
 /* eslint-disable react/display-name */
 export default ({ icon, title, desc }: any) => {
   return (
@@ -6,10 +8,10 @@ export default ({ icon, title, desc }: any) => {
       <div className="relative overflow-hidden rounded-xl p-6">
         {icon}
         <h2 className="mt-4 font-display text-base text-slate-900 dark:text-white">
-          <a href="/">
+          <Link prefetch="render" to="/">
             <span className="absolute -inset-px rounded-xl" />
             {title}
-          </a>
+          </Link>
         </h2>
         <p className="mt-1 text-sm text-slate-700 dark:text-slate-400">
           {desc}
