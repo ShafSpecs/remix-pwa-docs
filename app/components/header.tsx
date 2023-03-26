@@ -9,6 +9,7 @@ import { Link, NavLink, useLocation } from "@remix-run/react";
 import { useOnClickOutside, useWindowSize } from 'usehooks-ts';
 import RemixLight from "./icons/RemixLight";
 import RemixDark from "./icons/RemixDark";
+import { MetaDataObject } from "~/types/mdx";
 
 type HeaderProps = {
   scrollTop: number;
@@ -16,13 +17,7 @@ type HeaderProps = {
   setSelectedTheme: React.Dispatch<React.SetStateAction<string | null>>;
   closed: boolean;
   setClosed: React.Dispatch<React.SetStateAction<boolean>>;
-  list: {
-    topic: string;
-    children: {
-      slug: string;
-      name: string;
-    }[]
-  }[]
+  list: MetaDataObject[]
 };
 type userTheme = "light" | "dark";
 
@@ -110,8 +105,8 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                   <ul className="space-y-9">
                     {list.map((e) => {
                       return (
-                        <li key={e.topic}>
-                          <h2 className="font-display font-medium text-slate-900 dark:text-white">{e.topic}</h2>
+                        <li key={e.name}>
+                          <h2 className="font-display font-medium text-slate-900 dark:text-white">{e.name}</h2>
                           <ul className="mt-4 space-y-3 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
                             {e.children.map((item) => {
                               return (
@@ -123,7 +118,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                                         isActive ?
                                           "font-semibold text-sky-500 before:bg-sky-500" :
                                           "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300")}>
-                                        {item.name}
+                                        {item.title}
                                       </span>
                                     }
                                   </NavLink>
