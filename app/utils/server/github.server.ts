@@ -11,7 +11,7 @@ export const getPostContent = async (slug: string) => {
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: `posts/${slug}.mdx`,
-    ref: "main"
+    ref: "docs"
   });
 
   if (postData.status !== 200) {
@@ -28,7 +28,7 @@ export const getPostMetaData = async () => {
   const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: "posts/metadata.json",
-    ref: "docs"
+    ref: "control"
   });
 
   //@ts-ignore
