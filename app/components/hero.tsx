@@ -254,11 +254,11 @@ const func = () => {
                     </div>
                     <Highlight {...defaultProps} theme={theme} code={exampleCode} language="tsx">
                       {({ tokens, getLineProps, getTokenProps, className }) => (
-                        <pre className={`${className} overflow-x-auto leading-6 px-3`}>
+                        <pre className={`${className} overflow-x-auto leading-6 px-3`} style={{ marginTop: 0, paddingTop: 0, paddingBottom: 0, lineHeight: "24px" }}>
                           {tokens.map((line, i) => (
                             <div key={i} {...getLineProps({ line, key: i })}>
                               {line.map((token, key) => (
-                                <span {...getTokenProps({ token, key })} />
+                                <span {...getTokenProps({ token, key })} key={key} /> 
                               ))}
                             </div>
                           ))}
