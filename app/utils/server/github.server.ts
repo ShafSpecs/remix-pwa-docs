@@ -7,20 +7,16 @@ const octokit = request.defaults({
   }
 })
 
-export const getAllPosts = async () => {
-  return octokit("GET /repos/{owner}/{repo}/contents/{path}", {
-    ...Repo,
-    path: "posts",
-    ref: "main"
-  })
-}
-
 export const getPostContent = async (slug: string) => {
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: `posts/${slug}.mdx`,
-    ref: "main"
+    ref: "docs"
   });
+
+  if (postData.status !== 200) {
+    return null;
+  }
 
   //@ts-ignore
   const content = await fetch(postData.data.download_url).then(res => res.text());
@@ -32,7 +28,7 @@ export const getPostMetaData = async () => {
   const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: "posts/metadata.json",
-    ref: "docs"
+    ref: "control"
   });
 
   //@ts-ignore

@@ -13,7 +13,7 @@ const getAllPostMeta = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts",
-    ref: "docs"
+    ref: "control"
   });
 
   return Promise.all(posts.data.filter(e => !e.name.includes("metadata.json")).map(async (post) => {
@@ -30,7 +30,7 @@ const getMetaDataSHA = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/metadata.json",
-    ref: "docs"
+    ref: "control"
   });
 
   return meta.data.sha;
@@ -73,7 +73,7 @@ const metaData = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/metadata.json",
-    branch: "docs",
+    branch: "control",
     sha,
     message: 'chore: Updated metadata.json',
     content: content,

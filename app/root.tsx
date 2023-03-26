@@ -1,6 +1,5 @@
-import React from "react";
 import { useState, useEffect } from "react";
-import { Links, LiveReload, Meta, NavLink, Outlet, Scripts, ScrollRestoration, useLoaderData, useLocation, useMatches } from "@remix-run/react";
+import { Links, LiveReload, Meta, NavLink, Outlet, Scripts, ScrollRestoration, useLoaderData, useLocation, useMatches, useNavigation } from "@remix-run/react";
 import { useLocalStorage } from "usehooks-ts";
 import Hero from "./components/hero";
 import Header from "./components/header";
@@ -10,9 +9,10 @@ import styles from "./styles/app.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
 
-import type { LinksFunction, MetaFunction, LoaderFunction, TypedResponse} from "@remix-run/node";
+import type { LinksFunction, MetaFunction, LoaderFunction, TypedResponse } from "@remix-run/node";
 import { getPostMetaData } from "./utils/server/github.server";
 import type { MetaDataObject } from "./types/mdx";
+import { FrontMatterTypings } from './types/mdx';
 
 type LoaderData = {
   meta: MetaDataObject[];
@@ -55,6 +55,7 @@ export default function App() {
 
   const [scrollTop, setScrollTop] = useState(0);
   const [closed, setClosed] = useState(true);
+  const [next, setNext] = useState<any[]>([null, null])
 
   const onScroll = (e: any): void => {
     setScrollTop(e.target.documentElement.scrollTop);
@@ -78,6 +79,7 @@ export default function App() {
       setSelectedTheme("light");
     }
   }, [selectedTheme, setSelectedTheme]);
+
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
   }, []);
@@ -93,6 +95,8 @@ export default function App() {
   useEffect(() => {
     let mounted = isMount;
     isMount = false;
+
+    setNext(getPreviousAndNextRoute())
 
     if ("serviceWorker" in navigator) {
       if (navigator.serviceWorker.controller) {
@@ -139,6 +143,30 @@ export default function App() {
       }
     }
   }, [location]);
+
+  const getPreviousAndNextRoute = () => {
+    const currentRoute = location.pathname;
+    const routes = meta.map((meta) => meta.children);
+
+    //@ts-ignore
+    const childrenArr = [].concat(...routes);
+
+    //@ts-ignore
+    const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
+
+    let nextRoute: FrontMatterTypings | null = null;
+    let prevRoute: FrontMatterTypings | null = null;
+
+    if (currentRouteIndex < (childrenArr.length - 1)) {
+      nextRoute = childrenArr[currentRouteIndex + 1];
+    }
+
+    if (currentRouteIndex > 0) {
+      prevRoute = childrenArr[currentRouteIndex - 1];
+    }
+
+    return [prevRoute, nextRoute];
+  }
 
   return (
     <html lang="en" className="antialiased [font-feature-settings:'ss01']">
@@ -196,7 +224,7 @@ export default function App() {
 
             </div>
           </div>
-          <Outlet />
+          <Outlet context={[next]} />
         </div>
         <ScrollRestoration />
         <Scripts />
