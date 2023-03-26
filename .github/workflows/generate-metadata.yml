@@ -3,7 +3,7 @@ name: Generate metadata
 on:
   push:
     branches:
-      - post
+      - docs
 
 jobs:
   build:
