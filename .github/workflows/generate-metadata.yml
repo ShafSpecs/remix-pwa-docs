@@ -25,5 +25,5 @@ jobs:
     - name: Generate metadata 📜
       run: npm run generator
       env:
-        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        GITHUB_KEY: ${{ secrets.GIT_TOKEN }}
       
