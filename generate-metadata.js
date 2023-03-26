@@ -37,18 +37,41 @@ const getMetaDataSHA = async () => {
 }
 
 const metaData = async () => {
-  const metadata = [];
+  const metadata = [
+    {"name": "Getting Started", position: 1, children: []},
+    {"name": "Guides", position: 2, children: []},
+    {"name": "Packages", position: 3, children: []},
+    {"name": "API Reference", position: 4, children: []},
+    {"name": "Examples", position: 5, children: []},
+    {"name": "Community", position: 6, children: []},
+  ];
 
   const meta = await getAllPostMeta();
   const sha = await getMetaDataSHA();
 
   meta.forEach((m) => {
-    metadata.push({
-      title: m.title,
-      description: m.description,
-      section: m.section,
-      slug: m.slug,
-    });
+    // metadata.push({
+    //   title: m.title,
+    //   description: m.description,
+    //   section: m.section,
+    //   slug: m.slug,
+    //   position: m.position
+    // });
+
+    const section = metadata.find(e => e.name === m.section);
+
+    if (section) {
+      section.children.push({
+        title: m.title,
+        description: m.description,
+        slug: m.slug,
+        position: m.position
+      })
+
+      section.children.sort((a, b) => a.position - b.position);
+
+      metadata.sort((a, b) => a.position - b.position);
+    }
   })
 
   const content = Buffer.from(JSON.stringify(metadata, null, 2)).toString("base64");
