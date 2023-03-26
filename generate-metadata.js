@@ -72,7 +72,7 @@ const metaData = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/metadata.json",
-    ref: "docs",
+    branch: "docs",
     sha,
     message: 'chore: Updated metadata.json',
     content: content,
