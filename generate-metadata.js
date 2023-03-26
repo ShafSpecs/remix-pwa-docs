@@ -13,7 +13,7 @@ const getAllPostMeta = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts",
-    ref: "control"
+    ref: "docs"
   });
 
   return Promise.all(posts.data.filter(e => !e.name.includes("metadata.json")).map(async (post) => {

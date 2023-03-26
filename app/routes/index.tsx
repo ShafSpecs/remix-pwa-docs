@@ -1,3 +1,22 @@
+import { getPostContent } from '~/utils/server/github.server';
+import { mdxToHtml } from '~/utils/server/mdx.server';
+
+import type { LoaderFunction } from '@remix-run/node';
+
+export const loader: LoaderFunction = async () => {
+  const doc = await getPostContent("intro");
+
+  if (doc === null) {
+    return {
+      status: 404
+    }
+  }
+
+  const code = await mdxToHtml(doc);
+
+  return code;
+};
+
 export default function Index() {
   return (
     <div className="min-w-0 max-w-2xl flex-auto px-4 py-16 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
