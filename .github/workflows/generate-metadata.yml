@@ -1,0 +1,29 @@
+name: Generate metadata
+
+on:
+  push:
+    branches:
+      - post
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js 🛡
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install dependencies ✅
+      run: npm install
+
+    - name: Generate metadata 📜
+      run: npm run generator
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      
