@@ -80,7 +80,7 @@ tempora libero, fugit excepturi hic nulla quo unde voluptatum aspernatur animi v
   const validSlug: boolean = await validateSlug(`/docs/${slug!}`)
 
   if (!validSlug) {
-    console.log("Invalid slug: " + slug!);
+    console.error("Invalid slug: " + slug!);
 
     throw json(null, { status: 404, statusText: "Oops! This page could not be found." })
   }
@@ -194,7 +194,6 @@ function Doc({ code, frontmatter, next }: any) {
       }
 
       if (currentOl) {
-        console.log(currentOl);
         listItems.push(currentOl);
       }
 
@@ -220,8 +219,6 @@ function Doc({ code, frontmatter, next }: any) {
       const closestHeading = headings.find(heading => heading.id === closestHeadingElement.id);
 
       const activeIndex = headings.findIndex((h) => h.id === closestHeading!.id);
-
-      console.log("index", activeIndex, "closest", closestHeading)
 
       // Update the active heading if it's different from the current active heading
       if (closestHeading && closestHeading.id !== activeHeading!.id) {

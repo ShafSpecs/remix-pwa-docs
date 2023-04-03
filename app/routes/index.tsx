@@ -129,7 +129,6 @@ const Index = ({ code, frontmatter, next }: any) => {
       }
 
       if (currentOl) {
-        console.log(currentOl);
         listItems.push(currentOl);
       }
 
