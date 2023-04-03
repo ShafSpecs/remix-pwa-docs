@@ -13,6 +13,7 @@ import type { LinksFunction, MetaFunction, LoaderFunction, TypedResponse } from 
 import { getPostMetaData } from "./utils/server/github.server";
 import type { MetaDataObject } from "./types/mdx";
 import type { FrontMatterTypings } from './types/mdx';
+import { ClientOnly } from "remix-utils";
 
 type LoaderData = {
   meta: MetaDataObject[];
@@ -175,14 +176,19 @@ export default function App() {
         <Links />
       </head>
       <body className={`${!closed && "overflow-hidden"} bg-white font-inter font-feature-text ss01 dark:bg-slate-900`}>
-        <Header
-          selectedTheme={selectedTheme}
-          scrollTop={scrollTop}
-          setSelectedTheme={setSelectedTheme}
-          closed={closed}
-          setClosed={setClosed}
-          //@ts-ignore
-          list={meta}
+        <ClientOnly fallback={<></>} children={
+          () =>
+            <Header
+              selectedTheme={selectedTheme}
+              scrollTop={scrollTop}
+              setSelectedTheme={setSelectedTheme}
+              closed={closed}
+              setClosed={setClosed}
+              //@ts-ignore
+              list={meta}
+            />
+            // Todo: Create a fallback component
+        }
         />
         {location.pathname == "/" && <Hero />}
         <div className="relative flex justify-center mx-auto max-w-[88rem] sm:px-2 lg:px-8 xl:px-12">

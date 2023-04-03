@@ -43,7 +43,7 @@ function classNames(...classes: string[]) {
 }
 
 export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed, list }: HeaderProps) => {
-  const { width, height: _ } = useWindowSize();
+  const { width } = useWindowSize();
   const location = useLocation();
   const sidebarRef = useRef(null);
 
@@ -64,6 +64,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
   return (
     <Disclosure
       as="header"
+      id="header__main"
       className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 ${scrollTop > 20 && selectedTheme == "dark"
         ? "dark:bg-transparentsticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75"
         : "dark:bg-transparent"
@@ -71,7 +72,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
     >
       {({ open }) => (
         <>
-          <div className="mr-6 lg:hidden flex content-center">
+          <div className="flex content-center mr-6 lg:hidden">
             {/* Mobile menu button*/}
             <Disclosure.Button className="relative focus:outline-none focus:ring-0" onClick={() => setClosed(false)}>
               <span className="sr-only">Open main menu</span>
@@ -81,10 +82,10 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
 
           {/* Mobile Sidebar */}
           {!closed && (
-            <div className="fixed top-0 left-0 w-screen h-screen inset-0 w-screen z-50 flex items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur lg:hidden">
+            <div className="fixed inset-0 top-0 left-0 z-50 flex items-start w-screen h-screen pr-10 overflow-y-auto bg-slate-900/50 backdrop-blur lg:hidden">
               <div
                 ref={sidebarRef}
-                className="z-50 min-h-full w-full max-w-xs bg-white px-4 pt-5 pb-12 dark:bg-slate-900 sm:px-6"
+                className="z-50 w-full max-w-xs min-h-full px-4 pt-5 pb-12 bg-white dark:bg-slate-900 sm:px-6"
               >
                 <div className="flex items-center">
                   <Disclosure.Button
@@ -98,15 +99,15 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                     />
                   </Disclosure.Button>
                   <Link to={"/"} className="ml-6">
-                    {selectedTheme === "light" ? <RemixLight className="lg:hidden -ml-2 w-11 h-10 fill-slate-700" fill="fill-slate-700" /> : <RemixDark className="lg:hidden -ml-2 w-10 h-9 fill-sky-100" fill="fill-sky-100" />}
+                    {selectedTheme === "light" ? <RemixLight className="h-10 -ml-2 lg:hidden w-11 fill-slate-700" fill="fill-slate-700" /> : <RemixDark className="w-10 -ml-2 lg:hidden h-9 fill-sky-100" fill="fill-sky-100" />}
                   </Link>
                 </div>
-                <nav className="text-base lg:text-sm mt-5 px-1">
+                <nav className="px-1 mt-5 text-base lg:text-sm">
                   <ul className="space-y-9">
                     {list.map((e) => {
                       return (
                         <li key={e.name}>
-                          <h2 className="font-display font-medium text-slate-900 dark:text-white">{e.name}</h2>
+                          <h2 className="font-medium font-display text-slate-900 dark:text-white">{e.name}</h2>
                           <ul className="mt-4 space-y-3 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
                             {e.children.map((item) => {
                               return (
@@ -143,7 +144,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                   <path d="M18 17.5L10.308 5h15.144l7.933 12.5M18 17.5h15.385L25.452 30H10.308L18 17.5z"></path>
                 </g>
               </svg> */}
-              {selectedTheme === "light" ? <RemixLight className="lg:hidden w-11 h-10 -ml-2 fill-slate-700" fill="fill-slate-700" /> : <RemixDark className="lg:hidden w-11 -ml-2 h-10 fill-sky-100" fill="fill-sky-100" />}
+              {selectedTheme === "light" ? <RemixLight className="h-10 -ml-2 lg:hidden w-11 fill-slate-700" fill="fill-slate-700" /> : <RemixDark className="h-10 -ml-2 lg:hidden w-11 fill-sky-100" fill="fill-sky-100" />}
               {selectedTheme === "light" ? <RemixLight className="hidden w-10 h-9 fill-slate-700 lg:block" fill="fill-slate-700" /> : <RemixDark className="hidden w-10 h-9 fill-sky-100 lg:block" fill="fill-sky-100" />}
               <p className="hidden lg:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 content-end text-2xl top-[3px] relative -ml-2.5 leading-10 tracking-wide">emix&nbsp;<span className="text-transparent text-[26px] top-[1.5px] bg-clip-text bg-gradient-to-tr from-indigo-500 dark:from-indigo-400 to-sky-300 dark:to-sky-200">PWA</span></p>
             </a>
