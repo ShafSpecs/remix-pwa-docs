@@ -172,7 +172,7 @@ async function handleFetch(event) {
   return fetch(event.request.clone());
 }
 var handlePush = (event) => {
-  const data = JSON.parse(event == null ? void 0 : event.data.text());
+  const data = JSON.parse(event?.data.text());
   const title = data.title ? data.title : "Remix PWA";
   const options = {
     body: data.body ? data.body : "Notification Body Text",
