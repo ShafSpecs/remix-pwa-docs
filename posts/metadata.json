@@ -1,47 +1,138 @@
 [
   {
-    "name": "Introduction",
-    "position": 1,
+    "slug": "pwa",
     "children": [
       {
-        "title": "Introduction",
-        "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
-        "section": "Introduction",
-        "slug": "/",
-        "position": 1
+        "name": "Introduction",
+        "position": 1,
+        "children": [
+          {
+            "title": "Introduction",
+            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "section": "Introduction",
+            "slug": "/",
+            "position": 1
+          },
+          {
+            "title": "Test post",
+            "description": "Lorem ipsum. A simple description to not blow you away",
+            "section": "Introduction",
+            "slug": "/docs/test-post",
+            "position": 2
+          }
+        ]
       },
       {
-        "title": "Test post",
-        "description": "Lorem ipsum. A simple description to not blow you away",
-        "section": "Introduction",
-        "slug": "/docs/test-post",
-        "position": 2
+        "name": "Guides",
+        "position": 2,
+        "children": []
+      },
+      {
+        "name": "Packages",
+        "position": 3,
+        "children": []
+      },
+      {
+        "name": "API Reference",
+        "position": 4,
+        "children": []
+      },
+      {
+        "name": "Examples",
+        "position": 5,
+        "children": []
+      },
+      {
+        "name": "Community",
+        "position": 6,
+        "children": []
       }
     ]
   },
   {
-    "name": "Guides",
-    "position": 2,
-    "children": []
+    "slug": "sw",
+    "children": [
+      {
+        "name": "Introduction",
+        "position": 1,
+        "children": [
+          {
+            "title": "Introduction",
+            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "section": "Introduction",
+            "slug": "/sw/introduction",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "Guides",
+        "position": 2,
+        "children": []
+      },
+      {
+        "name": "Packages",
+        "position": 3,
+        "children": []
+      },
+      {
+        "name": "API Reference",
+        "position": 4,
+        "children": []
+      },
+      {
+        "name": "Examples",
+        "position": 5,
+        "children": []
+      },
+      {
+        "name": "Community",
+        "position": 6,
+        "children": []
+      }
+    ]
   },
   {
-    "name": "Packages",
-    "position": 3,
-    "children": []
-  },
-  {
-    "name": "API Reference",
-    "position": 4,
-    "children": []
-  },
-  {
-    "name": "Examples",
-    "position": 5,
-    "children": []
-  },
-  {
-    "name": "Community",
-    "position": 6,
-    "children": []
+    "slug": "push",
+    "children": [
+      {
+        "name": "Introduction",
+        "position": 1,
+        "children": [
+          {
+            "title": "Introduction",
+            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "section": "Introduction",
+            "slug": "/push/introduction",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "Guides",
+        "position": 2,
+        "children": []
+      },
+      {
+        "name": "Packages",
+        "position": 3,
+        "children": []
+      },
+      {
+        "name": "API Reference",
+        "position": 4,
+        "children": []
+      },
+      {
+        "name": "Examples",
+        "position": 5,
+        "children": []
+      },
+      {
+        "name": "Community",
+        "position": 6,
+        "children": []
+      }
+    ]
   }
 ]
