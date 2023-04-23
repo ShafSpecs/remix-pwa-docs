@@ -1,14 +1,21 @@
 [
   {
-    "name": "Getting Started",
+    "name": "Introduction",
     "position": 1,
     "children": [
       {
+        "title": "Introduction",
+        "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+        "section": "Introduction",
+        "slug": "/",
+        "position": 1
+      },
+      {
         "title": "Test post",
         "description": "Lorem ipsum. A simple description to not blow you away",
-        "section": "Getting Started",
+        "section": "Introduction",
         "slug": "/docs/test-post",
-        "position": 1
+        "position": 2
       }
     ]
   },

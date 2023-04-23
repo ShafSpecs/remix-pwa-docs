@@ -5,7 +5,7 @@ const octokit = request.defaults({
   headers: {
     authorization: `token ${process.env.GITHUB_KEY}`
   }
-})
+});
 
 export const getPostContent = async (slug: string) => {
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
@@ -19,10 +19,26 @@ export const getPostContent = async (slug: string) => {
   }
 
   //@ts-ignore
-  const content = await fetch(postData.data.download_url).then(res => res.text());
+  const content = await fetch(postData.data.download_url).then((res) => res.text());
 
   return content;
-}
+};
+
+export const validateSlug = async (slug: string): Promise<boolean> => {
+  const meta = await getPostMetaData();
+
+  const routes = meta.map((meta: any) => meta.children);
+
+  //@ts-ignore
+  const childrenArr = [].concat(...routes);
+  const slugs = childrenArr.map((a: any) => a.slug);
+
+  if (slugs.filter((member: any) => member === slug).length == 1) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 export const getPostMetaData = async () => {
   const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
@@ -32,7 +48,7 @@ export const getPostMetaData = async () => {
   });
 
   //@ts-ignore
-  const content = await fetch(meta.data.download_url).then(res => res.text());
+  const content = await fetch(meta.data.download_url).then((res) => res.text());
 
   return JSON.parse(content);
-}
+};

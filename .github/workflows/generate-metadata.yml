@@ -14,15 +14,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Use Node.js 🛡
+    - name: 🛡 Use Node.js 
       uses: actions/setup-node@v3
       with:
         node-version: 18
 
-    - name: Install dependencies ✅
+    - name: ✅ Install dependencies 
       run: npm install
 
-    - name: Generate metadata 📜
+    - name: 📜 Generate metadata 
       run: npm run generator
       env:
         GITHUB_KEY: ${{ secrets.GIT_TOKEN }}
