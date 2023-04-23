@@ -180,7 +180,7 @@ export default function App() {
   useEffect(() => {
     setNext(getPreviousAndNextRoute())
 
-    if (location.pathname.includes("/pwa/")) {
+    if (location.pathname.includes("/pwa/") || location.pathname === "/") {
       setSelected(packages[0])
     }
 
@@ -252,7 +252,7 @@ export default function App() {
                               }`
                             }
                             value={pkg}
-                            onClick={() => navigate(`/${pkg.slug}`)}
+                            onClick={() => navigate(`/${pkg.slug === 'pwa' ? '' : pkg.slug + '/introduction'}`)}
                           >
                             {({ selected }) => (
                               <>

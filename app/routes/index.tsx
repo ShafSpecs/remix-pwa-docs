@@ -17,7 +17,7 @@ import type { LoaderFunction } from '@remix-run/node';
 import { useIsFirstRender } from 'usehooks-ts';
 
 export const loader: LoaderFunction = async () => {
-  const doc: string | null = await getPostContent("intro", "");
+  const doc: string | null = await getPostContent("intro", "pwa");
 
   if (doc === null) {
     return {
