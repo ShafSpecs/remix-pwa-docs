@@ -17,7 +17,7 @@
             "title": "Test post",
             "description": "Lorem ipsum. A simple description to not blow you away",
             "section": "Introduction",
-            "slug": "/docs/test-post",
+            "slug": "/pwa/test-post",
             "position": 2
           }
         ]
