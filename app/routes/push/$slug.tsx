@@ -77,7 +77,7 @@ tempora libero, fugit excepturi hic nulla quo unde voluptatum aspernatur animi v
 
   const slug = params.slug;
 
-  const validSlug: boolean = await validateSlug(`/docs/${slug!}`)
+  const validSlug: boolean = await validateSlug(`/push/${slug!}`)
 
   if (!validSlug) {
     console.error("Invalid slug: " + slug!);
@@ -85,7 +85,7 @@ tempora libero, fugit excepturi hic nulla quo unde voluptatum aspernatur animi v
     throw json(null, { status: 404, statusText: "Oops! This page could not be found." })
   }
 
-  const doc = await getPostContent(slug!);
+  const doc = await getPostContent(slug!, "push");
   const code = await mdxToHtml(doc!);
 
   return code;
