@@ -156,12 +156,12 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                     </div>
                   </Listbox>
                   <ul className="space-y-9">
-                    {list.map((e) => {
+                    {list[packages.indexOf(selected)].children.map((e: any) => {
                       return (
                         <li key={e.name}>
                           <h2 className="font-medium font-display text-slate-900 dark:text-white">{e.name}</h2>
                           <ul className="mt-4 space-y-3 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                            {e.children.map((item) => {
+                            {e.children.map((item: any) => {
                               return (
                                 <li className="relative" key={item.slug}>
                                   <NavLink to={item.slug} end>
