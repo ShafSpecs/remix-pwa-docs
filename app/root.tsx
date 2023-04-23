@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
-import { Links, LiveReload, Meta, NavLink, Outlet, Scripts, ScrollRestoration, useLoaderData, useLocation, useMatches, useNavigation } from "@remix-run/react";
+import { useState, useEffect, Fragment } from "react";
+import { Links, LiveReload, Meta, NavLink, Outlet, Scripts, ScrollRestoration, useLoaderData, useLocation, useMatches, useNavigate, useNavigation } from "@remix-run/react";
 import { useLocalStorage } from "usehooks-ts";
 import Hero from "./components/hero";
 import Header from "./components/header";
 import { json } from "@remix-run/node";
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 import styles from "./styles/app.css";
 import theme from "./styles/night-owl.css";
@@ -14,12 +15,19 @@ import { getPostMetaData } from "./utils/server/github.server";
 import type { MetaDataObject } from "./types/mdx";
 import type { FrontMatterTypings } from './types/mdx';
 import { ClientOnly } from "remix-utils";
+import { Listbox, Transition } from "@headlessui/react";
 
 type LoaderData = {
   meta: MetaDataObject[];
 }
 
 let isMount = true;
+
+const packages = [
+  { name: 'remix-pwa', slug: 'pwa' },
+  { name: '@remix-pwa/sw', slug: 'sw' },
+  { name: '@remix-pwa/push', slug: 'push' },
+]
 
 export const links: LinksFunction = () => {
   return [
@@ -53,6 +61,7 @@ export default function App() {
   const { meta } = useLoaderData<LoaderData>();
   let location = useLocation();
   let matches = useMatches();
+  const navigate = useNavigate();
 
   const [scrollTop, setScrollTop] = useState(0);
   const [closed, setClosed] = useState(true);
@@ -63,6 +72,7 @@ export default function App() {
   };
 
   const [selectedTheme, setSelectedTheme] = useLocalStorage<string | null>("theme", null);
+  const [selected, setSelected] = useState(packages[0])
 
   useEffect(() => {
     if (document && document.documentElement) {
@@ -93,11 +103,33 @@ export default function App() {
     return false;
   }
 
+  const getPreviousAndNextRoute = () => {
+    const currentRoute = location.pathname;
+    const routes = meta.map((meta) => meta.children);
+
+    //@ts-ignore
+    const childrenArr = [].concat(...routes);
+
+    //@ts-ignore
+    const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
+
+    let nextRoute: FrontMatterTypings | null = null;
+    let prevRoute: FrontMatterTypings | null = null;
+
+    if (currentRouteIndex < (childrenArr.length - 1)) {
+      nextRoute = childrenArr[currentRouteIndex + 1];
+    }
+
+    if (currentRouteIndex > 0) {
+      prevRoute = childrenArr[currentRouteIndex - 1];
+    }
+
+    return [prevRoute, nextRoute];
+  }
+
   useEffect(() => {
     let mounted = isMount;
     isMount = false;
-
-    setNext(getPreviousAndNextRoute())
 
     if ("serviceWorker" in navigator) {
       if (navigator.serviceWorker.controller) {
@@ -143,31 +175,24 @@ export default function App() {
         };
       }
     }
-  }, [location]);
+  }, [location, matches]);
 
-  const getPreviousAndNextRoute = () => {
-    const currentRoute = location.pathname;
-    const routes = meta.map((meta) => meta.children);
+  useEffect(() => {
+    setNext(getPreviousAndNextRoute())
 
-    //@ts-ignore
-    const childrenArr = [].concat(...routes);
-
-    //@ts-ignore
-    const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
-
-    let nextRoute: FrontMatterTypings | null = null;
-    let prevRoute: FrontMatterTypings | null = null;
-
-    if (currentRouteIndex < (childrenArr.length - 1)) {
-      nextRoute = childrenArr[currentRouteIndex + 1];
+    if (location.pathname.includes("/pwa/")) {
+      setSelected(packages[0])
     }
 
-    if (currentRouteIndex > 0) {
-      prevRoute = childrenArr[currentRouteIndex - 1];
+    if (location.pathname.includes("/sw/")) {
+      setSelected(packages[1])
     }
 
-    return [prevRoute, nextRoute];
-  }
+    if (location.pathname.includes("/push/")) {
+      setSelected(packages[2])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, selected]);
 
   return (
     <html lang="en" className="antialiased [font-feature-settings:'ss01']">
@@ -175,7 +200,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className={`${!closed && "overflow-hidden"} bg-white font-inter font-feature-text ss01 dark:bg-slate-900`}>
+      <body className={`${!closed && "overflow-hidden"} bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}>
         <ClientOnly fallback={<></>} children={
           () =>
             <Header
@@ -184,10 +209,13 @@ export default function App() {
               setSelectedTheme={setSelectedTheme}
               closed={closed}
               setClosed={setClosed}
+              selected={selected}
+              setSelected={setSelected}
+              packages={packages}
               //@ts-ignore
               list={meta}
             />
-            // Todo: Create a fallback component
+          // Todo: Create a fallback component
         }
         />
         {location.pathname == "/" && <Hero />}
@@ -198,6 +226,55 @@ export default function App() {
             <div className="absolute bottom-0 right-0 hidden w-px top-28 bg-slate-800 dark:block"></div>
             <div className="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-16 pl-0.5">
               <nav className="w-64 pr-8 text-base lg:text-sm xl:w-72 xl:pr-16">
+                <Listbox value={selected} onChange={setSelected}>
+                  <div className="relative mt-1 mb-6">
+                    <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left rounded-lg shadow-sm cursor-default shadow-gray-300 dark:shadow-gray-700 dark:text-white focus:outline-none focus-visible:border-sky-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-sky-300 sm:text-sm">
+                      <span className="block truncate">{selected.name}</span>
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                        <ChevronUpDownIcon
+                          className="w-5 h-5 text-gray-400 dark:text-gray-200"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </Listbox.Button>
+                    <Transition
+                      as={Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-md dark:shadow-gray-700 dark:bg-slate-900 max-h-60 ring-1 ring-black dark:text-gray-100 ring-opacity-5 focus:outline-none sm:text-sm">
+                        {packages.map((pkg, packageIdx) => (
+                          <Listbox.Option
+                            key={packageIdx}
+                            className={({ active }) =>
+                              `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-sky-100 text-sky-900' : 'text-gray-900 dark:text-gray-200'
+                              }`
+                            }
+                            value={pkg}
+                            onClick={() => navigate(`/${pkg.slug}`)}
+                          >
+                            {({ selected }) => (
+                              <>
+                                <span
+                                  className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                    }`}
+                                >
+                                  {pkg.name}
+                                </span>
+                                {selected ? (
+                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sky-600">
+                                    <CheckIcon className="w-5 h-5" aria-hidden="true" />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </Listbox>
                 <ul className="space-y-9">
                   {meta.map((el) => {
                     return (
@@ -227,7 +304,6 @@ export default function App() {
                   })}
                 </ul>
               </nav>
-
             </div>
           </div>
           <Outlet context={[next]} />

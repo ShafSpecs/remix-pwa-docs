@@ -10,11 +10,15 @@ import { useOnClickOutside, useWindowSize } from 'usehooks-ts';
 import RemixLight from "./icons/RemixLight";
 import RemixDark from "./icons/RemixDark";
 import { MetaDataObject } from "~/types/mdx";
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 type HeaderProps = {
   scrollTop: number;
   selectedTheme: string | null;
   setSelectedTheme: React.Dispatch<React.SetStateAction<string | null>>;
+  selected: any;
+  setSelected: React.Dispatch<React.SetStateAction<any>>;
+  packages: any;
   closed: boolean;
   setClosed: React.Dispatch<React.SetStateAction<boolean>>;
   list: MetaDataObject[]
@@ -42,7 +46,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed, list }: HeaderProps) => {
+export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed, list, selected, setSelected, packages }: HeaderProps) => {
   const { width } = useWindowSize();
   const location = useLocation();
   const sidebarRef = useRef(null);
@@ -59,14 +63,14 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
 
   useEffect(() => {
     setClosed(true);
-  }, [location]);
+  }, [location, setClosed]);
 
   return (
     <Disclosure
       as="header"
       id="header__main"
-      className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 ${scrollTop > 20 && selectedTheme == "dark"
-        ? "dark:bg-transparentsticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75"
+      className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-300 dark:shadow-none sm:px-6 lg:px-8 ${scrollTop > 20 && selectedTheme == "dark"
+        ? "dark:bg-transparentsticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 dark:shadow-none sm:px-6 lg:px-8 dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75"
         : "dark:bg-transparent"
         }`}
     >
@@ -103,6 +107,54 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                   </Link>
                 </div>
                 <nav className="px-1 mt-5 text-base lg:text-sm">
+                  <Listbox value={selected} onChange={setSelected}>
+                    <div className="relative mt-1 mb-6">
+                      <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left rounded-lg shadow-sm cursor-default shadow-gray-300 dark:shadow-gray-700 dark:text-white focus:outline-none focus-visible:border-sky-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-sky-300 sm:text-sm">
+                        <span className="block truncate">{selected.name}</span>
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                          <ChevronUpDownIcon
+                            className="w-5 h-5 text-gray-400 dark:text-gray-200"
+                            aria-hidden="true"
+                          />
+                        </span>
+                      </Listbox.Button>
+                      <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                      >
+                        <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-md dark:shadow-gray-700 dark:bg-slate-900 max-h-60 ring-1 ring-black dark:text-gray-100 ring-opacity-5 focus:outline-none sm:text-sm">
+                          {packages.map((pkg: any, packageIdx: number) => (
+                            <Listbox.Option
+                              key={packageIdx}
+                              className={({ active }) =>
+                                `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-sky-100 text-sky-900' : 'text-gray-900 dark:text-gray-200'
+                                }`
+                              }
+                              value={pkg}
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <span
+                                    className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                      }`}
+                                  >
+                                    {pkg.name}
+                                  </span>
+                                  {selected ? (
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sky-600">
+                                      <CheckIcon className="w-5 h-5" aria-hidden="true" />
+                                    </span>
+                                  ) : null}
+                                </>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </Transition>
+                    </div>
+                  </Listbox>
                   <ul className="space-y-9">
                     {list.map((e) => {
                       return (
@@ -166,69 +218,28 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
           </div>
           <div className="relative flex justify-end gap-6 basis-0 sm:gap-8 md:flex-grow">
             <div className="relative flex content-center justify-end gap-6 basis-0 sm:gap-8 md:flex-grow">
-              <Listbox value={selectedTheme} onChange={setSelectedTheme}>
-                {({ open }) => (
-                  <>
-                    <Listbox.Label className="sr-only">Theme</Listbox.Label>
-                    <div className="relative z-10">
-                      <ClientOnly
-                        children={() => (
-                          <Listbox.Button className="flex items-center justify-center w-6 h-6 rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5">
-                            {selectedTheme && selectedTheme === "light" ? (
-                              <SunIcon className="w-4 h-4 fill-sky-400" />
-                            ) : selectedTheme && selectedTheme === "dark" ? (
-                              <MoonIcon className="w-4 h-4 fill-sky-400" />
-                            ) : (
-                              <p></p>
-                            )}
-                          </Listbox.Button>
-                        )}
-                      />
-
-                      <Transition
-                        show={open}
-                        as={Fragment}
-                        leave="transition ease-in duration-100"
-                        leaveFrom="opacity-100"
-                        leaveTo="opacity-0"
-                      >
-                        <Listbox.Options className="-translate-x-[50%] absolute top-full left-1/2 mt-3 w-36 space-y-1 rounded-xl bg-white p-3 text-sm font-medium shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-800 dark:ring-white/5">
-                          {themes.map((theme) => (
-                            <Listbox.Option
-                              key={theme.value}
-                              value={theme.value}
-                              className={({ active, selected }) =>
-                                classNames(
-                                  active ? "bg-slate-100 dark:bg-slate-900/40" : "",
-                                  (active && selected) || (!active && selected)
-                                    ? "text-sky-500"
-                                    : active && !selected
-                                      ? "text-slate-900 dark:text-white"
-                                      : "text-slate-700 dark:text-slate-400",
-                                  "flex cursor-pointer select-none items-center rounded-[0.625rem] p-1"
-                                )
-                              }
-                            >
-                              {({ selected, active }) => (
-                                <>
-                                  <div
-                                    className={classNames(
-                                      "rounded-md bg-white p-1 shadow ring-1 ring-slate-900/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5"
-                                    )}
-                                  >
-                                    {theme.icon}
-                                  </div>
-                                  <div className="ml-3">{theme.name}</div>
-                                </>
-                              )}
-                            </Listbox.Option>
-                          ))}
-                        </Listbox.Options>
-                      </Transition>
-                    </div>
-                  </>
-                )}
-              </Listbox>
+              <label className="sr-only">Theme</label>
+              <div className="relative z-10">
+                <ClientOnly
+                  children={() => (
+                    <button className="flex items-center justify-center w-6 h-6 rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5" onClick={() => {
+                      if (selectedTheme === "light") {
+                        setSelectedTheme("dark");
+                      } else if (selectedTheme === "dark") {
+                        setSelectedTheme("light");
+                      }
+                    }}>
+                      {selectedTheme && selectedTheme === "light" ? (
+                        <SunIcon className="w-4 h-4 fill-sky-400" />
+                      ) : selectedTheme && selectedTheme === "dark" ? (
+                        <MoonIcon className="w-4 h-4 fill-sky-400" />
+                      ) : (
+                        <p></p>
+                      )}
+                    </button>
+                  )}
+                />
+              </div>
               <a
                 className="group"
                 aria-label="GitHub"
