@@ -276,12 +276,12 @@ export default function App() {
                   </div>
                 </Listbox>
                 <ul className="space-y-9">
-                  {meta.map((el) => {
+                  {meta[packages.indexOf(selected)].children.map((el: any) => {
                     return (
                       <li key={el.name}>
                         <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
                         <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                          {el.children.map((sub) => {
+                          {el.children.map((sub: any) => {
                             return (
                               <li className="relative" key={sub.slug}>
                                 <NavLink prefetch="render" to={sub.slug} end={true} >
