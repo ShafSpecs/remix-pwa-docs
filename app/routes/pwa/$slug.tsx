@@ -7,7 +7,7 @@ import { json } from "@remix-run/node"
 import { Link, useCatch, useLoaderData, useOutletContext, useLocation } from '@remix-run/react';
 
 import type { LoaderArgs, LoaderFunction } from "@remix-run/node";
-import { getPostContent, validateSlug } from '~/utils/server/github.server';
+import { getPostContent } from '~/utils/server/github.server';
 import Skeleton from '~/components/layout/Skeleton';
 import { useIsFirstRender } from 'usehooks-ts';
 
@@ -77,16 +77,15 @@ tempora libero, fugit excepturi hic nulla quo unde voluptatum aspernatur animi v
 
   const slug = params.slug;
 
-  const validSlug: boolean = await validateSlug(`/pwa/${slug!}`)
+  const doc = await getPostContent(slug!, "pwa");
 
-  if (!validSlug) {
+  if (!doc) {
     console.error("Invalid slug: " + slug!);
 
     throw json(null, { status: 404, statusText: "Oops! This page could not be found." })
   }
 
-  const doc = await getPostContent(slug!, "pwa");
-  const code = await mdxToHtml(doc!);
+  const code = await mdxToHtml(doc);
 
   return code;
 };
