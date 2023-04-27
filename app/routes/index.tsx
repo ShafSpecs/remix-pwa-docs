@@ -196,10 +196,8 @@ const Index = ({ code, frontmatter, next }: any) => {
               Learn how to get Remix PWA up and running in your Remix application or explore the ecosystem 🌍!
             </p>
             <Grid>
-              <CustomLink.default icon={<Arrow />} title={"Installation"} desc={"Set up Remix PWA in your application"} />
-              <CustomLink.default icon={<Widget />} title={"Guide"} desc={""} />
-              <CustomLink.default icon={<Plugin />} title={"Plugins"} desc={""} />
-              <CustomLink.default icon={<Swatch />} title={"API Reference"} desc={""} />
+              <CustomLink.default icon={<Arrow />} title={"Installation"} desc={"Set up Remix PWA in your application easily!"} />
+              <CustomLink.default icon={<Widget />} title={"Guide"} desc={"Explore the possibilities and check out more that Remix PWA can do."} />
             </Grid>
             <p>
               {frontmatter.description}
