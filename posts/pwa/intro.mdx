@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.
+description: A lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿. Let's dive in!
 slug: /
 section: Introduction
 position: 1
@@ -9,50 +9,30 @@ position: 1
 import Warn from "./warn.tsx";
 import Info from "./info.tsx";
 
-## Quick start
+## Overview
 
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur.
+Remix PWA is a lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿.
 
-### Installing dependencies
+### Installation
 
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur quaerat exercitationem. Consequatur et cum atque mollitia qui quia necessitatibus.
+To get started with `remix-pwa`, use the command:
 
 ```sh
 npx remix-pwa@latest
 ```
 
-Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste. Provident nam asperiores vel laboriosam omnis ducimus enim nesciunt quaerat. Minus tempora cupiditate est quod.
+To get additional info about installation and the CLI, check out the [installation](/pwa/installation) section.
 
-<Warn>
-  This is what a disclaimer message looks like. You might want to include inline code in it. Or maybe you’ll want to
-  include a link in it. I don’t think we should get too carried away with other scenarios like lists or tables — that
-  would be silly.
-</Warn>
+## Features
 
-### Configuring the library
-
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur quaerat exercitationem. Consequatur et cum atque mollitia qui quia necessitatibus.
-
-```js
-// cache-advance.config.js
-export default {
-  strategy: "predictive",
-  engine: {
-    cpus: 12,
-    backups: ["./storage/cache.wtf"]
-  }
-};
-```
-
-Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste. Provident nam asperiores vel laboriosam omnis ducimus enim nesciunt quaerat. Minus tempora cupiditate est quod.
-
-<Info>
-  This is what a disclaimer message looks like. You might want to include inline code in it. Or maybe you’ll want to
-  include a link in it. I don’t think we should get too carried away with other scenarios like lists or tables — that
-  would be silly.
-</Info>
-
----
+- **One-stop for everything PWA**: Integrate Progressive Web App (PWA) features into Remix including offline support, caching, installability on native devices and more.
+- **Speed up your builds by caching large resources**: Automatic caching for `build` files and static files, it's customisable and on the house!
+- **Take caching to the next level**: Now ships with multiple caching strategies to customise your user experience down to the last word. Don't like what we have? Oh, you can build yours too!
+- **Error handling is a nice-to-have**: Safely handles uncached loader calls without affecting other sections of the site (i.e Throws user to nearest Error boundary without disrupting Service Workers)
+- **Native to the moon 🚀**: Native APIs to help give your Remix web application the native feel it deserves.
+- **Extensibility**: Remix PWA is built to be extensible, so you can add your own custom caching strategies, native APIs and more. 
+- **Modular**: The new `remix-pwa` isn't bundled together no more. It is now built from modular packages that together would give you the best PWA experience you can get.
+- **Plugins**: *Pssst*, that's right. Remix PWA extensibility just hit the next level 🔥. We are saying no more, as you would soon see! 
 
 ## Basic usage
 
