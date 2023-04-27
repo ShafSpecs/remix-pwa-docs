@@ -7,10 +7,10 @@ const octokit = request.defaults({
   }
 });
 
-export const getPostContent = async (slug: string, preSlug: string = "") => {
+export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
-    path: preSlug == '' ? `posts/${slug}.mdx` : `posts/${preSlug}/${slug}.mdx`,
+    path: `posts/${preSlug}/${slug}.mdx`,
     ref: "docs"
   });
 

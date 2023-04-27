@@ -24,9 +24,10 @@ type LoaderData = {
 let isMount = true;
 
 const packages = [
-  { name: 'remix-pwa', slug: 'pwa' },
-  { name: '@remix-pwa/sw', slug: 'sw' },
-  { name: '@remix-pwa/push', slug: 'push' },
+  { name: 'remix-pwa', slug: 'pwa', comingSoon: false },
+  { name: '@remix-pwa/sw', slug: 'sw', comingSoon: false },
+  { name: '@remix-pwa/push', slug: 'push', comingSoon: true },
+  { name: '@remix-pwa/client', slug: 'client', comingSoon: true },
 ]
 
 export const links: LinksFunction = () => {
@@ -180,7 +181,7 @@ export default function App() {
   useEffect(() => {
     setNext(getPreviousAndNextRoute())
 
-    if (location.pathname.includes("/pwa/")) {
+    if (location.pathname.includes("/pwa/") || location.pathname === "/") {
       setSelected(packages[0])
     }
 
@@ -191,7 +192,7 @@ export default function App() {
     if (location.pathname.includes("/push/")) {
       setSelected(packages[2])
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, selected]);
 
   return (
@@ -247,12 +248,15 @@ export default function App() {
                         {packages.map((pkg, packageIdx) => (
                           <Listbox.Option
                             key={packageIdx}
+                            disabled={pkg.comingSoon}
                             className={({ active }) =>
-                              `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-sky-100 text-sky-900' : 'text-gray-900 dark:text-gray-200'
-                              }`
+                              `relative select-none py-2 pl-10 pr-4 text-sm 
+                              ${pkg.comingSoon ? 'text-sm cursor-not-allowed bg-slate-200 text-gray-800 dark:bg-slate-700 dark:text-gray-200' : 'cursor-pointer xl:text-base'} 
+                              ${active ? 'bg-sky-100 text-sky-900' : 'text-gray-900 dark:text-gray-200'}
+                              `
                             }
                             value={pkg}
-                            onClick={() => navigate(`/${pkg.slug}`)}
+                            onClick={() => navigate(`/${pkg.slug === 'pwa' ? '' : pkg.slug + '/introduction'}`)}
                           >
                             {({ selected }) => (
                               <>
@@ -260,7 +264,7 @@ export default function App() {
                                   className={`block truncate ${selected ? 'font-medium' : 'font-normal'
                                     }`}
                                 >
-                                  {pkg.name}
+                                  {pkg.name} {pkg.comingSoon && <span className="text-gray-400 text-baase dark:text-gray-500">🚧</span>}
                                 </span>
                                 {selected ? (
                                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sky-600">

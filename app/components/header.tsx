@@ -9,7 +9,7 @@ import { Link, NavLink, useLocation } from "@remix-run/react";
 import { useOnClickOutside, useWindowSize } from 'usehooks-ts';
 import RemixLight from "./icons/RemixLight";
 import RemixDark from "./icons/RemixDark";
-import { MetaDataObject } from "~/types/mdx";
+import type { MetaDataObject } from "~/types/mdx";
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 type HeaderProps = {
@@ -23,24 +23,6 @@ type HeaderProps = {
   setClosed: React.Dispatch<React.SetStateAction<boolean>>;
   list: MetaDataObject[]
 };
-type userTheme = "light" | "dark";
-
-const themes: {
-  name: string;
-  value: userTheme;
-  icon: React.ReactNode;
-}[] = [
-    {
-      name: "Light",
-      value: "light",
-      icon: <SunIcon className="w-4 h-4 text-current" aria-hidden="true" />
-    },
-    {
-      name: "Dark",
-      value: "dark",
-      icon: <MoonIcon className="w-4 h-4 text-current" aria-hidden="true" />
-    }
-  ];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -128,6 +110,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                           {packages.map((pkg: any, packageIdx: number) => (
                             <Listbox.Option
                               key={packageIdx}
+                              disabled={pkg.comingSoon}
                               className={({ active }) =>
                                 `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-sky-100 text-sky-900' : 'text-gray-900 dark:text-gray-200'
                                 }`
@@ -140,7 +123,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                                     className={`block truncate ${selected ? 'font-medium' : 'font-normal'
                                       }`}
                                   >
-                                    {pkg.name}
+                                    {pkg.name} {pkg.comingSoon && <span className="text-base text-gray-400 dark:text-gray-500">🚧</span>}
                                   </span>
                                   {selected ? (
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sky-600">

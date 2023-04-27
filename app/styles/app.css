@@ -1754,6 +1754,14 @@ video {
   cursor: default;
 }
 
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .select-none {
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -2344,13 +2352,14 @@ video {
   color: rgb(120 53 15 / var(--tw-text-opacity));
 }
 
-.text-current {
-  color: currentColor;
-}
-
 .text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
 .text-gray-900 {
@@ -3524,6 +3533,11 @@ html {
   color: rgb(229 231 235 / var(--tw-text-opacity));
 }
 
+.dark .dark\:text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
 .dark .dark\:text-sky-100 {
   --tw-text-opacity: 1;
   color: rgb(224 242 254 / var(--tw-text-opacity));
@@ -4169,6 +4183,53 @@ html {
 
   .xl\:pr-6 {
     padding-right: 1.5rem;
+  }
+
+  .xl\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .font-inter .xl\:text-base,.xl\:text-base .font-inter {
+    line-height: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: -0.0223em;
+  }
+
+  .font-inter .xl\:text-base .tracking-tighter, .font-inter .xl\:text-base.tracking-tighter,.xl\:text-base .font-inter .tracking-tighter,.xl\:text-base .font-inter.tracking-tighter, .tracking-tighter .font-inter .xl\:text-base, .tracking-tighter .xl\:text-base.font-inter {
+    line-height: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: -0.0723em;
+  }
+
+  .font-inter .xl\:text-base .tracking-tight, .font-inter .xl\:text-base.tracking-tight,.xl\:text-base .font-inter .tracking-tight,.xl\:text-base .font-inter.tracking-tight, .tracking-tight .font-inter .xl\:text-base, .tracking-tight .xl\:text-base.font-inter {
+    line-height: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: -0.0473em;
+  }
+
+  .font-inter .xl\:text-base .tracking-normal, .font-inter .xl\:text-base.tracking-normal,.xl\:text-base .font-inter .tracking-normal,.xl\:text-base .font-inter.tracking-normal, .tracking-normal .font-inter .xl\:text-base, .tracking-normal .xl\:text-base.font-inter {
+    line-height: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: -0.0223em;
+  }
+
+  .font-inter .xl\:text-base .tracking-wide, .font-inter .xl\:text-base.tracking-wide,.xl\:text-base .font-inter .tracking-wide,.xl\:text-base .font-inter.tracking-wide, .tracking-wide .font-inter .xl\:text-base, .tracking-wide .xl\:text-base.font-inter {
+    line-height: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: 0.0027em;
+  }
+
+  .font-inter .xl\:text-base .tracking-wider, .font-inter .xl\:text-base.tracking-wider,.xl\:text-base .font-inter .tracking-wider,.xl\:text-base .font-inter.tracking-wider, .tracking-wider .font-inter .xl\:text-base, .tracking-wider .xl\:text-base.font-inter {
+    line-height: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: 0.0277em;
+  }
+
+  .font-inter .xl\:text-base .tracking-widest, .font-inter .xl\:text-base.tracking-widest,.xl\:text-base .font-inter .tracking-widest,.xl\:text-base .font-inter.tracking-widest, .tracking-widest .font-inter .xl\:text-base, .tracking-widest .xl\:text-base.font-inter {
+    line-height: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: 0.0777em;
   }
 }
 
