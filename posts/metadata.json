@@ -8,7 +8,7 @@
         "children": [
           {
             "title": "Introduction",
-            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "description": "A lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿. Let's dive in!",
             "section": "Introduction",
             "slug": "/",
             "position": 1
