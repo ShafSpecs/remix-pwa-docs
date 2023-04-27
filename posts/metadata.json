@@ -35,17 +35,17 @@
             "position": 4
           },
           {
-            "title": "FAQs",
-            "description": "Popular questions (and answers!) I've gotten so far about Remix PWA.",
-            "section": "Introduction",
-            "slug": "/pwa/faq",
-            "position": 5
-          },
-          {
             "title": "Contribute",
             "description": "Wanna contribute to `remix-pwa`? Here's how to get started.",
             "section": "Introduction",
             "slug": "/pwa/contribute",
+            "position": 5
+          },
+          {
+            "title": "FAQs",
+            "description": "Popular questions (and answers!) I've gotten so far about Remix PWA.",
+            "section": "Introduction",
+            "slug": "/pwa/faq",
             "position": 6
           }
         ]
