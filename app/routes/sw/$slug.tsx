@@ -7,7 +7,7 @@ import { json } from "@remix-run/node"
 import { Link, useCatch, useLoaderData, useOutletContext, useLocation } from '@remix-run/react';
 
 import type { LoaderArgs, LoaderFunction } from "@remix-run/node";
-import { getPostContent, validateSlug } from '~/utils/server/github.server';
+import { getPostContent } from '~/utils/server/github.server';
 import Skeleton from '~/components/layout/Skeleton';
 import { useIsFirstRender } from 'usehooks-ts';
 
