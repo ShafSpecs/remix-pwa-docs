@@ -226,7 +226,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
               <a
                 className="group"
                 aria-label="GitHub"
-                href="https://github.com/ShafSpecs/remix-pwa"
+                href="https://github.com/remix-pwa/remix-pwa"
                 target="_blank"
                 rel="noreferrer"
               >
