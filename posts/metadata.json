@@ -89,10 +89,10 @@
         "position": 3,
         "children": [
           {
-            "title": "useSWEEffect()",
+            "title": "useSWEffect()",
             "description": "A hook to monitor and handle navigation events in your Remix application.",
             "section": "Hooks",
-            "slug": "/sw/use-swe-effect",
+            "slug": "/sw/use-sw-effect",
             "position": 1
           }
         ]
