@@ -110,7 +110,22 @@
       {
         "name": "Contributing",
         "position": 6,
-        "children": []
+        "children": [
+          {
+            "title": "How to contribute",
+            "description": "Wanna contribute to `@remix-pwa/sw`? Here's how to get started.",
+            "section": "Contributing",
+            "slug": "/sw/how-to-contribute",
+            "position": 1
+          },
+          {
+            "title": "Documentation Guide",
+            "description": "How to contribute to `@remix-pwa/sw` documentation",
+            "section": "Contributing",
+            "slug": "/sw/docs-guide",
+            "position": 2
+          }
+        ]
       }
     ]
   },
