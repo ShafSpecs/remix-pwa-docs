@@ -40,6 +40,13 @@
             "section": "Introduction",
             "slug": "/pwa/faq",
             "position": 5
+          },
+          {
+            "title": "Contribute",
+            "description": "Wanna contribute to `remix-pwa`? Here's how to get started.",
+            "section": "Introduction",
+            "slug": "/pwa/contribute",
+            "position": 6
           }
         ]
       },
@@ -54,18 +61,8 @@
         "children": []
       },
       {
-        "name": "API Reference",
-        "position": 4,
-        "children": []
-      },
-      {
         "name": "Examples",
-        "position": 5,
-        "children": []
-      },
-      {
-        "name": "Contributing",
-        "position": 6,
+        "position": 4,
         "children": []
       }
     ]
@@ -127,26 +124,6 @@
         "name": "Examples",
         "position": 5,
         "children": []
-      },
-      {
-        "name": "Contributing",
-        "position": 6,
-        "children": [
-          {
-            "title": "How to contribute",
-            "description": "Wanna contribute to `@remix-pwa/sw`? Here's how to get started.",
-            "section": "Contributing",
-            "slug": "/sw/how-to-contribute",
-            "position": 1
-          },
-          {
-            "title": "Documentation Guide",
-            "description": "How to contribute to `@remix-pwa/sw` documentation",
-            "section": "Contributing",
-            "slug": "/sw/docs-guide",
-            "position": 2
-          }
-        ]
       }
     ]
   },
