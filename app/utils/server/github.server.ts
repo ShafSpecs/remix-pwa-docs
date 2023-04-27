@@ -1,6 +1,7 @@
 import { request } from "@octokit/request";
 import { Repo } from "../handlers/github-api";
 import { readFile } from "fs-extra";
+import { resolve } from "path"
 
 const octokit = request.defaults({
   headers: {
@@ -9,15 +10,18 @@ const octokit = request.defaults({
 });
 
 export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
-  // if (process.env.NODE_ENV === "development") {
-  //   const content = await readFile(`/posts/${preSlug}/${slug}.mdx`, "utf-8");
+  /**
+   * If we are in development mode, we can just read the file from the file system.
+   */
+  if (process.env.NODE_ENV === "development") {
+    const content = readFile(resolve(__dirname, '../', `posts/${preSlug}/${slug}.mdx`), "utf-8");
 
-  //   if (!content) {
-  //     return null;
-  //   }
+    if (!content) {
+      return null;
+    }
     
-  //   return content;
-  // }
+    return content;
+  }
 
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,

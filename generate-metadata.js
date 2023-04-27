@@ -95,9 +95,7 @@ const metaData = async () => {
         { "name": "Introduction", position: 1, children: [] },
         { "name": "Guides", position: 2, children: [] },
         { "name": "Packages", position: 3, children: [] },
-        { "name": "API Reference", position: 4, children: [] },
-        { "name": "Examples", position: 5, children: [] },
-        { "name": "Contributing", position: 6, children: [] }
+        { "name": "Examples", position: 4, children: [] }
       ]
     },
     {
@@ -107,8 +105,7 @@ const metaData = async () => {
         { "name": "Guides", position: 2, children: [] },
         { "name": "Hooks", position: 3, children: [] },
         { "name": "API Reference", position: 4, children: [] },
-        { "name": "Examples", position: 5, children: [] },
-        { "name": "Contributing", position: 6, children: [] }
+        { "name": "Examples", position: 5, children: [] }
       ]
     },
     {
