@@ -14,11 +14,32 @@
             "position": 1
           },
           {
-            "title": "Test post",
-            "description": "Lorem ipsum. A simple description to not blow you away",
+            "title": "Installation",
+            "description": "Install Remix PWA and get started building your next PWA.",
             "section": "Introduction",
-            "slug": "/pwa/test-post",
+            "slug": "/pwa/installation",
             "position": 2
+          },
+          {
+            "title": "Community",
+            "description": "Get support, share ideas, requests, how-tos and much more from the Remix community.",
+            "section": "Introduction",
+            "slug": "/pwa/community",
+            "position": 3
+          },
+          {
+            "title": "Roadmap",
+            "description": "Take a peek at the next things rolling out. Should be updated regularly",
+            "section": "Introduction",
+            "slug": "/pwa/roadmap",
+            "position": 4
+          },
+          {
+            "title": "FAQs",
+            "description": "Popular questions (and answers!) I've gotten so far about Remix PWA.",
+            "section": "Introduction",
+            "slug": "/pwa/faq",
+            "position": 5
           }
         ]
       },
