@@ -1,5 +1,6 @@
 import { request } from "@octokit/request";
 import { Repo } from "../handlers/github-api";
+import { readFile } from "fs-extra";
 
 const octokit = request.defaults({
   headers: {
@@ -8,6 +9,16 @@ const octokit = request.defaults({
 });
 
 export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
+  // if (process.env.NODE_ENV === "development") {
+  //   const content = await readFile(`/posts/${preSlug}/${slug}.mdx`, "utf-8");
+
+  //   if (!content) {
+  //     return null;
+  //   }
+    
+  //   return content;
+  // }
+
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: `posts/${preSlug}/${slug}.mdx`,
