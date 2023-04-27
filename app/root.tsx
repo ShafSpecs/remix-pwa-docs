@@ -104,9 +104,15 @@ export default function App() {
     return false;
   }
 
+  // Todo
   const getPreviousAndNextRoute = () => {
     const currentRoute = location.pathname;
-    const routes = meta.map((meta) => meta.children);
+    //@ts-ignore
+    let routes = []
+    
+    // if (location.pathname === "/" || location.pathname.includes("/pwa/")) {
+    //   routes = meta[0].children.map((meta: any) => meta.map((route: any) => route.slug));
+    // }
 
     //@ts-ignore
     const childrenArr = [].concat(...routes);
