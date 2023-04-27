@@ -1,1 +1,202 @@
-[]
+[
+  {
+    "slug": "pwa",
+    "children": [
+      {
+        "name": "Introduction",
+        "position": 1,
+        "children": [
+          {
+            "title": "Introduction",
+            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "section": "Introduction",
+            "slug": "/",
+            "position": 1
+          },
+          {
+            "title": "Test post",
+            "description": "Lorem ipsum. A simple description to not blow you away",
+            "section": "Introduction",
+            "slug": "/pwa/test-post",
+            "position": 2
+          }
+        ]
+      },
+      {
+        "name": "Guides",
+        "position": 2,
+        "children": []
+      },
+      {
+        "name": "Packages",
+        "position": 3,
+        "children": []
+      },
+      {
+        "name": "API Reference",
+        "position": 4,
+        "children": []
+      },
+      {
+        "name": "Examples",
+        "position": 5,
+        "children": []
+      },
+      {
+        "name": "Contributing",
+        "position": 6,
+        "children": []
+      }
+    ]
+  },
+  {
+    "slug": "sw",
+    "children": [
+      {
+        "name": "Introduction",
+        "position": 1,
+        "children": [
+          {
+            "title": "Introduction",
+            "description": "Getting started with `@remix-pwa/sw` package for building, extending and customizing Service Worker in Remix.",
+            "section": "Introduction",
+            "slug": "/sw/introduction",
+            "position": 1
+          },
+          {
+            "title": "Installation",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Introduction",
+            "slug": "/sw/installation",
+            "position": 2
+          },
+          {
+            "title": "Upgrade Guide",
+            "description": "A guide to upgrade to the latest version of `@remix-pwa/sw` from previous versions.",
+            "section": "Introduction",
+            "slug": "/sw/upgrade-guide",
+            "position": 3
+          }
+        ]
+      },
+      {
+        "name": "Guides",
+        "position": 2,
+        "children": []
+      },
+      {
+        "name": "Hooks",
+        "position": 3,
+        "children": [
+          {
+            "title": "useSWEEffect()",
+            "description": "A hook to monitor and handle navigation events in your Remix application.",
+            "section": "Hooks",
+            "slug": "/sw/use-swe-effect",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "API Reference",
+        "position": 4,
+        "children": []
+      },
+      {
+        "name": "Examples",
+        "position": 5,
+        "children": []
+      },
+      {
+        "name": "Contributing",
+        "position": 6,
+        "children": []
+      }
+    ]
+  },
+  {
+    "slug": "push",
+    "children": [
+      {
+        "name": "Introduction",
+        "position": 1,
+        "children": [
+          {
+            "title": "Introduction",
+            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "section": "Introduction",
+            "slug": "/push/introduction",
+            "position": 1
+          },
+          {
+            "title": "Introduction",
+            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "section": "Introduction",
+            "slug": "/client/introduction",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "Guides",
+        "position": 2,
+        "children": []
+      },
+      {
+        "name": "Packages",
+        "position": 3,
+        "children": []
+      },
+      {
+        "name": "API Reference",
+        "position": 4,
+        "children": []
+      },
+      {
+        "name": "Examples",
+        "position": 5,
+        "children": []
+      },
+      {
+        "name": "Community",
+        "position": 6,
+        "children": []
+      }
+    ]
+  },
+  {
+    "slug": "client",
+    "children": [
+      {
+        "name": "Introduction",
+        "position": 1,
+        "children": []
+      },
+      {
+        "name": "Guides",
+        "position": 2,
+        "children": []
+      },
+      {
+        "name": "Packages",
+        "position": 3,
+        "children": []
+      },
+      {
+        "name": "API Reference",
+        "position": 4,
+        "children": []
+      },
+      {
+        "name": "Examples",
+        "position": 5,
+        "children": []
+      },
+      {
+        "name": "Community",
+        "position": 6,
+        "children": []
+      }
+    ]
+  }
+]
