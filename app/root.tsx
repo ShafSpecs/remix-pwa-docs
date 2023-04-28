@@ -58,8 +58,13 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const meta = await getPostMetaData();
+  let meta = await getPostMetaData();
   const theme = await GetTheme(request);
+
+  // When reading from file system, `meta` is returned as a string,
+  // so we need to parse it into an object.
+  if (meta && typeof meta === "string") meta = JSON.parse(meta);
+
   // can add session theme data here if we want to store that. Otherwise, just using the regular script tag in the document works.
   if (meta)
     return typedjson(
