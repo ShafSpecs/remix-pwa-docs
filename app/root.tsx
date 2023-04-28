@@ -318,7 +318,7 @@ export default function App() {
                               `
                           }
                           value={pkg}
-                          onClick={() => navigate(`/${pkg.slug === "pwa" ? "" : pkg.slug + "/introduction"}`)}
+                          onClick={() => navigate(`/${pkg.slug}`)}
                         >
                           {({ selected }) => (
                             <>
