@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, type ReactNode } from "react";
+import { useState, useEffect, Fragment, type ReactNode, useReducer } from "react";
 import {
   Links,
   LiveReload,
@@ -29,8 +29,18 @@ import styles from "./styles/app.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
 import { GetTheme } from "./session.server";
+import RootReducer from "./rootReducer";
 
 let isMount = true;
+
+export type PrevOrNextLink = {
+  slug: string;
+  title: string;
+} | null;
+
+export type UpdateLinks = { prev: PrevOrNextLink; next: PrevOrNextLink };
+
+export type RootOutletContext = { prev: PrevOrNextLink; next: PrevOrNextLink };
 
 const packages = [
   { name: "remix-pwa", slug: "pwa", comingSoon: false },
@@ -51,10 +61,9 @@ export const loader = async ({ request }: LoaderArgs) => {
   let meta = await getPostMetaData();
   const theme = await GetTheme(request);
 
-  // When reading from file system, `meta` is returned as a string, 
+  // When reading from file system, `meta` is returned as a string,
   // so we need to parse it into an object.
-  if (meta && typeof meta === "string")
-    meta = JSON.parse(meta);
+  if (meta && typeof meta === "string") meta = JSON.parse(meta);
 
   // can add session theme data here if we want to store that. Otherwise, just using the regular script tag in the document works.
   if (meta)
@@ -139,15 +148,17 @@ export default function App() {
   let location = useLocation();
   let matches = useMatches();
   const navigate = useNavigate();
-  
+  // mainly using a reducer here to minimize state updates. Probably why we previously used an tuple of [prev,next] instead.
+  const [{ prev, next }, dispatch] = useReducer(RootReducer, { prev: null, next: null });
+
   const [scrollTop, setScrollTop] = useState(0);
-  const [next, setNext] = useState<any[]>([null, null]);
 
   const onScroll = (e: any): void => {
     setScrollTop(e.target.documentElement.scrollTop);
   };
 
   const [selected, setSelected] = useState(packages[0]);
+  console.log(selected);
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
@@ -166,7 +177,7 @@ export default function App() {
   }
 
   // Todo
-  const getPreviousAndNextRoute = () => {
+  const getPreviousAndNextRoute = (): UpdateLinks => {
     //const currentRoute = location.pathname;
     //@ts-ignore
     // let routes = [];
@@ -193,7 +204,7 @@ export default function App() {
     // }
 
     // return [prevRoute, nextRoute];
-    return [undefined, undefined];
+    return { prev: null, next: null };
   };
 
   useEffect(() => {
@@ -247,20 +258,17 @@ export default function App() {
   }, [location, matches]);
 
   useEffect(() => {
-    setNext(getPreviousAndNextRoute());
+    dispatch({ type: "updateLinks", payload: getPreviousAndNextRoute() });
 
     if (location.pathname.includes("/pwa/") || location.pathname === "/") {
       setSelected(packages[0]);
     }
-
     if (location.pathname.includes("/sw/")) {
       setSelected(packages[1]);
     }
-
     if (location.pathname.includes("/push/")) {
       setSelected(packages[2]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, selected]);
 
   return (
@@ -369,7 +377,7 @@ export default function App() {
             </nav>
           </div>
         </div>
-        <Outlet context={[next]} />
+        <Outlet context={{ prev, next }} />
       </div>
     </MainDocumentWithProviders>
   );
