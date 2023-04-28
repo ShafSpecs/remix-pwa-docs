@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type { ReactNode } from "react";
+import type { Dispatch, ReactNode } from "react";
 import { useHydrated } from "remix-utils";
 
 // Really great article on managing light and dark themes with SSR and hydration. https://www.mattstobbs.com/remix-dark-mode/
@@ -13,17 +13,14 @@ const getPreferredTheme = () => (window.matchMedia(prefersDarkMQ).matches ? "dar
 const clientThemeCode = `
 ;(() => {
   const cl = document.documentElement.classList;
-  let theme = localStorage.getItem('theme');
-  if(theme === "dark" || theme === "light"){
-    cl.add(theme);
-  }
-  theme = window.matchMedia(${JSON.stringify(prefersDarkMQ)}).matches
+  const theme = window.matchMedia(${JSON.stringify(prefersDarkMQ)}).matches
     ? 'dark'
     : 'light';
   const themeAlreadyApplied = cl.contains('light') || cl.contains('dark');
   if (themeAlreadyApplied) {
-    // do nothing, we had it in local storage alread.
+    // do nothing
   } else {
+    console.log('Applying theme', theme)
     cl.add(theme);
   }
 })();
@@ -38,29 +35,21 @@ const clientThemeCode = `
  * @returns
  */
 export function StopFOUC({ ssr_theme }: { ssr_theme?: boolean }) {
-  return !ssr_theme ? <script dangerouslySetInnerHTML={{ __html: clientThemeCode }} /> : <></>;
+  return ssr_theme ? <script dangerouslySetInnerHTML={{ __html: clientThemeCode }} /> : <></>;
 }
 
-type ThemeContextType = [Theme | null, (value: Theme | null) => void];
+type ThemeContextType = [Theme | null, Dispatch<React.SetStateAction<Theme | null>>];
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 function ThemeProvider({ children }: { children: ReactNode }) {
   const hydrated = useHydrated();
-  const [theme, setThemeState] = useState<Theme | null>(() => {
+  const [theme, setTheme] = useState<Theme | null>(() => {
     if (!hydrated) {
       return null;
     }
-
     return getPreferredTheme();
   });
-
-  const setTheme = (value: Theme | null) => {
-    setThemeState(value);
-    if (hydrated) {
-      localStorage.setItem("theme", value || "");
-    }
-  };
 
   return <ThemeContext.Provider value={[theme, setTheme]}>{children}</ThemeContext.Provider>;
 }

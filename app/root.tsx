@@ -29,6 +29,7 @@ import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
+import { GetTheme } from "./session.server";
 
 let isMount = true;
 
@@ -47,12 +48,13 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader = async (_: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const meta = await getPostMetaData();
+  const theme = await GetTheme(request);
   // can add session theme data here if we want to store that. Otherwise, just using the regular script tag in the document works.
   if (meta)
     return typedjson(
-      { meta },
+      { meta, theme },
       {
         headers: {
           "Cache-Control": "max-age=0, s-maxage=86400"
@@ -127,7 +129,7 @@ const MainDocumentWithProviders = ({ ssr_theme, children }: { ssr_theme: Theme |
 };
 
 export default function App() {
-  const { meta } = useTypedLoaderData<typeof loader>();
+  const { meta, theme } = useTypedLoaderData<typeof loader>();
   let location = useLocation();
   let matches = useMatches();
   const navigate = useNavigate();
@@ -254,7 +256,7 @@ export default function App() {
   }, [location, selected]);
 
   return (
-    <MainDocumentWithProviders ssr_theme={null}>
+    <MainDocumentWithProviders ssr_theme={theme}>
       <ClientOnly
         fallback={<></>}
         children={
