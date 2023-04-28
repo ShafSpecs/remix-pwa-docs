@@ -30,6 +30,11 @@ const MetaDataObjectSchema = z.object({
   children: z.array(FrontMatterTypingsSchema)
 });
 
+const LocalMetaDataFileSchema = z.object({
+  slug: z.string(),
+  children: z.array(MetaDataObjectSchema)
+});
+
 export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
   /**
    * If we are in development mode, we can just read the file from the file system.
@@ -78,8 +83,9 @@ export const getPostMetaData = async () => {
     if (!content) {
       return null;
     }
+    const parsed_content = JSON.parse(await content);
 
-    return await content;
+    return z.array(LocalMetaDataFileSchema).parse(parsed_content);
   }
 
   const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
