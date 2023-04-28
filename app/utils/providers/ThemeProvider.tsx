@@ -13,6 +13,10 @@ const getPreferredTheme = () => (window.matchMedia(prefersDarkMQ).matches ? "dar
 const clientThemeCode = `
 ;(() => {
   const cl = document.documentElement.classList;
+  const themeAlreadyApplied = cl.contains('light') || cl.contains('dark');
+  if (themeAlreadyApplied) {
+    // should return?
+  }
   let theme = localStorage.getItem('theme');
   if(theme === "dark" || theme === "light"){
     cl.add(theme);
@@ -20,9 +24,8 @@ const clientThemeCode = `
   theme = window.matchMedia(${JSON.stringify(prefersDarkMQ)}).matches
     ? 'dark'
     : 'light';
-  const themeAlreadyApplied = cl.contains('light') || cl.contains('dark');
   if (themeAlreadyApplied) {
-    // do nothing, we had it in local storage alread.
+    // do nothing, we had it in local storage already.
   } else {
     cl.add(theme);
   }
@@ -67,9 +70,12 @@ function ThemeProvider({ children }: { children: ReactNode }) {
 
 function useTheme() {
   const context = useContext(ThemeContext);
+  console.log(context);
+
   if (context === undefined) {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
+
   return context;
 }
 
