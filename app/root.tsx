@@ -48,7 +48,7 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async (_: LoaderArgs) => {
-  const meta: Awaited<ReturnType<typeof getPostMetaData>> = []; //await getPostMetaData();
+  const meta = await getPostMetaData();
   // can add session theme data here if we want to store that. Otherwise, just using the regular script tag in the document works.
   if (meta)
     return typedjson(
