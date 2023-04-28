@@ -11,24 +11,23 @@ import {
   useMatches,
   useNavigate
 } from "@remix-run/react";
+import { getPostMetaData } from "./utils/server/github.server";
+import { ClientOnly } from "remix-utils";
+import { Listbox, Transition } from "@headlessui/react";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import Hero from "./components/hero";
 import Header from "./components/header";
-import { type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
+import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
+
+import type { LinksFunction } from "@remix-run/node";
+import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 
 import styles from "./styles/app.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
-
-import type { LinksFunction } from "@remix-run/node";
-import { getPostMetaData } from "./utils/server/github.server";
-import type { FrontMatterTypings } from "./types/mdx";
-import { ClientOnly } from "remix-utils";
-import { Listbox, Transition } from "@headlessui/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
-import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
-import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
 
 let isMount = true;
 
@@ -87,6 +86,7 @@ function classNames(...classes: string[]) {
 const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme: Theme | null }) => {
   const [theme] = useTheme();
   const [closed] = useSidebar();
+
   return (
     <html lang="en" className={`antialiased [font-feature-settings:'ss01'] ${theme || ""}`}>
       <head>
@@ -95,9 +95,8 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
-        className={`${
-          !closed && "overflow-hidden"
-        } bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
+        className={`${!closed && "overflow-hidden"
+          } bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
       >
         {children}
         <ScrollRestoration />
@@ -160,30 +159,31 @@ export default function App() {
   const getPreviousAndNextRoute = () => {
     const currentRoute = location.pathname;
     //@ts-ignore
-    let routes = [];
+    // let routes = [];
 
-    // if (location.pathname === "/" || location.pathname.includes("/pwa/")) {
-    //   routes = meta[0].children.map((meta: any) => meta.map((route: any) => route.slug));
+    // // if (location.pathname === "/" || location.pathname.includes("/pwa/")) {
+    // //   routes = meta[0].children.map((meta: any) => meta.map((route: any) => route.slug));
+    // // }
+
+    // //@ts-ignore
+    // const childrenArr = [].concat(...routes);
+
+    // //@ts-ignore
+    // const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
+
+    // let nextRoute: FrontMatterTypings | null = null;
+    // let prevRoute: FrontMatterTypings | null = null;
+
+    // if (currentRouteIndex < childrenArr.length - 1) {
+    //   nextRoute = childrenArr[currentRouteIndex + 1];
     // }
 
-    //@ts-ignore
-    const childrenArr = [].concat(...routes);
+    // if (currentRouteIndex > 0) {
+    //   prevRoute = childrenArr[currentRouteIndex - 1];
+    // }
 
-    //@ts-ignore
-    const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
-
-    let nextRoute: FrontMatterTypings | null = null;
-    let prevRoute: FrontMatterTypings | null = null;
-
-    if (currentRouteIndex < childrenArr.length - 1) {
-      nextRoute = childrenArr[currentRouteIndex + 1];
-    }
-
-    if (currentRouteIndex > 0) {
-      prevRoute = childrenArr[currentRouteIndex - 1];
-    }
-
-    return [prevRoute, nextRoute];
+    // return [prevRoute, nextRoute];
+    return [undefined, undefined];
   };
 
   useEffect(() => {
@@ -291,11 +291,10 @@ export default function App() {
                           disabled={pkg.comingSoon}
                           className={({ active }) =>
                             `relative select-none py-2 pl-10 pr-4 text-sm 
-                              ${
-                                pkg.comingSoon
-                                  ? "text-sm cursor-not-allowed bg-slate-200 text-gray-800 dark:bg-slate-700 dark:text-gray-200"
-                                  : "cursor-pointer xl:text-base"
-                              } 
+                              ${pkg.comingSoon
+                              ? "text-sm cursor-not-allowed bg-slate-200 text-gray-800 dark:bg-slate-700 dark:text-gray-200"
+                              : "cursor-pointer xl:text-base"
+                            } 
                               ${active ? "bg-sky-100 text-sky-900" : "text-gray-900 dark:text-gray-200"}
                               `
                           }
@@ -324,6 +323,7 @@ export default function App() {
                 </div>
               </Listbox>
               <ul className="space-y-9">
+                {/* @ts-ignore */}
                 {meta[packages.indexOf(selected)].children.map((el: any) => {
                   return (
                     <li key={el.name}>
