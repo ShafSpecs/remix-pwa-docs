@@ -3,6 +3,8 @@ import { Repo } from "../handlers/github-api";
 import { readFile } from "fs-extra";
 import { resolve } from "path"
 
+declare let reuestCount: number;
+
 const octokit = request.defaults({
   headers: {
     authorization: `token ${process.env.GITHUB_KEY}`
@@ -40,6 +42,28 @@ export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
 };
 
 export const getPostMetaData = async () => {
+  /**
+   * If we are in development mode, we can just read the file from the file system.
+   */
+  if (process.env.NODE_ENV === "development") {
+    /**
+     * Don't want to automate this part cause I don't feel like.
+     * 
+     * Before you run `npm run dev`, run `npm run generator` first. This keeps the post metadata up to date, 
+     * if you add a new post or delete, open another terminal and re-run. Then refresh your application to 
+     * get the latest metadata.
+     * 
+     * Todo: Generate metadata in development without the use of a github token.
+     */
+    const content = readFile(resolve(__dirname, '../', `posts/metadata.json`), "utf-8");
+
+    if (!content) {
+      return null;
+    }
+    
+    return content;
+  }
+
   const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: "posts/metadata.json",
