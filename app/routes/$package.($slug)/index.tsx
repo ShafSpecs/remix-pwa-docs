@@ -25,9 +25,9 @@ export const packages: Record<ValidPackages, { name: string; slug: string; comin
 
 export const loader = async ({ params }: LoaderArgs) => {
   const package_string = RequireParam(params, "package");
-  const slug = RequireParam(params, "slug");
+  const slug = params.slug;
   if (valid_packages.includes(package_string)) {
-    const doc = await getPostContent(slug, package_string);
+    const doc = await getPostContent(package_string, slug);
     if (!doc) {
       console.error(`Invalid Slug: ${slug}`);
       throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });

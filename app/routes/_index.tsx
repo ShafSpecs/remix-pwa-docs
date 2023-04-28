@@ -10,7 +10,7 @@ import { typedjson } from "remix-typedjson";
 import IndexComponent from "~/components/layout/Index";
 
 export const loader = async () => {
-  const doc: string | null = await getPostContent("intro", "pwa");
+  const doc: string | null = await getPostContent("pwa", "intro");
 
   if (doc === null) {
     throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });
