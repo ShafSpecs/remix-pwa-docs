@@ -4,8 +4,6 @@ import { readFile } from "fs-extra";
 import { resolve } from "path";
 import { z } from "zod";
 
-declare let reuestCount: number;
-
 const octokit = request.defaults({
   headers: {
     authorization: `token ${process.env.GITHUB_KEY}`
