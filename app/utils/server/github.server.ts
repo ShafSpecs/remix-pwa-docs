@@ -1,7 +1,8 @@
 import { request } from "@octokit/request";
 import { Repo } from "../handlers/github-api";
 import { readFile } from "fs-extra";
-import { resolve } from "path"
+import { resolve } from "path";
+import { z } from "zod";
 
 declare let reuestCount: number;
 
@@ -11,17 +12,37 @@ const octokit = request.defaults({
   }
 });
 
+const octokitWithDownloadUrl = z.object({
+  data: z.object({
+    download_url: z.string()
+  })
+});
+
+const FrontMatterTypingsSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  slug: z.string(),
+  section: z.string(),
+  position: z.number()
+});
+
+const MetaDataObjectSchema = z.object({
+  name: z.string(),
+  position: z.number(),
+  children: z.array(FrontMatterTypingsSchema)
+});
+
 export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
   /**
    * If we are in development mode, we can just read the file from the file system.
    */
   if (process.env.NODE_ENV === "development") {
-    const content = readFile(resolve(__dirname, '../', `posts/${preSlug}/${slug}.mdx`), "utf-8");
+    const content = readFile(resolve(__dirname, "../", `posts/${preSlug}/${slug}.mdx`), "utf-8");
 
     if (!content) {
       return null;
     }
-    
+
     return content;
   }
 
@@ -34,9 +55,8 @@ export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
   if (postData.status !== 200) {
     return null;
   }
-
-  //@ts-ignore
-  const content = await fetch(postData.data.download_url).then((res) => res.text());
+  const download_url_obj = octokitWithDownloadUrl.parse(postData);
+  const content = await fetch(download_url_obj.data.download_url).then((res) => res.text());
 
   return content;
 };
@@ -69,15 +89,16 @@ export const getPostMetaData = async () => {
     path: "posts/metadata.json",
     ref: "control"
   });
-
-  //@ts-ignore
-  const content = await fetch(meta.data.download_url)
+  const download_url_obj = octokitWithDownloadUrl.parse(meta);
+  const content = await fetch(download_url_obj.data.download_url)
     .then((res) => res.text())
-    .catch((err) => { return null });
+    .catch((err) => {
+      return null;
+    });
 
   if (!content) {
     return null;
   }
-  
-  return JSON.parse(content);
+  const data = z.array(MetaDataObjectSchema).parse(JSON.parse(content));
+  return data;
 };
