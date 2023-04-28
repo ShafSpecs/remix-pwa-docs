@@ -1,6 +1,5 @@
 import { createContext, useContext, useState } from "react";
 import type { Dispatch, ReactNode } from "react";
-import { useHydrated } from "remix-utils";
 
 // Really great article on managing light and dark themes with SSR and hydration. https://www.mattstobbs.com/remix-dark-mode/
 // Most if not all of this is from that article. Changed from a Theme enum because enums are terrible in Typescript.
@@ -16,11 +15,10 @@ const clientThemeCode = `
   const theme = window.matchMedia(${JSON.stringify(prefersDarkMQ)}).matches
     ? 'dark'
     : 'light';
-  const themeAlreadyApplied = cl.contains('light') || cl.contains('dark');
+  const themeAlreadyApplied = cl.contains(theme);
   if (themeAlreadyApplied) {
     // do nothing
   } else {
-    console.log('Applying theme', theme)
     cl.add(theme);
   }
 })();
@@ -35,17 +33,17 @@ const clientThemeCode = `
  * @returns
  */
 export function StopFOUC({ ssr_theme }: { ssr_theme?: boolean }) {
-  return ssr_theme ? <script dangerouslySetInnerHTML={{ __html: clientThemeCode }} /> : <></>;
+  return !ssr_theme ? <script dangerouslySetInnerHTML={{ __html: clientThemeCode }} /> : <></>;
 }
 
 type ThemeContextType = [Theme | null, Dispatch<React.SetStateAction<Theme | null>>];
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-function ThemeProvider({ children }: { children: ReactNode }) {
-  const hydrated = useHydrated();
+function ThemeProvider({ children, ssr_theme }: { children: ReactNode; ssr_theme: Theme | null }) {
   const [theme, setTheme] = useState<Theme | null>(() => {
-    if (!hydrated) {
+    if (ssr_theme) return ssr_theme;
+    if (typeof window === "undefined") {
       return null;
     }
     return getPreferredTheme();
@@ -56,9 +54,11 @@ function ThemeProvider({ children }: { children: ReactNode }) {
 
 function useTheme() {
   const context = useContext(ThemeContext);
+
   if (context === undefined) {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
+
   return context;
 }
 

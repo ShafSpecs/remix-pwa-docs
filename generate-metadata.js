@@ -1,5 +1,7 @@
 const { request } = require("@octokit/request");
 const grayMatter = require("gray-matter");
+const fs = require("fs");
+const path = require("path");
 require('dotenv').config();
 
 const octokit = request.defaults({
@@ -9,6 +11,21 @@ const octokit = request.defaults({
 })
 
 const getPWAPostMeta = async () => {
+  if (process.env.NODE_ENV === "development") {
+    const pwaPath = path.join(__dirname, "posts/pwa");
+    let dirData = [];
+
+    fs.readdirSync(pwaPath).forEach(file => {
+      const content = fs.readFileSync(path.join(pwaPath, file), "utf8");
+      const { data } = grayMatter(content);
+      dirData.push(data);
+      return data;
+    })
+
+    return dirData;
+  }
+
+
   const posts = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
@@ -26,6 +43,20 @@ const getPWAPostMeta = async () => {
 }
 
 const getPushPostMeta = async () => {
+  if (process.env.NODE_ENV === "development") {
+    const pwaPath = path.join(__dirname, "posts/push");
+    let dirData = [];
+
+    fs.readdirSync(pwaPath).forEach(file => {
+      const content = fs.readFileSync(path.join(pwaPath, file), "utf8");
+      const { data } = grayMatter(content);
+      dirData.push(data);
+      return data;
+    })
+
+    return dirData;
+  }
+
   const posts = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
@@ -43,6 +74,20 @@ const getPushPostMeta = async () => {
 }
 
 const getSWPostMeta = async () => {
+  if (process.env.NODE_ENV === "development") {
+    const pwaPath = path.join(__dirname, "posts/sw");
+    let dirData = [];
+
+    fs.readdirSync(pwaPath).forEach(file => {
+      const content = fs.readFileSync(path.join(pwaPath, file), "utf8");
+      const { data } = grayMatter(content);
+      dirData.push(data);
+      return data;
+    })
+
+    return dirData;
+  }
+
   const posts = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
@@ -60,6 +105,20 @@ const getSWPostMeta = async () => {
 }
 
 const getClientPostMeta = async () => {
+  if (process.env.NODE_ENV === "development") {
+    const pwaPath = path.join(__dirname, "posts/client");
+    let dirData = [];
+
+    fs.readdirSync(pwaPath).forEach(file => {
+      const content = fs.readFileSync(path.join(pwaPath, file), "utf8");
+      const { data } = grayMatter(content);
+      dirData.push(data);
+      return data;
+    })
+
+    return dirData;
+  }
+
   const posts = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
@@ -136,7 +195,11 @@ const metaData = async () => {
   const metaPush = await getPushPostMeta();
   const metaSW = await getSWPostMeta();
   const metaClient = await getClientPostMeta();
-  const sha = await getMetaDataSHA();
+
+  let sha;
+
+  if (process.env.NODE_ENV !== "development")
+    sha = await getMetaDataSHA();
 
   metaPWA.forEach((m) => {
     const section = metadata[0].children.find(e => e.name === m.section);
@@ -212,15 +275,18 @@ const metaData = async () => {
 
   const content = Buffer.from(JSON.stringify(metadata, null, 2)).toString("base64");
 
-  await octokit('PUT /repos/{owner}/{repo}/contents/{path}', {
-    owner: "remix-pwa",
-    repo: "remix-pwa-docs",
-    path: "posts/metadata.json",
-    branch: "control",
-    sha,
-    message: 'chore: Updated metadata.json',
-    content: content,
-  })
+  if (process.env.NODE_ENV !== "development")
+    await octokit('PUT /repos/{owner}/{repo}/contents/{path}', {
+      owner: "remix-pwa",
+      repo: "remix-pwa-docs",
+      path: "posts/metadata.json",
+      branch: "control",
+      sha,
+      message: 'chore: Updated metadata.json',
+      content: content,
+    })
+  else
+    fs.writeFileSync(path.join(__dirname, "posts", "metadata.json"), JSON.stringify(metadata, null, 2).toString(), "utf-8");
 }
 
 metaData();

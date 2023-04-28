@@ -11,24 +11,23 @@ import {
   useMatches,
   useNavigate
 } from "@remix-run/react";
+import { getPostMetaData } from "./utils/server/github.server";
+import { ClientOnly } from "remix-utils";
+import { Listbox, Transition } from "@headlessui/react";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import Hero from "./components/hero";
 import Header from "./components/header";
-import { type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
+import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
+
+import type { LinksFunction } from "@remix-run/node";
+import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 
 import styles from "./styles/app.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
-
-import type { LinksFunction } from "@remix-run/node";
-import { getPostMetaData } from "./utils/server/github.server";
-import type { FrontMatterTypings } from "./types/mdx";
-import { ClientOnly } from "remix-utils";
-import { Listbox, Transition } from "@headlessui/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
-import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
-import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
 import { GetTheme } from "./session.server";
 
 let isMount = true;
@@ -89,6 +88,7 @@ function classNames(...classes: string[]) {
 const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme: Theme | null }) => {
   const [theme] = useTheme();
   const [closed] = useSidebar();
+
   return (
     <html lang="en" className={`antialiased [font-feature-settings:'ss01'] ${theme || ""}`}>
       <head>
@@ -120,7 +120,7 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
  */
 const MainDocumentWithProviders = ({ ssr_theme, children }: { ssr_theme: Theme | null; children: ReactNode }) => {
   return (
-    <ThemeProvider>
+    <ThemeProvider ssr_theme={ssr_theme}>
       <SidebarProvider>
         <MainDocument ssr_theme={ssr_theme}>{children}</MainDocument>
       </SidebarProvider>
@@ -151,41 +151,43 @@ export default function App() {
   }, []);
 
   function isPromise(p: any): boolean {
-    if (typeof p === "object" && typeof p.then === "function") {
-      return true;
-    }
+    if (p)
+      if (typeof p === "object" && typeof p.then === "function") {
+        return true;
+      }
 
     return false;
   }
 
   // Todo
   const getPreviousAndNextRoute = () => {
-    const currentRoute = location.pathname;
+    //const currentRoute = location.pathname;
     //@ts-ignore
-    let routes = [];
+    // let routes = [];
 
-    // if (location.pathname === "/" || location.pathname.includes("/pwa/")) {
-    //   routes = meta[0].children.map((meta: any) => meta.map((route: any) => route.slug));
+    // // if (location.pathname === "/" || location.pathname.includes("/pwa/")) {
+    // //   routes = meta[0].children.map((meta: any) => meta.map((route: any) => route.slug));
+    // // }
+
+    // //@ts-ignore
+    // const childrenArr = [].concat(...routes);
+
+    // //@ts-ignore
+    // const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
+
+    // let nextRoute: FrontMatterTypings | null = null;
+    // let prevRoute: FrontMatterTypings | null = null;
+
+    // if (currentRouteIndex < childrenArr.length - 1) {
+    //   nextRoute = childrenArr[currentRouteIndex + 1];
     // }
 
-    //@ts-ignore
-    const childrenArr = [].concat(...routes);
+    // if (currentRouteIndex > 0) {
+    //   prevRoute = childrenArr[currentRouteIndex - 1];
+    // }
 
-    //@ts-ignore
-    const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
-
-    let nextRoute: FrontMatterTypings | null = null;
-    let prevRoute: FrontMatterTypings | null = null;
-
-    if (currentRouteIndex < childrenArr.length - 1) {
-      nextRoute = childrenArr[currentRouteIndex + 1];
-    }
-
-    if (currentRouteIndex > 0) {
-      prevRoute = childrenArr[currentRouteIndex - 1];
-    }
-
-    return [prevRoute, nextRoute];
+    // return [prevRoute, nextRoute];
+    return [undefined, undefined];
   };
 
   useEffect(() => {
@@ -326,35 +328,37 @@ export default function App() {
                 </div>
               </Listbox>
               <ul className="space-y-9">
-                {meta[packages.indexOf(selected)].children.map((el: any) => {
-                  return (
-                    <li key={el.name}>
-                      <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
-                      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                        {el.children.map((sub: any) => {
-                          return (
-                            <li className="relative" key={sub.slug}>
-                              <NavLink prefetch="render" to={sub.slug} end={true}>
-                                {({ isActive }) => (
-                                  <span
-                                    className={classNames(
-                                      "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
-                                      isActive
-                                        ? "font-semibold text-sky-500 before:bg-sky-500"
-                                        : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                {Array.isArray(meta)
+                  ? meta[packages.indexOf(selected)].children.map((el: any) => {
+                      return (
+                        <li key={el.name}>
+                          <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
+                          <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                            {el.children.map((sub: any) => {
+                              return (
+                                <li className="relative" key={sub.slug}>
+                                  <NavLink prefetch="render" to={sub.slug} end={true}>
+                                    {({ isActive }) => (
+                                      <span
+                                        className={classNames(
+                                          "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
+                                          isActive
+                                            ? "font-semibold text-sky-500 before:bg-sky-500"
+                                            : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                                        )}
+                                      >
+                                        {sub.title}
+                                      </span>
                                     )}
-                                  >
-                                    {sub.title}
-                                  </span>
-                                )}
-                              </NavLink>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </li>
-                  );
-                })}
+                                  </NavLink>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </li>
+                      );
+                    })
+                  : meta}
               </ul>
             </nav>
           </div>
