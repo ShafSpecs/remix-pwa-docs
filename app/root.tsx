@@ -30,6 +30,7 @@ import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
 import { GetTheme } from "./session.server";
 import RootReducer from "./rootReducer";
+import { packages, valid_packages } from "./routes/$package.($slug)";
 
 let isMount = true;
 
@@ -41,13 +42,6 @@ export type PrevOrNextLink = {
 export type UpdateLinks = { prev: PrevOrNextLink; next: PrevOrNextLink };
 
 export type RootOutletContext = { prev: PrevOrNextLink; next: PrevOrNextLink };
-
-const packages = [
-  { name: "remix-pwa", slug: "pwa", comingSoon: false },
-  { name: "@remix-pwa/sw", slug: "sw", comingSoon: false },
-  { name: "@remix-pwa/push", slug: "push", comingSoon: true },
-  { name: "@remix-pwa/client", slug: "client", comingSoon: true }
-];
 
 export const links: LinksFunction = () => {
   return [
@@ -149,16 +143,17 @@ export default function App() {
   let matches = useMatches();
   const navigate = useNavigate();
   // mainly using a reducer here to minimize state updates. Probably why we previously used an tuple of [prev,next] instead.
-  const [{ prev, next }, dispatch] = useReducer(RootReducer, { prev: null, next: null });
+  const [{ prev, next, selected }, dispatch] = useReducer(RootReducer, {
+    prev: null,
+    next: null,
+    selected: packages.pwa
+  });
 
   const [scrollTop, setScrollTop] = useState(0);
 
   const onScroll = (e: any): void => {
     setScrollTop(e.target.documentElement.scrollTop);
   };
-
-  const [selected, setSelected] = useState(packages[0]);
-  console.log(selected);
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
@@ -258,16 +253,10 @@ export default function App() {
   }, [location, matches]);
 
   useEffect(() => {
-    dispatch({ type: "updateLinks", payload: getPreviousAndNextRoute() });
-
-    if (location.pathname.includes("/pwa/") || location.pathname === "/") {
-      setSelected(packages[0]);
-    }
-    if (location.pathname.includes("/sw/")) {
-      setSelected(packages[1]);
-    }
-    if (location.pathname.includes("/push/")) {
-      setSelected(packages[2]);
+    const split = location.pathname.split("/");
+    const package_route = split[1];
+    if (valid_packages.includes(package_route)) {
+      dispatch({ type: "updateLinks", payload: { ...getPreviousAndNextRoute(), selected: packages[package_route] } });
     }
   }, [location, selected]);
 
@@ -276,11 +265,11 @@ export default function App() {
       <ClientOnly
         fallback={<></>}
         children={
-          () => <Header scrollTop={scrollTop} selected={selected} setSelected={setSelected} packages={packages} />
+          () => <Header scrollTop={scrollTop} selected={selected} packages={packages} />
           // Todo: Create a fallback component
         }
       />
-      {location.pathname == "/" && <Hero />}
+      {(location.pathname === "/" || location.pathname === "/pwa") && <Hero />}
       <div className="relative flex justify-center mx-auto max-w-[88rem] sm:px-2 lg:px-8 xl:px-12">
         <div className="hidden ml-5 lg:relative lg:block lg:flex-none">
           <div className="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden"></div>
@@ -288,7 +277,7 @@ export default function App() {
           <div className="absolute bottom-0 right-0 hidden w-px top-28 bg-slate-800 dark:block"></div>
           <div className="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-16 pl-0.5">
             <nav className="w-64 pr-8 text-base lg:text-sm xl:w-72 xl:pr-16">
-              <Listbox value={selected} onChange={setSelected}>
+              <Listbox value={selected}>
                 <div className="relative mt-1 mb-6">
                   <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left rounded-lg shadow-sm cursor-default shadow-gray-300 dark:shadow-gray-700 dark:text-white focus:outline-none focus-visible:border-sky-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-sky-300 sm:text-sm">
                     <span className="block truncate">{selected.name}</span>
@@ -303,7 +292,7 @@ export default function App() {
                     leaveTo="opacity-0"
                   >
                     <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-md dark:shadow-gray-700 dark:bg-slate-900 max-h-60 ring-1 ring-black dark:text-gray-100 ring-opacity-5 focus:outline-none sm:text-sm">
-                      {packages.map((pkg, packageIdx) => (
+                      {Object.values(packages).map((pkg, packageIdx) => (
                         <Listbox.Option
                           key={packageIdx}
                           disabled={pkg.comingSoon}
@@ -343,7 +332,7 @@ export default function App() {
               </Listbox>
               <ul className="space-y-9">
                 {Array.isArray(meta)
-                  ? meta[packages.indexOf(selected)].children.map((el: any) => {
+                  ? meta[selected.position].children.map((el: any) => {
                       return (
                         <li key={el.name}>
                           <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>

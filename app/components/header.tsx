@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { SunIcon, MoonIcon } from "@heroicons/react/20/solid";
 import { Fragment, useRef, useEffect } from "react";
 import { ClientOnly } from "remix-utils";
-import { Link, NavLink, useLocation, useFetcher } from "@remix-run/react";
+import { Link, NavLink, useLocation, useFetcher, useNavigate } from "@remix-run/react";
 import { useOnClickOutside, useWindowSize } from "usehooks-ts";
 import RemixLight from "./icons/RemixLight";
 import RemixDark from "./icons/RemixDark";
@@ -14,19 +14,20 @@ import { useTheme } from "~/utils/providers/ThemeProvider";
 import { useSidebar } from "~/utils/providers/SidebarProvider";
 import { useTypedLoaderData } from "remix-typedjson";
 import type { loader as RootLoader } from "~/root";
+import type { PackageData, ValidPackages } from "~/routes/$package.($slug)";
 
 type HeaderProps = {
   scrollTop: number;
-  selected: any;
-  setSelected: React.Dispatch<React.SetStateAction<any>>;
-  packages: any;
+  selected: PackageData;
+  packages: Record<ValidPackages, PackageData>;
 };
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default ({ scrollTop, selected, setSelected, packages }: HeaderProps) => {
+export default ({ scrollTop, selected, packages }: HeaderProps) => {
+  const navigate = useNavigate();
   const { meta: list } = useTypedLoaderData<typeof RootLoader>();
   const fetcher = useFetcher();
   const [theme, setTheme] = useTheme();
@@ -96,7 +97,7 @@ export default ({ scrollTop, selected, setSelected, packages }: HeaderProps) => 
                   </Link>
                 </div>
                 <nav className="px-1 mt-5 text-base lg:text-sm">
-                  <Listbox value={selected} onChange={setSelected}>
+                  <Listbox value={selected}>
                     <div className="relative mt-1 mb-6">
                       <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left rounded-lg shadow-sm cursor-default shadow-gray-300 dark:shadow-gray-700 dark:text-white focus:outline-none focus-visible:border-sky-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-sky-300 sm:text-sm">
                         <span className="block truncate">{selected.name}</span>
@@ -111,7 +112,7 @@ export default ({ scrollTop, selected, setSelected, packages }: HeaderProps) => 
                         leaveTo="opacity-0"
                       >
                         <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-md dark:shadow-gray-700 dark:bg-slate-900 max-h-60 ring-1 ring-black dark:text-gray-100 ring-opacity-5 focus:outline-none sm:text-sm">
-                          {packages.map((pkg: any, packageIdx: number) => (
+                          {Object.values(packages).map((pkg, packageIdx: number) => (
                             <Listbox.Option
                               key={packageIdx}
                               disabled={pkg.comingSoon}
@@ -120,6 +121,7 @@ export default ({ scrollTop, selected, setSelected, packages }: HeaderProps) => 
                                   active ? "bg-sky-100 text-sky-900" : "text-gray-900 dark:text-gray-200"
                                 }`
                               }
+                              onClick={() => navigate(`/${pkg.slug}`)}
                               value={pkg}
                             >
                               {({ selected }) => (
@@ -145,7 +147,7 @@ export default ({ scrollTop, selected, setSelected, packages }: HeaderProps) => 
                   </Listbox>
                   <ul className="space-y-9">
                     {Array.isArray(list)
-                      ? list[packages.indexOf(selected)].children.map((e: any) => {
+                      ? list[selected.position].children.map((e: any) => {
                           return (
                             <li key={e.name}>
                               <h2 className="font-medium font-display text-slate-900 dark:text-white">{e.name}</h2>
