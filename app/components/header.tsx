@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { SunIcon, MoonIcon } from "@heroicons/react/20/solid";
 import { Fragment, useRef, useEffect } from "react";
 import { ClientOnly } from "remix-utils";
-import { Link, NavLink, useLocation } from "@remix-run/react";
+import { Link, NavLink, useLocation, useFetcher } from "@remix-run/react";
 import { useOnClickOutside, useWindowSize } from "usehooks-ts";
 import RemixLight from "./icons/RemixLight";
 import RemixDark from "./icons/RemixDark";
@@ -28,6 +28,7 @@ function classNames(...classes: string[]) {
 
 export default ({ scrollTop, selected, setSelected, packages }: HeaderProps) => {
   const { meta: list } = useTypedLoaderData<typeof RootLoader>();
+  const fetcher = useFetcher();
   const [theme, setTheme] = useTheme();
   const [closed, setClosed] = useSidebar();
   const { width } = useWindowSize();
@@ -143,35 +144,37 @@ export default ({ scrollTop, selected, setSelected, packages }: HeaderProps) => 
                     </div>
                   </Listbox>
                   <ul className="space-y-9">
-                    {list[packages.indexOf(selected)].children.map((e: any) => {
-                      return (
-                        <li key={e.name}>
-                          <h2 className="font-medium font-display text-slate-900 dark:text-white">{e.name}</h2>
-                          <ul className="mt-4 space-y-3 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                            {e.children.map((item: any) => {
-                              return (
-                                <li className="relative" key={item.slug}>
-                                  <NavLink to={item.slug} end>
-                                    {({ isActive }) => (
-                                      <span
-                                        className={classNames(
-                                          "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
-                                          isActive
-                                            ? "font-semibold text-sky-500 before:bg-sky-500"
-                                            : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                    {Array.isArray(list)
+                      ? list[packages.indexOf(selected)].children.map((e: any) => {
+                          return (
+                            <li key={e.name}>
+                              <h2 className="font-medium font-display text-slate-900 dark:text-white">{e.name}</h2>
+                              <ul className="mt-4 space-y-3 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                                {e.children.map((item: any) => {
+                                  return (
+                                    <li className="relative" key={item.slug}>
+                                      <NavLink to={item.slug} end>
+                                        {({ isActive }) => (
+                                          <span
+                                            className={classNames(
+                                              "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
+                                              isActive
+                                                ? "font-semibold text-sky-500 before:bg-sky-500"
+                                                : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                                            )}
+                                          >
+                                            {item.title}
+                                          </span>
                                         )}
-                                      >
-                                        {item.title}
-                                      </span>
-                                    )}
-                                  </NavLink>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </li>
-                      );
-                    })}
+                                      </NavLink>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </li>
+                          );
+                        })
+                      : list}
                   </ul>
                 </nav>
               </div>
@@ -230,8 +233,10 @@ export default ({ scrollTop, selected, setSelected, packages }: HeaderProps) => 
                       onClick={() => {
                         if (theme === "light") {
                           setTheme("dark");
+                          fetcher.submit({ theme: "dark" }, { method: "post", action: "/updateUserTheme" });
                         } else if (theme === "dark") {
                           setTheme("light");
+                          fetcher.submit({ theme: "light" }, { method: "post", action: "/updateUserTheme" });
                         }
                       }}
                     >

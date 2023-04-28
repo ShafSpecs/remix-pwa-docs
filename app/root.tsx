@@ -28,6 +28,7 @@ import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import styles from "./styles/app.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
+import { GetTheme } from "./session.server";
 
 let isMount = true;
 
@@ -46,12 +47,13 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader = async (_: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const meta = await getPostMetaData();
+  const theme = await GetTheme(request);
   // can add session theme data here if we want to store that. Otherwise, just using the regular script tag in the document works.
   if (meta)
     return typedjson(
-      { meta },
+      { meta, theme },
       {
         headers: {
           "Cache-Control": "max-age=0, s-maxage=86400"
@@ -95,8 +97,9 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
-        className={`${!closed && "overflow-hidden"
-          } bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
+        className={`${
+          !closed && "overflow-hidden"
+        } bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
       >
         {children}
         <ScrollRestoration />
@@ -117,7 +120,7 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
  */
 const MainDocumentWithProviders = ({ ssr_theme, children }: { ssr_theme: Theme | null; children: ReactNode }) => {
   return (
-    <ThemeProvider>
+    <ThemeProvider ssr_theme={ssr_theme}>
       <SidebarProvider>
         <MainDocument ssr_theme={ssr_theme}>{children}</MainDocument>
       </SidebarProvider>
@@ -126,7 +129,7 @@ const MainDocumentWithProviders = ({ ssr_theme, children }: { ssr_theme: Theme |
 };
 
 export default function App() {
-  const { meta } = useTypedLoaderData<typeof loader>();
+  const { meta, theme } = useTypedLoaderData<typeof loader>();
   let location = useLocation();
   let matches = useMatches();
   const navigate = useNavigate();
@@ -148,16 +151,17 @@ export default function App() {
   }, []);
 
   function isPromise(p: any): boolean {
-    if (typeof p === "object" && typeof p.then === "function") {
-      return true;
-    }
+    if (p)
+      if (typeof p === "object" && typeof p.then === "function") {
+        return true;
+      }
 
     return false;
   }
 
   // Todo
   const getPreviousAndNextRoute = () => {
-    const currentRoute = location.pathname;
+    //const currentRoute = location.pathname;
     //@ts-ignore
     // let routes = [];
 
@@ -254,7 +258,7 @@ export default function App() {
   }, [location, selected]);
 
   return (
-    <MainDocumentWithProviders ssr_theme={null}>
+    <MainDocumentWithProviders ssr_theme={theme}>
       <ClientOnly
         fallback={<></>}
         children={
@@ -291,10 +295,11 @@ export default function App() {
                           disabled={pkg.comingSoon}
                           className={({ active }) =>
                             `relative select-none py-2 pl-10 pr-4 text-sm 
-                              ${pkg.comingSoon
-                              ? "text-sm cursor-not-allowed bg-slate-200 text-gray-800 dark:bg-slate-700 dark:text-gray-200"
-                              : "cursor-pointer xl:text-base"
-                            } 
+                              ${
+                                pkg.comingSoon
+                                  ? "text-sm cursor-not-allowed bg-slate-200 text-gray-800 dark:bg-slate-700 dark:text-gray-200"
+                                  : "cursor-pointer xl:text-base"
+                              } 
                               ${active ? "bg-sky-100 text-sky-900" : "text-gray-900 dark:text-gray-200"}
                               `
                           }
@@ -323,36 +328,37 @@ export default function App() {
                 </div>
               </Listbox>
               <ul className="space-y-9">
-                {/* @ts-ignore */}
-                {meta[packages.indexOf(selected)].children.map((el: any) => {
-                  return (
-                    <li key={el.name}>
-                      <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
-                      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                        {el.children.map((sub: any) => {
-                          return (
-                            <li className="relative" key={sub.slug}>
-                              <NavLink prefetch="render" to={sub.slug} end={true}>
-                                {({ isActive }) => (
-                                  <span
-                                    className={classNames(
-                                      "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
-                                      isActive
-                                        ? "font-semibold text-sky-500 before:bg-sky-500"
-                                        : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                {Array.isArray(meta)
+                  ? meta[packages.indexOf(selected)].children.map((el: any) => {
+                      return (
+                        <li key={el.name}>
+                          <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
+                          <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                            {el.children.map((sub: any) => {
+                              return (
+                                <li className="relative" key={sub.slug}>
+                                  <NavLink prefetch="render" to={sub.slug} end={true}>
+                                    {({ isActive }) => (
+                                      <span
+                                        className={classNames(
+                                          "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
+                                          isActive
+                                            ? "font-semibold text-sky-500 before:bg-sky-500"
+                                            : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                                        )}
+                                      >
+                                        {sub.title}
+                                      </span>
                                     )}
-                                  >
-                                    {sub.title}
-                                  </span>
-                                )}
-                              </NavLink>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </li>
-                  );
-                })}
+                                  </NavLink>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </li>
+                      );
+                    })
+                  : meta}
               </ul>
             </nav>
           </div>
