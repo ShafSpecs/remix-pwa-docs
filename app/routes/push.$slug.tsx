@@ -1,16 +1,16 @@
-import { useMemo, useRef, useEffect, useState, Fragment } from 'react';
+import { useMemo, useRef, useEffect, useState, Fragment } from "react";
 import { mdxToHtml } from "~/utils/server/mdx.server";
 import { getMDXComponent } from "mdx-bundler/client";
-import { ClientOnly } from 'remix-utils';
-import type { CatchBoundaryComponent } from '@remix-run/react';
-import { json } from "@remix-run/node"
-import { Link, useCatch, useLoaderData, useOutletContext, useLocation } from '@remix-run/react';
+import { ClientOnly } from "remix-utils";
+import type { CatchBoundaryComponent } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { Link, useCatch, useLoaderData, useOutletContext, useLocation } from "@remix-run/react";
 
 import type { LoaderArgs, LoaderFunction } from "@remix-run/node";
-import { getPostContent } from '~/utils/server/github.server';
-import Skeleton from '~/components/layout/Skeleton';
-import { useIsFirstRender } from 'usehooks-ts';
-import { Doc } from '~/components/layout/Documentation';
+import { getPostContent } from "~/utils/server/github.server";
+import Skeleton from "~/components/layout/Skeleton";
+import { useIsFirstRender } from "usehooks-ts";
+import { Doc } from "~/components/layout/Documentation";
 
 export const loader: LoaderFunction = async ({ params }: LoaderArgs) => {
   const _s = `
@@ -78,11 +78,11 @@ tempora libero, fugit excepturi hic nulla quo unde voluptatum aspernatur animi v
 
   const slug = params.slug;
 
-  const doc = await getPostContent(slug!, "sw");
+  const doc = await getPostContent(slug!, "push");
   if (!doc) {
     console.error("Invalid slug: " + slug!);
 
-    throw json(null, { status: 404, statusText: "Oops! This page could not be found." })
+    throw json(null, { status: 404, statusText: "Oops! This page could not be found." });
   }
 
   const code = await mdxToHtml(doc);
@@ -98,13 +98,7 @@ export default function DocPage() {
   return (
     <ClientOnly
       fallback={<Skeleton />}
-      children={() =>
-        <Doc
-          next={next}
-          code={loaderData.code}
-          frontmatter={loaderData.frontmatter}
-        />
-      }
+      children={() => <Doc next={next} code={loaderData.code} frontmatter={loaderData.frontmatter} />}
     />
   );
 }
@@ -113,17 +107,15 @@ export const CatchBoundary: CatchBoundaryComponent = () => {
   const caught = useCatch();
 
   return (
-    <div id='catch-doc' className="flex-auto max-w-2xl min-w-0 px-4 py-16 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
+    <div id="catch-doc" className="flex-auto max-w-2xl min-w-0 px-4 py-16 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
       <article>
-        <main className='prose prose-slate max-w-none dark:prose-invert dark:text-slate-400 prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-normal lg:prose-headings:scroll-mt-[8.5rem] prose-lead:text-slate-500 dark:prose-lead:text-slate-400 prose-a:font-semibold dark:prose-a:text-sky-400 prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,theme(colors.sky.300))] hover:prose-a:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:theme(colors.slate.900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,theme(colors.sky.800))] dark:hover:prose-a:[--tw-prose-underline-size:6px] prose-pre:rounded-xl prose-pre:bg-slate-900 prose-pre:shadow-lg dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10 dark:prose-hr:border-slate-800'>
+        <main className="prose prose-slate max-w-none dark:prose-invert dark:text-slate-400 prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-normal lg:prose-headings:scroll-mt-[8.5rem] prose-lead:text-slate-500 dark:prose-lead:text-slate-400 prose-a:font-semibold dark:prose-a:text-sky-400 prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,theme(colors.sky.300))] hover:prose-a:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:theme(colors.slate.900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,theme(colors.sky.800))] dark:hover:prose-a:[--tw-prose-underline-size:6px] prose-pre:rounded-xl prose-pre:bg-slate-900 prose-pre:shadow-lg dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10 dark:prose-hr:border-slate-800">
           {caught.status} | {caught.statusText}
         </main>
       </article>
       <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
         <div className="ml-auto text-right">
-          <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">
-            Next
-          </dt>
+          <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Next</dt>
           <dd className="mt-1">
             <Link
               className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
@@ -135,5 +127,5 @@ export const CatchBoundary: CatchBoundaryComponent = () => {
         </div>
       </dl>
     </div>
-  )
-}
+  );
+};
