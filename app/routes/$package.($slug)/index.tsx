@@ -1,6 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import { typedjson } from "remix-typedjson";
+import { redirect, typedjson } from "remix-typedjson";
 import { ClientOnly } from "remix-utils";
 import GeneralError from "~/components/GeneralError";
 import { Doc } from "~/components/layout/Documentation";
@@ -34,6 +34,11 @@ export const packages: Record<ValidPackages, PackageData> = {
 export const loader = async ({ params }: LoaderArgs) => {
   const package_string = RequireParam(params, "package");
   const slug = params.slug;
+
+  if (slug == undefined && package_string == "pwa") {
+    return redirect("/");
+  }
+
   if (valid_packages.includes(package_string)) {
     const doc = await getPostContent(package_string, slug);
     if (!doc) {
@@ -45,6 +50,7 @@ export const loader = async ({ params }: LoaderArgs) => {
 
     return typedjson(code, 200);
   }
+
   throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });
 };
 
@@ -55,9 +61,9 @@ export default function DocPage() {
 export const ErrorBoundary = () => {
   let error = useRouteError();
 
-  if (isRouteErrorResponse(error)) 
+  if (isRouteErrorResponse(error))
     return <GeneralError status={error.status} statusText={error.statusText} />;
-  
+
   if (error instanceof Error)
     return <GeneralError status={500} statusText={`Message: ${error.message}. Stack: ${error.stack}`} />;
 
