@@ -8,7 +8,6 @@ import {
   Scripts,
   ScrollRestoration,
   useLocation,
-  useMatches,
   useNavigate
 } from "@remix-run/react";
 import { getPostMetaData } from "./utils/server/github.server";
@@ -31,6 +30,7 @@ import prism from "./styles/code.css";
 import { GetTheme } from "./session.server";
 import RootReducer from "./rootReducer";
 import { packages, valid_packages } from "./routes/$package.($slug)";
+import { FrontMatterTypings } from "./types/mdx";
 
 let isMount = true;
 
@@ -139,17 +139,58 @@ const MainDocumentWithProviders = ({ ssr_theme, children }: { ssr_theme: Theme |
 export default function App() {
   const { meta, theme } = useTypedLoaderData<typeof loader>();
   let location = useLocation();
-  let matches = useMatches();
   const navigate = useNavigate();
 
+  const getPreviousAndNextRoute = (): UpdateLinks => {
+    const currentRoute = location.pathname;
+    // fix types later on
+    let routes: any[] = [];
+
+    if (currentRoute === "/" || currentRoute.includes("/pwa")) {
+      //@ts-ignore
+      routes = meta[0].children.map((route) => { return route.children });
+    } else if (currentRoute.includes("/sw")) {
+      //@ts-ignore
+      routes = meta[1].children.map((route) => { return route.children });
+    } else if (currentRoute.includes("/push")) {
+      //@ts-ignore
+      routes = meta[2].children.map((route) => { return route.children });
+    } else if (currentRoute.includes("/client")) {
+      //@ts-ignore
+      routes = meta[3].children.map((route) => { return route.children });
+    }
+
+    const childrenArr = [].concat(...routes);
+
+    //@ts-ignore
+    const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
+
+    let nextRoute: FrontMatterTypings | null = null;
+    let prevRoute: FrontMatterTypings | null = null;
+
+    if (currentRouteIndex < childrenArr.length - 1) {
+      nextRoute = childrenArr[currentRouteIndex + 1];
+    }
+
+    if (currentRouteIndex > 0) {
+      prevRoute = childrenArr[currentRouteIndex - 1];
+    }
+
+    return { prev: prevRoute, next: nextRoute };
+  };
+
   // mainly using a reducer here to minimize state updates. Probably why we previously used an tuple of [prev,next] instead.
-  const [{ prev, next, selected }, dispatch] = useReducer(RootReducer, {
-    prev: null,
-    next: null,
-    selected: packages.pwa
+  const [{ selected }, dispatch] = useReducer(RootReducer, {
+    selected: location.pathname.substring(0, 6).includes("client") ?
+      packages.client :
+      location.pathname.substring(0, 6).includes("push") ?
+        packages.push :
+        location.pathname.substring(0, 6).includes("sw") ?
+          packages.sw : packages.pwa
   });
 
   const [scrollTop, setScrollTop] = useState(0);
+  const [routes, setRoutes] = useState<UpdateLinks>({ prev: getPreviousAndNextRoute().prev, next: getPreviousAndNextRoute().next });
 
   const onScroll = (e: any): void => {
     setScrollTop(e.target.documentElement.scrollTop);
@@ -162,107 +203,26 @@ export default function App() {
     };
   }, []);
 
-  function isPromise(p: any): boolean {
-    if (p)
-      if (typeof p === "object" && typeof p.then === "function") {
-        return true;
-      }
-
-    return false;
-  }
-
-  // Todo
-  const getPreviousAndNextRoute = (): UpdateLinks => {
-    //const currentRoute = location.pathname;
-    //@ts-ignore
-    // let routes = [];
-
-    // // if (location.pathname === "/" || location.pathname.includes("/pwa/")) {
-    // //   routes = meta[0].children.map((meta: any) => meta.map((route: any) => route.slug));
-    // // }
-
-    // //@ts-ignore
-    // const childrenArr = [].concat(...routes);
-
-    // //@ts-ignore
-    // const currentRouteIndex = childrenArr.findIndex((route) => route.slug === currentRoute);
-
-    // let nextRoute: FrontMatterTypings | null = null;
-    // let prevRoute: FrontMatterTypings | null = null;
-
-    // if (currentRouteIndex < childrenArr.length - 1) {
-    //   nextRoute = childrenArr[currentRouteIndex + 1];
-    // }
-
-    // if (currentRouteIndex > 0) {
-    //   prevRoute = childrenArr[currentRouteIndex - 1];
-    // }
-
-    // return [prevRoute, nextRoute];
-    return { prev: null, next: null };
-  };
-
-  useEffect(() => {
-    let mounted = isMount;
-    isMount = false;
-
-    if ("serviceWorker" in navigator) {
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller?.postMessage({
-          type: "REMIX_NAVIGATION",
-          isMount: mounted,
-          location,
-          matches: matches.filter((route) => {
-            if (route.data) {
-              return (
-                Object.values(route.data!).filter((elem) => {
-                  return isPromise(elem);
-                }).length === 0
-              );
-            }
-            return true;
-          }),
-          manifest: window.__remixManifest
-        });
-      } else {
-        let listener = async () => {
-          await navigator.serviceWorker.ready;
-          navigator.serviceWorker.controller?.postMessage({
-            type: "REMIX_NAVIGATION",
-            isMount: mounted,
-            location,
-            matches: matches.filter((route) => {
-              if (route.data) {
-                return (
-                  Object.values(route.data!).filter((elem) => {
-                    return isPromise(elem);
-                  }).length === 0
-                );
-              }
-              return true;
-            }),
-            manifest: window.__remixManifest
-          });
-        };
-        navigator.serviceWorker.addEventListener("controllerchange", listener);
-        return () => {
-          navigator.serviceWorker.removeEventListener("controllerchange", listener);
-        };
-      }
-    }
-  }, [location, matches]);
-
   // Run on mount and when location `pathname` changes only. 
   // Adding `selected` overrides the dispath call made on clicking the options, 
   // when we change the location. For some reason, the `selected` state is not updated
   // to the newer pathname but the old one. Used logs to confirm this. 
   useEffect(() => {
     const split = location.pathname.split("/");
-    const package_route = split[1];
-    if (valid_packages.includes(package_route)) {
-      dispatch({ type: "updateLinks", payload: { ...getPreviousAndNextRoute(), selected: packages[package_route] } });
+    let package_route = split[1];
+    
+    if (package_route === "") {
+      package_route = "pwa";
     }
-  }, [location.pathname]);
+    
+    if (valid_packages.includes(package_route)) {
+      const { prev, next } = getPreviousAndNextRoute();
+
+      dispatch({ type: "updateLinks", payload: { selected: packages[package_route] } });
+      setRoutes({ prev, next });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   return (
     <MainDocumentWithProviders ssr_theme={theme}>
@@ -312,7 +272,7 @@ export default function App() {
                           value={pkg}
                           onClick={() => {
                             navigate(`/${pkg.slug}`);
-                            dispatch({ type: "updateLinks", payload: { ...getPreviousAndNextRoute(), selected: packages[pkg.slug] } });
+                            dispatch({ type: "updateLinks", payload: { selected: packages[pkg.slug] } });
                           }}
                         >
                           {({ selected }) => (
@@ -372,7 +332,7 @@ export default function App() {
             </nav>
           </div>
         </div>
-        <Outlet context={{ prev, next }} />
+        <Outlet context={{ prev: routes.prev, next: routes.next }} />
       </div>
     </MainDocumentWithProviders>
   );
