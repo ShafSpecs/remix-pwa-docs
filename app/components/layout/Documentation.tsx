@@ -55,7 +55,7 @@ export function Doc() {
         );
       }
 
-      if (headings.length !== toc.length) {
+      if (toc.length > 0 && headings.length !== toc.length) {
         setHeadings(toc);
         setActiveHeading(headingElements[0]);
         if (headingElements[0].tagName.includes("2")) {
