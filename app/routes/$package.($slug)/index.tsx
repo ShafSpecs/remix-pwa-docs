@@ -21,7 +21,9 @@ export type PackageData = {
   comingSoon: boolean;
   position: number;
 };
+
 export const valid_packages = ["client", "push", "pwa", "sw"] as unknown as TypeGuardReadonlyArray<ValidPackages>;
+
 export const packages: Record<ValidPackages, PackageData> = {
   pwa: { name: "remix-pwa", slug: "pwa", comingSoon: false, position: 0 },
   sw: { name: "@remix-pwa/sw", slug: "sw", comingSoon: false, position: 1 },
@@ -52,8 +54,12 @@ export default function DocPage() {
 
 export const ErrorBoundary = () => {
   let error = useRouteError();
-  if (isRouteErrorResponse(error)) return <GeneralError status={error.status} statusText={error.statusText} />;
+
+  if (isRouteErrorResponse(error)) 
+    return <GeneralError status={error.status} statusText={error.statusText} />;
+  
   if (error instanceof Error)
     return <GeneralError status={500} statusText={`Message: ${error.message}. Stack: ${error.stack}`} />;
+
   return <h1>An Unknown Error Occurred</h1>;
 };
