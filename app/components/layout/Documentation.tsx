@@ -171,6 +171,10 @@ export function Doc() {
     const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
 
     function handleScroll() {
+      if (headingElements.length === 0) {
+        return;
+      }
+      
       const topDistances = headingElements.map((headingElement) => ({
         element: headingElement,
         topDistance: Math.abs(headingElement.getBoundingClientRect().top)
