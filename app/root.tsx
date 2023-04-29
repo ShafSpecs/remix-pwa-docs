@@ -106,9 +106,8 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
-        className={`${
-          !closed && "overflow-hidden"
-        } bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
+        className={`${!closed && "overflow-hidden"
+          } bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
       >
         {children}
         <ScrollRestoration />
@@ -142,6 +141,7 @@ export default function App() {
   let location = useLocation();
   let matches = useMatches();
   const navigate = useNavigate();
+
   // mainly using a reducer here to minimize state updates. Probably why we previously used an tuple of [prev,next] instead.
   const [{ prev, next, selected }, dispatch] = useReducer(RootReducer, {
     prev: null,
@@ -252,13 +252,17 @@ export default function App() {
     }
   }, [location, matches]);
 
+  // Run on mount and when location `pathname` changes only. 
+  // Adding `selected` overrides the dispath call made on clicking the options, 
+  // when we change the location. For some reason, the `selected` state is not updated
+  // to the newer pathname but the old one. Used logs to confirm this. 
   useEffect(() => {
     const split = location.pathname.split("/");
     const package_route = split[1];
     if (valid_packages.includes(package_route)) {
       dispatch({ type: "updateLinks", payload: { ...getPreviousAndNextRoute(), selected: packages[package_route] } });
     }
-  }, [location, selected]);
+  }, [location.pathname]);
 
   return (
     <MainDocumentWithProviders ssr_theme={theme}>
@@ -269,7 +273,7 @@ export default function App() {
           // Todo: Create a fallback component
         }
       />
-      {(location.pathname === "/" || location.pathname === "/pwa") && <Hero />}
+      {(location.pathname === "/" || location.pathname === "/pwa" || location.pathname === "/pwa/") && <Hero />}
       <div className="relative flex justify-center mx-auto max-w-[88rem] sm:px-2 lg:px-8 xl:px-12">
         <div className="hidden ml-5 lg:relative lg:block lg:flex-none">
           <div className="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden"></div>
@@ -298,16 +302,18 @@ export default function App() {
                           disabled={pkg.comingSoon}
                           className={({ active }) =>
                             `relative select-none py-2 pl-10 pr-4 text-sm 
-                              ${
-                                pkg.comingSoon
-                                  ? "text-sm cursor-not-allowed bg-slate-200 text-gray-800 dark:bg-slate-700 dark:text-gray-200"
-                                  : "cursor-pointer xl:text-base"
-                              } 
+                              ${pkg.comingSoon
+                              ? "text-sm cursor-not-allowed bg-slate-200 text-gray-800 dark:bg-slate-700 dark:text-gray-200"
+                              : "cursor-pointer xl:text-base"
+                            } 
                               ${active ? "bg-sky-100 text-sky-900" : "text-gray-900 dark:text-gray-200"}
                               `
                           }
                           value={pkg}
-                          onClick={() => navigate(`/${pkg.slug}`)}
+                          onClick={() => {
+                            navigate(`/${pkg.slug}`);
+                            dispatch({ type: "updateLinks", payload: { ...getPreviousAndNextRoute(), selected: packages[pkg.slug] } });
+                          }}
                         >
                           {({ selected }) => (
                             <>
@@ -333,34 +339,34 @@ export default function App() {
               <ul className="space-y-9">
                 {Array.isArray(meta)
                   ? meta[selected.position].children.map((el: any) => {
-                      return (
-                        <li key={el.name}>
-                          <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
-                          <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                            {el.children.map((sub: any) => {
-                              return (
-                                <li className="relative" key={sub.slug}>
-                                  <NavLink prefetch="render" to={sub.slug} end={true}>
-                                    {({ isActive }) => (
-                                      <span
-                                        className={classNames(
-                                          "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
-                                          isActive
-                                            ? "font-semibold text-sky-500 before:bg-sky-500"
-                                            : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
-                                        )}
-                                      >
-                                        {sub.title}
-                                      </span>
-                                    )}
-                                  </NavLink>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </li>
-                      );
-                    })
+                    return (
+                      <li key={el.name}>
+                        <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
+                        <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                          {el.children.map((sub: any) => {
+                            return (
+                              <li className="relative" key={sub.slug}>
+                                <NavLink prefetch="render" to={sub.slug} end={true}>
+                                  {({ isActive }) => (
+                                    <span
+                                      className={classNames(
+                                        "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
+                                        isActive
+                                          ? "font-semibold text-sky-500 before:bg-sky-500"
+                                          : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                                      )}
+                                    >
+                                      {sub.title}
+                                    </span>
+                                  )}
+                                </NavLink>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </li>
+                    );
+                  })
                   : meta}
               </ul>
             </nav>
