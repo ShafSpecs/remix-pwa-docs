@@ -4,16 +4,12 @@ import type { PrevOrNextLink } from "./root";
 import type { PackageData } from "./routes/$package.($slug)";
 
 export type RootState = {
-  next: PrevOrNextLink;
-  prev: PrevOrNextLink;
   selected: PackageData;
 };
 
 export type Actions = {
   type: "updateLinks";
   payload: {
-    next: PrevOrNextLink;
-    prev: PrevOrNextLink;
     selected: PackageData;
   };
 };
@@ -21,9 +17,7 @@ export type Actions = {
 const RootReducer = (state: RootState, action: Actions) => {
   switch (action.type) {
     case "updateLinks":
-      const { next, prev, selected } = action.payload;
-      state.next = next;
-      state.prev = prev;
+      const { selected } = action.payload;
       state.selected = selected;
       return state;
     default:
