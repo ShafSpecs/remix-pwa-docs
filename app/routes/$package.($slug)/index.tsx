@@ -15,19 +15,25 @@ interface TypeGuardReadonlyArray<T> extends ReadonlyArray<T> {
   includes(searchElement: unknown, fromIndex?: number): searchElement is T;
 }
 // This is a string literal coercion. We can use this to make sure that the package string we return is valid.
+export type PackageData = {
+  name: string;
+  slug: ValidPackages;
+  comingSoon: boolean;
+  position: number;
+};
 export const valid_packages = ["client", "push", "pwa", "sw"] as unknown as TypeGuardReadonlyArray<ValidPackages>;
-export const packages: Record<ValidPackages, { name: string; slug: string; comingSoon: boolean }> = {
-  client: { name: "remix-pwa", slug: "pwa", comingSoon: false },
-  push: { name: "@remix-pwa/sw", slug: "sw", comingSoon: false },
-  pwa: { name: "@remix-pwa/push", slug: "push", comingSoon: true },
-  sw: { name: "@remix-pwa/client", slug: "client", comingSoon: true }
+export const packages: Record<ValidPackages, PackageData> = {
+  pwa: { name: "remix-pwa", slug: "pwa", comingSoon: false, position: 0 },
+  sw: { name: "@remix-pwa/sw", slug: "sw", comingSoon: false, position: 1 },
+  push: { name: "@remix-pwa/push", slug: "push", comingSoon: true, position: 2 },
+  client: { name: "@remix-pwa/client", slug: "client", comingSoon: true, position: 3 }
 };
 
 export const loader = async ({ params }: LoaderArgs) => {
   const package_string = RequireParam(params, "package");
-  const slug = RequireParam(params, "slug");
+  const slug = params.slug;
   if (valid_packages.includes(package_string)) {
-    const doc = await getPostContent(slug, package_string);
+    const doc = await getPostContent(package_string, slug);
     if (!doc) {
       console.error(`Invalid Slug: ${slug}`);
       throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });

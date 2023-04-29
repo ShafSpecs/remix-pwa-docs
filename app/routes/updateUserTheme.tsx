@@ -1,6 +1,11 @@
 import type { ActionArgs } from "@remix-run/node";
+import { redirect } from "react-router-dom";
 import { typedjson } from "remix-typedjson";
 import { SetTheme } from "~/session.server";
+
+export const loader = () => {
+  return redirect("/");
+};
 
 export const action = async ({ request }: ActionArgs) => {
   const method = request.method.toLowerCase();

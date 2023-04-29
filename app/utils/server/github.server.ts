@@ -3,6 +3,7 @@ import { Repo } from "../handlers/github-api";
 import { readFile } from "fs-extra";
 import { resolve } from "path";
 import { z } from "zod";
+import type { ValidPackages } from "~/routes/$package.($slug)";
 
 const octokit = request.defaults({
   headers: {
@@ -35,12 +36,18 @@ const LocalMetaDataFileSchema = z.object({
   children: z.array(MetaDataObjectSchema)
 });
 
-export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
+/**
+ *
+ * @param packageSlug - Slug of the package we're interested in
+ * @param slug - Slug of the post we're interested in
+ * @returns
+ */
+export const getPostContent = async (packageSlug: ValidPackages, slug: string | undefined) => {
   /**
    * If we are in development mode, we can just read the file from the file system.
    */
   if (process.env.NODE_ENV === "development") {
-    const content = readFile(resolve(__dirname, "../", `posts/${preSlug}/${slug}.mdx`), "utf-8");
+    const content = await readFile(resolve(__dirname, "../", `posts/${packageSlug}/${slug || "intro"}.mdx`), "utf-8");
 
     if (!content) {
       return null;
@@ -51,7 +58,7 @@ export const getPostContent = async (slug: string, preSlug: string = "pwa") => {
 
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
-    path: `posts/${preSlug}/${slug}.mdx`,
+    path: `posts/${packageSlug}/${slug || "intro"}.mdx`,
     ref: "docs"
   });
 
