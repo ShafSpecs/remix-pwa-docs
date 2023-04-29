@@ -7,9 +7,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
   useLocation,
   useMatches,
-  useNavigate
+  useNavigate,
+  useRouteError
 } from "@remix-run/react";
 import { type MetaDataObject, getPostMetaData } from "./utils/server/github.server";
 import { ClientOnly } from "remix-utils";
@@ -340,37 +342,35 @@ export default function App() {
                 </div>
               </Listbox>
               <ul className="space-y-9">
-                {Array.isArray(meta)
-                  ? meta[selected.position].children.map((el: any) => {
-                      return (
-                        <li key={el.name}>
-                          <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
-                          <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                            {el.children.map((sub: any) => {
-                              return (
-                                <li className="relative" key={sub.slug}>
-                                  <NavLink prefetch="render" to={sub.slug} end={true}>
-                                    {({ isActive }) => (
-                                      <span
-                                        className={classNames(
-                                          "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
-                                          isActive
-                                            ? "font-semibold text-sky-500 before:bg-sky-500"
-                                            : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
-                                        )}
-                                      >
-                                        {sub.title}
-                                      </span>
+                {meta[selected.slug].children.map((el) => {
+                  return (
+                    <li key={el.name}>
+                      <h2 className="font-medium font-display text-slate-900 dark:text-white">{el.name}</h2>
+                      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                        {el.children.map((sub) => {
+                          return (
+                            <li className="relative" key={sub.slug}>
+                              <NavLink prefetch="render" to={sub.slug} end={true}>
+                                {({ isActive }) => (
+                                  <span
+                                    className={classNames(
+                                      "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
+                                      isActive
+                                        ? "font-semibold text-sky-500 before:bg-sky-500"
+                                        : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
                                     )}
-                                  </NavLink>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </li>
-                      );
-                    })
-                  : meta}
+                                  >
+                                    {sub.title}
+                                  </span>
+                                )}
+                              </NavLink>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
           </div>
@@ -382,9 +382,21 @@ export default function App() {
 }
 
 export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
+  const error = useRouteError();
+  let message: string | number = "";
+  let stack: undefined | string = "";
+  if (error instanceof Error) {
+    message = error.message;
+    stack = error.stack;
+  }
+  if (isRouteErrorResponse(error)) {
+    message = error.status;
+    stack = error.statusText;
+  }
   return (
     <MainDocumentWithProviders ssr_theme={null}>
-      <h1>Uh oh!</h1>
+      <h1>Status: {message}</h1>
+      <h2>StatusText: {stack}</h2>
     </MainDocumentWithProviders>
   );
 };
