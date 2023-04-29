@@ -1,39 +1,26 @@
 /* eslint-disable react/display-name */
-import { Disclosure, Listbox, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Disclosure } from "@headlessui/react";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { Fragment, useRef, useEffect } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "@remix-run/react";
-import { useOnClickOutside, useWindowSize } from "usehooks-ts";
-import RemixLight from "./icons/RemixLight";
-import RemixDark from "./icons/RemixDark";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { useEffect } from "react";
+import { Link, useLocation } from "@remix-run/react";
+import { useWindowSize } from "usehooks-ts";
 import { useTheme } from "~/utils/providers/ThemeProvider";
 import { useSidebar } from "~/utils/providers/SidebarProvider";
-import { useTypedLoaderData } from "remix-typedjson";
-import type { loader as RootLoader } from "~/root";
-import type { PackageData, ValidPackages } from "~/routes/$package.($slug)";
 import { ToggleTheme } from "./ToggleTheme";
 import MobileSidebar from "./MobileSidebar";
+import RemixLogo from "./RemixLogo";
 
 type HeaderProps = {
   scrollTop: number;
-  selected: PackageData;
-  packages: Record<ValidPackages, PackageData>;
 };
 
-export default ({ scrollTop, selected, packages }: HeaderProps) => {
-  const navigate = useNavigate();
-  const { meta: list } = useTypedLoaderData<typeof RootLoader>();
+export default ({ scrollTop }: HeaderProps) => {
   const [theme] = useTheme();
-  const [closed, setClosed] = useSidebar();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setClosed] = useSidebar();
   const { width } = useWindowSize();
   const location = useLocation();
-  const sidebarRef = useRef(null);
-
-  useOnClickOutside(sidebarRef, () => {
-    setClosed(true);
-  });
 
   useEffect(() => {
     if (width > 1024) {
@@ -66,27 +53,23 @@ export default ({ scrollTop, selected, packages }: HeaderProps) => {
           </div>
 
           {/* Mobile Sidebar */}
-          <MobileSidebar selected={selected} packages={packages} />
+          <MobileSidebar />
 
           <div className="relative flex items-center flex-grow basis-0">
-            <a aria-label="Home page" href="/" className="lg:flex">
-              {theme === "light" ? (
-                <RemixLight className="h-10 -ml-2 lg:hidden w-11 fill-slate-700" />
-              ) : (
-                <RemixDark className="h-10 -ml-2 lg:hidden w-11 fill-sky-100" />
-              )}
-              {theme === "light" ? (
-                <RemixLight className="hidden w-10 h-9 fill-slate-700 lg:block" />
-              ) : (
-                <RemixDark className="hidden w-10 h-9 fill-sky-100 lg:block" />
-              )}
-              <p className="hidden lg:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 content-end text-2xl top-[3px] relative -ml-2.5 leading-10 tracking-wide">
+            <Link aria-label="Home page" to="/" className="lg:flex">
+              <RemixLogo mobile height="h-10" width="w-11" />
+              <RemixLogo height="h-9" width="w-10" />
+
+              <p
+                className="hidden lg:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 text-2xl relative -ml-2.5"
+                style={{ top: "5.25px" }}
+              >
                 emix&nbsp;
                 <span className="text-transparent text-[26px] top-[1.5px] bg-clip-text bg-gradient-to-tr from-indigo-500 dark:from-indigo-400 to-sky-300 dark:to-sky-200">
                   PWA
                 </span>
               </p>
-            </a>
+            </Link>
           </div>
           <div className="mr-6 -my-5 sm:mr-8 md:mr-0">
             <button

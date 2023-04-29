@@ -3,8 +3,6 @@ import { getPostContent } from "~/utils/server/github.server";
 import { mdxToHtml } from "~/utils/server/mdx.server";
 import { ClientOnly } from "remix-utils";
 import Skeleton from "~/components/layout/Skeleton";
-//import Swatch from "~/components/icons/Swatch";
-//import Plugin from "~/components/icons/Plugin";
 
 import { typedjson } from "remix-typedjson";
 import IndexComponent from "~/components/layout/Index";

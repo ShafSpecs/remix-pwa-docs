@@ -1,31 +1,27 @@
 // I like separating out reducer functions since they can get really large and complex
 
 import type { PrevOrNextLink } from "./root";
-import type { PackageData } from "./routes/$package.($slug)";
+import type { PackageData } from "./utils/PackageHelpers";
 
 export type RootState = {
-  next: PrevOrNextLink;
-  prev: PrevOrNextLink;
   selected: PackageData;
+  prev: PrevOrNextLink;
+  next: PrevOrNextLink;
 };
 
 export type Actions = {
   type: "updateLinks";
   payload: {
-    next: PrevOrNextLink;
-    prev: PrevOrNextLink;
     selected: PackageData;
+    prev: PrevOrNextLink;
+    next: PrevOrNextLink;
   };
 };
 
 const RootReducer = (state: RootState, action: Actions) => {
   switch (action.type) {
     case "updateLinks":
-      const { next, prev, selected } = action.payload;
-      state.next = next;
-      state.prev = prev;
-      state.selected = selected;
-      return state;
+      return action.payload;
     default:
       return state;
   }

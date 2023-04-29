@@ -4,7 +4,7 @@ import { useMemo, useRef, useState, useEffect, Fragment } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { useIsFirstRender } from "usehooks-ts";
 import type { RootOutletContext } from "~/root";
-import type { loader as ExampleLoaderResponse } from "~/routes/client.$slug";
+import type { loader as ExampleLoaderResponse } from "~/routes/$package.($slug)";
 
 export type Heading = {
   id: string;
@@ -55,7 +55,7 @@ export function Doc() {
         );
       }
 
-      if (headings.length > 0 && headings.length !== toc.length) {
+      if (toc.length > 0 && headings.length !== toc.length) {
         setHeadings(toc);
         setActiveHeading(headingElements[0]);
         if (headingElements[0].tagName.includes("2")) {
@@ -171,6 +171,10 @@ export function Doc() {
     const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
 
     function handleScroll() {
+      if (headingElements.length === 0) {
+        return;
+      }
+      
       const topDistances = headingElements.map((headingElement) => ({
         element: headingElement,
         topDistance: Math.abs(headingElement.getBoundingClientRect().top)
