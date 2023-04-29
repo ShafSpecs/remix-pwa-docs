@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, type ReactNode, useReducer } from "react";
+import { useState, useEffect, type ReactNode, useReducer } from "react";
 import {
   Links,
   LiveReload,
@@ -69,9 +69,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         push: []
       }
     );
-    meta.client.forEach((item) => {
-      console.log(item);
-    });
+
     return typedjson(
       { meta, theme },
       {
@@ -166,7 +164,7 @@ export default function App() {
   // mainly using a reducer here to minimize state updates. Probably why we previously used an tuple of [prev,next] instead.
   const [state, dispatch] = useReducer(RootReducer, GetInitialSelected());
 
-  const { selected, prev, next } = state;
+  const { selected } = state;
 
   const getPreviousAndNextRoute = (): UpdateLinks => {
     const currentRoute = location.pathname;
@@ -251,7 +249,7 @@ export default function App() {
               </nav>
             </div>
           </div>
-          <Outlet context={{ prev, next }} />
+          <Outlet />
         </div>
       </RootContext.Provider>
     </MainDocumentWithProviders>
