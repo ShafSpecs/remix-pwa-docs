@@ -6,9 +6,7 @@ function hydrate() {
   startTransition(() => {
     hydrateRoot(
       document,
-      <StrictMode>
-        <RemixBrowser />
-      </StrictMode>
+      <RemixBrowser />
     );
   });
 }
@@ -58,9 +56,9 @@ if ("serviceWorker" in navigator) {
 
 if ("serviceWorker" in navigator) {
   // Use the window load event to keep the page load performant
-  async function loadSW(){
+  async function loadSW() {
     console.log("loaded");
-    
+
     return navigator.serviceWorker
       .register("/entry.worker.js")
       .then(() => navigator.serviceWorker.ready)

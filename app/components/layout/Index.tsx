@@ -1,32 +1,21 @@
-import { useLocation, Link, useOutletContext } from "@remix-run/react";
+/* eslint-disable react/jsx-pascal-case */
+import { useOutletContext, Link } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
-import { useMemo, useRef, useState, useEffect, Fragment } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
+import type { loader as ExampleLoaderResponse } from "~/routes/_index";
+import * as CustomLink from "~/components/mdx/Link";
+import Arrow from "~/components/icons/Arrow";
+import Widget from "~/components/icons/Widget";
+import type { Heading } from "./Documentation";
 import { useIsFirstRender } from "usehooks-ts";
+import Grid from "../mdx/Grid";
 import type { RootOutletContext } from "~/root";
-import type { loader as ExampleLoaderResponse } from "~/routes/$package.($slug)";
 
-export type Heading = {
-  id: string;
-  text: string;
-  level: number;
-  element: Element;
-};
-
-/**
- * @description - We can easily use this component if we at minimum return the result of mdxToHtml spread from our loader like:
- * @example
- * ```ts
- * const code = await mdxToHtml(doc);
- * return typedjson({...code}, 200);
- * ```
- * @returns
- */
-export function Doc() {
+const IndexComponent = () => {
   const { code, frontmatter } = useTypedLoaderData<typeof ExampleLoaderResponse>();
-  const { next, prev } = useOutletContext<RootOutletContext>();
+  const { next } = useOutletContext<RootOutletContext>();
   const Component = useMemo(() => getMDXComponent(code), [code]);
-  const location = useLocation();
 
   const docRef = useRef<HTMLDivElement>(null!);
 
@@ -55,12 +44,9 @@ export function Doc() {
         );
       }
 
-      if (toc.length > 0 && headings.length !== toc.length) {
+      if (headings.length !== toc.length) {
         setHeadings(toc);
         setActiveHeading(headingElements[0]);
-        if (headingElements[0].tagName.includes("2")) {
-          setActiveH2(headingElements[0]);
-        }
       }
 
       let currentOl = null;
@@ -70,10 +56,7 @@ export function Doc() {
         const heading = headings[i];
 
         if (heading.level === 2) {
-          let headingId = heading.text
-            .replaceAll(/[#'?$]/g, "")
-            .replaceAll(" ", "-")
-            .toLowerCase();
+          let headingId = heading.text.replaceAll(" ", "-").toLowerCase();
 
           if (currentOl) {
             listItems.push(currentOl);
@@ -90,15 +73,11 @@ export function Doc() {
               >
                 <Link
                   className={`${
-                    activeHeading!.id ===
-                    headings[i + 1].text
-                      .replaceAll(/[#'?$]/g, "")
-                      .replaceAll(" ", "-")
-                      .toLowerCase()
+                    activeHeading!.id === headings[i + 1].text.replaceAll(" ", "-").toLowerCase()
                       ? "text-sky-500"
                       : "hover:text-slate-600 dark:hover:text-slate-300"
                   }`}
-                  to={`${location.pathname}#${headings[i + 1]!.text.replaceAll(" ", "-").toLowerCase()}`}
+                  to={`/#${headings[i + 1]!.text.replaceAll(" ", "-").toLowerCase()}`}
                 >
                   {headings[i + 1].text}
                 </Link>
@@ -111,7 +90,7 @@ export function Doc() {
             <li key={heading.id}>
               <h3 ref={(el: HTMLHeadingElement) => (headingsRef.current[headingsRef.current.length] = el)}>
                 <Link
-                  to={`${location.pathname}#${headingId}`}
+                  to={`/#${headingId}`}
                   className={`${
                     activeHeading!.id == headingId || (activeH2 && activeH2.id == headingId)
                       ? "text-sky-500"
@@ -127,10 +106,7 @@ export function Doc() {
             </li>
           );
         } else if (heading.level === 3) {
-          let headingId = heading.text
-            .replaceAll(/[#'?$]/g, "")
-            .replaceAll(" ", "-")
-            .toLowerCase();
+          let headingId = heading.text.replaceAll(" ", "-").toLowerCase();
 
           if (!currentOl) {
             currentOl = (
@@ -146,7 +122,7 @@ export function Doc() {
                 className={`${
                   activeHeading!.id === headingId ? "text-sky-500" : "hover:text-slate-600 dark:hover:text-slate-300"
                 }`}
-                to={`${location.pathname}#${heading.text.replaceAll(" ", "-").toLowerCase()}}`}
+                to={`/#${heading.text.replaceAll(" ", "-").toLowerCase()}}`}
               >
                 {heading.text}
               </Link>
@@ -161,7 +137,7 @@ export function Doc() {
 
       setListItems(listItems);
     }
-  }, [activeH2, activeHeading, headings, location]);
+  }, [activeH2, activeHeading, headings]);
 
   useEffect(() => {
     if (isFirstRender) {
@@ -171,10 +147,6 @@ export function Doc() {
     const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
 
     function handleScroll() {
-      if (headingElements.length === 0) {
-        return;
-      }
-      
       const topDistances = headingElements.map((headingElement) => ({
         element: headingElement,
         topDistance: Math.abs(headingElement.getBoundingClientRect().top)
@@ -191,6 +163,7 @@ export function Doc() {
           // Find the index of the last level 2 (h2) heading before the active heading
           for (let i = activeIndex - 1; i >= 0; i--) {
             if (headings[i].level === 2) {
+              // Found the last h2 element, do something with it
               const lastH2 = headings[i];
               lastH2 !== undefined && setActiveH2(lastH2.element);
               break;
@@ -223,28 +196,27 @@ export function Doc() {
             ref={docRef}
             className="prose table-auto prose-slate max-w-none dark:prose-invert dark:text-slate-400 prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-normal lg:prose-headings:scroll-mt-[8.5rem] prose-lead:text-slate-500 dark:prose-lead:text-slate-400 prose-a:font-semibold dark:prose-a:text-sky-400 prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,theme(colors.sky.300))] hover:prose-a:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:theme(colors.slate.900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,theme(colors.sky.800))] dark:hover:prose-a:[--tw-prose-underline-size:6px] prose-pre:rounded-xl prose-pre:bg-slate-900 prose-pre:shadow-lg dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10 dark:prose-hr:border-slate-800"
           >
-            <p>
-              {/* Todo: (ShafSpecs) Transform backticks to code tags */}
-              {frontmatter.description}
+            <p className="lead">
+              Learn how to get Remix PWA up and running in your Remix application or explore the ecosystem 🌍!
             </p>
+            <Grid>
+              <CustomLink.default
+                icon={<Arrow />}
+                title={"Installation"}
+                desc={"Set up Remix PWA in your application easily!"}
+              />
+              <CustomLink.default
+                icon={<Widget />}
+                title={"Guide"}
+                desc={"Explore the possibilities and check out more that Remix PWA can do."}
+              />
+            </Grid>
+            <p>{frontmatter.description}</p>
             <hr />
             <Component />
           </main>
         </article>
         <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
-          {prev && (
-            <div>
-              <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Previous</dt>
-              <dd className="mt-1">
-                <Link
-                  className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-                  to={prev.slug}
-                >
-                  <span aria-hidden="true">←</span> {prev.title}
-                </Link>
-              </dd>
-            </div>
-          )}
           {next && (
             <div className="ml-auto text-right">
               <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Next</dt>
@@ -254,7 +226,7 @@ export function Doc() {
                   to={next.slug}
                 >
                   {next.title}
-                  {/* */} <span aria-hidden="true">→</span>
+                  <span aria-hidden="true">→</span>
                 </Link>
               </dd>
             </div>
@@ -271,4 +243,6 @@ export function Doc() {
       </div>
     </Fragment>
   );
-}
+};
+
+export default IndexComponent;

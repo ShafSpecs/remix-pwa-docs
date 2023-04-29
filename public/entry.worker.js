@@ -1,5 +1,35 @@
-// node_modules/@remix-run/server-runtime/dist/esm/responses.js
-var json = (data, init = {}) => {
+// node_modules/@remix-run/router/dist/router.js
+function _extends() {
+  _extends = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends.apply(this, arguments);
+}
+var Action;
+(function(Action2) {
+  Action2["Pop"] = "POP";
+  Action2["Push"] = "PUSH";
+  Action2["Replace"] = "REPLACE";
+})(Action || (Action = {}));
+var ResultType;
+(function(ResultType2) {
+  ResultType2["data"] = "data";
+  ResultType2["deferred"] = "deferred";
+  ResultType2["redirect"] = "redirect";
+  ResultType2["error"] = "error";
+})(ResultType || (ResultType = {}));
+var json = function json2(data, init) {
+  if (init === void 0) {
+    init = {};
+  }
   let responseInit = typeof init === "number" ? {
     status: init
   } : init;
@@ -7,10 +37,20 @@ var json = (data, init = {}) => {
   if (!headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json; charset=utf-8");
   }
-  return new Response(JSON.stringify(data), {
-    ...responseInit,
+  return new Response(JSON.stringify(data), _extends({}, responseInit, {
     headers
-  });
+  }));
+};
+var validMutationMethodsArr = ["post", "put", "patch", "delete"];
+var validMutationMethods = new Set(validMutationMethodsArr);
+var validRequestMethodsArr = ["get", ...validMutationMethodsArr];
+var validRequestMethods = new Set(validRequestMethodsArr);
+var isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
+var UNSAFE_DEFERRED_SYMBOL = Symbol("deferred");
+
+// node_modules/@remix-run/server-runtime/dist/esm/responses.js
+var json3 = (data, init = {}) => {
+  return json(data, init);
 };
 
 // app/entry.worker.ts
@@ -143,7 +183,7 @@ async function handleFetch(event) {
         response.headers.set("X-Remix-Worker", "yes");
         return response;
       }
-      return json(
+      return json3(
         { message: "Network Error" },
         {
           status: 500,
@@ -229,9 +269,21 @@ async function appHandleFetch(event, { error, response }) {
 }
 /*! Bundled license information:
 
+@remix-run/router/dist/router.js:
+  (**
+   * @remix-run/router v1.5.0
+   *
+   * Copyright (c) Remix Software Inc.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE.md file in the root directory of this source tree.
+   *
+   * @license MIT
+   *)
+
 @remix-run/server-runtime/dist/esm/responses.js:
   (**
-   * @remix-run/server-runtime v1.14.3
+   * @remix-run/server-runtime v1.15.0
    *
    * Copyright (c) Remix Software Inc.
    *
@@ -243,7 +295,7 @@ async function appHandleFetch(event, { error, response }) {
 
 @remix-run/server-runtime/dist/esm/index.js:
   (**
-   * @remix-run/server-runtime v1.14.3
+   * @remix-run/server-runtime v1.15.0
    *
    * Copyright (c) Remix Software Inc.
    *
