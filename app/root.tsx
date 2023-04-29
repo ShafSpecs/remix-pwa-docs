@@ -11,7 +11,7 @@ import {
   useMatches,
   useNavigate
 } from "@remix-run/react";
-import { getPostMetaData } from "./utils/server/github.server";
+import { type MetaDataObject, getPostMetaData } from "./utils/server/github.server";
 import { ClientOnly } from "remix-utils";
 import { Listbox, Transition } from "@headlessui/react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
@@ -30,7 +30,7 @@ import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
 import { GetTheme } from "./session.server";
 import RootReducer from "./rootReducer";
-import { packages, valid_packages } from "./routes/$package.($slug)";
+import { type ValidPackages, packages, valid_packages } from "./routes/$package.($slug)";
 
 let isMount = true;
 
@@ -52,15 +52,23 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  let meta = await getPostMetaData();
+  const meta_nullable = await getPostMetaData();
   const theme = await GetTheme(request);
 
-  // When reading from file system, `meta` is returned as a string,
-  // so we need to parse it into an object.
-  if (meta && typeof meta === "string") meta = JSON.parse(meta);
-
   // can add session theme data here if we want to store that. Otherwise, just using the regular script tag in the document works.
-  if (meta)
+  if (meta_nullable) {
+    const meta = meta_nullable.reduce(
+      (prev: Record<ValidPackages, Array<MetaDataObject>>, next) => {
+        prev[next.slug] = next.children;
+        return prev;
+      },
+      {
+        client: [],
+        pwa: [],
+        sw: [],
+        push: []
+      }
+    );
     return typedjson(
       { meta, theme },
       {
@@ -69,6 +77,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         }
       }
     );
+  }
   // throw error? How necessary is meta? Seems pretty necessary.
   // Depending on how much we need meta, we can just return null and handle it where meta would go.
   throw new Error("Uh oh! Something went wrong!");
