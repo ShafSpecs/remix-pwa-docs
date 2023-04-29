@@ -1,8 +1,14 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
-  serverBuildTarget: "vercel",
+  //serverBuildTarget: "vercel",
   server: process.env.NODE_ENV === "development" ? undefined : "./server.js",
   ignoredRouteFiles: ["**/.*"],
+  publicPath: "/build/",
+  serverBuildPath: "api/index.js",
+  //serverMainFields: ["main, module"],
+  serverModuleFormat: "cjs",
+  serverPlatform: "node",
+  serverMinify: false,
   serverDependenciesToBundle: [
     /^rehype.*/,
     /^remark.*/,
@@ -32,8 +38,14 @@ module.exports = {
     /^hastscript.*/,
     /^parse-entities.*/,
     /^is.*/,
-    /^stringify.*/,
+    /^stringify.*/
   ],
   appDirectory: "app",
-  serverBuildPath: "api/index.js"
+  future: {
+    v2_errorBoundary: true,
+    v2_meta: true,
+    v2_normalizeFormMethod: true,
+    v2_routeConvention: true,
+    unstable_tailwind: true
+  }
 };

@@ -3,32 +3,35 @@ import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { SunIcon, MoonIcon } from "@heroicons/react/20/solid";
-import { Fragment, useRef, useEffect } from 'react';
+import { Fragment, useRef, useEffect } from "react";
 import { ClientOnly } from "remix-utils";
-import { Link, NavLink, useLocation } from "@remix-run/react";
-import { useOnClickOutside, useWindowSize } from 'usehooks-ts';
+import { Link, NavLink, useLocation, useFetcher, useNavigate } from "@remix-run/react";
+import { useOnClickOutside, useWindowSize } from "usehooks-ts";
 import RemixLight from "./icons/RemixLight";
 import RemixDark from "./icons/RemixDark";
-import type { MetaDataObject } from "~/types/mdx";
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { useTheme } from "~/utils/providers/ThemeProvider";
+import { useSidebar } from "~/utils/providers/SidebarProvider";
+import { useTypedLoaderData } from "remix-typedjson";
+import type { loader as RootLoader } from "~/root";
+import type { PackageData, ValidPackages } from "~/routes/$package.($slug)";
 
 type HeaderProps = {
   scrollTop: number;
-  selectedTheme: string | null;
-  setSelectedTheme: React.Dispatch<React.SetStateAction<string | null>>;
-  selected: any;
-  setSelected: React.Dispatch<React.SetStateAction<any>>;
-  packages: any;
-  closed: boolean;
-  setClosed: React.Dispatch<React.SetStateAction<boolean>>;
-  list: MetaDataObject[]
+  selected: PackageData;
+  packages: Record<ValidPackages, PackageData>;
 };
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed, list, selected, setSelected, packages }: HeaderProps) => {
+export default ({ scrollTop, selected, packages }: HeaderProps) => {
+  const navigate = useNavigate();
+  const { meta: list } = useTypedLoaderData<typeof RootLoader>();
+  const fetcher = useFetcher();
+  const [theme, setTheme] = useTheme();
+  const [closed, setClosed] = useSidebar();
   const { width } = useWindowSize();
   const location = useLocation();
   const sidebarRef = useRef(null);
@@ -41,7 +44,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
     if (width > 1024) {
       setClosed(true);
     }
-  }, [setClosed, width])
+  }, [setClosed, width]);
 
   useEffect(() => {
     setClosed(true);
@@ -51,10 +54,11 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
     <Disclosure
       as="header"
       id="header__main"
-      className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-300 dark:shadow-none sm:px-6 lg:px-8 ${scrollTop > 20 && selectedTheme == "dark"
-        ? "dark:bg-transparentsticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 dark:shadow-none sm:px-6 lg:px-8 dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75"
-        : "dark:bg-transparent"
-        }`}
+      className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-300 dark:shadow-none sm:px-6 lg:px-8 ${
+        scrollTop > 20 && theme == "dark"
+          ? "dark:bg-transparentsticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 dark:shadow-none sm:px-6 lg:px-8 dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75"
+          : "dark:bg-transparent"
+      }`}
     >
       {({ open }) => (
         <>
@@ -85,19 +89,20 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                     />
                   </Disclosure.Button>
                   <Link to={"/"} className="ml-6">
-                    {selectedTheme === "light" ? <RemixLight className="h-10 -ml-2 lg:hidden w-11 fill-slate-700" fill="fill-slate-700" /> : <RemixDark className="w-10 -ml-2 lg:hidden h-9 fill-sky-100" fill="fill-sky-100" />}
+                    {theme === "light" ? (
+                      <RemixLight className="h-10 -ml-2 lg:hidden w-11 fill-slate-700" fill="fill-slate-700" />
+                    ) : (
+                      <RemixDark className="w-10 -ml-2 lg:hidden h-9 fill-sky-100" fill="fill-sky-100" />
+                    )}
                   </Link>
                 </div>
                 <nav className="px-1 mt-5 text-base lg:text-sm">
-                  <Listbox value={selected} onChange={setSelected}>
+                  <Listbox value={selected}>
                     <div className="relative mt-1 mb-6">
                       <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left rounded-lg shadow-sm cursor-default shadow-gray-300 dark:shadow-gray-700 dark:text-white focus:outline-none focus-visible:border-sky-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-sky-300 sm:text-sm">
                         <span className="block truncate">{selected.name}</span>
                         <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                          <ChevronUpDownIcon
-                            className="w-5 h-5 text-gray-400 dark:text-gray-200"
-                            aria-hidden="true"
-                          />
+                          <ChevronUpDownIcon className="w-5 h-5 text-gray-400 dark:text-gray-200" aria-hidden="true" />
                         </span>
                       </Listbox.Button>
                       <Transition
@@ -107,23 +112,25 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                         leaveTo="opacity-0"
                       >
                         <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-md dark:shadow-gray-700 dark:bg-slate-900 max-h-60 ring-1 ring-black dark:text-gray-100 ring-opacity-5 focus:outline-none sm:text-sm">
-                          {packages.map((pkg: any, packageIdx: number) => (
+                          {Object.values(packages).map((pkg, packageIdx: number) => (
                             <Listbox.Option
                               key={packageIdx}
                               disabled={pkg.comingSoon}
                               className={({ active }) =>
-                                `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-sky-100 text-sky-900' : 'text-gray-900 dark:text-gray-200'
+                                `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                  active ? "bg-sky-100 text-sky-900" : "text-gray-900 dark:text-gray-200"
                                 }`
                               }
+                              onClick={() => navigate(`/${pkg.slug}`)}
                               value={pkg}
                             >
                               {({ selected }) => (
                                 <>
-                                  <span
-                                    className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                                      }`}
-                                  >
-                                    {pkg.name} {pkg.comingSoon && <span className="text-base text-gray-400 dark:text-gray-500">🚧</span>}
+                                  <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
+                                    {pkg.name}{" "}
+                                    {pkg.comingSoon && (
+                                      <span className="text-base text-gray-400 dark:text-gray-500">🚧</span>
+                                    )}
                                   </span>
                                   {selected ? (
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sky-600">
@@ -139,32 +146,37 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                     </div>
                   </Listbox>
                   <ul className="space-y-9">
-                    {list[packages.indexOf(selected)].children.map((e: any) => {
-                      return (
-                        <li key={e.name}>
-                          <h2 className="font-medium font-display text-slate-900 dark:text-white">{e.name}</h2>
-                          <ul className="mt-4 space-y-3 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                            {e.children.map((item: any) => {
-                              return (
-                                <li className="relative" key={item.slug}>
-                                  <NavLink to={item.slug} end>
-                                    {({ isActive }) =>
-                                      <span className={classNames(
-                                        "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
-                                        isActive ?
-                                          "font-semibold text-sky-500 before:bg-sky-500" :
-                                          "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300")}>
-                                        {item.title}
-                                      </span>
-                                    }
-                                  </NavLink>
-                                </li>
-                              )
-                            })}
-                          </ul>
-                        </li>
-                      )
-                    })}
+                    {Array.isArray(list)
+                      ? list[selected.position].children.map((e: any) => {
+                          return (
+                            <li key={e.name}>
+                              <h2 className="font-medium font-display text-slate-900 dark:text-white">{e.name}</h2>
+                              <ul className="mt-4 space-y-3 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+                                {e.children.map((item: any) => {
+                                  return (
+                                    <li className="relative" key={item.slug}>
+                                      <NavLink to={item.slug} end>
+                                        {({ isActive }) => (
+                                          <span
+                                            className={classNames(
+                                              "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
+                                              isActive
+                                                ? "font-semibold text-sky-500 before:bg-sky-500"
+                                                : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
+                                            )}
+                                          >
+                                            {item.title}
+                                          </span>
+                                        )}
+                                      </NavLink>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </li>
+                          );
+                        })
+                      : list}
                   </ul>
                 </nav>
               </div>
@@ -179,9 +191,22 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
                   <path d="M18 17.5L10.308 5h15.144l7.933 12.5M18 17.5h15.385L25.452 30H10.308L18 17.5z"></path>
                 </g>
               </svg> */}
-              {selectedTheme === "light" ? <RemixLight className="h-10 -ml-2 lg:hidden w-11 fill-slate-700" fill="fill-slate-700" /> : <RemixDark className="h-10 -ml-2 lg:hidden w-11 fill-sky-100" fill="fill-sky-100" />}
-              {selectedTheme === "light" ? <RemixLight className="hidden w-10 h-9 fill-slate-700 lg:block" fill="fill-slate-700" /> : <RemixDark className="hidden w-10 h-9 fill-sky-100 lg:block" fill="fill-sky-100" />}
-              <p className="hidden lg:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 content-end text-2xl top-[3px] relative -ml-2.5 leading-10 tracking-wide">emix&nbsp;<span className="text-transparent text-[26px] top-[1.5px] bg-clip-text bg-gradient-to-tr from-indigo-500 dark:from-indigo-400 to-sky-300 dark:to-sky-200">PWA</span></p>
+              {theme === "light" ? (
+                <RemixLight className="h-10 -ml-2 lg:hidden w-11 fill-slate-700" fill="fill-slate-700" />
+              ) : (
+                <RemixDark className="h-10 -ml-2 lg:hidden w-11 fill-sky-100" fill="fill-sky-100" />
+              )}
+              {theme === "light" ? (
+                <RemixLight className="hidden w-10 h-9 fill-slate-700 lg:block" fill="fill-slate-700" />
+              ) : (
+                <RemixDark className="hidden w-10 h-9 fill-sky-100 lg:block" fill="fill-sky-100" />
+              )}
+              <p className="hidden lg:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 text-2xl relative -ml-2.5" style={{ top: "5.25px" }}>
+                emix&nbsp;
+                <span className="text-transparent text-[26px] top-[1.5px] bg-clip-text bg-gradient-to-tr from-indigo-500 dark:from-indigo-400 to-sky-300 dark:to-sky-200">
+                  PWA
+                </span>
+              </p>
             </a>
           </div>
           <div className="mr-6 -my-5 sm:mr-8 md:mr-0">
@@ -205,16 +230,21 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
               <div className="relative z-10">
                 <ClientOnly
                   children={() => (
-                    <button className="flex items-center justify-center w-6 h-6 rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5" onClick={() => {
-                      if (selectedTheme === "light") {
-                        setSelectedTheme("dark");
-                      } else if (selectedTheme === "dark") {
-                        setSelectedTheme("light");
-                      }
-                    }}>
-                      {selectedTheme && selectedTheme === "light" ? (
+                    <button
+                      className="flex items-center justify-center w-6 h-6 rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5"
+                      onClick={() => {
+                        if (theme === "light") {
+                          setTheme("dark");
+                          fetcher.submit({ theme: "dark" }, { method: "post", action: "/updateUserTheme" });
+                        } else if (theme === "dark") {
+                          setTheme("light");
+                          fetcher.submit({ theme: "light" }, { method: "post", action: "/updateUserTheme" });
+                        }
+                      }}
+                    >
+                      {theme && theme === "light" ? (
                         <SunIcon className="w-4 h-4 fill-sky-400" />
-                      ) : selectedTheme && selectedTheme === "dark" ? (
+                      ) : theme && theme === "dark" ? (
                         <MoonIcon className="w-4 h-4 fill-sky-400" />
                       ) : (
                         <p></p>
@@ -226,7 +256,7 @@ export default ({ scrollTop, selectedTheme, setSelectedTheme, closed, setClosed,
               <a
                 className="group"
                 aria-label="GitHub"
-                href="https://github.com/ShafSpecs/remix-pwa"
+                href="https://github.com/remix-pwa/remix-pwa"
                 target="_blank"
                 rel="noreferrer"
               >
