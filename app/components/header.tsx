@@ -201,7 +201,7 @@ export default ({ scrollTop, selected, packages }: HeaderProps) => {
               ) : (
                 <RemixDark className="hidden w-10 h-9 fill-sky-100 lg:block" fill="fill-sky-100" />
               )}
-              <p className="hidden lg:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 text-2xl relative -ml-2" style={{ top: "5.25px" }}>
+              <p className="hidden lg:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 text-2xl relative -ml-2.5" style={{ top: "5.25px" }}>
                 emix&nbsp;
                 <span className="text-transparent text-[26px] top-[1.5px] bg-clip-text bg-gradient-to-tr from-indigo-500 dark:from-indigo-400 to-sky-300 dark:to-sky-200">
                   PWA
