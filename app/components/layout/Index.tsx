@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-pascal-case */
-import { useOutletContext, Link } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
@@ -10,11 +10,11 @@ import Widget from "~/components/icons/Widget";
 import type { Heading } from "./Documentation";
 import { useIsFirstRender } from "usehooks-ts";
 import Grid from "../mdx/Grid";
-import type { RootOutletContext } from "~/root";
+import { useRoot } from "~/utils/providers/RootProvider";
 
 const IndexComponent = () => {
   const { code, frontmatter } = useTypedLoaderData<typeof ExampleLoaderResponse>();
-  const { next } = useOutletContext<RootOutletContext>();
+  const { next } = useRoot();
   const Component = useMemo(() => getMDXComponent(code), [code]);
 
   const docRef = useRef<HTMLDivElement>(null!);

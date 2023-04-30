@@ -31,8 +31,10 @@ const MetaDataObjectSchema = z.object({
   children: z.array(FrontMatterTypingsSchema)
 });
 
+export type MetaDataObject = z.infer<typeof MetaDataObjectSchema>;
+
 const LocalMetaDataFileSchema = z.object({
-  slug: z.string(),
+  slug: z.union([z.literal("pwa"), z.literal("client"), z.literal("push"), z.literal("sw")]),
   children: z.array(MetaDataObjectSchema)
 });
 
@@ -52,7 +54,6 @@ export const getPostContent = async (packageSlug: ValidPackages, slug: string | 
     if (!content) {
       return null;
     }
-
     return content;
   }
 
@@ -85,12 +86,12 @@ export const getPostMetaData = async () => {
      *
      * Todo: Generate metadata in development without the use of a github token.
      */
-    const content = readFile(resolve(__dirname, "../", `posts/metadata.json`), "utf-8");
+    const content = await readFile(resolve(__dirname, "../", `posts/metadata.json`), "utf-8");
 
     if (!content) {
       return null;
     }
-    const parsed_content = JSON.parse(await content);
+    const parsed_content = JSON.parse(content);
 
     return z.array(LocalMetaDataFileSchema).parse(parsed_content);
   }
@@ -110,6 +111,7 @@ export const getPostMetaData = async () => {
   if (!content) {
     return null;
   }
-  const data = z.array(MetaDataObjectSchema).parse(JSON.parse(content));
+  // This might not be the right schema, Not sure if production data is any different from development, if so this schema needs to be updated.
+  const data = z.array(LocalMetaDataFileSchema).parse(JSON.parse(content));
   return data;
 };

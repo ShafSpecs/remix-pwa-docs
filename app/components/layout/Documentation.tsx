@@ -1,10 +1,10 @@
-import { useLocation, Link, useOutletContext } from "@remix-run/react";
+import { useLocation, Link } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo, useRef, useState, useEffect, Fragment } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { useIsFirstRender } from "usehooks-ts";
-import type { RootOutletContext } from "~/root";
 import type { loader as ExampleLoaderResponse } from "~/routes/$package.($slug)";
+import { useRoot } from "~/utils/providers/RootProvider";
 
 export type Heading = {
   id: string;
@@ -24,7 +24,7 @@ export type Heading = {
  */
 export function Doc() {
   const { code, frontmatter } = useTypedLoaderData<typeof ExampleLoaderResponse>();
-  const { next, prev } = useOutletContext<RootOutletContext>();
+  const { next, prev } = useRoot();
   const Component = useMemo(() => getMDXComponent(code), [code]);
   const location = useLocation();
 
@@ -174,7 +174,7 @@ export function Doc() {
       if (headingElements.length === 0) {
         return;
       }
-      
+
       const topDistances = headingElements.map((headingElement) => ({
         element: headingElement,
         topDistance: Math.abs(headingElement.getBoundingClientRect().top)
