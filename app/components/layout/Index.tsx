@@ -72,11 +72,10 @@ const IndexComponent = () => {
                 ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)}
               >
                 <Link
-                  className={`${
-                    activeHeading!.id === headings[i + 1].text.replaceAll(" ", "-").toLowerCase()
+                  className={`${activeHeading!.id === headings[i + 1].text.replaceAll(" ", "-").toLowerCase()
                       ? "text-sky-500"
                       : "hover:text-slate-600 dark:hover:text-slate-300"
-                  }`}
+                    }`}
                   to={`/#${headings[i + 1]!.text.replaceAll(" ", "-").toLowerCase()}`}
                 >
                   {headings[i + 1].text}
@@ -91,11 +90,10 @@ const IndexComponent = () => {
               <h3 ref={(el: HTMLHeadingElement) => (headingsRef.current[headingsRef.current.length] = el)}>
                 <Link
                   to={`/#${headingId}`}
-                  className={`${
-                    activeHeading!.id == headingId || (activeH2 && activeH2.id == headingId)
+                  className={`${activeHeading!.id == headingId || (activeH2 && activeH2.id == headingId)
                       ? "text-sky-500"
                       : "font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
-                  }`}
+                    }`}
                 >
                   {heading.text}
                 </Link>
@@ -119,9 +117,8 @@ const IndexComponent = () => {
           currentOl.props.children.push(
             <li key={heading.id} ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)}>
               <Link
-                className={`${
-                  activeHeading!.id === headingId ? "text-sky-500" : "hover:text-slate-600 dark:hover:text-slate-300"
-                }`}
+                className={`${activeHeading!.id === headingId ? "text-sky-500" : "hover:text-slate-600 dark:hover:text-slate-300"
+                  }`}
                 to={`/#${heading.text.replaceAll(" ", "-").toLowerCase()}}`}
               >
                 {heading.text}
@@ -213,6 +210,75 @@ const IndexComponent = () => {
             </Grid>
             <p>{frontmatter.description}</p>
             <hr />
+            <div className="relative z-10 col-span-3 -ml-10 shadow-lg bg-slate-800 rounded-xl xl:ml-0 dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/10">
+              <div className="relative flex text-xs leading-6 text-slate-400">
+                <div className="flex items-center flex-none px-4 py-1 mt-2 border-t border-b text-sky-300 border-t-transparent border-b-sky-300">
+                  Terminal
+                </div>
+                <div className="flex flex-auto pt-2 overflow-hidden rounded-tr-xl">
+                  <div className="flex-auto -mr-px border rounded-tl bg-slate-700/50 border-slate-500/30" />
+                </div>
+                <div className="absolute right-0 flex items-center h-8 pr-4 top-2">
+                  <div className="relative flex -mr-2">
+                    <button type="button" className="text-slate-500 hover:text-slate-400">
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        className="w-8 h-8"
+                      >
+                        <path d="M13 10.75h-1.25a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h8.5a2 2 0 0 0 2-2v-8.5a2 2 0 0 0-2-2H19" />
+                        <path d="M18 12.25h-4a1 1 0 0 1-1-1v-1.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1ZM13.75 16.25h4.5M13.75 19.25h4.5" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="relative">
+                <pre className="flex overflow-auto text-sm leading-6 text-slate-50 ligatures-none">
+                  <code className="flex-none min-w-full p-5">
+                    <span className="flex">
+                      <svg
+                        viewBox="0 -9 3 24"
+                        aria-hidden="true"
+                        className="flex-none w-auto h-6 mr-3 overflow-visible text-pink-400"
+                      >
+                        <path
+                          d="M0 0L3 3L0 6"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <span className="flex-auto">npm install -D tailwindcss</span>
+                    </span>
+                    <span className="flex">
+                      <svg
+                        viewBox="0 -9 3 24"
+                        aria-hidden="true"
+                        className="flex-none w-auto h-6 mr-3 overflow-visible text-pink-400"
+                      >
+                        <path
+                          d="M0 0L3 3L0 6"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <span className="flex-auto">npx tailwindcss init</span>
+                    </span>
+                  </code>
+                </pre>
+              </div>
+            </div>
+
             <Component />
           </main>
         </article>

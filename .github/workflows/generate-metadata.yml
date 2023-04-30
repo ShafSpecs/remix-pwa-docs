@@ -26,4 +26,5 @@ jobs:
       run: npm run generator
       env:
         GITHUB_KEY: ${{ secrets.GIT_TOKEN }}
+        NODE_ENV: production
       
