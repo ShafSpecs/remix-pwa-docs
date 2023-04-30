@@ -3,7 +3,7 @@ import { Repo } from "../handlers/github-api";
 import { readFile } from "fs-extra";
 import { resolve } from "path";
 import { z } from "zod";
-import type { ValidPackages } from "~/routes/$package.($slug)";
+import type { ValidPackages } from "../PackageHelpers";
 
 const octokit = request.defaults({
   headers: {
