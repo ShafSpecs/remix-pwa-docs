@@ -111,13 +111,12 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        {/* <script src="https://cdn.tailwindcss.com"></script> */}
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
         className={`${
           !closed && "overflow-hidden"
-        } bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
+        } bg-white transition-colors scroll-smooth duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
       >
         {children}
         <ScrollRestoration />
