@@ -34,7 +34,7 @@ const MobileSidebar = () => {
       >
         <div
           ref={sidebarRef}
-          className="z-50 w-full max-w-xs min-h-full px-4 pt-5 pb-12 bg-white dark:bg-slate-900 sm:px-6"
+          className="z-50 max-w-xs min-h-full px-4 pt-5 pb-12 bg-white w-80 dark:bg-slate-900 sm:px-6"
         >
           <div className="flex items-center">
             <Disclosure.Button className="relative focus:outline-none focus:ring-0" onClick={() => setClosed(true)}>

@@ -44,7 +44,7 @@ export type RootOutletContext = { prev: PrevOrNextLink; next: PrevOrNextLink };
 
 export const links: LinksFunction = () => {
   return [
-    { rel: "stylesheet", href: tailwind },
+    // { rel: "stylesheet", href: tailwind },
     { rel: "stylesheet", href: appcss },
     { rel: "stylesheet", href: theme },
     { rel: "stylesheet", href: prism }
@@ -109,6 +109,7 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
       <head>
         <Meta />
         <Links />
+        <script src="https://cdn.tailwindcss.com"></script>
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
