@@ -38,7 +38,9 @@ module.exports = {
     /^hastscript.*/,
     /^parse-entities.*/,
     /^is.*/,
-    /^stringify.*/
+    /^stringify.*/,
+    "redent",
+    "strip-indent"
   ],
   appDirectory: "app",
   future: {

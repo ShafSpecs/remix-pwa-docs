@@ -5,3 +5,69 @@ slug: /pwa/contribute
 section: Introduction
 position: 5
 ---
+
+## Contributing to Remix PWA
+
+We welcome contributions to Remix PWA! We can't be where we are or accomplish what we do without the wonderful community. We appreciate your help!
+
+This post is to help you familiarize yourself with the process and start contributing to Remix PWA.
+
+**Please read this before attempting to make a contribution.**
+
+## Roles
+
+There are two roles in the Remix PWA project:
+
+- **Admins** are team members responsible for the overall health of the project. They are the ones who with admin rights, create releases and manage the roadmap.
+- **Maintainers** are team members responsible for reviewing and merging pull requests. They have write access to the repositories.
+- **Contributors** are anyone who contributes to the project. This includes opening issues, opening pull requests, and commenting on issues and pull requests. In short, you!
+
+## Development Process 
+
+### Feature Development 
+
+If you want to create a new feature/module for `remix-pwa`, please don't directly open a pull request. 
+Instead, follow this process:
+
+1. Create a [Github discussion](https://github.com/orgs/remix-pwa/discussions), outlining the feature you want to add. This allows for refinement, corrections and discussion anyone starts coding.
+2. Once a discussion is approved, an issue would be created to keep track of it.
+3. Depending on the nature of the request, it would be added to the [roadmap](/pwa/roadmap).
+4. An assignee (or multiple) would then be assigned to the issue. Who would keep track, and prepare the feature.
+5. Once the feature is ready, a PR would then be opened and reviewing would happen.
+6. If the green lght is given, a merge occurs!
+
+### Bug-fix Pull Requests
+
+No software is perfect including this one, so if you've found a bug, we'd love a PR! Follow these guidelines to ensure a swift merge:
+
+1. Create an issue describing the bug. If you can, include a link to a reproduction repo or provide code snippets.
+2. Make sure to explain the bug, how to reproduce it and your proposed fix.
+
+### Bug Repost Issues 
+
+If you've found a bug but don't have the time to fix it or can't find a solution, we'd still love to hear about it! Follow these guidelines when reporting:
+
+1. Create an issue describing the bug. If you can, include a link to a reproduction repo or provide code snippets to reproduce it.
+2. Make sure to explain the issue well and how to reproduce it using explanatory terms.
+3. If you have a proposed fix but can't create a PR, please include it in the issue.
+
+## Development Setup
+
+Before submitting a change to any codebase, you would need to follow these prerequisites. They might be a tad bit different based on the codebase you are contributing to:
+
+1. Fork the repository 
+2. Clone the repository
+3. Install the dependencies using `npm`
+4. Verify you are good to go by running `npm run dev`
+5. Run the tests (if found)
+6. Make your changes
+
+## Typo fixes
+
+If you find a typo in the documentation, please feel free to open a PR with the fix. We appreciate it!
+To do so, follow these guidelines:
+
+1. Fork the repository
+2. Clone the repository
+3. Make your changes in the `posts` directory (Each article is sorted by their sections)
+4. Create a PR with the changes to the `docs` branch of [`remix-pwa-docs`](https://github.com/ShafSpecs/remix-pwa-docs)
