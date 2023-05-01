@@ -6,34 +6,62 @@ section: Introduction
 position: 6
 ---
 
+import Info from './info.tsx'
+
 ## Frequently Asked Questions 
 
 ### What is Remix PWA?
 
-Remix PWA 
+Remix PWA is a collection of lightweight packages and templates that allow you to transform your Remix application 
+into a Progressive Web App (PWA) with minimal effort and configuration. Give your web app a native feel without ever going native.
 
 ### What is Remix?
 
-Remix 
+*"Remix is a full stack web framework that lets you focus on the user interface and work back through web standards to deliver a fast, slick, and resilient user experience."*
+
+Remix is a web framework focused on the fundamentals, that allow you to create and do cool stuffs with the web :+1:
 
 ### What is a Progressive Web App (PWA)?
 
-A Progressive Web App (PWA) is a web application that uses modern web capabilities to deliver an app-like experience to users. These apps meet certain requirements (see below), are deployed to servers, accessible through URLs, and indexed by search engines.
+A Progressive Web App (PWA) is a web application that uses modern web capabilities to deliver an app-like experience to users. These apps meet certain requirements (see below), 
+are deployed to servers, accessible through URLs, and indexed by search engines. Read more about PWAs [here](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
 
 ### What does `remix-pwa` do to my application? 
 
-`remix-pwa`
+`remix-pwa` is a scaffolding template that adds the necessary files and configurations to your Remix application to make it a PWA.
+By running `npx remix-pwa@latest`, you will be able to add the following features to your Remix application using the CLI:
+
+- Add a `manifest.webmanifest` file to your application. Read more about manifests [here](https://developer.mozilla.org/en-US/docs/Web/Manifest)
+- Add a minimal service worker file to your application, this file is built directly by `esbuild` into your `build` folder at build time.
+- Provide client utilities for you to interact with your device APIs and provide a seamless, native experience.
+- Provides APIs to interact with the [Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API) and [Notification API](https://developer.mozilla.org/en-us/docs/web/api/notification) to send push notifications to your users.
 
 ### What are the different modules for? 
 
-...
+`remix-pwa` originally used to be a one, big package that contains every feature you need to make your Remix application a PWA. 
+However, as the project grew, it became clear that it would be better to split the project into smaller, more focused packages.
+The main modules are as follows:
+
+- **`remix-pwa`**: The main package that contains the CLI and the `remix-pwa` template. It is used to easily scaffold a PWA in your web app. 
+- **`@remix-pwa/sw`**: This package contains utilities to build a simple or complex Service Worker. The limit is your imagination.
+- **`@remix-pwa/push` (Coming Soon)**: This package contains utilities to interact with the [Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API) as well as integration with external services like [OneSignal](https://onesignal.com/) and [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging).
+- **`@remix-pwa/client` (Coming Soon)**: This contains client-side APIs to give your users some crazy UX and also to extend other parts of your app.
+
+<Info>
+You don't need to run `npx remix-pwa@latest` anymore to kickstart your PWA. With the new modular approach, you can pick and choose the features you want to add to your app at whim. Explore the rest of the docs to find out how 🚀
+</Info>
 
 ## Extending Remix PWA 
 
 ### How do plugins work?
 
-...
+Depends on what you are extending/creating a plugin for. The general approach for plugins is to create a plugin class that extends the particular `Plugin` interface, you can then implement the methods 
+you want to override and add your own logic. You can then utilize the plugin in your application.
 
 ### Can I create my own plugin? 
 
-...
+Definitely. You can create your own plugin and publish it to NPM if you feel like, but do tell us if you do so we can add it to list if plgins. You can then use it in your Remix application by installing it with `npm` or `yarn` and adding it to your `remix.config.ts` file.
+
+### Why do I need to add plugins to `remix.config.ts`?
+
+Because ESM. Currently, Remix compiles your server build to CJS and doesn't bundle your node modules. CJS modules can't import ESM modules. Read more [here](https://remix.run/docs/en/1.15.0/pages/gotchas#importing-esm-packages)
