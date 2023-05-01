@@ -17,6 +17,7 @@ import Hero from "./components/Hero";
 import Header from "./components/Header";
 import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
+import { Analytics } from "@vercel/analytics/react"
 
 import type { LinksFunction } from "@remix-run/node";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
@@ -120,6 +121,7 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
       >
         {children}
         <ScrollRestoration />
+        <Analytics />
         <Scripts />
         <LiveReload />
       </body>
