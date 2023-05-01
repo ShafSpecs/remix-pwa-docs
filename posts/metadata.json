@@ -53,12 +53,49 @@
       {
         "name": "Guides",
         "position": 2,
-        "children": []
+        "children": [
+          {
+            "title": "Quickstart",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Guides",
+            "slug": "/pwa/quickstart",
+            "position": 1
+          }
+        ]
       },
       {
         "name": "Packages",
         "position": 3,
-        "children": []
+        "children": [
+          {
+            "title": "remix-pwa",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Packages",
+            "slug": "/pwa/remix-pwa",
+            "position": 1
+          },
+          {
+            "title": "@remix-pwa/sw",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Packages",
+            "slug": "/pwa/remix-pwa-sw",
+            "position": 2
+          },
+          {
+            "title": "@remix-pwa/push",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Packages",
+            "slug": "/pwa/remix-pwa-push",
+            "position": 3
+          },
+          {
+            "title": "@remix-pwa/client",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Packages",
+            "slug": "/pwa/remix-pwa-client",
+            "position": 4
+          }
+        ]
       },
       {
         "name": "Examples",
@@ -139,6 +176,13 @@
             "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
             "section": "Introduction",
             "slug": "/push/introduction",
+            "position": 1
+          },
+          {
+            "title": "Introduction",
+            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "section": "Introduction",
+            "slug": "/client/introduction",
             "position": 1
           }
         ]
