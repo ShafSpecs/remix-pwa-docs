@@ -44,7 +44,7 @@ export type RootOutletContext = { prev: PrevOrNextLink; next: PrevOrNextLink };
 
 export const links: LinksFunction = () => {
   return [
-    // { rel: "stylesheet", href: tailwind },
+    { rel: "stylesheet", href: tailwind },
     { rel: "stylesheet", href: appcss },
     { rel: "stylesheet", href: theme },
     { rel: "stylesheet", href: prism }
@@ -107,9 +107,10 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
   return (
     <html lang="en" className={`antialiased [font-feature-settings:'ss01'] ${theme || ""}`}>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <script src="https://cdn.tailwindcss.com"></script>
+        {/* <script src="https://cdn.tailwindcss.com"></script> */}
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
@@ -219,6 +220,8 @@ export default function App() {
       const selected = packages[package_route];
       dispatch({ type: "updateLinks", payload: { selected, prev, next } });
     }
+
+    alert("Current width of the viewport is " + window.screen.width + "px")
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
