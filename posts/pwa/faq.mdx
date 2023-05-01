@@ -55,12 +55,11 @@ You don't need to run `npx remix-pwa@latest` anymore to kickstart your PWA. With
 
 ### How do plugins work?
 
-Depends on what you are extending/creating a plugin for. The general approach for plugins is to create a plugin class that extends the particular `Plugin` interface, you can then implement the methods 
-you want to override and add your own logic. You can then utilize the plugin in your application.
+Depends on what you are extending/creating a plugin for. The general approach for plugins is a plugin class that extends the particular `Plugin` interface, and then implement the methods it needs to override. You can then utilize the plugin in your application.
 
 ### Can I create my own plugin? 
 
-Definitely. You can create your own plugin and publish it to NPM if you feel like, but do tell us if you do so we can add it to list if plgins. You can then use it in your Remix application by installing it with `npm` or `yarn` and adding it to your `remix.config.ts` file.
+Definitely. You can create your own plugin and publish it to NPM if you feel like, but do tell us if you do so we can add it to list of plgins. You can then use it in your Remix application by installing it with `npm` or `yarn` and adding it to your `remix.config.ts` file.
 
 ### Why do I need to add plugins to `remix.config.ts`?
 
