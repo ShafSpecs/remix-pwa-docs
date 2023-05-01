@@ -221,8 +221,6 @@ export default function App() {
       dispatch({ type: "updateLinks", payload: { selected, prev, next } });
     }
 
-    alert("Current width of the viewport is " + window.screen.width + "px")
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
