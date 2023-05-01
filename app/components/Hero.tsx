@@ -4,11 +4,13 @@ import theme from "prism-react-renderer/themes/vsDark";
 
 export default () => {
   const exampleCode = `
-const func = () => {
-  console.log("Welcome to Remix PWA!");
+import { CacheFirst } from "@remix-pwa/sw";
 
-  return "Hello World!";
-}
+self.addEventListener('fetch', (event) => {
+  if (event.request.destination === 'document') {
+    event.respondWith(cacheFirst.handle(event));
+  }
+})
   `.trim();
 
   return (
@@ -233,7 +235,7 @@ const func = () => {
                   </svg>
                   <div className="flex mt-4 space-x-2 text-xs">
                     <div className="flex h-6 p-px font-medium rounded-full bg-gradient-to-r from-sky-400/30 via-sky-400 to-sky-400/30 text-sky-300">
-                      <div className="flex items-center rounded-full px-2.5 bg-slate-800">cache-advance.config.js</div>
+                      <div className="flex items-center rounded-full px-2.5 bg-slate-800">entry.worker.ts</div>
                     </div>
                     <div className="flex h-6 rounded-full text-slate-500">
                       <div className="flex items-center rounded-full px-2.5">package.json</div>
@@ -244,7 +246,7 @@ const func = () => {
                       aria-hidden="true"
                       className="pr-4 font-mono border-r select-none border-slate-300/5 text-slate-600"
                     >
-                      {["01", "02", "03", "04", "05"].map((i) => {
+                      {["01", "02", "03", "04", "05", "06", "07"].map((i) => {
                         return (
                           <div key={i} className="leading-6">
                             {i}
@@ -252,13 +254,13 @@ const func = () => {
                         );
                       })}
                     </div>
-                    <Highlight {...defaultProps} theme={theme} code={exampleCode} language="tsx">
+                    <Highlight {...defaultProps} theme={theme} code={exampleCode} language="typescript">
                       {({ tokens, getLineProps, getTokenProps, className }) => (
-                        <pre className={`${className} overflow-x-auto leading-6 px-3`} style={{ marginTop: 0, paddingTop: 0, paddingBottom: 0, lineHeight: "24px" }}>
+                        <pre className={`${className} overflow-x-auto leading-6 px-3 bg-[#0A101F]/80`} style={{ marginTop: 0, paddingTop: 0, paddingBottom: 0, lineHeight: "24px", backgroundColor: "#0a101f/80" }}>
                           {tokens.map((line, i) => (
                             <div key={i} {...getLineProps({ line, key: i })}>
                               {line.map((token, key) => (
-                                <span {...getTokenProps({ token, key })} key={key} /> 
+                                <span {...getTokenProps({ token, key })} key={key} />
                               ))}
                             </div>
                           ))}
