@@ -43,7 +43,7 @@
           },
           {
             "title": "FAQs",
-            "description": "Popular questions (and answers!) I've gotten so far about Remix PWA.",
+            "description": "Popular questions (and answers!) I've gotten so far about Remix PWA plus some.",
             "section": "Introduction",
             "slug": "/pwa/faq",
             "position": 6
