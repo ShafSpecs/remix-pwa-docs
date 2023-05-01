@@ -37,7 +37,7 @@ const MobileSidebar = () => {
           className="z-50 max-w-xs min-h-full px-4 pt-5 pb-12 bg-white w-80 dark:bg-slate-900 sm:px-6"
         >
           <div className="flex items-center">
-            <Disclosure.Button className="relative focus:outline-none focus:ring-0" onClick={() => setClosed(true)}>
+            <Disclosure.Button className="relative mr-6 focus:outline-none focus:ring-0" onClick={() => setClosed(true)}>
               <XMarkIcon
                 className="block w-6 h-6 stroke-2 text-slate-700 dark:text-sky-100"
                 stroke="currentColor"
