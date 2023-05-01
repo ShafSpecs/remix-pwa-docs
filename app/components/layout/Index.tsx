@@ -213,7 +213,7 @@ const IndexComponent = () => {
             <Component />
           </main>
         </article>
-        <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
+        <dl className="flex pt-6 mt-12 border-t scroll-smooth border-slate-200 dark:border-slate-800">
           {next && (
             <div className="ml-auto text-right">
               <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Next</dt>
