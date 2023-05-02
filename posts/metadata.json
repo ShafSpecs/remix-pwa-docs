@@ -60,6 +60,13 @@
             "section": "Guides",
             "slug": "/pwa/quickstart",
             "position": 1
+          },
+          {
+            "title": "Skip remix-pwa",
+            "description": "Build your PWA from scratch with `remix-pwa` modules",
+            "section": "Guides",
+            "slug": "/pwa/without-cli",
+            "position": 2
           }
         ]
       },

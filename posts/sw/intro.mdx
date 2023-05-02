@@ -1,7 +1,46 @@
 ---
 title: Introduction
-description: Getting started with `@remix-pwa/sw` package for building, extending and customizing Service Worker in Remix.
 slug: /sw
 section: Introduction
 position: 1
+---
+
+import Grid from "./grid.tsx";
+import Link from "./link.tsx";
+import Arrow from "./arrow.tsx";
+import Widget from "./widget.tsx";
+import Plugin from "./plugin.tsx";
+import Swatch from "./swatch.tsx";
+
+<p className="lead">Learn how to get Remix PWA up and running in your Remix application or explore the ecosystem 🌍!</p>
+
+<Grid>
+  <Link
+    icon={<Arrow />}
+    to={"/sw/installation"}
+    title={"Installation"}
+    desc={"Set up Remix PWA in your application easily!"}
+  />
+  <Link
+    icon={<Widget />}
+    to={"/sw/basic-setup"}
+    title={"Guide"}
+    desc={"Get dirty with Service Workers and how to use them in Remix."}
+  />
+  <Link
+    icon={<Plugin />}
+    to={"/sw/plugins"}
+    title={"Plugins"}
+    desc={"Extend `@remix-pwa/sw` with custom plugins to add more features."}
+  />
+  <Link
+    icon={<Swatch />}
+    to={"/sw/cache-strategy"}
+    title={"API Reference"}
+    desc={"Learn about the internals of `@remix-pwa/sw` and what powers it."}
+  />
+</Grid>
+
+Getting started with `@remix-pwa/sw` package for building, extending and customizing Service Worker in Remix.
+
 ---
