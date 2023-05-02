@@ -8,7 +8,7 @@
         "children": [
           {
             "title": "Introduction",
-            "description": "A lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿. Let's dive in!",
+            "description": "A lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿. Let's dive right in!",
             "section": "Introduction",
             "slug": "/",
             "position": 1
@@ -137,7 +137,22 @@
       {
         "name": "Guides",
         "position": 2,
-        "children": []
+        "children": [
+          {
+            "title": "Basic Setup",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Guides",
+            "slug": "/sw/basic-setup",
+            "position": 1
+          },
+          {
+            "title": "Extending your SW",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Guides",
+            "slug": "/sw/extending",
+            "position": 2
+          }
+        ]
       },
       {
         "name": "Hooks",
@@ -153,13 +168,62 @@
         ]
       },
       {
-        "name": "API Reference",
+        "name": "Plugins",
         "position": 4,
-        "children": []
+        "children": [
+          {
+            "title": "Explore Plugins",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Plugins",
+            "slug": "/sw/plugins",
+            "position": 1
+          },
+          {
+            "title": "Create a Plugin",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Plugins",
+            "slug": "/sw/create-plugin",
+            "position": 2
+          }
+        ]
+      },
+      {
+        "name": "API Reference",
+        "position": 5,
+        "children": [
+          {
+            "title": "Cache Strategy",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "API Reference",
+            "slug": "/sw/cache-strategy",
+            "position": 1
+          },
+          {
+            "title": "Message Handler",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "API Reference",
+            "slug": "/sw/message-handler",
+            "position": 2
+          },
+          {
+            "title": "Plugin Reference",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "API Reference",
+            "slug": "/sw/plugin-reference",
+            "position": 3
+          },
+          {
+            "title": "Helper Reference",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "API Reference",
+            "slug": "/sw/helper-reference",
+            "position": 4
+          }
+        ]
       },
       {
         "name": "Examples",
-        "position": 5,
+        "position": 6,
         "children": []
       }
     ]
