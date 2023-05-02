@@ -15,7 +15,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const package_string = RequireParam(params, "package");
   const slug = params.slug;
 
-  if (slug == undefined && package_string == "pwa") {
+  if ((slug == undefined && package_string == "pwa") || package_string == "client" || package_string == "push") {
     return redirect("/");
   }
 
