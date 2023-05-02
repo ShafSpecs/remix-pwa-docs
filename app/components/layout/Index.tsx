@@ -199,11 +199,13 @@ const IndexComponent = () => {
             <Grid>
               <CustomLink.default
                 icon={<Arrow />}
+                to={"/pwa/installation"}
                 title={"Installation"}
                 desc={"Set up Remix PWA in your application easily!"}
               />
               <CustomLink.default
                 icon={<Widget />}
+                to={"/pwa/quickstart"}
                 title={"Guide"}
                 desc={"Explore the possibilities and check out more that Remix PWA can do."}
               />
