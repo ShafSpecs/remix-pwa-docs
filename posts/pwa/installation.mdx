@@ -8,24 +8,34 @@ position: 2
 
 ## Installation
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.
+To get started with `remix-pwa` in your application, run:
 
-Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.
-Nullam id dolor id nibh ultricies vehicula ut id elit. 
-
-### Queue va'sis?
-
-Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.
-
-```java {2}
-public static void main (String args[]) {
-  System.out.println("Hello World");
-}
+```bash
+npx remix-pwa@latest
 ```
 
-## Another Section
+This would install the CLI that can then be used to scaffold a new Remix PWA application quickly.
 
-Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.
-Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.
+### CLI Usage
 
+Run the following command to see the available options and flags:
 
+```bash
+npx remix-pwa@latest -h
+```
+
+When you run the CLI in a new project, a set of questions would be asked in order to whip up a suitable template.
+
+- **Is this a TS or JS Project:** Wether to use `ts` or `js` files in your application.
+- **Caching Strategy:** Wether to use precaching or not (Just-In-Time caching).
+- **PWA Features you want:** The available features are:
+  - Service Worker
+  - Web Manifest
+  - Push Notifications
+  - Client Utilities (Offline, Network, etc.)
+  - Development Icons
+- **Workbox Integration**: If you selected service workers above, do you want to integrate workbox?
+- **Location of your app folder:** By defalt, it is `app`. But if you changed it (e.g `src`), then indicate so. (*Without any trailing slashes*)
+- **Immediately install dependencies:** If you want to install dependencies immediately after scaffolding.
+
+Check out the [Quickstart](/pwa/quickstart) guide to get started with your new application.

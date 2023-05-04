@@ -75,32 +75,25 @@
         "position": 3,
         "children": [
           {
-            "title": "remix-pwa",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
-            "section": "Packages",
-            "slug": "/pwa/remix-pwa",
-            "position": 1
-          },
-          {
             "title": "@remix-pwa/sw",
             "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
             "section": "Packages",
             "slug": "/pwa/remix-pwa-sw",
-            "position": 2
+            "position": 1
           },
           {
             "title": "@remix-pwa/push",
             "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
             "section": "Packages",
             "slug": "/pwa/remix-pwa-push",
-            "position": 3
+            "position": 2
           },
           {
             "title": "@remix-pwa/client",
             "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
             "section": "Packages",
             "slug": "/pwa/remix-pwa-client",
-            "position": 4
+            "position": 3
           }
         ]
       },
@@ -120,7 +113,6 @@
         "children": [
           {
             "title": "Introduction",
-            "description": "Getting started with `@remix-pwa/sw` package for building, extending and customizing Service Worker in Remix.",
             "section": "Introduction",
             "slug": "/sw",
             "position": 1
