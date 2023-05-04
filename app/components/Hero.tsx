@@ -25,7 +25,7 @@ self.addEventListener('fetch', (event) => {
               height="530"
               decoding="async"
               data-nimg="1"
-              className="absolute -mb-56 opacity-50 bottom-full right-full -mr-72"
+              className="absolute -mb-56 opacity-50 select-none bottom-full right-full -mr-72"
               style={{ color: "transparent" }}
             />
             <div className="relative">
@@ -209,7 +209,7 @@ self.addEventListener('fetch', (event) => {
                 height={530}
                 decoding="async"
                 data-nimg={1}
-                className="absolute -top-64 -right-64"
+                className="absolute select-none -top-64 -right-64"
                 style={{ color: "transparent" }}
               />
               <img
@@ -219,7 +219,7 @@ self.addEventListener('fetch', (event) => {
                 height={567}
                 decoding="async"
                 data-nimg={1}
-                className="absolute -bottom-40 -right-44"
+                className="absolute select-none -bottom-40 -right-44"
                 style={{ color: "transparent" }}
               />
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg" />
