@@ -111,13 +111,12 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        {/* <script src="https://cdn.tailwindcss.com"></script> */}
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
         className={`${
           !closed && "overflow-hidden"
-        } bg-white transition-colors duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
+        } bg-white transition-colors scroll-smooth duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
       >
         {children}
         <ScrollRestoration />
@@ -237,7 +236,7 @@ export default function App() {
           }
         />
         {(location.pathname === "/" || location.pathname === "/pwa" || location.pathname === "/pwa/") && <Hero />}
-        <div className="relative flex justify-center mx-auto max-w-[88rem] sm:px-2 lg:px-8 xl:px-12">
+        <div className="relative flex justify-center mx-auto max-w-[88rem] body sm:px-2 lg:px-8 xl:px-12">
           <div className="hidden ml-5 lg:relative lg:block lg:flex-none">
             <div className="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden"></div>
             <div className="absolute bottom-0 right-0 hidden w-px h-12 top-16 bg-gradient-to-t from-slate-800 dark:block"></div>

@@ -19,7 +19,7 @@ const octokitWithDownloadUrl = z.object({
 
 const FrontMatterTypingsSchema = z.object({
   title: z.string(),
-  description: z.string(),
+  description: z.string().optional(),
   slug: z.string(),
   section: z.string(),
   position: z.number()

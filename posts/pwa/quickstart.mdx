@@ -1,0 +1,56 @@
+---
+title: Quickstart
+description: This guide will get you all set up and ready to use `remix-pwa` in your Remix application.
+slug: /pwa/quickstart
+section: Guides
+position: 1
+---
+
+## Getting up and ready 
+
+After [installing `remix-pwa`](/pwa/installation), the next step is to actually get it up and running.
+
+A few things that the CLI did for use was to create a new entry file for us, a manifest route (the names of these files might differ based on your choices) 
+and some new files in a `utils` directory, modified our `package.json` and added a new set of icons in `public/icons`. Not shabby at all.
+
+We still have work to do though, currently our Remix app has no idea about the existence of a worker and the worker has no idea 
+about anything going on in the Remix application. Quite a mess!
+
+### Linking the Worker
+
+Fixing the first issue is not difficult, head over to `entry.client.tsx` and plug in the following (short) code:
+
+```ts
+import { loadServiceWorker } from "@remix-pwa/sw";
+
+// change the name if yours is something else
+// Note the `.js` extension!!!
+loadServiceWorker("/entry.worker.js");
+```
+
+Great! Now our application can actually locate our worker file 
+and if we open up the "Application" tab in the browser, and navigate to the Service Worker tab, 
+we actually see our service worker. But we still have a problem, no caching is happening 
+and if we go offline, our app goes offline with us (*a lot of errors also included*). 
+
+We need to inform the worker file of events and stuffs (like navigation) happening in the app. Can be solved with a hook luckily.
+Add this line to your `root.tsx` (remember to import from `@remix-pwa/sw`):
+
+```ts 
+// Add at the top of your main, root component
+useSWEEffect();
+```
+
+And like that, we have a PWA. 
+
+### Linking our Manifest 
+
+Currently, our manifest file is also not recognised. That's because we didn't link anything yet.
+It's also not difficult to solve, add the right above Remix `<Links>` component in your `root`:
+
+```html 
+<!-- Notice I used Remix `v2_routeConvention`, change if not using -->
+<link rel="manifest" href="/resources.manifest.webmanifest" />
+```
+
+And we have a good-to-go PWA set up! Check out the rest of the docs to explore the endless possibilities!

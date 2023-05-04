@@ -8,7 +8,7 @@
         "children": [
           {
             "title": "Introduction",
-            "description": "A lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿. Let's dive in!",
+            "description": "A lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿. Let's dive right in!",
             "section": "Introduction",
             "slug": "/",
             "position": 1
@@ -43,7 +43,7 @@
           },
           {
             "title": "FAQs",
-            "description": "Popular questions (and answers!) I've gotten so far about Remix PWA.",
+            "description": "Popular questions (and answers!) I've gotten so far about Remix PWA plus some.",
             "section": "Introduction",
             "slug": "/pwa/faq",
             "position": 6
@@ -53,12 +53,49 @@
       {
         "name": "Guides",
         "position": 2,
-        "children": []
+        "children": [
+          {
+            "title": "Quickstart",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Guides",
+            "slug": "/pwa/quickstart",
+            "position": 1
+          },
+          {
+            "title": "Skip remix-pwa",
+            "description": "Build your PWA from scratch with `remix-pwa` modules",
+            "section": "Guides",
+            "slug": "/pwa/without-cli",
+            "position": 2
+          }
+        ]
       },
       {
         "name": "Packages",
         "position": 3,
-        "children": []
+        "children": [
+          {
+            "title": "@remix-pwa/sw",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Packages",
+            "slug": "/pwa/remix-pwa-sw",
+            "position": 1
+          },
+          {
+            "title": "@remix-pwa/push",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Packages",
+            "slug": "/pwa/remix-pwa-push",
+            "position": 2
+          },
+          {
+            "title": "@remix-pwa/client",
+            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "section": "Packages",
+            "slug": "/pwa/remix-pwa-client",
+            "position": 3
+          }
+        ]
       },
       {
         "name": "Examples",
@@ -76,7 +113,6 @@
         "children": [
           {
             "title": "Introduction",
-            "description": "Getting started with `@remix-pwa/sw` package for building, extending and customizing Service Worker in Remix.",
             "section": "Introduction",
             "slug": "/sw",
             "position": 1
@@ -100,7 +136,22 @@
       {
         "name": "Guides",
         "position": 2,
-        "children": []
+        "children": [
+          {
+            "title": "Basic Setup",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Guides",
+            "slug": "/sw/basic-setup",
+            "position": 1
+          },
+          {
+            "title": "Extending your SW",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Guides",
+            "slug": "/sw/extending",
+            "position": 2
+          }
+        ]
       },
       {
         "name": "Hooks",
@@ -116,13 +167,62 @@
         ]
       },
       {
-        "name": "API Reference",
+        "name": "Plugins",
         "position": 4,
-        "children": []
+        "children": [
+          {
+            "title": "Explore Plugins",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Plugins",
+            "slug": "/sw/plugins",
+            "position": 1
+          },
+          {
+            "title": "Create a Plugin",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "Plugins",
+            "slug": "/sw/create-plugin",
+            "position": 2
+          }
+        ]
+      },
+      {
+        "name": "API Reference",
+        "position": 5,
+        "children": [
+          {
+            "title": "Cache Strategy",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "API Reference",
+            "slug": "/sw/cache-strategy",
+            "position": 1
+          },
+          {
+            "title": "Message Handler",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "API Reference",
+            "slug": "/sw/message-handler",
+            "position": 2
+          },
+          {
+            "title": "Plugin Reference",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "API Reference",
+            "slug": "/sw/plugin-reference",
+            "position": 3
+          },
+          {
+            "title": "Helper Reference",
+            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "section": "API Reference",
+            "slug": "/sw/helper-reference",
+            "position": 4
+          }
+        ]
       },
       {
         "name": "Examples",
-        "position": 5,
+        "position": 6,
         "children": []
       }
     ]

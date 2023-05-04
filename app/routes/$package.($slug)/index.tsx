@@ -15,7 +15,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const package_string = RequireParam(params, "package");
   const slug = params.slug;
 
-  if (slug == undefined && package_string == "pwa") {
+  if ((slug == undefined && package_string == "pwa") || package_string == "client" || package_string == "push") {
     return redirect("/");
   }
 
@@ -36,7 +36,10 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export default function DocPage() {
   const { slug } = useTypedLoaderData<typeof loader>();
-  return <ClientOnly fallback={<Skeleton />} children={() => (slug ? <Doc /> : <IndexComponent />)} />;
+  // removed this cause jsx can be imported into mdx directly so Index is redundant.
+  // And also duplicated text exverywhere.
+  // return <ClientOnly fallback={<Skeleton />} children={() => (slug ? <Doc /> : <IndexComponent />)} />;
+  return <ClientOnly fallback={<Skeleton />} children={() => (<Doc />)} />;
 }
 
 export const ErrorBoundary = () => {

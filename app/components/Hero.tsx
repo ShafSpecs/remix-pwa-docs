@@ -14,7 +14,7 @@ self.addEventListener('fetch', (event) => {
   `.trim();
 
   return (
-    <div className="overflow-hidden bg-slate-900 dark:-mb-32 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
+    <div className="overflow-hidden hero scroll-smooth bg-slate-900 dark:-mb-32 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
       <div className="py-16 sm:px-2 lg:relative lg:py-20 lg:px-0">
         <div className="grid items-center max-w-2xl grid-cols-1 px-4 mx-auto gap-y-16 gap-x-8 lg:max-w-[88rem] lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12">
           <div style={{ width: "100%" }} className="z-10 md:text-center lg:text-left">
@@ -30,22 +30,23 @@ self.addEventListener('fetch', (event) => {
             />
             <div className="relative">
               <p className="inline text-5xl font-medium tracking-tight text-transparent bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display">
-                Never miss the cache again.
+                Remix your app natively.
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
-                Cache every single thing your app could ever do ahead of time, so your code never even has to run at
-                all.
+                Unlock the power of native with Remix PWA. Transform your web app and take your user experience to the next level.
               </p>
               <div className="flex gap-4 mt-8 md:justify-center lg:justify-start">
                 <a
                   className="px-4 py-2 text-sm font-semibold rounded-full bg-sky-300 text-slate-900 hover:bg-sky-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/50 active:bg-sky-500"
-                  href="/"
+                  href="/#overview"
                 >
                   Get started
                 </a>
                 <a
                   className="px-4 py-2 text-sm font-medium text-white rounded-full bg-slate-800 hover:bg-slate-700 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50 active:text-slate-400"
-                  href="/"
+                  href="https://github.com/remix-pwa/remix-pwa"
+                  target="_blank" 
+                  rel="noreferrer"
                 >
                   View on GitHub
                 </a>
