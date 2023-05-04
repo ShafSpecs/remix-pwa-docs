@@ -75,32 +75,25 @@
         "position": 3,
         "children": [
           {
-            "title": "remix-pwa",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "title": "@remix-pwa/sw",
+            "description": "Everything Service Worker is being handled here. Come and check it out!",
             "section": "Packages",
-            "slug": "/pwa/remix-pwa",
+            "slug": "/pwa/remix-pwa-sw",
             "position": 1
           },
           {
-            "title": "@remix-pwa/sw",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "title": "@remix-pwa/push",
+            "description": "Push notifications for your PWA (rolling out soon)",
             "section": "Packages",
-            "slug": "/pwa/remix-pwa-sw",
+            "slug": "/pwa/remix-pwa-push",
             "position": 2
           },
           {
-            "title": "@remix-pwa/push",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
-            "section": "Packages",
-            "slug": "/pwa/remix-pwa-push",
-            "position": 3
-          },
-          {
             "title": "@remix-pwa/client",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "description": "Everything utils and APIs to give your PWA superpowers and the authentic feeling!",
             "section": "Packages",
             "slug": "/pwa/remix-pwa-client",
-            "position": 4
+            "position": 3
           }
         ]
       },
