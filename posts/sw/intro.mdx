@@ -11,6 +11,7 @@ import Arrow from "./arrow.tsx";
 import Widget from "./widget.tsx";
 import Plugin from "./plugin.tsx";
 import Swatch from "./swatch.tsx";
+import Info from "./info.tsx";
 
 <p className="lead">Learn how to get Remix PWA up and running in your Remix application or explore the ecosystem 🌍!</p>
 
@@ -44,3 +45,54 @@ import Swatch from "./swatch.tsx";
 Getting started with `@remix-pwa/sw` package for building, extending and customizing Service Worker in Remix.
 
 ---
+
+`@remix-pwa/sw` is Remix PWA solution to everything Service Worker, containing all the tools you need to build,
+extend and customize Service Worker in Remix. As well as integration with external tools, currently only [`Workbox`](https://developer.chrome.com/docs/workbox/) is supported.
+
+## Installation
+
+To install `@remix-pwa/sw` package, run the following command:
+
+```bash
+# npm
+npm install @remix-pwa/sw
+
+# yarn
+yarn add @remix-pwa/sw
+```
+
+You still have to set your scripts though to recognise your service workers in `package.json`.
+
+```json
+{
+  "scripts": {
+    "build:worker": "esbuild ./app/route-to-worker --outfile=./public/name-of-worker-file.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
+    "dev: worker": "esbuild ./app/route-to-worker --outfile=./public/name-of-worker-file.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
+  }
+}
+```
+
+And you are ready to go! 🎉
+
+<Info>
+Alternatively, you can run `npx remix-pwa@latest` to quickly set up `@remix-pwa/sw` package with a ready service worker in your Remix application.
+{/* ```bash
+# (todo): make this a possible command
+npx @remix-pwa/sw init
+````*/}
+</Info>
+
+## Usage
+
+To use `@remix-pwa/sw` package, you need to accomplish three simple things:
+
+- A service worker
+- Connect your service worker to the rest of your application
+- A way to detect navigation and requests in your Remix application
+
+Check out the [basic setup guide](/sw/basic-setup) for more information.
+
+## Plugins
+
+`@remix-pwa/sw` package is designed to be extensible and customizable.
+You can extend it with custom plugins to add more features. Check out the [plugins guide](/sw/plugins) for more information.
