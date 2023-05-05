@@ -76,21 +76,21 @@
         "children": [
           {
             "title": "@remix-pwa/sw",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "description": "Everything Service Worker is being handled here. Come and check it out!",
             "section": "Packages",
             "slug": "/pwa/remix-pwa-sw",
             "position": 1
           },
           {
             "title": "@remix-pwa/push",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "description": "Push notifications for your PWA (rolling out soon)",
             "section": "Packages",
             "slug": "/pwa/remix-pwa-push",
             "position": 2
           },
           {
             "title": "@remix-pwa/client",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
+            "description": "Everything utils and APIs to give your PWA superpowers and the authentic feeling!",
             "section": "Packages",
             "slug": "/pwa/remix-pwa-client",
             "position": 3
@@ -116,13 +116,6 @@
             "section": "Introduction",
             "slug": "/sw",
             "position": 1
-          },
-          {
-            "title": "Installation",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
-            "section": "Introduction",
-            "slug": "/sw/installation",
-            "position": 2
           },
           {
             "title": "Upgrade Guide",

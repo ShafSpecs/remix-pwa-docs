@@ -25,7 +25,9 @@ import { loadServiceWorker } from "@remix-pwa/sw";
 
 // change the name if yours is something else
 // Note the `.js` extension!!!
-loadServiceWorker("/entry.worker.js");
+loadServiceWorker({
+  serviceWorkerUrl: "/entry.worker.js"
+});
 ```
 
 Great! Now our application can actually locate our worker file 

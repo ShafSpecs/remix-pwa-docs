@@ -1,7 +1,46 @@
 ---
 title: "Create a Plugin"
-description: Learn how to install and setup a basic Service Worker in Remix
+description: "Understand how plugins works and how you can create one to plug into @remix-pwa/sw module"
 slug: /sw/create-plugin
 section: Plugins
 position: 2
 ---
+
+Plugins are used to extend a lot of things in Remix PWA. Generally, `@remix-pwa/sw` uses a super, abstract class - inherited classes to implement several features. 
+For example, caching strategies use this approach. To extend the behaviour of a strategy (like add a background sysnc feature), you can create a plugin and plug it into the strategy directly 
+at initialisation.
+
+## Creating a Plugin
+
+To create a plugin, you need to extend the `Plugin` interface of whatever you want to extend. 
+For example, if you want to extend `CacheStrategy` behaviour, you need to extend the `StrategyPlugin` interface.
+
+```ts
+import { StrategyPlugin } from '@remix-pwa/sw';
+
+export class MyStrategyPlugin extends StrategyPlugin {
+  // implement the methods you want to override
+}
+```
+
+## Plugging a Plugin
+
+To plug a plugin functionality in, you only need to pass it to during instantiation.
+
+```ts
+import { NetworkFirst } from '@remix-pwa/sw';
+import { MyStrategyPlugin } from './my-strategy-plugin';
+
+const customPlugin = new MyStrategyPlugin();
+
+const customNetworkStrategy = new NetworkFirst({
+  cacheName: 'custom-network-strategy',
+  plugins: [customPlugin]
+});
+```
+
+And you can use your strategy as usual in your service worker.
+
+## Plugin Lifecycle
+
+Plugins have a lifecycle that is called by the strategy. Check out the [plugin reference](/sw/plugin-reference) for more info.
