@@ -118,18 +118,11 @@
             "position": 1
           },
           {
-            "title": "Installation",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
-            "section": "Introduction",
-            "slug": "/sw/installation",
-            "position": 2
-          },
-          {
             "title": "Upgrade Guide",
             "description": "A guide to upgrade to the latest version of `@remix-pwa/sw` from previous versions.",
             "section": "Introduction",
             "slug": "/sw/upgrade-guide",
-            "position": 3
+            "position": 2
           }
         ]
       },
@@ -172,14 +165,14 @@
         "children": [
           {
             "title": "Explore Plugins",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "description": "Check out all the new fuzzy and fiery plugins available for Remix PWA 🔥",
             "section": "Plugins",
             "slug": "/sw/plugins",
             "position": 1
           },
           {
             "title": "Create a Plugin",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "description": "Understand how plugins works and how you can create one to plug into @remix-pwa/sw module",
             "section": "Plugins",
             "slug": "/sw/create-plugin",
             "position": 2
