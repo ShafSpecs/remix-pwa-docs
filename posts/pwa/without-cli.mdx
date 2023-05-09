@@ -79,7 +79,7 @@ acknowledge worker files so we do it ourselves. Head over to `package.json` and 
 ```json
 "scripts": {
   "build:worker": "esbuild ./app/route-to-worker --outfile=./public/name-of-worker-file.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
-  "dev: worker": "esbuild ./app/route-to-worker --outfile=./public/name-of-worker-file.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
+  "dev:worker": "esbuild ./app/route-to-worker --outfile=./public/name-of-worker-file.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
 }
 ```
 
