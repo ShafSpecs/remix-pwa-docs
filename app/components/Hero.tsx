@@ -14,7 +14,7 @@ self.addEventListener('fetch', (event) => {
   `.trim();
 
   return (
-    <div className="overflow-hidden scroll-smooth bg-slate-900 dark:-mb-32 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
+    <div className="overflow-hidden hero scroll-smooth bg-slate-900 dark:-mb-32 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
       <div className="py-16 sm:px-2 lg:relative lg:py-20 lg:px-0">
         <div className="grid items-center max-w-2xl grid-cols-1 px-4 mx-auto gap-y-16 gap-x-8 lg:max-w-[88rem] lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12">
           <div style={{ width: "100%" }} className="z-10 md:text-center lg:text-left">
@@ -25,7 +25,7 @@ self.addEventListener('fetch', (event) => {
               height="530"
               decoding="async"
               data-nimg="1"
-              className="absolute -mb-56 opacity-50 bottom-full right-full -mr-72"
+              className="absolute -mb-56 opacity-50 select-none bottom-full right-full -mr-72"
               style={{ color: "transparent" }}
             />
             <div className="relative">
@@ -210,7 +210,7 @@ self.addEventListener('fetch', (event) => {
                 height={530}
                 decoding="async"
                 data-nimg={1}
-                className="absolute -top-64 -right-64"
+                className="absolute select-none -top-64 -right-64"
                 style={{ color: "transparent" }}
               />
               <img
@@ -220,7 +220,7 @@ self.addEventListener('fetch', (event) => {
                 height={567}
                 decoding="async"
                 data-nimg={1}
-                className="absolute -bottom-40 -right-44"
+                className="absolute select-none -bottom-40 -right-44"
                 style={{ color: "transparent" }}
               />
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg" />

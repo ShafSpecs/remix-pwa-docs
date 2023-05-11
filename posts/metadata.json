@@ -143,6 +143,13 @@
             "section": "Guides",
             "slug": "/sw/extending",
             "position": 2
+          },
+          {
+            "title": "Workbox",
+            "description": "Take advantage of Workbox in your Remix applications.",
+            "section": "Guides",
+            "slug": "/sw/workbox",
+            "position": 3
           }
         ]
       },
@@ -212,11 +219,6 @@
             "position": 4
           }
         ]
-      },
-      {
-        "name": "Examples",
-        "position": 6,
-        "children": []
       }
     ]
   },
@@ -257,16 +259,6 @@
         "name": "API Reference",
         "position": 4,
         "children": []
-      },
-      {
-        "name": "Examples",
-        "position": 5,
-        "children": []
-      },
-      {
-        "name": "Community",
-        "position": 6,
-        "children": []
       }
     ]
   },
@@ -291,16 +283,6 @@
       {
         "name": "API Reference",
         "position": 4,
-        "children": []
-      },
-      {
-        "name": "Examples",
-        "position": 5,
-        "children": []
-      },
-      {
-        "name": "Community",
-        "position": 6,
         "children": []
       }
     ]

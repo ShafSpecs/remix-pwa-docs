@@ -5,3 +5,15 @@ slug: /sw/use-sw-effect
 section: Hooks
 position: 1
 ---
+
+The `useSWEffect` hook allows you to monitor and handle navigation events in your Remix application. 
+It is similar to the `useEffect` hook, but it is only called when the user navigates to a new page in your application.
+
+This hook is to be used exclusively in your `root` file. 
+
+```ts 
+import { useSWEffect } from "@remix-pwa/sw";
+
+// at the yop of your root component 
+useSWEffect();
+```

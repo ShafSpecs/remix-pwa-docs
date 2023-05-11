@@ -43,3 +43,7 @@ html {
   font-feature-settings: "ss01" on;
   font-kerning: normal;
 }
+
+.body pre > code {
+  font-size: 14px;
+}

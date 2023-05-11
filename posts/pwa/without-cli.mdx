@@ -1,0 +1,94 @@
+---
+title: "Skip remix-pwa"
+description: Build your PWA from scratch with `remix-pwa` modules
+slug: /pwa/without-cli
+section: "Guides"
+position: 2
+---
+
+import Info from "./info.tsx"
+
+Skip scaffolding a PWA with `npx remix-pwa` and learn how to build your own custom PWA from scratch by utilizing `remix-pwa` packages.
+
+## Prerequisites
+
+In order to have a PWA, the basic components you need are:
+
+- A service worker
+- A manifest file
+
+and that's about it! A manifest and a service worker. 
+
+In `remix-pwa`, manifests are loaded from the `resources/manifest.webmanifest` route, a serverless route.
+If you want to skip building your own, you can run the CLI and select only the *Web Manifest* option. 
+Or head over to this [file](https://github.com/remix-pwa/remix-pwa/blob/main/templates/ts/app/routes/resources/manifest%5B.%5Djson.ts) 
+and copy it to your own project. You can then link your application with your manifest using a HTML `link` tag 
+placed above Remix's `Links` component in your `app/root.tsx` file.
+
+```html 
+<link rel="manifest" href="/route-to-your-manifest-file" />
+```
+
+## Service Worker
+
+Building a service worker is now much easier, thanks to [@remix-pwa/sw](/pwa/remix-pwa-sw) package.
+To get started, create a worker file in your `app` root. It can be called anything, we over here though 
+like to call ours `entry.worker` :+1:. 
+
+**You can read up more on Service Workers, lifecyles, events, etc. over [here](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)**
+
+The following code would set up a basic worker:
+
+```ts 
+/// <reference lib="WebWorker" />
+
+// Service Workers are quite broken in ts, this is a workaround
+export type {};
+declare let self: ServiceWorkerGlobalScope;
+
+self.addEventListener('install', (event: ExtendableEvent) => {
+  console.log('Service worker installed');
+  event.waitUntil(self.skipWaiting());
+});
+
+self.addEventListener('activate', (event: ExtendableEvent) => {
+  console.log('Service worker activated');
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('message', (event: ExtendableMessageEvent) => {
+  console.log('Service worker received message', event.data);
+});
+```
+
+You would need to register this file in your application though. No worries, we got you covered.
+Head over to the `entry.client.tsx` file in your `app` root and add the following code:
+
+```ts
+import { loadServiceWorker } from '@remix-pwa/sw';
+
+loadServiceWorker('/name-of-worker-file.js');
+```
+
+Notice that we used the file name, not the route and also a `.js` extension. This is because 
+we would be using `esbuild` to bundle our worker file into the `public` directory (It is just a script, after all!)
+
+One more thing and you would be set, generating a route for it. Currently, Remix doesn't 
+acknowledge worker files so we do it ourselves. Head over to `package.json` and dump the following in your scripts:
+
+```json
+"scripts": {
+  "build:worker": "esbuild ./app/route-to-worker --outfile=./public/name-of-worker-file.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
+  "dev:worker": "esbuild ./app/route-to-worker --outfile=./public/name-of-worker-file.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
+}
+```
+
+<Info>
+To run all scripts simultaneously, I recommend a package like [`npm-run-all`](https://www.npmjs.com/package/npm-run-all) to run all dev or build scripts at once.
+</Info>
+
+Now, you can run `npm run dev:worker` and `npm run build:worker` to build your worker file.
+
+## Extending the Worker 
+
+Now, I know that our current worker is unappealing but we can change that. We won't be doing that here though, head over to [this](/sw) page to learn more about building workers with remix-pwa.
