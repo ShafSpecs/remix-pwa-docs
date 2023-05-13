@@ -19,7 +19,7 @@ import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
 import { Analytics } from "@vercel/analytics/react"
 
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 
@@ -85,8 +85,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   throw new Error("Uh oh! Something went wrong!");
 };
 
-export const meta: V2_MetaFunction = () => [
-  {
+export const meta: MetaFunction = () => {
+  return {
     charset: "utf-8",
     title: "Remix PWA Docs",
     viewport: "width=device-width,initial-scale=1",
@@ -109,7 +109,7 @@ export const meta: V2_MetaFunction = () => [
     "og:image:url": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
     "og:description": "Progressively enhance your Remix application with PWA features like never before.",
   }
-];
+};
 
 /**
  * @description Separate out main styles and desired components from the App component so that we have a baseline for any errors that happen.
