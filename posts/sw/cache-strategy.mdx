@@ -6,7 +6,7 @@ section: "API Reference"
 position: 1
 ---
 
-...
+> This entire section is still a work in progress.
 
 ## Common Interfaces
 
@@ -14,27 +14,54 @@ These are the interfaces that are implemented across the cache `strategy` submod
 
 ### `CacheQueryMatchOptions`
 
-...
+#### Remarks 
+
+- `CacheQueryMatchOptions` is an interface that extends `CacheQueryOptions` and is a custom `matchOptions` object passed into a request.
+
+#### Definition 
+
+```typescript
+interface CacheQueryMatchOptions 
+  extends Omit<CacheQueryOptions, 'cacheName' | 'ignoreMethod'> {}
+```
 
 ### `CacheStrategyOptions`
 
-...
+#### Remarks
+
+- This is an interface type used to initialise a `CacheStrategy` instance.
+
+#### Definition
+
+```typescript
+interface CacheStrategyOptions {
+  cacheName: string;
+  plugins?: StrategyPlugin[];
+  isLoader?: boolean;
+  matchOptions?: CacheQueryMatchOptions;
+}
+```
+
+- `cacheName` - The name of the cache to use.
+- `plugins` - An array of `StrategyPlugin` instances to use.
+- `isLoader` - Whether or not the strategy is handling loader requests.
+- `matchOptions` - A custom [`matchOptions`](#CacheQueryMatchOptions) object to use when matching requests.
 
 ## `CacheStrategy`
 
-...
+`CacheStrategy` is an abstract class that is extended to create a cache strategy. 
 
 #### Remarks
 
-...
+- `CacheStrategy` is an exposed class that is extended to create a cache strategy. It is not to be used directly.
+- It contains an abstract `_handle` method that is to be overridden by the extending class and a `handle` method that is used to call the `_handle` method 
+under the hood.
 
 #### Constructor
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
 | `options` | `CacheStrategyOptions` | Yes | The options for the strategy. |
-
-...
 
 #### Properties
 
@@ -46,4 +73,12 @@ These are the interfaces that are implemented across the cache `strategy` submod
 
 #### Example
 
-...
+```typescript
+import { CacheStrategy } from '@remix-pwa/sw/cache-strategy';
+
+class MyStrategy extends CacheStrategy {
+  async _handle(request: Request) {
+    // Handle the request here
+  }
+}
+```

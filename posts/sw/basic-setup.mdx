@@ -5,3 +5,171 @@ slug: /sw/basic-setup
 section: Guides
 position: 1
 ---
+
+import Info from './info.tsx'
+
+So you have installed `@remix-pwa/sw` and you are ready to get started. This guide will walk you through the basic setup of a Service Worker in Remix.
+
+## Create a Service Worker
+
+The first step is to create a Service Worker. This is a TypeScript (or JavaScript) file that will be responsible for caching your assets and handling offline requests.
+Create a new file in your project called `entry.worker.ts` and add the following code:
+
+```ts
+/// <reference lib="WebWorker" />
+
+// Service Workers are quite broken in ts, this is a workaround
+export type {};
+declare let self: ServiceWorkerGlobalScope;
+
+self.addEventListener("install", (event: ExtendableEvent) => {
+  console.log("Service worker installed");
+  event.waitUntil(self.skipWaiting());
+});
+
+self.addEventListener("activate", (event: ExtendableEvent) => {
+  console.log("Service worker activated");
+  event.waitUntil(self.clients.claim());
+});
+```
+
+This is a basic Service Worker that when installed, would skip the [waiting](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting)
+process of the service worker and would attempt to take over, and an `activate` listener that would ensure your service worker take control of the current client and
+all other [clients](https://developer.mozilla.org/en-US/docs/Web/API/Clients). It will also log to the console when it is installed and activated.
+
+Currently our Service Worker doesn't do anything. No request interception, caching, push handling or anything. That's fine, Remix doesn't even know about the existence of our Service Worker yet.
+
+To fix that, add the following to your `package.json` file:
+
+```json
+{
+  "scripts": {
+    "build:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
+    "dev:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
+  }
+}
+```
+
+We now use `esbuild` to bundle our script to Remix `public` directory. Finally, let's load up our Service Worker in our app.
+In our `entry.client.ts` file, add the following:
+
+```ts 
+import { loadServiceWorker } from "@remix-pwa/sw";
+
+loadServiceWorker();
+```
+
+<Info>
+  If you can't locate your `entry.client.ts` file, run `npx remix reveal` and you should now see it in the `app` folder.
+</Info>
+
+Now, we have successfully loaded our Service Worker script into our Remix application 💿!
+
+## Basic caching 
+
+Let's do some basic caching with our Service Worker. We would do something similar to the old `remix-pwa` templates 
+(i.e Cache assets, loader data, and document pages). 
+
+Little bit of explanantion about caching in `@remix-pwa/sw`, the package contains multiple caching strategies as classes that all extend the 
+`CacheStrategy` class which contains an abstract `handle` method. This method is called when a request is made and the strategy is matched.
+
+> Check out [Caching Strategies](/sw/cache-strategies) in the API Reference for more information.
+
+Let's start by caching our assets. We will use the `CacheFirst` strategy for this, which is attempt to load the resource from the cache, if not found, fetch using network. In our `entry.worker.ts` file, add the following:
+
+```ts
+import { CacheFirst, matchRequest } from "@remix-pwa/sw";
+import type { MatchResponse } from "@remix-pwa/sw";
+
+// ...previous code
+
+const assetCache = new CacheFirst({
+  cacheName: "asset-cache",
+  matchOptions: {
+    ignoreSearch: true,
+    ignorevary: true
+  }
+});
+
+const fetchHandler = ({ request }: FetchEvent): Promise<Response> => {
+  const matched: MatchResponse = matchRequest(
+    request, 
+    ["/build/", "/fonts/", "/favicon.ico"]
+  );
+
+  switch (matched) {
+    case "asset":
+      return assetCache.handle(request);
+    case "loader":
+      break;
+    case "document":
+      break;
+    default:
+      return fetch(request);
+  }
+}
+
+self.addEventListener("fetch", (event: FetchEvent) => {
+  event.respondWith(fetchHandler(event));
+});
+```
+
+Bzzzzt 🤖! We have a basic caching strategy for our assets. Let's break down what we did a little bit.
+
+First, we created a new `CacheFirst` strategy and passed in a `cacheName` and `matchOptions`. The `cacheName` is the name of the cache that will be created in the browser. 
+The `matchOptions` is an object that contains options that will be passed to the `match` method of the `Cache` object. We set `ignoreSearch` and `ignoreVary` to `true` because 
+we don't want to cache assets with query strings or assets with different `Vary` headers.
+
+Next, we defined a `fetchHandler` which should handle all fetch events. We use the `matchRequest` function from `@remix-pwa/sw` to match the request to a type. 
+If the request matches an asset, we use the `CacheFirst` strategy to handle the request. If it matches a loader or document, we do nothing and `break` (for now). 
+If it doesn't match any of the above, we just fetch the request.
+
+Finally, we add an event listener for the `fetch` event and pass in our `fetchHandler` function.
+
+Let's implement the last two cases. Check this out: 
+
+```ts {1, 14-17}
+import { CacheFirst, matchRequest, NetworkFirst } from "@remix-pwa/sw";
+
+// just below the `CacheFirst` strategy
+const loaderCache = new NetworkFirst({
+  cacheName: "data-cache",
+  isLoader: true
+});
+
+const documentCache = new CacheFirst({
+  cacheName: "document-cache"
+});
+
+// in the `fetchHandler` function
+case "loader":
+  return loaderCache.handle(request);
+case "document":
+  return documentCache.handle(request);
+```
+
+Now, we have a basic caching strategy for our assets, loader data, and document pages. Let's test it out!
+
+## Handling Navigation 
+
+> This section is still a work in progress (WIP).
+
+Add the following to your `entry.worker.ts` file:
+
+```ts
+import { RemixNavigationHandler } from "@remix-pwa/sw";
+
+const messageHandler = new RemixNavigationHandler();
+
+self.addEventListener("message", (event) => {
+  event.waitUntil(
+    messageHandler.handle(event, {
+      caches: {
+        DATA,
+        PAGES: DOCUMENTS,
+      },
+    })
+  );
+});
+```
+
