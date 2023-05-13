@@ -89,7 +89,25 @@ export const meta: V2_MetaFunction = () => [
   {
     charset: "utf-8",
     title: "Remix PWA Docs",
-    viewport: "width=device-width,initial-scale=1"
+    viewport: "width=device-width,initial-scale=1",
+    keywords: "Remix,ShafSpecs,Remix PWA,Remix PWA Docs,Remix PWA Documentation,Remix PWA Documentation,remix-pwa,remix-pwa-docs,@remix-pwa",
+    "twitter:image": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    "og:image": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@ShafSpecs",
+    "twitter:title": "Remix PWA",
+    "og:title": "Remix PWA",
+    "og:type": "website",
+    "og:url": "https://remix-pwa-docs.vercel.app",
+    "twitter:description": "Progressively enhance your Remix application with PWA features like never before.",
+    "og:locale": "en_US",
+    "og:image:alt": "Remix PWA",
+    "og:image:width": "1200",
+    "og:image:height": "630",
+    "og:image:type": "image/png",
+    "og:image:secure_url": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    "og:image:url": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    "og:description": "Progressively enhance your Remix application with PWA features like never before.",
   }
 ];
 
@@ -114,9 +132,8 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
-        className={`${
-          !closed && "overflow-hidden"
-        } bg-white transition-colors scroll-smooth duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
+        className={`${!closed && "overflow-hidden"
+          } bg-white transition-colors scroll-smooth duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
       >
         {children}
         <ScrollRestoration />
