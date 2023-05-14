@@ -21,7 +21,7 @@ import { Analytics } from "@vercel/analytics/react"
 
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 
 // Imported this way because unstable_tailwindcss flag in remix.config.js (https://tailwindcss.com/docs/guides/remix)
 import tailwind from "./tailwind.css";
