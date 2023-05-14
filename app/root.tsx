@@ -197,6 +197,7 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
           sizes="16x16"
           href="/icons/favicon-16x16.png"
         />
+        <link rel="manifest" href="/resources/manifest.webmanifest" />
         <Links />
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
