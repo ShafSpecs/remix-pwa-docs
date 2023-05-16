@@ -1,6 +1,6 @@
 export type FrontMatterTypings = {
   title: string;
-  description: string;
+  description?: string;
   slug: string;
   section: string;
   position: number;
