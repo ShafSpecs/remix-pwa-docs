@@ -5,3 +5,122 @@ slug: /sw/message-handler
 section: "API Reference"
 position: 2
 ---
+
+## `MessageHandlerParams`
+
+#### Remarks
+
+- The `MessageHandlerParams` is an interface that defines the parameters that are passed to the `MessageHandler` constructor.
+
+#### Definition
+
+```ts
+interface MessageEnv {
+  event?: ExtendableMessageEvent;
+  state?: Record<string, any>;
+}
+
+interface MessageHandlerParams {
+  plugins?: MessagePlugin[];
+  state?: MessageEnv;
+}
+```
+
+---
+
+## `MessageHandler`
+
+The `MessageHandler` is an abstract class that allows you to send messages to the Service Worker from your application.
+Contains unimplemented `_handle` method that should be overriden with whatever custom logic you want
+
+#### Remarks
+
+- It is to be extended and implemented.
+- Contains an unimplemented `_handle` method that should be overriden
+- Also contains a `runPlugins` to run plugins on the message before, during or after it is handled
+
+#### Constructor
+
+| Parameter | Type                   | Required | Description                                                         |
+| :-------- | :--------------------- | :------- | :------------------------------------------------------------------ |
+| `params`  | `MessageHandlerParams` | No       | The parameters that are passed to the `MessageHandler` constructor. |
+
+#### Properties
+
+| Property  | Type              | Description                                                                                         |
+| :-------- | :---------------- | :-------------------------------------------------------------------------------------------------- |
+| `plugins` | `MessagePlugin[]` | The plugins that are passed to the `MessageHandler` constructor.                                    |
+| `state`   | `MessageEnv`      | The state that is passed to the `MessageHandler` constructor. Can be any additional info or config. |
+
+#### Methods
+
+| Method       | Returns | Description                                                                        |
+| :----------- | :------ | :--------------------------------------------------------------------------------- |
+| `handle`     | `void`  | The exposed method to call the implemented abstract method.                        |
+| `_handle`    | `void`  | Abstract method that would get implemented. Take the event and a record            |
+| `runPlugins` | `void`  | Method that runs the plugins on the message before, during or after it is handled. |
+
+---
+
+### `PrecacheHandler`
+
+#### Remarks
+
+- The `PrecacheHandler` is a class that gathers and proceeds to cache every route at the start of your application (precache)
+
+#### Constructor
+
+Takes in one parameter, `params` which is of type `PrecacheHandlerOptions` that extends `MessageHandlerParams`.
+The definition is as follows:
+
+```ts
+interface PrecacheHandlerOptions extends MessageHandlerParams {
+  dataCacheName: string;
+  documentCacheName: string;
+  assetCacheName: string;
+}
+```
+
+#### Example
+
+```ts
+import { PrecacheHandler } from "@remix-run/sw";
+
+new PrecacheHandler({
+  dataCacheName: "data-cache",
+  documentCacheName: "document-cache",
+  assetCacheName: "asset-cache"
+});
+```
+
+---
+
+### `RemixNavigationHandler`
+
+#### Remarks
+
+- The `RemixNavigationHandler` is a class that handles and responds to the navigation of your application. It is what you typically use in a JIT-caching scenario (cache on visit, not beforehand).
+
+#### Constructor
+
+Takes in one parameter, `params` which is of type `RemixNavigationHandlerOptions` that extends `MessageHandlerParams`.
+
+The definition is as follows:
+
+```ts
+interface RemixNavigationHandlerOptions extends MessageHandlerParams {
+  dataCacheName: string;
+  documentCacheName: string;
+};
+```
+
+#### Example
+
+```ts
+import { RemixNavigationHandler } from "@remix-run/sw";
+
+new RemixNavigationHandler({
+  dataCacheName: "data-cache",
+  documentCacheName: "document-cache"
+});
+```

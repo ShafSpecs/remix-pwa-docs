@@ -159,16 +159,14 @@ Add the following to your `entry.worker.ts` file:
 ```ts
 import { RemixNavigationHandler } from "@remix-pwa/sw";
 
-const messageHandler = new RemixNavigationHandler();
+const messageHandler = new RemixNavigationHandler({
+  dataCacheName: "data-cache",
+  documentCacheName: "document-cache"
+});
 
 self.addEventListener("message", (event) => {
   event.waitUntil(
-    messageHandler.handle(event, {
-      caches: {
-        DATA,
-        PAGES: DOCUMENTS,
-      },
-    })
+    messageHandler.handle(event)
   );
 });
 ```
