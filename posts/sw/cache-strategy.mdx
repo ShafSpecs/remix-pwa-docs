@@ -19,7 +19,8 @@ These are the interfaces that are implemented across the cache `strategy` submod
 #### Definition
 
 ```typescript
-interface CacheQueryMatchOptions extends Omit<CacheQueryOptions, "cacheName" | "ignoreMethod"> {}
+interface CacheQueryMatchOptions 
+  extends Omit<CacheQueryOptions, "cacheName" | "ignoreMethod"> {}
 ```
 
 ### `CacheStrategyOptions`
