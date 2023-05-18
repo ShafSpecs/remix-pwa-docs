@@ -1,12 +1,10 @@
 ---
 title: "Cache Strategy"
-description: Learn how to install and setup a basic Service Worker in Remix
+description: Under-the-hood view of what makes up caching in Remix PWA
 slug: /sw/cache-strategy
 section: "API Reference"
 position: 1
 ---
-
-> This entire section is still a work in progress.
 
 ## Common Interfaces
 
@@ -14,15 +12,15 @@ These are the interfaces that are implemented across the cache `strategy` submod
 
 ### `CacheQueryMatchOptions`
 
-#### Remarks 
+#### Remarks
 
 - `CacheQueryMatchOptions` is an interface that extends `CacheQueryOptions` and is a custom `matchOptions` object passed into a request.
 
-#### Definition 
+#### Definition
 
 ```typescript
 interface CacheQueryMatchOptions 
-  extends Omit<CacheQueryOptions, 'cacheName' | 'ignoreMethod'> {}
+  extends Omit<CacheQueryOptions, "cacheName" | "ignoreMethod"> {}
 ```
 
 ### `CacheStrategyOptions`
@@ -47,38 +45,194 @@ interface CacheStrategyOptions {
 - `isLoader` - Whether or not the strategy is handling loader requests.
 - `matchOptions` - A custom [`matchOptions`](#CacheQueryMatchOptions) object to use when matching requests.
 
-## `CacheStrategy`
+### `FetchListenerEnv`
 
-`CacheStrategy` is an abstract class that is extended to create a cache strategy. 
+#### Remarks
+
+- This is an interface type used to pass additional information to the strategy handler.
+
+#### Definition
+
+```typescript
+interface FetchListenerEnvState extends Record<string, any> {
+  fetcher?: typeof fetch;
+}
+
+interface FetchListenerEnv {
+  event?: FetchEvent;
+  state?: FetchListenerEnvState;
+}
+```
+
+- `event`: Is the fetch event that is being handled.
+- `state`: Is an object that contains additional information about the fetch event. It contains a special `fetcher` property
+  of `typeof fetch` that can be used to fetch requests, could be the defualt fetch or a custom function.
+
+---
+
+## `CacheStrategy`
 
 #### Remarks
 
 - `CacheStrategy` is an exposed class that is extended to create a cache strategy. It is not to be used directly.
-- It contains an abstract `_handle` method that is to be overridden by the extending class and a `handle` method that is used to call the `_handle` method 
-under the hood.
+- It contains an abstract `_handle` method that is to be overridden by the extending class and a `handle` method that is used to call the `_handle` method
+  under the hood.
 
 #### Constructor
 
-| Parameter | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
-| `options` | `CacheStrategyOptions` | Yes | The options for the strategy. |
+| Parameter | Type                   | Required | Description                   |
+| :-------- | :--------------------- | :------- | :---------------------------- |
+| `options` | `CacheStrategyOptions` | Yes      | The options for the strategy. |
 
 #### Properties
 
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `options` | `CacheStrategyOptions` | The options for the strategy. |
+| Property       | Type                     | Description                                                                              |
+| :------------- | :----------------------- | :--------------------------------------------------------------------------------------- |
+| `cacheName`    | `string`                 | The name of the cache to use.                                                            |
+| `plugins`      | `StrategyPlugin[]`       | An array of `StrategyPlugin` instances to use.                                           |
+| `isLoader`     | `boolean`                | Whether or not the strategy is handling loader requests.                                 |
+| `matchOptions` | `CacheQueryMatchOptions` | A custom [`matchOptions`](#CacheQueryMatchOptions) object to use when matching requests. |
+
+#### Methods
+
+| Method    | Returns             | Description                                                        |
+| :-------- | :------------------ | :----------------------------------------------------------------- |
+| `handle`  | `Promise<Response>` | Handles the request and returns a response. Takes a request object |
+| `_handle` | `Promise<Response>` | Abstract method that would get implemented. Takes a request object |
 
 ...
 
 #### Example
 
 ```typescript
-import { CacheStrategy } from '@remix-pwa/sw/cache-strategy';
+import { CacheStrategy } from "@remix-pwa/sw";
 
 class MyStrategy extends CacheStrategy {
   async _handle(request: Request) {
     // Handle the request here
   }
 }
+```
+
+---
+
+### `CacheFirst`
+
+#### Remarks
+
+- `CacheFirst` is a class that extends `CacheStrategy` and implements a cache first strategy.
+- It will attempt to retrieve a response from the cache and if it is not found, it will fetch the request and cache the response.
+
+#### Example
+
+```typescript
+import { CacheFirst } from "@remix-pwa/sw";
+
+const myStrategy = new CacheFirst({
+  cacheName: "my-cache",
+  plugins: [
+    // Add plugins here
+  ],
+  isLoader: false,
+  matchOptions: {
+    // Add match options here
+  }
+});
+```
+
+---
+
+### `NetworkFirst`
+
+#### Remarks
+
+- `NetworkFirst` is a class that extends `CacheStrategy` and implements a network first strategy.
+- It will attempt to fetch the request and if it fails, it will retrieve a response from the cache.
+- It contains a specialized constructor that collects more options like `networkTimeoutSeconds`.
+
+#### Constructor
+
+| Parameter | Type                  | Required | Description                                         |
+| :-------- | :-------------------- | :------- | :-------------------------------------------------- |
+| `options` | `NetworkFirstOptions` | Yes      | The options for the strategy.                       |
+| `env`     | `FetchListenerEnv`    | No       | Extra information that can be passed to the handler |
+
+#### Definitions
+
+```typescript
+interface NetworkFirstOptions extends CacheStrategyOptions {
+  networkTimeoutSeconds?: number;
+}
+```
+
+#### Example
+
+```typescript
+import { NetworkFirst } from "@remix-pwa/sw";
+
+const myStrategy = new NetworkFirst({
+  cacheName: "my-cache",
+  plugins: [
+    // Add plugins here
+  ],
+  isLoader: false,
+  matchOptions: {
+    // Add match options here
+  },
+  networkTimeoutSeconds: 5
+});
+```
+
+---
+
+### `CacheOnly`
+
+#### Remarks
+
+- `CacheOnly` is a class that extends `CacheStrategy` and implements a cache only strategy.
+  {/* Should technically be a `503` */}
+- It will attempt to retrieve a response from the cache and if it is not found, it will return a `404` response.
+
+#### Example
+
+```typescript
+import { CacheOnly } from "@remix-pwa/sw";
+
+const myStrategy = new CacheOnly({
+  cacheName: "my-cache",
+  plugins: [
+    // Add plugins here
+  ],
+  isLoader: false,
+  matchOptions: {
+    // Add match options here
+  }
+});
+```
+
+---
+
+### `NetworkOnly`
+
+#### Remarks
+
+- `NetworkOnly` is a class that extends `CacheStrategy` and implements a network only strategy.
+- It will attempt to fetch the request and if it fails, it will return a `404` response.
+- The constructor also collects a specialized `NetworkOnlyOptions` and `FetchListenerEnv` like [`NetworkFirst`](/sw/cache-strategy#networkfirst).
+
+#### Example
+
+```typescript
+import { NetworkOnly } from "@remix-pwa/sw";
+
+const myStrategy = new NetworkOnly({
+  cacheName: "my-cache",
+  plugins: [
+    // Add plugins here
+  ],
+  isLoader: false,
+  matchOptions: {
+    // Add match options here
+  }
+});
 ```
