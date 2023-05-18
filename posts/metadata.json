@@ -207,14 +207,14 @@
           },
           {
             "title": "Plugin Reference",
-            "description": "",
+            "description": "Check the interfaces that make up the plugin system in Remix PWA. Plus, how to implement them yourself.",
             "section": "API Reference",
             "slug": "/sw/plugin-reference",
             "position": 3
           },
           {
             "title": "Helper Reference",
-            "description": "",
+            "description": "Check out the little, yet mighty functions exposed by Remix PWA sw module to help you build your own custom service worker.",
             "section": "API Reference",
             "slug": "/sw/helper-reference",
             "position": 4
