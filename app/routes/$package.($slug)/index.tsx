@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
 import { ClientOnly } from "remix-utils";
@@ -31,6 +31,14 @@ export const loader = async ({ params }: LoaderArgs) => {
   }
 
   throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });
+};
+
+export const meta: MetaFunction = ({ data }) => {
+  console.log(data);
+  return {
+    title: `${data.slug ? data.slug[0].toUpperCase() + data.slug.substr(1) + " | " : ""}Remix Docs`,
+    description: `${data.code && data.frontmatter.description}`,
+  }
 };
 
 export default function DocPage() {
