@@ -250,7 +250,7 @@ const metaData = async () => {
   })
 
   metaClient.forEach((m) => {
-    const section = metadata[2].children.find(e => e.name === m.section);
+    const section = metadata[3].children.find(e => e.name === m.section);
 
     if (section) {
       section.children.push({

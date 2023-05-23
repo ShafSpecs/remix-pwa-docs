@@ -4,7 +4,6 @@ import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
 import { ClientOnly } from "remix-utils";
 import GeneralError from "~/components/GeneralError";
 import { Doc } from "~/components/layout/Documentation";
-import IndexComponent from "~/components/layout/Index";
 import Skeleton from "~/components/layout/Skeleton";
 import { valid_packages } from "~/utils/PackageHelpers";
 import { RequireParam } from "~/utils/ParamHelpers";
@@ -15,7 +14,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const package_string = RequireParam(params, "package");
   const slug = params.slug;
 
-  if ((slug == undefined && package_string == "pwa") || package_string == "client" || package_string == "push") {
+  if ((slug == undefined && package_string == "pwa") || package_string == "client") {
     return redirect("/");
   }
 
