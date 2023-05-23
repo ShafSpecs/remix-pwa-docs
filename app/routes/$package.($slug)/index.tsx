@@ -34,7 +34,6 @@ export const loader = async ({ params }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction = ({ data }) => {
-  console.log(data);
   return {
     title: `${data.slug ? data.slug[0].toUpperCase() + data.slug.substr(1) + " | " : ""}Remix Docs`,
     description: `${data.code && data.frontmatter.description}`,
