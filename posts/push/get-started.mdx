@@ -1,0 +1,340 @@
+---
+title: Get Started
+description: "Learn how to get started with the Remix PWA Push package."
+slug: /push/get-started
+section: Guides
+position: 1
+---
+
+import Info from "./info.tsx";
+
+In this guide, we are going to build out our own push notification system, it would be simple, nothing too complex, but it will give you a good idea of how to use the Remix PWA Push package.
+
+## Prerequisites
+
+You would need a Service Worker to be able to use the Remix PWA Push package, if you don't have one,
+check out the [service worker package](/sw). Your service worker doesn't need to do anything, it just
+needs to be built by `esbuild` when your application runs. This [guide](/sw/basic-setup#create-a-service-worker)
+would get you started if you haven't gotten a service worker yet.
+
+You would also require `@remix-pwa/push` to be installed (_after all, this is the docs for it_).
+
+## Getting Started
+
+Let's get this over with, shall we? Firstly, we want to provide a structure/layout in our service worker for working with push (no pun intended).
+
+```ts
+self.addEventListener("push", (event) => {});
+
+self.addEventListener("notificationclick", (event) => {});
+
+self.addEventListener("notificationclose", (event) => {});
+
+self.addEventListener("error", (error) => {});
+```
+
+The `push` event is fired when a push notification is received, the `notificationclick` event is fired when a notification is clicked,
+the `notificationclose` event is fired when a notification is closed, and the `error` event is fired when an error occurs. Perfect!
+
+We could have skipped the last three but we want to be able to handle errors and clicks on notifications, don't we? Plus, it gives us more
+control over the notifications.
+
+Next up, we need a [resource route](https://remix.run/docs/en/1.16.1/guides/resource-routes) to handle the push notifications from the server, we would call it `push.ts` (_because '/push' is befitting in my opinion_)
+
+```ts
+// push.ts
+import type { ActionFunction } from "@remix-run/node";
+
+export const action: ActionFunction = async ({ request }) => {
+  return null;
+};
+```
+
+<Info>
+Push API, to be put simple, has two main parts. The client side which is your application that the user interfaces with and the server side, which you control.
+
+Afterall, Push API gives the the ability to your application to receive messages pushed to them from a server,
+whether or not the web app is in the foreground, or even currently loaded, on a user agent. So somehow, you need to keep track of users (aka subscriptions). Could be in
+a database, a simple text/CSV file, or even a service like [Pusher](https://pusher.com/).
+
+</Info>
+
+Ah, so beautiful _and quite empty too_! Let's do something about that. We want to be able to subscribe to push notifications after all.
+
+### Setting up the client
+
+`@remix-pwa/push` comes with two main functions for working with push notifications, `subscribeToPush` and `unsubscribeFromPush`.
+Let's spin create a simple route for subscribing to push notifications.
+
+```
+import { subscribeToPush } from "@remix-pwa/push";
+
+export default function PushRoute() {
+  const [subscribed, setSubscribed] = useState(false);
+
+  const subscribe = () => {}
+
+  return (
+    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
+      <h1>Welcome to Remix Push</h1>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <h2 style={{ margin: "12px 16px" }}>Subscribe to Notifications?</h2>
+        <button onClick={subscribe} style={{ padding: "4px 12px" }}>Subscribe Me!</button>
+      </div>
+    </div>
+  );
+}
+```
+
+First of all, I know this thing looks hideous, but it's just a demo, so bear with me please. Or go ahead and add some flair all you like!
+Now that we have that out of the way, let's explain what we're doing. We have a simple button that should subscribe to push notifications when clicked.
+Next, we have a state called `subscribed` that is a boolean, it would be used to determine if the user is subscribed or not. Typically, you would want to save this
+in a `Context` or even a `Reducer`. Or skip saving it at all and just fetch from the subscription status from the server, but since we ain't doing
+that, we would just save it in a state.
+
+In the meantime, quickly run:
+
+```bash
+npm i dotenv web-push
+```
+
+and in your `entry.server.tsx` file, add:
+
+```ts
+import "dotenv/config";
+```
+
+We need to install `dotenv` because we would be using environment variables, and `web-push` because we would be using it to generate our VAPID keys and send push info from the server.
+
+<Info>
+  `VAPID` stands for *Voluntary Application Server Identity*, it's a way to identify who is sending the push
+  notification and is auto-generated.
+</Info>
+
+Generate your vapid keys with the command:
+
+```bash
+npx web-push generate-vapid-keys
+```
+
+And save the output in your `.env` file as `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` respectively.
+
+### Cleaning up the client
+
+Now that we have our keys, let's go back to our `PushRoute` and implement the `subscribe` function.
+
+```ts
+const subscribe = async () => {
+  await subscribeToPush("Your-Vapid-Public-Key", "/push");
+  setSubscribed(true);
+};
+```
+
+`subscribeToPush` returns a promise, so we need to `await` it. It takes in your VAPID public key as an argument and the route
+where you are handling push optionally (in our case, '_/push_'). If successful, it returns a subscription object that you can save in
+your database (if you for some reason, chose to not save it server-side) or an error if things went haywire.
+
+## Set up the Server
+
+Right now, our client is mostly ready. Now, let's quickly implement the server and start pushing those
+notifications! Check out the code below:
+
+```ts
+import type { ActionArgs } from "@remix-run/node";
+
+export const action = async ({ request }: ActionArgs) => {
+  const body = await request.json();
+
+  const { type } = body;
+
+  switch (type) {
+    case "subscribe":
+      break;
+    case "unsubscribe":
+      break;
+  }
+
+  return null;
+};
+```
+
+We have a simple switch statement that checks the type of request we are getting. If it's a `subscribe` request, we would save the subscription in our database, if it's an `unsubscribe` request, we would remove the subscription from our database. Simple, right?
+
+<Info>
+  `subscribeToPush` and `unsubscribeFromPush` also send the `type` as a string in their payload when sending along the
+  subscription object. You can extend this by adding more cases when you want to send along your own custom
+  notification, etc. For example, `notify-all` to notify all subscriptions present in your database.
+</Info>
+
+### Saving the Subscription
+
+This entire section is relative to how your application is structured. You can save your subscription data in a JSON file or a database field, it's your choice.
+I would store mine in the browser's `LocalStorage` for the sake of simplicity.
+
+```ts
+// push.ts
+export const action: ActionFunction = async ({ request }) => {
+  const body = await request.json();
+
+  const { type } = body;
+
+  switch (type) {
+    case "subscribe":
+      console.log("subscribed");
+      return json(body.subscription, {
+        status: 201
+      });
+    case "unsubscribe":
+      console.log("unsubscribed");
+      return json(true, {
+        status: 200
+      });
+  }
+
+  return null;
+};
+```
+
+`subscribeToPush` sends a `subscription` object in the payload, which should be saved in your database. In our case, we would just return it as a response and save in `localStorage`.
+
+<Info>
+  You want to avoid saving Push information in the client because that means the user would need to be 
+  actively using your application to receive push notifications. If they are not, they would not receive any notifications.
+
+Plus, you won't be able to send mass notifications to all your users if the subscription is saved in the client.
+
+</Info>
+
+Let's update our `subscribe` function to save the subscription in `localStorage`:
+
+```ts
+const subscribe = async () => {
+  const subscription = await subscribeToPush("your-public-key", "/push").then((res) => res.json());
+
+  window.localStorage.setItem("subscription", JSON.stringify(subscription));
+  setSubscribed(true);
+};
+```
+
+Sweet! We are done with all the saving. I didn't add any error handling, but you typically should. I also skipped
+the `unsubscribe` function, but it's pretty much the same as the `subscribe` function, except that unsubscribing to the [`PushManager`](https://developer.mozilla.org/en-US/docs/Web/API/PushManager)
+returns a promise that resolves to a boolean, we just returned `true` in our case.
+
+Now, let's move on to the fun part, sending push notifications 🪄!
+
+## Sending Push Notifications
+
+Sending push notifications is pretty straightforward. We would be using the `web-push` library to send our notifications. Let's quickly install it if you haven't already:
+
+```bash
+npm i web-push
+```
+
+Now, let's modify our index component to allow us to send push notifications when subscribed:
+
+```
+return (
+  <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
+    <h1>Welcome to Remix Push</h1>
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      {subscribed ? (
+        <Fragment>
+          <h2 style={{ margin: "12px 16px" }}>You are subscribed to push notifications!</h2>
+          <button
+            onClick={() => {
+              /* Implement this yourself 😉 */
+            }}
+            style={{ padding: "4px 12px" }}
+          >
+            Unsubscribe
+          </button>
+          <button style={{ padding: "4px 12px", margin: "0 8px" }} onClick={() => sendPush()}>
+            Send Me a Push! 🚀
+          </button>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <h2 style={{ margin: "12px 16px" }}>Subscribe to Notifications?</h2>
+          <button onClick={subscribe} style={{ padding: "4px 12px" }}>
+            Subscribe Me!
+          </button>
+        </Fragment>
+      )}
+    </div>
+  </div>
+);
+```
+
+Just a simple button to send a push notification when clicked. Let's implement the `sendPush` function:
+
+```ts
+const sendPush = async () => {
+  const subscription = JSON.parse(window.localStorage.getItem("subscription")!);
+
+  const res = await fetch("/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      type: "notify",
+      subscription
+    })
+  });
+
+  if (res.ok) {
+    console.log("Push sent!");
+  }
+};
+```
+
+We are sending a `POST` request to our `/push` route with the `subscription` object we saved earlier. 
+We also send a `type` of `notify` to let our server know that we want to send a push notification. Let's implement the server-side code:
+
+```ts
+// push.ts
+case "notify":
+  console.log("notified");
+  const notification = {
+    title: "Hello from Remix!",
+    options: {
+      body: "This is a notification from Remix!",
+      icon: "/favicon.png",
+    },
+  }
+
+  sendNotifications({
+    subscriptions: [body.subscription],
+    ttl: 15_000,
+    vapidDetails: {
+      subject: "mailto:test@test.com",
+      publicKey: process.env.VAPID_PUBLIC_KEY ?? "",
+      privateKey: process.env.VAPID_PRIVATE_KEY ?? "",
+    },
+    notification,
+  });
+  break;
+```
+
+`sendNotifications` is a function that takes in an object with the following properties:
+
+- `subscriptions`: An array of `subscription` objects to send the notification to (if you wanted a campaign, you dump all subscriptions in here).
+- `ttl`: The time to live of the notification in milliseconds.
+- `vapidDetails`: An object containing the `subject`, `publicKey` and `privateKey` of your VAPID keys.
+- `notification`: An object containing the `title` and `options` of the notification. You can check out the [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification) for more information.
+
+Awesome! We are done 🚀! Or, are we 🤔?
+
+## Testing it Out
+
+<Info>
+  This section is only for entertainment purposes.
+</Info>
+
+Let's test out our application. Run `npm run dev` to start the server and open up `localhost:3000` in your browser.
+If you didn't implement `unsubscribe` and want to unsubscribe manually, you can simply delete the `subscription` key from `localStorage` and refresh the page.
+
+Now, click on the "Subscribe Me!" button and you should see a prompt asking you to allow notifications. Click on `Allow` and you would now be subscribed to push notifications,
+click on the send push button and hooray... nothing happens 😢. Why's that? Cause we didn't implement anything in the service worker to handle push notifications 🤦‍♂️.
+
+Check out the [next](/push/custom-push) guide to learn how to handle push notifications in your service worker with Remix PWA.
