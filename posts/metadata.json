@@ -60,6 +60,13 @@
             "section": "Guides",
             "slug": "/pwa/quickstart",
             "position": 1
+          },
+          {
+            "title": "Skip remix-pwa",
+            "description": "Build your PWA from scratch with `remix-pwa` modules",
+            "section": "Guides",
+            "slug": "/pwa/without-cli",
+            "position": 2
           }
         ]
       },
@@ -106,6 +113,7 @@
         "children": [
           {
             "title": "Introduction",
+            "description": "Explore the realms of Service Workers with Remix utilizing Remix PWA's very own extensible module!",
             "section": "Introduction",
             "slug": "/sw",
             "position": 1
@@ -132,7 +140,7 @@
           },
           {
             "title": "Extending your SW",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "description": "Learn how to extend the capabilities of your Service Worker and Remix PWA with this guide.",
             "section": "Guides",
             "slug": "/sw/extending",
             "position": 2
@@ -185,28 +193,28 @@
         "children": [
           {
             "title": "Cache Strategy",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "description": "Under-the-hood view of what makes up caching in Remix PWA",
             "section": "API Reference",
             "slug": "/sw/cache-strategy",
             "position": 1
           },
           {
             "title": "Message Handler",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "description": "Explore how Remix PWA handles communication between the Service Worker and your application.",
             "section": "API Reference",
             "slug": "/sw/message-handler",
             "position": 2
           },
           {
             "title": "Plugin Reference",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "description": "Check the interfaces that make up the plugin system in Remix PWA. Plus, how to implement them yourself.",
             "section": "API Reference",
             "slug": "/sw/plugin-reference",
             "position": 3
           },
           {
             "title": "Helper Reference",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
+            "description": "Check out the little, yet mighty functions exposed by Remix PWA sw module to help you build your own custom service worker.",
             "section": "API Reference",
             "slug": "/sw/helper-reference",
             "position": 4
@@ -224,16 +232,67 @@
         "children": [
           {
             "title": "Introduction",
-            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "description": "Integrate Push Notifications into your Remix app easier than ever before!",
             "section": "Introduction",
-            "slug": "/push/introduction",
+            "slug": "/push",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "Guides",
+        "position": 2,
+        "children": [
+          {
+            "title": "Get Started",
+            "description": "Learn how to get started with the Remix PWA Push package.",
+            "section": "Guides",
+            "slug": "/push/get-started",
             "position": 1
           },
+          {
+            "title": "Create a strategy",
+            "description": "Extend your Service Worker by creating your own Push custom strategy.",
+            "section": "Guides",
+            "slug": "/push/custom-push",
+            "position": 2
+          },
+          {
+            "title": "Create a Plugin",
+            "description": "Learn how to create a plugin for your custom Push strategy.",
+            "section": "Guides",
+            "slug": "/push/custom-plugin",
+            "position": 3
+          }
+        ]
+      },
+      {
+        "name": "API Reference",
+        "position": 3,
+        "children": [
+          {
+            "title": "Push API Reference",
+            "description": "Explore the Push API Reference for Remix PWA.",
+            "section": "API Reference",
+            "slug": "/push/push-reference",
+            "position": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "client",
+    "children": [
+      {
+        "name": "Introduction",
+        "position": 1,
+        "children": [
           {
             "title": "Introduction",
             "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
             "section": "Introduction",
-            "slug": "/client/introduction",
+            "slug": "/client",
             "position": 1
           }
         ]
@@ -244,38 +303,8 @@
         "children": []
       },
       {
-        "name": "Packages",
-        "position": 3,
-        "children": []
-      },
-      {
         "name": "API Reference",
-        "position": 4,
-        "children": []
-      }
-    ]
-  },
-  {
-    "slug": "client",
-    "children": [
-      {
-        "name": "Introduction",
-        "position": 1,
-        "children": []
-      },
-      {
-        "name": "Guides",
-        "position": 2,
-        "children": []
-      },
-      {
-        "name": "Packages",
         "position": 3,
-        "children": []
-      },
-      {
-        "name": "API Reference",
-        "position": 4,
         "children": []
       }
     ]
