@@ -232,16 +232,9 @@
         "children": [
           {
             "title": "Introduction",
-            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "description": "Integrate Push Notifications into your Remix app easier than ever before!",
             "section": "Introduction",
-            "slug": "/push/introduction",
-            "position": 1
-          },
-          {
-            "title": "Introduction",
-            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
-            "section": "Introduction",
-            "slug": "/client/introduction",
+            "slug": "/push",
             "position": 1
           }
         ]
@@ -249,12 +242,42 @@
       {
         "name": "Guides",
         "position": 2,
-        "children": []
+        "children": [
+          {
+            "title": "Get Started",
+            "description": "Learn how to get started with the Remix PWA Push package.",
+            "section": "Guides",
+            "slug": "/push/get-started",
+            "position": 1
+          },
+          {
+            "title": "Create a strategy",
+            "description": "Extend your Service Worker by creating your own Push custom strategy.",
+            "section": "Guides",
+            "slug": "/push/custom-push",
+            "position": 2
+          },
+          {
+            "title": "Create a Plugin",
+            "description": "Learn how to create a plugin for your custom Push strategy.",
+            "section": "Guides",
+            "slug": "/push/custom-plugin",
+            "position": 3
+          }
+        ]
       },
       {
         "name": "API Reference",
         "position": 3,
-        "children": []
+        "children": [
+          {
+            "title": "Push API Reference",
+            "description": "Explore the Push API Reference for Remix PWA.",
+            "section": "API Reference",
+            "slug": "/push/push-reference",
+            "position": 1
+          }
+        ]
       }
     ]
   },
@@ -264,7 +287,15 @@
       {
         "name": "Introduction",
         "position": 1,
-        "children": []
+        "children": [
+          {
+            "title": "Introduction",
+            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+            "section": "Introduction",
+            "slug": "/client",
+            "position": 1
+          }
+        ]
       },
       {
         "name": "Guides",
