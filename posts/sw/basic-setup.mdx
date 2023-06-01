@@ -16,6 +16,7 @@ The first step is to create a Service Worker. This is a TypeScript (or JavaScrip
 Create a new file in your project called `entry.worker.ts` and add the following code:
 
 ```ts
+// entry.worker.ts
 /// <reference lib="WebWorker" />
 
 // Service Workers are quite broken in ts, this is a workaround
@@ -54,6 +55,7 @@ We now use `esbuild` to bundle our script to Remix `public` directory. Finally, 
 In our `entry.client.ts` file, add the following:
 
 ```ts 
+// entry.client.ts
 import { loadServiceWorker } from "@remix-pwa/sw";
 
 loadServiceWorker();
@@ -78,6 +80,7 @@ Little bit of explanantion about caching in `@remix-pwa/sw`, the package contain
 Let's start by caching our assets. We will use the `CacheFirst` strategy for this, which is attempt to load the resource from the cache, if not found, fetch using network. In our `entry.worker.ts` file, add the following:
 
 ```ts
+// entry.worker.ts
 import { CacheFirst, matchRequest } from "@remix-pwa/sw";
 import type { MatchResponse } from "@remix-pwa/sw";
 
@@ -129,6 +132,7 @@ Finally, we add an event listener for the `fetch` event and pass in our `fetchHa
 Let's implement the last two cases. Check this out: 
 
 ```ts {1, 14-17}
+// entry.worker.ts
 import { CacheFirst, matchRequest, NetworkFirst } from "@remix-pwa/sw";
 
 // just below the `CacheFirst` strategy
@@ -157,6 +161,7 @@ Now, we have a basic caching strategy for our assets, loader data, and document 
 Add the following to your `entry.worker.ts` file:
 
 ```ts
+// entry.worker.ts
 import { RemixNavigationHandler } from "@remix-pwa/sw";
 
 const messageHandler = new RemixNavigationHandler({

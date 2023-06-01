@@ -2048,7 +2048,7 @@ var MessageHandler = class {
     return __awaiter(this, void 0, void 0, function* () {
       for (const plugin of this.plugins) {
         if (plugin[hook]) {
-          yield plugin[hook](env);
+          plugin[hook](env);
         }
       }
     });
@@ -2115,6 +2115,9 @@ var PrecacheHandler = class extends MessageHandler {
       DATA_CACHE2 = this.dataCacheName;
       DOCUMENT_CACHE2 = this.documentCacheName;
       ASSET_CACHE2 = this.assetCacheName;
+      this.runPlugins("messageDidReceive", {
+        event
+      });
       const cachePromises = /* @__PURE__ */ new Map();
       const [dataCache, documentCache, assetCache] = yield Promise.all([
         caches.open(DATA_CACHE2),
@@ -2122,9 +2125,10 @@ var PrecacheHandler = class extends MessageHandler {
         caches.open(ASSET_CACHE2)
       ]);
       const manifest = event.data.manifest;
-      const routes = Object.values(manifest.routes);
+      const routes = Object.values((manifest === null || manifest === void 0 ? void 0 : manifest.routes) || {});
       for (const route of routes) {
         if (route.id.includes("$")) {
+          logger.debug("parametrized route", route.id);
           continue;
         }
         cacheRoute(route);
@@ -2157,8 +2161,9 @@ var PrecacheHandler = class extends MessageHandler {
         const search = `?${params.toString()}`;
         const url = pathname + search;
         if (!cachePromises.has(url)) {
+          logger.debug("caching loader data", url);
           cachePromises.set(url, dataCache.add(url).catch((error) => {
-            console.debug(`Failed to cache data for ${url}:`, error);
+            logger.error(`Failed to cache data for ${url}:`, error);
           }));
         }
       }
@@ -2169,7 +2174,7 @@ var PrecacheHandler = class extends MessageHandler {
           }
           console.debug("Caching asset", assetUrl);
           return assetCache.add(assetUrl).catch((error) => {
-            console.debug(`Failed to cache asset ${assetUrl}:`, error);
+            logger.error(`Failed to cache asset ${assetUrl}:`, error);
           });
         });
       }
@@ -2193,7 +2198,7 @@ var PrecacheHandler = class extends MessageHandler {
 };
 
 // node_modules/@remix-pwa/sw/lib/react/useSWEffect.js
-var import_react = __toESM(require_react(), 1);
+var import_react = __toESM(require_react());
 
 // node_modules/@remix-pwa/sw/lib/core/helper.js
 var isHttpRequest = (request) => {
@@ -2236,7 +2241,7 @@ var __awaiter3 = function(thisArg, _arguments, P, generator) {
 };
 var CacheStrategy = class {
   // todo: (ShafSpecs) Fix this!
-  constructor({ cacheName = `cache-v1`, isLoader = false, plugins = [], matchOptions = {} }) {
+  constructor({ cacheName, isLoader = false, plugins = [], matchOptions = {} }) {
     Object.defineProperty(this, "cacheName", {
       enumerable: true,
       configurable: true,
@@ -2326,35 +2331,52 @@ var CacheFirst = class extends CacheStrategy {
     var _a, _b;
     return __awaiter4(this, void 0, void 0, function* () {
       const cache = yield caches.open(this.cacheName);
-      const cachedResponse = yield cache.match(request, {
+      let cachedResponse = yield cache.match(request, {
         ignoreVary: ((_a = this.matchOptions) === null || _a === void 0 ? void 0 : _a.ignoreVary) || false,
         ignoreSearch: ((_b = this.matchOptions) === null || _b === void 0 ? void 0 : _b.ignoreSearch) || false
       });
       if (cachedResponse) {
-        return cachedResponse;
+        let res = cachedResponse;
+        for (const plugin of this.plugins) {
+          if (plugin.cachedResponseWillBeUsed) {
+            res = yield plugin.cachedResponseWillBeUsed({
+              cacheName: this.cacheName,
+              request,
+              cachedResponse,
+              matchOptions: this.matchOptions || {}
+            });
+          }
+        }
+        return res;
       }
       return null;
     });
   }
   getFromNetwork(request) {
     return __awaiter4(this, void 0, void 0, function* () {
-      try {
-        const response = yield fetch(request);
-        if (response && response.status === 200) {
-          for (const plugin of this.plugins) {
-            if (plugin.fetchDidSucceed) {
-              yield plugin.fetchDidSucceed({ request, response });
-            }
+      let req = request.clone();
+      for (const plugin of this.plugins) {
+        if (plugin.requestWillFetch) {
+          req = yield plugin.requestWillFetch({ request });
+        }
+      }
+      const response = yield fetch(req).catch((err) => {
+        for (const plugin of this.plugins) {
+          if (plugin.fetchDidFail) {
+            plugin.fetchDidFail({
+              request,
+              error: err
+            });
           }
-          return response;
         }
-      } catch (error) {
-        if (error instanceof Error) {
-          return this.handleFetchError(request, error);
-        } else {
-          const err = error;
-          return this.handleFetchError(request, err);
+      });
+      if (response) {
+        for (const plugin of this.plugins) {
+          if (plugin.fetchDidSucceed) {
+            yield plugin.fetchDidSucceed({ request, response });
+          }
         }
+        return response;
       }
       return null;
     });
@@ -2363,49 +2385,30 @@ var CacheFirst = class extends CacheStrategy {
     return __awaiter4(this, void 0, void 0, function* () {
       const cache = yield caches.open(this.cacheName);
       const oldResponse = yield cache.match(request);
-      yield cache.put(request, response.clone());
-      yield this.removeExpiredEntries(cache);
-      this.notifyCacheUpdated(request, response, oldResponse);
-    });
-  }
-  handleFetchError(request, error) {
-    var _a, _b;
-    return __awaiter4(this, void 0, void 0, function* () {
+      let newResponse = response.clone();
       for (const plugin of this.plugins) {
-        if (plugin.fetchDidFail) {
-          yield plugin.fetchDidFail({ request, error });
-        }
-      }
-      const cachedResponse = yield caches.match(request, {
-        ignoreVary: ((_a = this.matchOptions) === null || _a === void 0 ? void 0 : _a.ignoreVary) || false,
-        ignoreSearch: ((_b = this.matchOptions) === null || _b === void 0 ? void 0 : _b.ignoreSearch) || false
-      });
-      if (cachedResponse) {
-        this.isLoader && cachedResponse.headers.set("X-Remix-Worker", "yes");
-        return cachedResponse;
-      }
-      return null;
-    });
-  }
-  removeExpiredEntries(cache) {
-    return __awaiter4(this, void 0, void 0, function* () {
-      for (const plugin of this.plugins) {
-        if (plugin.cacheWillExpire) {
-          yield plugin.cacheWillExpire({ cache });
-        }
-      }
-    });
-  }
-  notifyCacheUpdated(request, response, oldResponse) {
-    return __awaiter4(this, void 0, void 0, function* () {
-      for (const plugin of this.plugins) {
-        if (plugin.cacheDidUpdate)
-          yield plugin.cacheDidUpdate({
-            request,
-            oldResponse,
-            newResponse: response,
-            cacheName: this.cacheName
+        if (plugin.cacheWillUpdate) {
+          newResponse = yield plugin.cacheWillUpdate({
+            response,
+            request
           });
+          if (!newResponse) {
+            break;
+          }
+        }
+      }
+      if (newResponse) {
+        yield cache.put(request, newResponse.clone());
+        for (const plugin of this.plugins) {
+          if (plugin.cacheDidUpdate) {
+            plugin.cacheDidUpdate({
+              cacheName: this.cacheName,
+              request,
+              oldResponse,
+              newResponse
+            });
+          }
+        }
       }
     });
   }
@@ -2455,24 +2458,16 @@ var NetworkFirst = class extends CacheStrategy {
       value: void 0
     });
     this.fetchListenerEnv = env;
-    this._networkTimeoutSeconds = options.networkTimeoutSeconds || 10;
+    this._networkTimeoutSeconds = options.networkTimeoutSeconds || Infinity;
   }
   _handle(request) {
     return __awaiter5(this, void 0, void 0, function* () {
       const cache = yield caches.open(this.cacheName);
       try {
         const response = yield this.fetchAndCache(request);
-        for (const plugin of this.plugins) {
-          if (plugin.fetchDidSucceed)
-            yield plugin.fetchDidSucceed({ request, response });
-        }
         return response;
       } catch (error) {
         let err = toError(error);
-        for (const plugin of this.plugins) {
-          if (plugin.fetchDidFail)
-            yield plugin.fetchDidFail({ request, error: err });
-        }
         const cachedResponse = yield cache.match(request, this.matchOptions);
         if (cachedResponse) {
           cachedResponse.headers.set("X-Remix-Worker", "yes");
@@ -2489,16 +2484,68 @@ var NetworkFirst = class extends CacheStrategy {
     var _a;
     return __awaiter5(this, void 0, void 0, function* () {
       const cache = yield caches.open(this.cacheName);
-      const timeoutPromise = this._networkTimeoutSeconds ? new Promise((_, reject) => {
+      const timeoutPromise = this._networkTimeoutSeconds !== Infinity ? new Promise((_, reject) => {
         setTimeout(() => {
           reject(new Error(`Network timed out after ${this._networkTimeoutSeconds} seconds`));
         }, this._networkTimeoutSeconds * 1e3);
       }) : null;
       const fetcher = ((_a = this.fetchListenerEnv.state) === null || _a === void 0 ? void 0 : _a.fetcher) || fetch;
-      const fetchPromise = fetcher(request);
-      const response = timeoutPromise ? yield Promise.race([fetchPromise, timeoutPromise]) : yield fetchPromise;
-      yield cache.put(request, response.clone());
-      return response;
+      let updatedRequest = request;
+      for (const plugin of this.plugins) {
+        if (plugin.requestWillFetch) {
+          updatedRequest = yield plugin.requestWillFetch({
+            request: updatedRequest
+          });
+        }
+      }
+      const fetchPromise = fetcher(updatedRequest).catch((err) => {
+        for (const plugin of this.plugins) {
+          if (plugin.fetchDidFail)
+            plugin.fetchDidFail({
+              request: updatedRequest,
+              error: err
+            });
+        }
+      });
+      let response = timeoutPromise ? yield Promise.race([fetchPromise, timeoutPromise]) : yield fetchPromise;
+      if (response) {
+        let updatedResponse = response;
+        for (const plugin of this.plugins) {
+          if (plugin.fetchDidSucceed) {
+            updatedResponse = yield plugin.fetchDidSucceed({
+              request: updatedRequest,
+              response: updatedResponse
+            });
+          }
+        }
+        let aboutToBeCachedResponse = updatedResponse;
+        for (const plugin of this.plugins) {
+          if (plugin.cacheWillUpdate) {
+            aboutToBeCachedResponse = yield plugin.cacheWillUpdate({
+              request: updatedRequest,
+              response: aboutToBeCachedResponse
+            });
+            if (!aboutToBeCachedResponse) {
+              break;
+            }
+          }
+        }
+        if (aboutToBeCachedResponse) {
+          yield cache.put(request, response.clone());
+          for (const plugin of this.plugins) {
+            if (plugin.cacheDidUpdate) {
+              yield plugin.cacheDidUpdate({
+                request: updatedRequest,
+                cacheName: this.cacheName,
+                newResponse: updatedResponse
+              });
+            }
+          }
+          return aboutToBeCachedResponse;
+        }
+        return updatedResponse;
+      }
+      throw new Error("No response received from fetch: Timeout");
     });
   }
 };

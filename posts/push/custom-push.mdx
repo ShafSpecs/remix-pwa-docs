@@ -34,6 +34,7 @@ Note: All methods are abstract and must be implemented but they could be empty.
 Let's create an outline for our Push Handler:
 
 ```ts
+// entry.worker.ts
 import { Push } from "@remix-pwa/push";
 
 class CustomPush extends Push {
@@ -51,6 +52,7 @@ and that's it! We have created our own Push Handler. Now, let's see how we can u
 hook it up to the event listeners:
 
 ```ts
+// entry.worker.ts
 const pushHandler = new CustomPush();
 
 self.addEventListener("push", (event: PushEvent) => {
@@ -78,6 +80,7 @@ The `handlePush` method is called when a push event is received. Since we want t
 push notifications sent from the [last](/push/get-started) guide, we would want to show a notification when a push event is received.
 
 ```ts {3-4}
+// entry.worker.ts
 class CustomPush extends Push {
   async handlePush(event: PushEvent): Promise<void> {
     const { data } = event;
@@ -103,6 +106,7 @@ When a notification is clicked, we would want to open a new window to the URL sp
 Update your notification `options` in `push.ts` to contain the a `url` property:
 
 ```ts {5}
+// push.ts
 const notification = {
   title: "Hello from Remix!",
   options: {
@@ -118,6 +122,7 @@ const notification = {
 and then update your `handleNotificationClick` method to open a new window to the URL:
 
 ```ts {2-8}
+// entry.worker.ts
 async handleNotificationClick(event: NotificationEvent) {
   const { notification } = event;
   console.log(notification)
