@@ -2055,7 +2055,7 @@ var MessageHandler = class {
   }
 };
 
-// node_modules/@remix-pwa/sw/lib/message/precacheHandler.js
+// node_modules/@remix-pwa/sw/lib/message/remixNavigationHandler.js
 var __awaiter2 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -2083,8 +2083,8 @@ var __awaiter2 = function(thisArg, _arguments, P, generator) {
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
-var PrecacheHandler = class extends MessageHandler {
-  constructor({ plugins, dataCacheName, documentCacheName, assetCacheName, state }) {
+var RemixNavigationHandler = class extends MessageHandler {
+  constructor({ plugins, dataCacheName, documentCacheName, state }) {
     super({ plugins, state });
     Object.defineProperty(this, "dataCacheName", {
       enumerable: true,
@@ -2098,101 +2098,52 @@ var PrecacheHandler = class extends MessageHandler {
       writable: true,
       value: void 0
     });
-    Object.defineProperty(this, "assetCacheName", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
     this.dataCacheName = dataCacheName;
     this.documentCacheName = documentCacheName;
-    this.assetCacheName = assetCacheName;
     this._handleMessage = this._handleMessage.bind(this);
   }
   _handleMessage(event) {
     return __awaiter2(this, void 0, void 0, function* () {
-      let DATA_CACHE2, DOCUMENT_CACHE2, ASSET_CACHE2;
-      DATA_CACHE2 = this.dataCacheName;
-      DOCUMENT_CACHE2 = this.documentCacheName;
-      ASSET_CACHE2 = this.assetCacheName;
+      const { data } = event;
+      let DATA, PAGES;
+      DATA = this.dataCacheName;
+      PAGES = this.documentCacheName;
       this.runPlugins("messageDidReceive", {
         event
       });
-      const cachePromises = /* @__PURE__ */ new Map();
-      const [dataCache, documentCache, assetCache] = yield Promise.all([
-        caches.open(DATA_CACHE2),
-        caches.open(DOCUMENT_CACHE2),
-        caches.open(ASSET_CACHE2)
-      ]);
-      const manifest = event.data.manifest;
-      const routes = Object.values((manifest === null || manifest === void 0 ? void 0 : manifest.routes) || {});
-      for (const route of routes) {
-        if (route.id.includes("$")) {
-          logger.debug("parametrized route", route.id);
-          continue;
-        }
-        cacheRoute(route);
-      }
-      yield Promise.all(cachePromises.values());
-      function cacheRoute(route) {
-        const pathname = getPathname(route);
-        if (route.hasLoader) {
-          cacheLoaderData(route);
-        }
-        if (route.module) {
-          cachePromises.set(route.module, cacheAsset(route.module));
-        }
-        if (route.imports) {
-          for (const assetUrl of route.imports) {
-            logger.debug(route.index, route.parentId, route.imports, route.module);
-            if (cachePromises.has(assetUrl)) {
-              continue;
-            }
-            cachePromises.set(assetUrl, cacheAsset(assetUrl));
-          }
-        }
-        cachePromises.set(pathname, documentCache.add(pathname).catch((error) => {
-          console.debug(`Failed to cache document ${pathname}:`, error);
-        }));
-      }
-      function cacheLoaderData(route) {
-        const pathname = getPathname(route);
-        const params = new URLSearchParams({ _data: route.id });
-        const search = `?${params.toString()}`;
-        const url = pathname + search;
-        if (!cachePromises.has(url)) {
-          logger.debug("caching loader data", url);
-          cachePromises.set(url, dataCache.add(url).catch((error) => {
-            logger.error(`Failed to cache data for ${url}:`, error);
+      let cachePromises = /* @__PURE__ */ new Map();
+      if (data.type === "REMIX_NAVIGATION") {
+        let { isMount, location, matches, manifest } = data;
+        let documentUrl = location.pathname + location.search + location.hash;
+        let [dataCache, documentCache, existingDocument] = yield Promise.all([
+          caches.open(DATA),
+          caches.open(PAGES),
+          caches.match(documentUrl)
+        ]);
+        if (!existingDocument || !isMount) {
+          cachePromises.set(documentUrl, documentCache.add(documentUrl).catch((error) => {
+            logger.error(`Failed to cache document for ${documentUrl}:`, error);
           }));
         }
-      }
-      function cacheAsset(assetUrl) {
-        return __awaiter2(this, void 0, void 0, function* () {
-          if (yield assetCache.match(assetUrl)) {
-            return;
-          }
-          console.debug("Caching asset", assetUrl);
-          return assetCache.add(assetUrl).catch((error) => {
-            logger.error(`Failed to cache asset ${assetUrl}:`, error);
-          });
-        });
-      }
-      function getPathname(route) {
-        if (route.index)
-          return "/";
-        let pathname = "";
-        if (route.path && route.path.length > 0) {
-          pathname = "/" + route.path;
-        }
-        if (route.parentId) {
-          const parentPath = getPathname(manifest.routes[route.parentId]);
-          if (parentPath) {
-            pathname = parentPath + pathname;
+        if (isMount) {
+          for (let match of matches) {
+            if (manifest.routes[match.id].hasLoader) {
+              let params = new URLSearchParams(location.search);
+              params.set("_data", match.id);
+              let search = params.toString();
+              search = search ? `?${search}` : "";
+              let url = location.pathname + search + location.hash;
+              if (!cachePromises.has(url)) {
+                logger.log("Caching data for", url);
+                cachePromises.set(url, dataCache.add(url).catch((error) => {
+                  logger.error(`Failed to cache data for ${url}:`, error);
+                }));
+              }
+            }
           }
         }
-        return pathname;
       }
+      yield Promise.all(cachePromises.values());
     });
   }
 };
@@ -2561,9 +2512,8 @@ var ASSET_CACHE = "asset-cache";
 var DATA_CACHE = "data-cache";
 var DOCUMENT_CACHE = "document-cache";
 var STATIC_ASSETS = ["/build/", "/icons/"];
-var precacheHandler = new PrecacheHandler({
+var navigationHandler = new RemixNavigationHandler({
   dataCacheName: DATA_CACHE,
-  assetCacheName: ASSET_CACHE,
   documentCacheName: DOCUMENT_CACHE,
   plugins: []
 });
@@ -2600,7 +2550,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(handleActivate(event));
 });
 self.addEventListener("message", (event) => {
-  event.waitUntil(precacheHandler.handle(event));
+  event.waitUntil(navigationHandler.handle(event));
 });
 self.addEventListener("fetch", (event) => {
   event.respondWith(fetchHandler(event));
