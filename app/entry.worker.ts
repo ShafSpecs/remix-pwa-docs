@@ -1,6 +1,13 @@
 /// <reference lib="WebWorker" />
 
-import { CacheFirst, NetworkFirst, PrecacheHandler, isAssetRequest, isDocumentRequest, isLoaderRequest } from "@remix-pwa/sw";
+import {
+  CacheFirst,
+  NetworkFirst,
+  RemixNavigationHandler,
+  isAssetRequest,
+  isDocumentRequest,
+  isLoaderRequest
+} from "@remix-pwa/sw";
 
 export type {};
 declare let self: ServiceWorkerGlobalScope;
@@ -18,12 +25,11 @@ const DATA_CACHE = "data-cache";
 const DOCUMENT_CACHE = "document-cache";
 const STATIC_ASSETS = ["/build/", "/icons/"];
 
-const precacheHandler = new PrecacheHandler({
+const navigationHandler = new RemixNavigationHandler({
   dataCacheName: DATA_CACHE,
-  assetCacheName: ASSET_CACHE,
   documentCacheName: DOCUMENT_CACHE,
-  plugins: [],
-})
+  plugins: []
+});
 
 const assetCacheHandler = new CacheFirst({
   cacheName: ASSET_CACHE,
@@ -31,7 +37,7 @@ const assetCacheHandler = new CacheFirst({
     ignoreSearch: true,
     ignoreVary: true
   }
-})
+});
 
 const dataCacheHandler = new NetworkFirst({
   cacheName: DATA_CACHE,
@@ -55,20 +61,20 @@ const fetchHandler = async (event: FetchEvent): Promise<Response> => {
   }
 
   return fetch(request.clone());
-}
+};
 
 self.addEventListener("install", (event: ExtendableEvent) => {
   event.waitUntil(handleInstall(event));
-})
+});
 
 self.addEventListener("activate", (event: ExtendableEvent) => {
   event.waitUntil(handleActivate(event));
-})
+});
 
 self.addEventListener("message", (event: ExtendableMessageEvent) => {
-  event.waitUntil(precacheHandler.handle(event));
-})
+  event.waitUntil(navigationHandler.handle(event));
+});
 
 self.addEventListener("fetch", (event: FetchEvent) => {
   event.respondWith(fetchHandler(event));
-})
+});
