@@ -19,6 +19,7 @@ npm install @remix-pwa/sw
 Then in your `root` file, replace the `useEffect` that was previously injected by `remix-pwa` with the following:
 
 ```ts 
+// root.tsx
 import { useSWEffect } from '@remix-pwa/sw'
 
 // in your root component
@@ -28,6 +29,7 @@ useSWEffect()
 We aren't still finished, we also need to head over to our `entry.client` file and remove the injected code too. Replace with: 
   
 ```ts 
+// entry.client.tsx
 import { loadServiceWorker } from '@remix-pwa/sw'
 
 // below the hydration code
@@ -42,6 +44,7 @@ Now that we've upgraded to `@remix-pwa/sw`, we might want to start customising o
 Replace with
 
 ```ts
+// entry.worker.ts
 /// <reference lib="WebWorker" />
 
 // Service Workers are quite broken in ts, this is a workaround

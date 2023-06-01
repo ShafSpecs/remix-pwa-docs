@@ -2048,14 +2048,14 @@ var MessageHandler = class {
     return __awaiter(this, void 0, void 0, function* () {
       for (const plugin of this.plugins) {
         if (plugin[hook]) {
-          yield plugin[hook](env);
+          plugin[hook](env);
         }
       }
     });
   }
 };
 
-// node_modules/@remix-pwa/sw/lib/message/precacheHandler.js
+// node_modules/@remix-pwa/sw/lib/message/remixNavigationHandler.js
 var __awaiter2 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -2083,8 +2083,8 @@ var __awaiter2 = function(thisArg, _arguments, P, generator) {
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
-var PrecacheHandler = class extends MessageHandler {
-  constructor({ plugins, dataCacheName, documentCacheName, assetCacheName, state }) {
+var RemixNavigationHandler = class extends MessageHandler {
+  constructor({ plugins, dataCacheName, documentCacheName, state }) {
     super({ plugins, state });
     Object.defineProperty(this, "dataCacheName", {
       enumerable: true,
@@ -2098,102 +2098,58 @@ var PrecacheHandler = class extends MessageHandler {
       writable: true,
       value: void 0
     });
-    Object.defineProperty(this, "assetCacheName", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: void 0
-    });
     this.dataCacheName = dataCacheName;
     this.documentCacheName = documentCacheName;
-    this.assetCacheName = assetCacheName;
     this._handleMessage = this._handleMessage.bind(this);
   }
   _handleMessage(event) {
     return __awaiter2(this, void 0, void 0, function* () {
-      let DATA_CACHE2, DOCUMENT_CACHE2, ASSET_CACHE2;
-      DATA_CACHE2 = this.dataCacheName;
-      DOCUMENT_CACHE2 = this.documentCacheName;
-      ASSET_CACHE2 = this.assetCacheName;
-      const cachePromises = /* @__PURE__ */ new Map();
-      const [dataCache, documentCache, assetCache] = yield Promise.all([
-        caches.open(DATA_CACHE2),
-        caches.open(DOCUMENT_CACHE2),
-        caches.open(ASSET_CACHE2)
-      ]);
-      const manifest = event.data.manifest;
-      const routes = Object.values(manifest.routes);
-      for (const route of routes) {
-        if (route.id.includes("$")) {
-          continue;
-        }
-        cacheRoute(route);
-      }
-      yield Promise.all(cachePromises.values());
-      function cacheRoute(route) {
-        const pathname = getPathname(route);
-        if (route.hasLoader) {
-          cacheLoaderData(route);
-        }
-        if (route.module) {
-          cachePromises.set(route.module, cacheAsset(route.module));
-        }
-        if (route.imports) {
-          for (const assetUrl of route.imports) {
-            logger.debug(route.index, route.parentId, route.imports, route.module);
-            if (cachePromises.has(assetUrl)) {
-              continue;
-            }
-            cachePromises.set(assetUrl, cacheAsset(assetUrl));
-          }
-        }
-        cachePromises.set(pathname, documentCache.add(pathname).catch((error) => {
-          console.debug(`Failed to cache document ${pathname}:`, error);
-        }));
-      }
-      function cacheLoaderData(route) {
-        const pathname = getPathname(route);
-        const params = new URLSearchParams({ _data: route.id });
-        const search = `?${params.toString()}`;
-        const url = pathname + search;
-        if (!cachePromises.has(url)) {
-          cachePromises.set(url, dataCache.add(url).catch((error) => {
-            console.debug(`Failed to cache data for ${url}:`, error);
+      const { data } = event;
+      let DATA, PAGES;
+      DATA = this.dataCacheName;
+      PAGES = this.documentCacheName;
+      this.runPlugins("messageDidReceive", {
+        event
+      });
+      let cachePromises = /* @__PURE__ */ new Map();
+      if (data.type === "REMIX_NAVIGATION") {
+        let { isMount, location, matches, manifest } = data;
+        let documentUrl = location.pathname + location.search + location.hash;
+        let [dataCache, documentCache, existingDocument] = yield Promise.all([
+          caches.open(DATA),
+          caches.open(PAGES),
+          caches.match(documentUrl)
+        ]);
+        if (!existingDocument || !isMount) {
+          cachePromises.set(documentUrl, documentCache.add(documentUrl).catch((error) => {
+            logger.error(`Failed to cache document for ${documentUrl}:`, error);
           }));
         }
-      }
-      function cacheAsset(assetUrl) {
-        return __awaiter2(this, void 0, void 0, function* () {
-          if (yield assetCache.match(assetUrl)) {
-            return;
-          }
-          console.debug("Caching asset", assetUrl);
-          return assetCache.add(assetUrl).catch((error) => {
-            console.debug(`Failed to cache asset ${assetUrl}:`, error);
-          });
-        });
-      }
-      function getPathname(route) {
-        if (route.index)
-          return "/";
-        let pathname = "";
-        if (route.path && route.path.length > 0) {
-          pathname = "/" + route.path;
-        }
-        if (route.parentId) {
-          const parentPath = getPathname(manifest.routes[route.parentId]);
-          if (parentPath) {
-            pathname = parentPath + pathname;
+        if (isMount) {
+          for (let match of matches) {
+            if (manifest.routes[match.id].hasLoader) {
+              let params = new URLSearchParams(location.search);
+              params.set("_data", match.id);
+              let search = params.toString();
+              search = search ? `?${search}` : "";
+              let url = location.pathname + search + location.hash;
+              if (!cachePromises.has(url)) {
+                logger.log("Caching data for", url);
+                cachePromises.set(url, dataCache.add(url).catch((error) => {
+                  logger.error(`Failed to cache data for ${url}:`, error);
+                }));
+              }
+            }
           }
         }
-        return pathname;
       }
+      yield Promise.all(cachePromises.values());
     });
   }
 };
 
 // node_modules/@remix-pwa/sw/lib/react/useSWEffect.js
-var import_react = __toESM(require_react(), 1);
+var import_react = __toESM(require_react());
 
 // node_modules/@remix-pwa/sw/lib/core/helper.js
 var isHttpRequest = (request) => {
@@ -2236,7 +2192,7 @@ var __awaiter3 = function(thisArg, _arguments, P, generator) {
 };
 var CacheStrategy = class {
   // todo: (ShafSpecs) Fix this!
-  constructor({ cacheName = `cache-v1`, isLoader = false, plugins = [], matchOptions = {} }) {
+  constructor({ cacheName, isLoader = false, plugins = [], matchOptions = {} }) {
     Object.defineProperty(this, "cacheName", {
       enumerable: true,
       configurable: true,
@@ -2326,35 +2282,52 @@ var CacheFirst = class extends CacheStrategy {
     var _a, _b;
     return __awaiter4(this, void 0, void 0, function* () {
       const cache = yield caches.open(this.cacheName);
-      const cachedResponse = yield cache.match(request, {
+      let cachedResponse = yield cache.match(request, {
         ignoreVary: ((_a = this.matchOptions) === null || _a === void 0 ? void 0 : _a.ignoreVary) || false,
         ignoreSearch: ((_b = this.matchOptions) === null || _b === void 0 ? void 0 : _b.ignoreSearch) || false
       });
       if (cachedResponse) {
-        return cachedResponse;
+        let res = cachedResponse;
+        for (const plugin of this.plugins) {
+          if (plugin.cachedResponseWillBeUsed) {
+            res = yield plugin.cachedResponseWillBeUsed({
+              cacheName: this.cacheName,
+              request,
+              cachedResponse,
+              matchOptions: this.matchOptions || {}
+            });
+          }
+        }
+        return res;
       }
       return null;
     });
   }
   getFromNetwork(request) {
     return __awaiter4(this, void 0, void 0, function* () {
-      try {
-        const response = yield fetch(request);
-        if (response && response.status === 200) {
-          for (const plugin of this.plugins) {
-            if (plugin.fetchDidSucceed) {
-              yield plugin.fetchDidSucceed({ request, response });
-            }
+      let req = request.clone();
+      for (const plugin of this.plugins) {
+        if (plugin.requestWillFetch) {
+          req = yield plugin.requestWillFetch({ request });
+        }
+      }
+      const response = yield fetch(req).catch((err) => {
+        for (const plugin of this.plugins) {
+          if (plugin.fetchDidFail) {
+            plugin.fetchDidFail({
+              request,
+              error: err
+            });
           }
-          return response;
         }
-      } catch (error) {
-        if (error instanceof Error) {
-          return this.handleFetchError(request, error);
-        } else {
-          const err = error;
-          return this.handleFetchError(request, err);
+      });
+      if (response) {
+        for (const plugin of this.plugins) {
+          if (plugin.fetchDidSucceed) {
+            yield plugin.fetchDidSucceed({ request, response });
+          }
         }
+        return response;
       }
       return null;
     });
@@ -2363,49 +2336,30 @@ var CacheFirst = class extends CacheStrategy {
     return __awaiter4(this, void 0, void 0, function* () {
       const cache = yield caches.open(this.cacheName);
       const oldResponse = yield cache.match(request);
-      yield cache.put(request, response.clone());
-      yield this.removeExpiredEntries(cache);
-      this.notifyCacheUpdated(request, response, oldResponse);
-    });
-  }
-  handleFetchError(request, error) {
-    var _a, _b;
-    return __awaiter4(this, void 0, void 0, function* () {
+      let newResponse = response.clone();
       for (const plugin of this.plugins) {
-        if (plugin.fetchDidFail) {
-          yield plugin.fetchDidFail({ request, error });
-        }
-      }
-      const cachedResponse = yield caches.match(request, {
-        ignoreVary: ((_a = this.matchOptions) === null || _a === void 0 ? void 0 : _a.ignoreVary) || false,
-        ignoreSearch: ((_b = this.matchOptions) === null || _b === void 0 ? void 0 : _b.ignoreSearch) || false
-      });
-      if (cachedResponse) {
-        this.isLoader && cachedResponse.headers.set("X-Remix-Worker", "yes");
-        return cachedResponse;
-      }
-      return null;
-    });
-  }
-  removeExpiredEntries(cache) {
-    return __awaiter4(this, void 0, void 0, function* () {
-      for (const plugin of this.plugins) {
-        if (plugin.cacheWillExpire) {
-          yield plugin.cacheWillExpire({ cache });
-        }
-      }
-    });
-  }
-  notifyCacheUpdated(request, response, oldResponse) {
-    return __awaiter4(this, void 0, void 0, function* () {
-      for (const plugin of this.plugins) {
-        if (plugin.cacheDidUpdate)
-          yield plugin.cacheDidUpdate({
-            request,
-            oldResponse,
-            newResponse: response,
-            cacheName: this.cacheName
+        if (plugin.cacheWillUpdate) {
+          newResponse = yield plugin.cacheWillUpdate({
+            response,
+            request
           });
+          if (!newResponse) {
+            break;
+          }
+        }
+      }
+      if (newResponse) {
+        yield cache.put(request, newResponse.clone());
+        for (const plugin of this.plugins) {
+          if (plugin.cacheDidUpdate) {
+            plugin.cacheDidUpdate({
+              cacheName: this.cacheName,
+              request,
+              oldResponse,
+              newResponse
+            });
+          }
+        }
       }
     });
   }
@@ -2455,24 +2409,16 @@ var NetworkFirst = class extends CacheStrategy {
       value: void 0
     });
     this.fetchListenerEnv = env;
-    this._networkTimeoutSeconds = options.networkTimeoutSeconds || 10;
+    this._networkTimeoutSeconds = options.networkTimeoutSeconds || Infinity;
   }
   _handle(request) {
     return __awaiter5(this, void 0, void 0, function* () {
       const cache = yield caches.open(this.cacheName);
       try {
         const response = yield this.fetchAndCache(request);
-        for (const plugin of this.plugins) {
-          if (plugin.fetchDidSucceed)
-            yield plugin.fetchDidSucceed({ request, response });
-        }
         return response;
       } catch (error) {
         let err = toError(error);
-        for (const plugin of this.plugins) {
-          if (plugin.fetchDidFail)
-            yield plugin.fetchDidFail({ request, error: err });
-        }
         const cachedResponse = yield cache.match(request, this.matchOptions);
         if (cachedResponse) {
           cachedResponse.headers.set("X-Remix-Worker", "yes");
@@ -2489,16 +2435,68 @@ var NetworkFirst = class extends CacheStrategy {
     var _a;
     return __awaiter5(this, void 0, void 0, function* () {
       const cache = yield caches.open(this.cacheName);
-      const timeoutPromise = this._networkTimeoutSeconds ? new Promise((_, reject) => {
+      const timeoutPromise = this._networkTimeoutSeconds !== Infinity ? new Promise((_, reject) => {
         setTimeout(() => {
           reject(new Error(`Network timed out after ${this._networkTimeoutSeconds} seconds`));
         }, this._networkTimeoutSeconds * 1e3);
       }) : null;
       const fetcher = ((_a = this.fetchListenerEnv.state) === null || _a === void 0 ? void 0 : _a.fetcher) || fetch;
-      const fetchPromise = fetcher(request);
-      const response = timeoutPromise ? yield Promise.race([fetchPromise, timeoutPromise]) : yield fetchPromise;
-      yield cache.put(request, response.clone());
-      return response;
+      let updatedRequest = request;
+      for (const plugin of this.plugins) {
+        if (plugin.requestWillFetch) {
+          updatedRequest = yield plugin.requestWillFetch({
+            request: updatedRequest
+          });
+        }
+      }
+      const fetchPromise = fetcher(updatedRequest).catch((err) => {
+        for (const plugin of this.plugins) {
+          if (plugin.fetchDidFail)
+            plugin.fetchDidFail({
+              request: updatedRequest,
+              error: err
+            });
+        }
+      });
+      let response = timeoutPromise ? yield Promise.race([fetchPromise, timeoutPromise]) : yield fetchPromise;
+      if (response) {
+        let updatedResponse = response;
+        for (const plugin of this.plugins) {
+          if (plugin.fetchDidSucceed) {
+            updatedResponse = yield plugin.fetchDidSucceed({
+              request: updatedRequest,
+              response: updatedResponse
+            });
+          }
+        }
+        let aboutToBeCachedResponse = updatedResponse;
+        for (const plugin of this.plugins) {
+          if (plugin.cacheWillUpdate) {
+            aboutToBeCachedResponse = yield plugin.cacheWillUpdate({
+              request: updatedRequest,
+              response: aboutToBeCachedResponse
+            });
+            if (!aboutToBeCachedResponse) {
+              break;
+            }
+          }
+        }
+        if (aboutToBeCachedResponse) {
+          yield cache.put(request, response.clone());
+          for (const plugin of this.plugins) {
+            if (plugin.cacheDidUpdate) {
+              yield plugin.cacheDidUpdate({
+                request: updatedRequest,
+                cacheName: this.cacheName,
+                newResponse: updatedResponse
+              });
+            }
+          }
+          return aboutToBeCachedResponse;
+        }
+        return updatedResponse;
+      }
+      throw new Error("No response received from fetch: Timeout");
     });
   }
 };
@@ -2514,9 +2512,8 @@ var ASSET_CACHE = "asset-cache";
 var DATA_CACHE = "data-cache";
 var DOCUMENT_CACHE = "document-cache";
 var STATIC_ASSETS = ["/build/", "/icons/"];
-var precacheHandler = new PrecacheHandler({
+var navigationHandler = new RemixNavigationHandler({
   dataCacheName: DATA_CACHE,
-  assetCacheName: ASSET_CACHE,
   documentCacheName: DOCUMENT_CACHE,
   plugins: []
 });
@@ -2553,7 +2550,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(handleActivate(event));
 });
 self.addEventListener("message", (event) => {
-  event.waitUntil(precacheHandler.handle(event));
+  event.waitUntil(navigationHandler.handle(event));
 });
 self.addEventListener("fetch", (event) => {
   event.respondWith(fetchHandler(event));

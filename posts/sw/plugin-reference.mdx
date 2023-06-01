@@ -55,6 +55,8 @@ class analyticsPlugin implements MessagePlugin = {
 interface StrategyPlugin {
   requestWillFetch?: (options: { request: Request; event?: ExtendableEvent }) => Promise<Request>;
 
+  fetchDidSucceed?: (options: { request: Request; response: Response; event?: ExtendableEvent }) => Promise<Response>;
+
   fetchDidFail?: (options: {
     request: Request;
     error: Error;
@@ -82,42 +84,6 @@ interface StrategyPlugin {
     cachedResponse: Response;
     event?: ExtendableEvent;
   }) => Promise<Response | null | void | undefined>;
-
-  cacheDidDelete?: (options: {
-    cacheName: string;
-    request?: Request;
-    cachedResponse?: Response;
-    matchOptions?: CacheQueryMatchOptions;
-  }) => Promise<void>;
-
-  fetchDidStart?: (options: { request: Request }) => Promise<void>;
-
-  fetchDidReceive?: (options: { request: Request; response: Response }) => Promise<Response>;
-
-  fetchDidSucceed?: (options: { request: Request; response: Response; event?: ExtendableEvent }) => Promise<Response>;
-
-  cachedResponseIsValid?: (options: {
-    cacheName: string;
-    request: Request;
-    matchOptions: CacheQueryMatchOptions;
-    cachedResponse: Response;
-  }) => Promise<boolean>;
-
-  responseShouldBeCached?: (options: { request: Request; response: Response }) => Promise<boolean>;
-
-  cacheableFetchDidFetch?: (options: { request: Request }) => Promise<Response>;
-
-  cacheHasExpired?: (options: {
-    cacheName: string;
-    matchOptions: CacheQueryMatchOptions;
-    cachedResponse: Response;
-    request: Request;
-    event?: ExtendableEvent;
-  }) => Promise<boolean> | boolean;
-
-  cacheWillExpire?: (options: { cache: Cache }) => Promise<void> | void;
-
-  cachesWillExpire?: (options: { cacheNames: string[] }) => Promise<void> | void;
 }
 ```
 
@@ -126,16 +92,7 @@ interface StrategyPlugin {
 - The `cacheWillUpdate` method is called when a request is about to be cached.
 - The `cacheDidUpdate` method is called when a request has been cached.
 - The `cachedResponseWillBeUsed` method is called when a cached response is about to be used.
-- The `cacheDidDelete` method is called when a cached response is deleted.
-- The `fetchDidStart` method is called when a request starts to fetch.
-- The `fetchDidReceive` method is called when a request receives a response.
 - The `fetchDidSucceed` method is called when a request successfully fetches a response.
-- The `cachedResponseIsValid` method is called when a cached response is about to be used.
-- The `responseShouldBeCached` method is called when a response is about to be cached.
-- The `cacheableFetchDidFetch` method is called when a request is about to be fetched.
-- The `cacheHasExpired` method is called when a cached response has expired.
-- The `cacheWillExpire` method is called when a cached response is about to expire.
-- The `cachesWillExpire` method is called when a cache is about to expire.
 
 <Info>
 If you think there is another instance in a cache lifecycle missed out on, or maybe you want to add a new lifecycle, please check out the [contribution](/pwa/contribute) section to see how you can contribute.

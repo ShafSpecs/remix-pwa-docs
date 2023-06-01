@@ -24,6 +24,7 @@ You would also require `@remix-pwa/push` to be installed (_after all, this is th
 Let's get this over with, shall we? Firstly, we want to provide a structure/layout in our service worker for working with push (no pun intended).
 
 ```ts
+// entry.worker.ts
 self.addEventListener("push", (event) => {});
 
 self.addEventListener("notificationclick", (event) => {});
@@ -67,6 +68,7 @@ Ah, so beautiful _and quite empty too_! Let's do something about that. We want t
 Let's spin create a simple route for subscribing to push notifications.
 
 ```
+// app/routes/_index.tsx
 import { subscribeToPush } from "@remix-pwa/push";
 
 export default function PushRoute() {
@@ -140,6 +142,7 @@ Right now, our client is mostly ready. Now, let's quickly implement the server a
 notifications! Check out the code below:
 
 ```ts
+// push.ts
 import type { ActionArgs } from "@remix-run/node";
 
 export const action = async ({ request }: ActionArgs) => {
@@ -268,6 +271,7 @@ return (
 Just a simple button to send a push notification when clicked. Let's implement the `sendPush` function:
 
 ```ts
+// app/routes/_index.tsx
 const sendPush = async () => {
   const subscription = JSON.parse(window.localStorage.getItem("subscription")!);
 

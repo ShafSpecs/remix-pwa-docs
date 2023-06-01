@@ -23,6 +23,7 @@ keeps a count of the number of times a push notification is recieved.
 To create a plugin, we need to create a class that implements the `PushPlugin` interface right above our push handler code.
 
 ```typescript
+// entry.worker.ts
 import { PushPlugin } from "@remix-pwa/push";
 
 class AnalyticsPlugin implements PushPlugin {
@@ -48,6 +49,7 @@ They all take in a `PushHandlerEnv` object that contains the following fields:
 Since this is analytics plugin, we want to track all four. So we would implement all four methods.
 
 ```typescript
+// entry.worker.ts
 class AnalyticsPlugin implements PushPlugin {
   async pushReceived(push: PushHandlerEnv) {}
 
@@ -63,6 +65,7 @@ And before we move on, let's simulate a scenario. Sometimes, we want to track on
 and not the others. To do that, let's create a field in `Analytics` plugin that would allow us to specify the event we want to track.
 
 ```typescript {1-6, 9}
+// entry.worker.ts
 interface AnalyticsPluginOptions {
   trackPushReceived?: boolean;
   trackPushClicked?: boolean;
@@ -243,6 +246,7 @@ Now that we have implemented the plugin methods, let's implement the plugin. We 
 into the `plugins` array.
 
 ```typescript 
+// entry.worker.ts
 const analyticsPlugin = new AnalyticsPlugin();
 
 const pushHandler = new CustomPush([analyticsPlugin]);
@@ -262,6 +266,7 @@ Currently, the plugin doesn't work. We need to make the `CustomPush` class aware
 Let's quickly fix that:
 
 ```ts 
+// entry.worker.ts
 class CustomPush extends Push {
   async handlePush(event: PushEvent): Promise<void> {
     this.applyPlugins("pushReceived", { event });
