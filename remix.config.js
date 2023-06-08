@@ -40,14 +40,16 @@ module.exports = {
     /^is.*/,
     /^stringify.*/,
     "redent",
-    "strip-indent"
+    "strip-indent",
+    "escape-string-regexp",
+    "web-namespaces"
   ],
   appDirectory: "app",
   future: {
     v2_errorBoundary: true,
     v2_meta: false,
     v2_normalizeFormMethod: true,
-    v2_routeConvention: true,
-    unstable_tailwind: true
-  }
+    v2_routeConvention: true
+  },
+  tailwind: true
 };

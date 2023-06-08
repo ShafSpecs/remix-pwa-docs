@@ -23,12 +23,11 @@ import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { LoaderArgs } from "@remix-run/node";
 
-// Imported this way because unstable_tailwindcss flag in remix.config.js (https://tailwindcss.com/docs/guides/remix)
 import tailwind from "./tailwind.css";
-
-import appcss from "./styles/app.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
+import toolbar from "./styles/toolbar.min.css";
+
 import { GetTheme } from "./session.server";
 import type { FrontMatterTypings } from "./types/mdx";
 import NavItem from "./components/NavItem";
@@ -46,9 +45,9 @@ export type RootOutletContext = { prev: PrevOrNextLink; next: PrevOrNextLink };
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwind },
-    { rel: "stylesheet", href: appcss },
     { rel: "stylesheet", href: theme },
-    { rel: "stylesheet", href: prism }
+    { rel: "stylesheet", href: prism },
+    { rel: "stylesheet", href: toolbar }
   ];
 };
 
