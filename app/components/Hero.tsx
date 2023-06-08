@@ -28,7 +28,7 @@ self.addEventListener('fetch', (event) => {
               style={{ color: "transparent" }}
             />
             <div className="relative">
-              <p className="inline text-5xl font-medium tracking-tight text-transparent bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display">
+              <p className="inline text-5xl font-medium tracking-tight text-transparent bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 font-display" style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text' }}>
                 Remix your app natively.
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
