@@ -23,7 +23,7 @@ async function handleActivate(event: ExtendableEvent) {
 const ASSET_CACHE = "asset-cache";
 const DATA_CACHE = "data-cache";
 const DOCUMENT_CACHE = "document-cache";
-const STATIC_ASSETS = ["/build/", "/icons/"];
+const STATIC_ASSETS = ["/build/", "/icons/", "/fonts/", "/images/", "/favicon.ico"];
 
 const navigationHandler = new RemixNavigationHandler({
   dataCacheName: DATA_CACHE,
@@ -45,7 +45,7 @@ const dataCacheHandler = new NetworkFirst({
   networkTimeoutSeconds: 15
 });
 
-const documentCacheHandler = new CacheFirst({
+const documentCacheHandler = new NetworkFirst({
   cacheName: DOCUMENT_CACHE
 });
 
