@@ -263,6 +263,13 @@
             "section": "Guides",
             "slug": "/push/custom-plugin",
             "position": 3
+          },
+          {
+            "title": "Chat Application",
+            "description": "Learn how to utilise Push Notifications well by utilising it in a chat application.",
+            "section": "Guides",
+            "slug": "/push/chat-push",
+            "position": 4
           }
         ]
       },
