@@ -167,6 +167,9 @@ We have a simple switch statement that checks the type of request we are getting
   `subscribeToPush` and `unsubscribeFromPush` also send the `type` as a string in their payload when sending along the
   subscription object. You can extend this by adding more cases when you want to send along your own custom
   notification, etc. For example, `notify-all` to notify all subscriptions present in your database.
+
+  **New:** They also now contain a `payload` field which is an object that takes in any additional type you 
+  want to pass to the server.
 </Info>
 
 ### Saving the Subscription
