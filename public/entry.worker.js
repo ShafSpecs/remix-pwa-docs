@@ -2287,7 +2287,7 @@ var CacheFirst = class extends CacheStrategy {
         ignoreSearch: ((_b = this.matchOptions) === null || _b === void 0 ? void 0 : _b.ignoreSearch) || false
       });
       if (cachedResponse) {
-        let res = cachedResponse;
+        let res = cachedResponse.clone();
         for (const plugin of this.plugins) {
           if (plugin.cachedResponseWillBeUsed) {
             res = yield plugin.cachedResponseWillBeUsed({
@@ -2296,6 +2296,9 @@ var CacheFirst = class extends CacheStrategy {
               cachedResponse,
               matchOptions: this.matchOptions || {}
             });
+            if (!res) {
+              break;
+            }
           }
         }
         return res;
@@ -2308,14 +2311,14 @@ var CacheFirst = class extends CacheStrategy {
       let req = request.clone();
       for (const plugin of this.plugins) {
         if (plugin.requestWillFetch) {
-          req = yield plugin.requestWillFetch({ request });
+          req = yield plugin.requestWillFetch({ request: req });
         }
       }
-      const response = yield fetch(req).catch((err) => {
+      let response = yield fetch(req).catch((err) => {
         for (const plugin of this.plugins) {
           if (plugin.fetchDidFail) {
             plugin.fetchDidFail({
-              request,
+              request: req.clone(),
               error: err
             });
           }
@@ -2324,7 +2327,7 @@ var CacheFirst = class extends CacheStrategy {
       if (response) {
         for (const plugin of this.plugins) {
           if (plugin.fetchDidSucceed) {
-            yield plugin.fetchDidSucceed({ request, response });
+            response = yield plugin.fetchDidSucceed({ request: req, response });
           }
         }
         return response;
@@ -2340,7 +2343,7 @@ var CacheFirst = class extends CacheStrategy {
       for (const plugin of this.plugins) {
         if (plugin.cacheWillUpdate) {
           newResponse = yield plugin.cacheWillUpdate({
-            response,
+            response: newResponse.clone(),
             request
           });
           if (!newResponse) {
@@ -2421,8 +2424,14 @@ var NetworkFirst = class extends CacheStrategy {
         let err = toError(error);
         const cachedResponse = yield cache.match(request, this.matchOptions);
         if (cachedResponse) {
-          cachedResponse.headers.set("X-Remix-Worker", "yes");
-          return cachedResponse;
+          const body = cachedResponse.clone().body;
+          const headers = new Headers(cachedResponse.clone().headers);
+          const newResponse = new Response(body, {
+            headers: Object.assign(Object.assign({}, headers), { "X-Remix-Worker": "yes" }),
+            status: cachedResponse.status,
+            statusText: cachedResponse.statusText
+          });
+          return newResponse;
         }
         return new Response(JSON.stringify({ message: "Network Error" }), {
           status: 500,
@@ -2441,7 +2450,7 @@ var NetworkFirst = class extends CacheStrategy {
         }, this._networkTimeoutSeconds * 1e3);
       }) : null;
       const fetcher = ((_a = this.fetchListenerEnv.state) === null || _a === void 0 ? void 0 : _a.fetcher) || fetch;
-      let updatedRequest = request;
+      let updatedRequest = request.clone();
       for (const plugin of this.plugins) {
         if (plugin.requestWillFetch) {
           updatedRequest = yield plugin.requestWillFetch({
@@ -2460,7 +2469,7 @@ var NetworkFirst = class extends CacheStrategy {
       });
       let response = timeoutPromise ? yield Promise.race([fetchPromise, timeoutPromise]) : yield fetchPromise;
       if (response) {
-        let updatedResponse = response;
+        let updatedResponse = response.clone();
         for (const plugin of this.plugins) {
           if (plugin.fetchDidSucceed) {
             updatedResponse = yield plugin.fetchDidSucceed({
@@ -2511,7 +2520,7 @@ async function handleActivate(event) {
 var ASSET_CACHE = "asset-cache";
 var DATA_CACHE = "data-cache";
 var DOCUMENT_CACHE = "document-cache";
-var STATIC_ASSETS = ["/build/", "/icons/"];
+var STATIC_ASSETS = ["/build/", "/icons/", "/fonts/", "/images/", "/favicon.ico"];
 var navigationHandler = new RemixNavigationHandler({
   dataCacheName: DATA_CACHE,
   documentCacheName: DOCUMENT_CACHE,
@@ -2529,7 +2538,7 @@ var dataCacheHandler = new NetworkFirst({
   isLoader: true,
   networkTimeoutSeconds: 15
 });
-var documentCacheHandler = new CacheFirst({
+var documentCacheHandler = new NetworkFirst({
   cacheName: DOCUMENT_CACHE
 });
 var fetchHandler = async (event) => {
