@@ -19,10 +19,6 @@ import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
 import { Analytics } from "@vercel/analytics/react"
 
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
-import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
-import type { LoaderArgs } from "@remix-run/node";
-
 import tailwind from "./tailwind.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
@@ -35,6 +31,9 @@ import RouteListBox from "./components/RouteListBox";
 import RootReducer from "./rootReducer";
 import { type ValidPackages, packages, valid_packages } from "./utils/PackageHelpers";
 import { RootContext } from "./utils/providers/RootProvider";
+
+import type { LinksFunction, MetaFunction,LoaderArgs } from "@remix-run/node";
+import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules"; 
 
 export type PrevOrNextLink = FrontMatterTypings | null;
 
@@ -195,6 +194,12 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
           type="image/png"
           sizes="16x16"
           href="/icons/favicon-16x16.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          // sizes="16x16"
+          href="/images/Remix-PWA.png"
         />
         <link rel="manifest" href="/resources/manifest.webmanifest" />
         <Links />
