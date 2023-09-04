@@ -60,7 +60,7 @@ export const getPostContent = async (packageSlug: ValidPackages, slug: string | 
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: `posts/${packageSlug}/${slug || "intro"}.mdx`,
-    ref: "docs"
+    ref: "v2-docs"
   });
 
   if (postData.status !== 200) {
@@ -99,7 +99,7 @@ export const getPostMetaData = async () => {
   const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
     path: "posts/metadata.json",
-    ref: "control"
+    ref: "v2-control"
   });
   const download_url_obj = octokitWithDownloadUrl.parse(meta);
   const content = await fetch(download_url_obj.data.download_url)
