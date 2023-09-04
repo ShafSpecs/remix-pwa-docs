@@ -172,8 +172,7 @@ const metaData = async () => {
       children: [
         { "name": "Introduction", position: 1, children: [] },
         { "name": "Guides", position: 2, children: [] },
-        { "name": "Packages", position: 3, children: [] },
-        { "name": "API Reference", position: 4, children: [] },
+        { "name": "API Reference", position: 3, children: [] },
       ]
     },
     {
@@ -181,8 +180,7 @@ const metaData = async () => {
       children: [
         { "name": "Introduction", position: 1, children: [] },
         { "name": "Guides", position: 2, children: [] },
-        { "name": "Packages", position: 3, children: [] },
-        { "name": "API Reference", position: 4, children: [] }
+        { "name": "API Reference", position: 3, children: [] }
       ]
     }
   ];
@@ -252,7 +250,7 @@ const metaData = async () => {
   })
 
   metaClient.forEach((m) => {
-    const section = metadata[2].children.find(e => e.name === m.section);
+    const section = metadata[3].children.find(e => e.name === m.section);
 
     if (section) {
       section.children.push({

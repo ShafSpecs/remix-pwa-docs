@@ -19,16 +19,11 @@ import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
 import { Analytics } from "@vercel/analytics/react"
 
-import type { LinksFunction } from "@remix-run/node";
-import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
-
-// Imported this way because unstable_tailwindcss flag in remix.config.js (https://tailwindcss.com/docs/guides/remix)
 import tailwind from "./tailwind.css";
-
-import appcss from "./styles/app.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
+import toolbar from "./styles/toolbar.min.css";
+
 import { GetTheme } from "./session.server";
 import type { FrontMatterTypings } from "./types/mdx";
 import NavItem from "./components/NavItem";
@@ -36,6 +31,9 @@ import RouteListBox from "./components/RouteListBox";
 import RootReducer from "./rootReducer";
 import { type ValidPackages, packages, valid_packages } from "./utils/PackageHelpers";
 import { RootContext } from "./utils/providers/RootProvider";
+
+import type { LinksFunction, MetaFunction,LoaderArgs } from "@remix-run/node";
+import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules"; 
 
 export type PrevOrNextLink = FrontMatterTypings | null;
 
@@ -46,9 +44,9 @@ export type RootOutletContext = { prev: PrevOrNextLink; next: PrevOrNextLink };
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwind },
-    { rel: "stylesheet", href: appcss },
     { rel: "stylesheet", href: theme },
-    { rel: "stylesheet", href: prism }
+    { rel: "stylesheet", href: prism },
+    { rel: "stylesheet", href: toolbar }
   ];
 };
 
@@ -85,13 +83,31 @@ export const loader = async ({ request }: LoaderArgs) => {
   throw new Error("Uh oh! Something went wrong!");
 };
 
-export const meta: V2_MetaFunction = () => [
-  {
+export const meta: MetaFunction = () => {
+  return {
     charset: "utf-8",
     title: "Remix PWA Docs",
-    viewport: "width=device-width,initial-scale=1"
+    viewport: "width=device-width,initial-scale=1",
+    keywords: "Remix,ShafSpecs,Remix PWA,Remix PWA Docs,Remix PWA Documentation,Remix PWA Documentation,remix-pwa,remix-pwa-docs,@remix-pwa",
+    "twitter:image": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    "og:image": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@ShafSpecs",
+    "twitter:title": "Remix PWA Docs",
+    "og:title": "Remix PWA Docs",
+    "og:type": "website",
+    "og:url": "https://remix-pwa-docs.vercel.app",
+    "twitter:description": "Progressively enhance your Remix application with PWA features like never before.",
+    "og:locale": "en_US",
+    "og:image:alt": "Remix PWA Documentation",
+    "og:image:width": "1200",
+    "og:image:height": "630",
+    "og:image:type": "image/png",
+    "og:image:secure_url": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    "og:image:url": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    "og:description": "Progressively enhance your Remix application with PWA features like never before.",
   }
-];
+};
 
 /**
  * @description Separate out main styles and desired components from the App component so that we have a baseline for any errors that happen.
@@ -110,13 +126,88 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
+        <link
+          rel="apple-touch-icon"
+          sizes="57x57"
+          href="/icons/apple-icon-57x57.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="60x60"
+          href="/icons/apple-icon-60x60.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="72x72"
+          href="/icons/apple-icon-72x72.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="76x76"
+          href="/icons/apple-icon-76x76.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="114x114"
+          href="/icons/apple-icon-114x114.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="120x120"
+          href="/icons/apple-icon-120x120.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="144x144"
+          href="/icons/apple-icon-144x144.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="152x152"
+          href="/icons/apple-icon-152x152.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/icons/apple-icon-180x180.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="/icons/android-icon-192x192.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/icons/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="96x96"
+          href="/icons/favicon-96x96.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/icons/favicon-16x16.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          // sizes="16x16"
+          href="/images/Remix-PWA.png"
+        />
+        <link rel="manifest" href="/resources/manifest.webmanifest" />
         <Links />
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
       <body
-        className={`${
-          !closed && "overflow-hidden"
-        } bg-white transition-colors scroll-smooth duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
+        className={`${!closed && "overflow-hidden"
+          } bg-white transition-colors scroll-smooth duration-300 font-inter font-feature-text ss01 dark:bg-slate-900`}
       >
         {children}
         <ScrollRestoration />

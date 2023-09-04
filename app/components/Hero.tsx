@@ -1,6 +1,5 @@
 /* eslint-disable react/display-name */
-import Highlight, { defaultProps } from "prism-react-renderer";
-import theme from "prism-react-renderer/themes/vsDark";
+import { themes, Highlight } from "prism-react-renderer";
 
 export default () => {
   const exampleCode = `
@@ -29,7 +28,7 @@ self.addEventListener('fetch', (event) => {
               style={{ color: "transparent" }}
             />
             <div className="relative">
-              <p className="inline text-5xl font-medium tracking-tight text-transparent bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display">
+              <p className="inline text-5xl font-medium tracking-tight text-transparent bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 font-display" style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text' }}>
                 Remix your app natively.
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
@@ -255,7 +254,7 @@ self.addEventListener('fetch', (event) => {
                         );
                       })}
                     </div>
-                    <Highlight {...defaultProps} theme={theme} code={exampleCode} language="typescript">
+                    <Highlight theme={themes.vsDark} code={exampleCode} language="typescript">
                       {({ tokens, getLineProps, getTokenProps, className }) => (
                         <pre className={`${className} overflow-x-auto leading-6 px-3 bg-[#0A101F]/80`} style={{ marginTop: 0, paddingTop: 0, paddingBottom: 0, lineHeight: "24px", backgroundColor: "#0a101f/80" }}>
                           {tokens.map((line, i) => (

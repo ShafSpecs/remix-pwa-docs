@@ -1,7 +1,117 @@
 ---
-title: "Helper Reference" 
-description: Learn how to install and setup a basic Service Worker in Remix
+title: "Helper Reference"
+description: "Check out the little, yet mighty functions exposed by Remix PWA sw module to help you build your own custom service worker."
 slug: /sw/helper-reference
 section: "API Reference"
 position: 4
 ---
+
+This reference contains all the functions that Remix PWA exposes to help you build your own custom service worker, plus how you can replace them with your own.
+
+## `logger`
+
+The `logger` function is used to log messages to the console available only in development environment. It is a wrapper around `console.log` that 
+logs various messages depending on the log level. The available log levels are: 
+
+- `debug`
+- `info`
+- `warn`
+- `error`
+- `log`
+
+You can easily disable various log levels by setting the corresponding log level to `false` at the top of your service worker file:
+
+```ts 
+// disable all logs 
+self.__DISABLE_PWA_DEV_LOGS = true
+
+// disable all debug messages 
+self.__DISABLE_PWA_DEBUG_LOGS = true
+```
+
+#### Example
+  
+```ts
+// log a debug message
+logger.debug('debug message')
+
+// log an info message
+logger.info('info message')
+```
+
+---
+
+## `handleFetchRequest`
+
+The `handleFetchRequest` function is used to handle the `fetch` event with respect to a strategy. It is a simple shortcut to easily do:
+
+```ts
+myStrategy.handle(request)
+```
+
+It takes in two arguments:
+
+- `request` - the `Request` object to handle
+- `strategy` - the strategy to use to handle the request
+
+---
+
+## `isAssetRequest`
+
+The `isAssetRequest` function is used to check if a request is an asset request. It takes two arguments:
+
+- `request` - the `Request` object to check
+- `assetUrls` - an optional array of asset urls to check against. If not provided, the default asset urls are used (`['/build/', '/icons']`).
+
+---
+
+## `isDocumentRequest`
+
+The `isDocumentRequest` function is used to check if a request is a document request. It takes just one argument: `request`.
+
+---
+
+## `isLoaderRequest`
+
+A special function provided by `@remix-pwa/sw` to detect wether a request is a loader request. Also takes just a `Request` object as parameter.
+
+---
+
+## `matchRequest`
+
+The `matchRequest` function of type [`MatchRequest`](/sw/helper-reference#MatchRequest), is used to match a request against a list of urls. It takes two arguments:
+
+- `request` - the `Request` object to match
+- `assetUrls` - an array of urls to match against
+
+In short, it does a check for all cases (loader request? asset request? document request?) and returns the corresponding string value of type [`MatchResponse`](/sw/helper-reference#MatchResponse).
+
+### `MatchRequest`
+
+The `MatchRequest` type is simply a function that takes in a `Request` object and an optional array of asset urls and returns a `MatchResponse` type.
+
+### `MatchResponse`
+
+The `MatchResponse` type is a string (or `null`) with the following values:
+
+- `asset` - the request is an asset request
+- `document` - the request is a document request
+- `loader` - the request is a loader request
+- `null` - the request is none of the above, and should be handled like a default request.
+
+---
+
+## `unregisterServiceWorker`
+
+The `unregisterServiceWorker` function is used to unregister the service worker. It takes no arguments.
+
+---
+
+## `loadServiceWorker`
+
+The `loadServiceWorker` function is used to load the service worker. It takes in two optional arguments:
+
+- `scriptUrl` - the url of the service worker script. Defaults to `/entry.worker.js`
+- `scope` - the scope of the service worker. Defaults to `/`
+
+> Read more about scopes [here](https://web.dev/learn/pwa/service-workers/#scope)

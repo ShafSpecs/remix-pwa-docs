@@ -16,6 +16,6 @@ export const valid_packages = ["client", "push", "pwa", "sw"] as unknown as Type
 export const packages: Record<ValidPackages, PackageData> = {
   pwa: { name: "remix-pwa", slug: "pwa", comingSoon: false, position: 0 },
   sw: { name: "@remix-pwa/sw", slug: "sw", comingSoon: false, position: 1 },
-  push: { name: "@remix-pwa/push", slug: "push", comingSoon: true, position: 2 },
+  push: { name: "@remix-pwa/push", slug: "push", comingSoon: false, position: 2 },
   client: { name: "@remix-pwa/client", slug: "client", comingSoon: true, position: 3 }
 };

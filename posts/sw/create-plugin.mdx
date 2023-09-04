@@ -16,6 +16,7 @@ To create a plugin, you need to extend the `Plugin` interface of whatever you wa
 For example, if you want to extend `CacheStrategy` behaviour, you need to extend the `StrategyPlugin` interface.
 
 ```ts
+// my-strategy-plugin.ts (can also be in worker file)
 import { StrategyPlugin } from '@remix-pwa/sw';
 
 export class MyStrategyPlugin extends StrategyPlugin {
@@ -28,6 +29,7 @@ export class MyStrategyPlugin extends StrategyPlugin {
 To plug a plugin functionality in, you only need to pass it to during instantiation and that's all.
 
 ```ts
+// entry.worker.ts
 import { NetworkFirst } from '@remix-pwa/sw';
 import { MyStrategyPlugin } from './my-strategy-plugin';
 

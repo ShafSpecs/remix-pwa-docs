@@ -1,6 +1,6 @@
 ---
 title: "Extending your SW"
-description: Learn how to install and setup a basic Service Worker in Remix
+description: Learn how to extend the capabilities of your Service Worker and Remix PWA with this guide.
 slug: /sw/extending
 section: Guides
 position: 2
@@ -19,6 +19,7 @@ A strategy is a class that extends the `CacheStrategy` class. It's used to deter
 We can easily implement our own strategy by extending the `CacheStrategy` class and overriding the `_handle` method. Check out the [reference](/sw/cache-strategy) for more information.
 
 ```ts 
+// entry.worker.ts
 import { CacheStrategy } from '@remix-pwa/sw`
 
 class ImageCacheStrategy extends CacheStrategy {
@@ -81,6 +82,7 @@ Bravo 👏! you just created your own custom matcher.
 Now that we have our custom strategy and matcher, we can use them in our Service Worker alongside our other strategies. 
 
 ```ts
+// entry.worker.ts
 const fetchHandler = ({ request }: FetchEvent): Promise<Response> => {
   if (isImageRequest(request)) {
     return imageCacheStrategy.handle(request);

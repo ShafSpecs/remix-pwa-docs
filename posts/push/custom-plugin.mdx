@@ -1,0 +1,310 @@
+---
+title: Create a Plugin
+description: "Learn how to create a plugin for your custom Push strategy."
+slug: /push/custom-plugin
+section: Guides
+position: 3
+---
+
+import Info from './info.tsx';
+
+We have built a fully functional push handler that works just fine, but what if
+we want to add some custom functionality during any of the stages of a push notification? For example,
+we want to log the interactions users have with our push notifications in order to create a
+map. Or we want to translate the push notification message to the user's language when a push is recieved.
+Or take it to the next level and create a background sync queue that queues messages when the user is offline.
+All of that would require us to create a plugin for our push strategy.
+
+In this guide, we would be building a simple analytics plugin that logs the push notification to the console and
+keeps a count of the number of times a push notification is recieved.
+
+## Create a Plugin
+
+To create a plugin, we need to create a class that implements the `PushPlugin` interface right above our push handler code.
+
+```typescript
+// entry.worker.ts
+import { PushPlugin } from "@remix-pwa/push";
+
+class AnalyticsPlugin implements PushPlugin {
+  // ...
+}
+
+// our `CustomPush` plugin
+```
+
+The `PushPlugin` interface has 4 methods that can be implemented:
+
+- `pushReceived` - called when a push notification is recieved
+- `pushClicked` - called when a push notification is clicked
+- `pushDismissed` - called when a push notification is dismissed (closed)
+- `error` - called when an error occurs during the push process
+
+They all take in a `PushHandlerEnv` object that contains the following fields:
+
+- `event` - An event is the event being passed to the plugin. It can be a `PushEvent` or a `NotificationEvent` or an `ErrorEvent`
+- `state` - This is a type of `Record<string, any>` that allows you to pass any data to the plugin. It is useful when you want to pass data from one plugin to another
+  or extra information to the plugin.
+
+Since this is analytics plugin, we want to track all four. So we would implement all four methods.
+
+```typescript
+// entry.worker.ts
+class AnalyticsPlugin implements PushPlugin {
+  async pushReceived(push: PushHandlerEnv) {}
+
+  async pushClicked(push: PushHandlerEnv) {}
+
+  async pushDismissed(push: PushHandlerEnv) {}
+
+  async error(error: PushHandlerEnv) {}
+}
+```
+
+And before we move on, let's simulate a scenario. Sometimes, we want to track only a specific push notification event (for example, `pushRecieved`)
+and not the others. To do that, let's create a field in `Analytics` plugin that would allow us to specify the event we want to track.
+
+```typescript {1-6, 9}
+// entry.worker.ts
+interface AnalyticsPluginOptions {
+  trackPushReceived?: boolean;
+  trackPushClicked?: boolean;
+  trackPushDismissed?: boolean;
+  trackPushError?: boolean;
+}
+
+class AnalyticsPlugin implements PushPlugin {
+  private options: AnalyticsPluginOptions;
+
+  async pushReceived(push: PushHandlerEnv) {}
+
+  async pushClicked(push: PushHandlerEnv) {}
+
+  async pushDismissed(push: PushHandlerEnv) {}
+
+  async error(error: PushHandlerEnv) {}
+}
+```
+
+Let's also create a constructor that would allow us to pass in the options.
+
+```typescript {4-12}
+class AnalyticsPlugin implements PushPlugin {
+  private options: AnalyticsPluginOptions;
+
+  constructor(options: AnalyticsPluginOptions = {}) {
+    this.options = {
+      trackPushReceived: options.trackPushReceived ?? true,
+      trackPushClicked: options.trackPushClicked ?? true,
+      trackPushDismissed: options.trackPushDismissed ?? true,
+      trackPushError: options.trackPushError ?? true,
+      ...options
+    };
+  }
+
+  async pushReceived(push: PushHandlerEnv) {}
+
+  async pushClicked(push: PushHandlerEnv) {}
+
+  async pushDismissed(push: PushHandlerEnv) {}
+
+  async error(error: PushHandlerEnv) {}
+}
+```
+
+Sweet, we have a plugin outline that we can use. Let's now implement the methods.
+
+## Implement the Plugin Methods
+
+### `pushReceived`
+
+The `pushReceived` method is called when a push notification is recieved. We want to log the push notification to the console and
+keep a count of the number of times a push notification is recieved. To do that, we would create a field in the `AnalyticsPlugin` class
+that would keep track of the number of times a push notification is recieved.
+
+```typescript {3}
+class AnalyticsPlugin implements PushPlugin {
+  private options: AnalyticsPluginOptions;
+  private pushReceivedCount = 0;
+
+  // ...
+}
+```
+
+And then we would increment the count in the `pushReceived` method and log a message if the `trackPushReceived` option is set to `true`.
+
+```typescript {2-6}
+async pushReceived({ event, state }: PushHandlerEnv) {
+  if (!this.options.trackPushReceived) return;
+
+  this.pushReceivedCount++;
+  console.log("Push recieved", event);
+  console.log(`%cPush received ${this.pushReceivedCount}`, "color: green");
+}
+```
+
+### `pushClicked`
+
+The `pushClicked` method is called when a push notification is clicked. We would repeat the same step as above.
+
+```typescript {4}
+class AnalyticsPlugin implements PushPlugin {
+  private options: AnalyticsPluginOptions;
+  private pushReceivedCount = 0;
+  private pushClickedCount = 0;
+
+  // ...
+}
+```
+
+And now, for the method:
+
+```typescript {6-10}
+class AnalyticsPlugin implements PushPlugin {
+  // ...
+  private pushClickedCount = 0;
+
+  async pushClicked({ event, state }: PushHandlerEnv) {
+    if (!this.options.trackPushClicked) return;
+
+    this.pushClickedCount++;
+    console.log("Push clicked", event);
+    console.log(`%cPush clicked ${this.pushClickedCount}`, "color: blue");
+  }
+
+  // ...
+}
+```
+
+### `pushDismissed`
+
+The `pushDismissed` method is called when a push notification is dismissed. Same as above, we would create a field in the `AnalyticsPlugin` class
+that would keep track of the number of times a push notification is dismissed.
+
+```typescript {5}
+class AnalyticsPlugin implements PushPlugin {
+  private options: AnalyticsPluginOptions;
+  private pushReceivedCount = 0;
+  private pushClickedCount = 0;
+  private pushDismissedCount = 0;
+
+  // ...
+}
+```
+
+Now, let's increment the count in the `pushDismissed` method and log a message
+
+```typescript {6-10}
+class AnalyticsPlugin implements PushPlugin {
+  // ...
+  private pushDismissedCount = 0;
+
+  async pushDismissed({ event, state }: PushHandlerEnv) {
+    if (!this.options.trackPushDismissed) return;
+
+    this.pushDismissedCount++;
+    console.log("Push dismissed", event);
+    console.log(`%cPush dismissed ${this.pushDismissedCount}`, "color: yellow");
+  }
+
+  // ...
+}
+```
+
+### `error`
+
+The `error` method is called when an error occurs during the push process. Same. Hopefully, no errors occur during the push process. But if they do,
+we are ready for it 😎.
+
+```typescript {6}
+class AnalyticsPlugin implements PushPlugin {
+  private options: AnalyticsPluginOptions;
+  private pushReceivedCount = 0;
+  private pushClickedCount = 0;
+  private pushDismissedCount = 0;
+  private errorCount = 0;
+
+  // ...
+}
+```
+
+And then we would increment the count in the `error` method and log a message
+
+```typescript {2-6}
+async error({ event, state }: PushHandlerEnv) {
+  if (!this.options.trackPushError) return;
+
+  this.errorCount++;
+  console.log("Error", event);
+  console.log(`%cError ${this.errorCount}`, "color: red");
+}
+```
+
+## Implement the Plugin
+
+Now that we have implemented the plugin methods, let's implement the plugin. We simply head back to our `CustomPush` declaration and slot the plugin 
+into the `plugins` array.
+
+```typescript 
+// entry.worker.ts
+const analyticsPlugin = new AnalyticsPlugin();
+
+const pushHandler = new CustomPush([analyticsPlugin]);
+```
+
+<Info>
+You might be wondering why we didn't just do `new AnalyticsPlugin()` straight up 
+in the array. The answer is simply because we are tracking the number of times a push notification is recieved, clicked, dismissed and errored.
+
+If we initialise a new instance directly, we would be initialising a new object every single time and 
+resetting the count tracker back to zero. Typically, you should be sending to a server so it won't matter.
+</Info>
+
+## Test the Plugin
+
+Currently, the plugin doesn't work. We need to make the `CustomPush` class aware of the plugin and actually call the plugin methods. 
+Let's quickly fix that:
+
+```ts 
+// entry.worker.ts
+class CustomPush extends Push {
+  async handlePush(event: PushEvent): Promise<void> {
+    this.applyPlugins("pushReceived", { event });
+
+    // ...
+  }
+
+  async handleNotificationClick(event: NotificationEvent): Promise<void> {
+    this.applyPlugins("pushClicked", { event });
+
+    // ...
+  }
+
+  async handleNotificationClose(event: NotificationEvent): Promise<void> {
+    this.applyPlugins("pushDismissed", { event });
+
+    // ...
+  }
+
+  async handleError(error: ErrorEvent): Promise<void> {
+    this.applyPlugins("error", { event: error });
+
+    // ...
+  }
+}
+```
+
+<Info>
+`applyPlugins` is a method that is available on the `Push` class and subsclasses. It takes in the name of the plugin method (`keyof PushPlugin`) and the `PushHandlerEnv` object
+and then proceeds to call the plugin method under the hood.
+</Info>
+
+And now, our plugin is logging to and accurately keeping track just fine 🥳!
+
+## Conclusion
+
+Hopefully, this guide has been a good introduction to push notifications in Remix. If you 
+have any further questions or suggestions, or maybe you created your own plugin and would 
+love to share it to the community, feel free to reach out via a PR, issue or Github discussion.
+
+Thanks for reading, and have a blast building! 🚀
