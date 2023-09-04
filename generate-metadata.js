@@ -30,7 +30,7 @@ const getPWAPostMeta = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/pwa",
-    ref: "docs"
+    ref: "v2-docs"
   });
 
   return Promise.all(posts.data.map(async (post) => {
@@ -61,7 +61,7 @@ const getPushPostMeta = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/push",
-    ref: "docs"
+    ref: "v2-docs"
   });
 
   return Promise.all(posts.data.map(async (post) => {
@@ -92,7 +92,7 @@ const getSWPostMeta = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/sw",
-    ref: "docs"
+    ref: "v2-docs"
   });
 
   return Promise.all(posts.data.map(async (post) => {
@@ -123,7 +123,7 @@ const getClientPostMeta = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/client",
-    ref: "docs"
+    ref: "v2-docs"
   });
 
   return Promise.all(posts.data.map(async (post) => {
@@ -140,7 +140,7 @@ const getMetaDataSHA = async () => {
     owner: "remix-pwa",
     repo: "remix-pwa-docs",
     path: "posts/metadata.json",
-    ref: "control"
+    ref: "v2-control"
   });
 
   return meta.data.sha;
