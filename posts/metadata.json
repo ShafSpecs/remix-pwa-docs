@@ -266,7 +266,7 @@
           },
           {
             "title": "Chat Application",
-            "description": "Learn how to utilise Push Notifications well by building a chat application.",
+            "description": "Learn how to utilise Push Notifications well by utilising it in a chat application.",
             "section": "Guides",
             "slug": "/push/chat-push",
             "position": 4
