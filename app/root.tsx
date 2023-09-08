@@ -196,9 +196,6 @@ export default function App() {
   useEffect(() => {
     const { prev, next } = getPreviousAndNextRoute();
     dispatch({ type: "updateLinks", payload: { prev, next } });
-
-    console.log(meta)
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
