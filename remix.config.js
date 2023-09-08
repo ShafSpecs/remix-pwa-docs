@@ -39,7 +39,11 @@ module.exports = {
     /^parse-entities.*/,
     /^is.*/,
     /^stringify.*/,
+    /^slugify.*/,
+    /^@sindresorhus.*/,
     "redent",
+    "@sindresorhus/slugify",
+    "@sindresorhus/transliterate",
     "strip-indent",
     "escape-string-regexp",
     "web-namespaces"
