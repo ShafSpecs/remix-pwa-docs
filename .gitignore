@@ -11,6 +11,7 @@ node_modules
 /public/entry.worker.js
 /api/index.js
 /api/index.js.map
+/api/*.json
 
 *.worker.js
 
