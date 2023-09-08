@@ -6,6 +6,9 @@ import { useIsFirstRender } from "usehooks-ts";
 import type { loader as ExampleLoaderResponse } from "~/routes/docs.($slug)";
 import { useRoot } from "~/utils/providers/RootProvider";
 import SidebarLayout from "./Sidebar";
+import Header, { ClientHeader } from "../Header";
+import { ClientOnly } from "remix-utils";
+import slugify from '@sindresorhus/slugify';
 
 export type Heading = {
   id: string;
@@ -30,6 +33,7 @@ export function Doc() {
   const location = useLocation();
 
   const docRef = useRef<HTMLDivElement>(null!);
+  const tocRef = useRef<HTMLOListElement>(null!);
 
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [listItems, setListItems] = useState<any[]>([]);
@@ -39,6 +43,24 @@ export function Doc() {
 
   const [activeHeading, setActiveHeading] = useState<Element | HTMLElement | null>(null);
   const [activeH2, setActiveH2] = useState<Element | HTMLElement | null>(null);
+
+  const scrollIntoView = (e: MouseEvent, el: Element) => {
+    e.preventDefault();
+
+    const scrollTo = docRef.current.querySelector(`#${el.getAttribute('href')!.replace('#', '')}`);
+
+    console.log("Click!")
+
+    if (scrollTo) {
+      const scrollToRect = scrollTo.getBoundingClientRect();
+      const offsetPos = scrollToRect.top + window.scrollY - 106;
+
+      window.scrollTo({
+        top: offsetPos,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -70,97 +92,29 @@ export function Doc() {
       for (let i = 0; i < headings.length; i++) {
         const heading = headings[i];
 
-        if (heading.level === 2) {
-          let headingId = heading.text
-            .replaceAll(/[#'?$!]/g, "")
-            .replaceAll(" ", "-")
-            .toLowerCase();
+        let headingId = slugify(heading.text);
 
-          if (currentOl) {
-            listItems.push(currentOl);
-            currentOl = null;
-          }
+        if (currentOl) {
+          listItems.push(currentOl);
+          currentOl = null;
+        }
 
-          const subheadings = [];
-          while (i + 1 < headings.length && headings[i + 1].level === 3) {
-            subheadings.push(
-              // eslint-disable-next-line no-loop-func
-              <li
-                key={headings[i + 1].id}
-                className="ml-4"
-                ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)}
-              >
-                <Link
-                  className={`${activeHeading!.id ===
-                    headings[i + 1].text
-                      .replaceAll(/[#'?$!]/g, "")
-                      .replaceAll(" ", "-")
-                      .toLowerCase()
-                    ? "text-sky-500 dark:text-sky-400"
-                    : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
-                    } group flex items-start py-1`}
-                  to={`${location.pathname}#${headings[i + 1]!.text.replaceAll(" ", "-").replaceAll(/[#'?$!]/g, "").toLowerCase()}`}
-                >
-                  <svg
-                    width={3}
-                    height={24}
-                    viewBox="0 -9 3 24"
-                    className="mr-2 overflow-visible text-slate-400 group-hover:text-slate-600 dark:text-slate-600 dark:group-hover:text-slate-500"
-                  >
-                    <path
-                      d="M0 0L3 3L0 6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  &nbsp;{headings[i + 1].text}
-                </Link>
-              </li>
-            );
-            i++;
-          }
-
-          listItems.push(
-            <li key={heading.id}>
-              <h3 ref={(el: HTMLHeadingElement) => (headingsRef.current[headingsRef.current.length] = el)}>
-                <Link
-                  to={`${location.pathname}#${headingId.replaceAll(/[#'?$!]/g, "").replaceAll(" ", "-")}`}
-                  className={`${activeHeading!.id == headingId || (activeH2 && activeH2.id == headingId)
-                    ? "font-medium text-sky-500 dark:text-sky-400"
-                    : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
-                    } ${subheadings.length > 0 ? "font-medium" : ""} block py-1`}
-                >
-                  {heading.text}
-                </Link>
-              </h3>
-              {subheadings.length > 0 && (
-                <Fragment>{subheadings}</Fragment>
-              )}
-            </li>
-          );
-        } else if (heading.level === 3) {
-          let headingId = heading.text
-            .replaceAll(/[#'?$!]/g, "")
-            .replaceAll(" ", "-")
-            .toLowerCase();
-
-          if (!currentOl) {
-            currentOl = (
-              <Fragment>
-                {[]}
-              </Fragment>
-            );
-          }
-
-          currentOl.props.children.push(
-            <li key={heading.id} ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)} className="ml-4">
+        const subheadings = [];
+        while (i + 1 < headings.length && headings[i + 1].level === 3) {
+          subheadings.push(
+            // eslint-disable-next-line no-loop-func
+            <li
+              key={headings[i + 1].id}
+              className="ml-4"
+              ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)}
+            >
               <Link
-                className={`${activeHeading!.id === headingId ? "text-sky-500 dark:text-sky-400"
+                className={`${activeHeading!.id ===
+                  slugify(headings[i + 1].text)
+                  ? "text-sky-500 dark:text-sky-400"
                   : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
-                  } group flex items-start py-1`}
-                to={`${location.pathname}#${heading.text.replaceAll(" ", "-").replaceAll(/[#'?$!]/g, "").toLowerCase()}}`}
+                  } group flex items-start py-1 toc-anchor`}
+                to={`${location.pathname}#${slugify(headings[i + 1]!.text)}`}
               >
                 <svg
                   width={3}
@@ -176,11 +130,31 @@ export function Doc() {
                     strokeLinecap="round"
                   />
                 </svg>
-                &nbsp;{heading.text}
+                {" "}{headings[i + 1].text}
               </Link>
             </li>
           );
+          i++;
         }
+
+        listItems.push(
+          <li key={heading.id}>
+            <h3 ref={(el: HTMLHeadingElement) => (headingsRef.current[headingsRef.current.length] = el)}>
+              <Link
+                to={`${location.pathname}#${slugify(headingId)}`}
+                className={`${activeHeading!.id == headingId || (activeH2 && activeH2.id == headingId)
+                  ? "font-medium text-sky-500 dark:text-sky-400"
+                  : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
+                  } ${subheadings.length > 0 ? "font-medium" : ""} block py-1 toc-anchor`}
+              >
+                {heading.text}
+              </Link>
+            </h3>
+            {subheadings.length > 0 && (
+              <Fragment>{subheadings}</Fragment>
+            )}
+          </li>
+        );
       }
 
       if (currentOl) {
@@ -242,73 +216,100 @@ export function Doc() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [headings, activeHeading, isFirstRender, activeH2]);
 
-  return (
-    <SidebarLayout>
-      <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
-        <div className="flex-auto max-w-2xl min-w-0 px-4 py-16 scroll-smooth lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
-          <article>
-            <header id="header" className="relative z-20">
-              <div>
-                <p className="mb-2 text-sm font-semibold leading-6 text-sky-500 dark:text-sky-400">
-                  {frontmatter.section}
-                </p>
-                <div className="flex items-center">
-                  <h1 className="inline-block text-2xl font-extrabold tracking-tight sm:text-3xl text-slate-900 dark:text-slate-200">
-                    {frontmatter.title}
-                  </h1>
-                </div>
-              </div>
-              <p className="mt-2 text-lg text-slate-700 dark:text-slate-400">
-                {frontmatter.description}
-              </p>
-            </header>
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      docRef.current.querySelectorAll('a').forEach((el) => {
+        el.addEventListener('click', (e) => scrollIntoView(e, el))
+      });
 
-            <main
-              ref={docRef}
-              className="relative z-20 mt-8 prose prose-slate dark:prose-dark scroll-smooth"
-            >
-              <Component />
-            </main>
-          </article>
-          <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
-            {prev && (
-              <div>
-                <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Previous</dt>
-                <dd className="mt-1">
-                  <Link
-                    className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-                    to={`/docs/${prev.slug.replace('/', '')}`}
-                  >
-                    <span aria-hidden="true">←</span>&nbsp;{prev.title}
-                  </Link>
-                </dd>
-              </div>
-            )}
-            {next && (
-              <div className="ml-auto text-right">
-                <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Next</dt>
-                <dd className="mt-1">
-                  <Link
-                    className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-                    to={`/docs/${next.slug.replace('/', '')}`}
-                  >
-                    {next.title}
-                    {/* */}&nbsp;<span aria-hidden="true">→</span>
-                  </Link>
-                </dd>
-              </div>
-            )}
-          </dl>
+      return () => {
+        document.getElementById('article-main')!.querySelectorAll('a').forEach((el) => {
+          el.removeEventListener('click', (e) => scrollIntoView(e, el))
+        });
+
+        document.getElementById('toc-id')!.querySelectorAll('a').forEach((el) => {
+          el.removeEventListener('click', (e) => scrollIntoView(e, el))
+        });
+      };
+    }
+  }, [])
+
+  return (
+    <Fragment>
+      <ClientOnly
+        fallback={<ClientHeader />}
+        children={
+          () => <Header />
+        }
+      />
+      <SidebarLayout>
+        <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
+          <div className="flex-auto mb-8 scroll-smooth">
+            <article>
+              <header id="header" className="relative z-20">
+                <div>
+                  <p className="mb-2 text-sm font-semibold leading-6 text-sky-500 dark:text-sky-400">
+                    {frontmatter.section}
+                  </p>
+                  <div className="flex items-center">
+                    <h1 className="inline-block text-2xl font-extrabold tracking-tight sm:text-3xl text-slate-900 dark:text-slate-200">
+                      {frontmatter.title}
+                    </h1>
+                  </div>
+                </div>
+                <p className="mt-2 text-lg text-slate-700 dark:text-slate-400">
+                  {frontmatter.description}
+                </p>
+              </header>
+
+              <main
+                ref={docRef}
+                id="article-main"
+                className="relative z-20 mt-8 prose prose-slate dark:prose-dark scroll-smooth"
+              >
+                <Component />
+              </main>
+            </article>
+            <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
+              {prev && (
+                <div>
+                  <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Previous</dt>
+                  <dd className="mt-1">
+                    <Link
+                      className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
+                      to={`/docs/${prev.slug.replace('/', '')}`}
+                    >
+                      <span aria-hidden="true">←</span>&nbsp;{prev.title}
+                    </Link>
+                  </dd>
+                </div>
+              )}
+              {next && (
+                <div className="ml-auto text-right">
+                  <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Next</dt>
+                  <dd className="mt-1">
+                    <Link
+                      className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
+                      to={`/docs/${next.slug.replace('/', '')}`}
+                    >
+                      {next.title}
+                      {/* */}&nbsp;<span aria-hidden="true">→</span>
+                    </Link>
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+          <div className="fixed z-20 top-[3.8125rem] bottom-0 right-[max(0px,calc(50%-45rem))] w-[19.5rem] py-10 overflow-y-auto hidden xl:block">
+            <nav aria-labelledby="on-this-page-title" className="px-8">
+              <h2 id="on-this-page-title" className="mb-4 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100">
+                On this page
+              </h2>
+              <ol className="text-sm leading-6 text-slate-700" id="toc-id" ref={tocRef}>{listItems}</ol>
+            </nav>
+          </div>
         </div>
-        <div className="fixed z-20 top-[3.8125rem] bottom-0 right-[max(0px,calc(50%-45rem))] w-[19.5rem] py-10 overflow-y-auto hidden xl:block">
-          <nav aria-labelledby="on-this-page-title" className="px-8">
-            <h2 id="on-this-page-title" className="mb-4 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100">
-              On this page
-            </h2>
-            <ol className="text-sm leading-6 text-slate-700">{listItems}</ol>
-          </nav>
-        </div>
-      </div>
-    </SidebarLayout>
+      </SidebarLayout>
+    </Fragment>
   );
 }
