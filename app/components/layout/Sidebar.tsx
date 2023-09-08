@@ -96,7 +96,7 @@ export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fa
         {!mobile && <div className="h-10 bg-white dark:bg-slate-900" />}
         <div className="relative bg-white pointer-events-auto dark:bg-slate-900">
           {/* Todo: Extract this as a separate `SearchButton` */}
-          <button className="hidden w-full lg:flex items-center text-sm leading-6 text-slate-400 rounded-md ring-1 ring-slate-900/10 shadow-sm py-1.5 pl-2 pr-3 hover:ring-slate-300 dark:bg-slate-800 dark:highlight-white/5 dark:hover:bg-slate-700">
+          <button type="button" className="hidden w-full lg:flex items-center text-sm leading-6 text-slate-400 rounded-md  ring-slate-900/10 outline-none shadow-sm py-1.5 pl-2 pr-3 hover:ring-slate-300 dark:bg-slate-800 dark:highlight-white/5 dark:hover:bg-slate-700">
             {/* {({ actionKey }) => ( */}
               <>
                 <svg
@@ -135,7 +135,7 @@ export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fa
         </div>
         {!mobile && <div className="h-8 bg-gradient-to-b from-white dark:from-slate-900" />}
       </div>
-      <ul className="">
+      <ul className="lg:-mt-6">
         {meta.map((el: MetaDataObject, i: number) => (
           <NavItem key={`${i}-${el.name}`} {...el} />
         ))}
