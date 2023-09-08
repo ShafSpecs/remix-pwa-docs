@@ -1,319 +1,47 @@
 [
   {
-    "slug": "pwa",
+    "name": "Getting Started",
+    "position": 1,
     "children": [
       {
-        "name": "Introduction",
-        "position": 1,
-        "children": [
-          {
-            "title": "Introduction",
-            "description": "A lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿. Let's dive right in!",
-            "section": "Introduction",
-            "slug": "/",
-            "position": 1
-          },
-          {
-            "title": "Installation",
-            "description": "Install Remix PWA and get started building your next PWA.",
-            "section": "Introduction",
-            "slug": "/pwa/installation",
-            "position": 2
-          },
-          {
-            "title": "Community",
-            "description": "Get support, share ideas, requests, how-tos and much more from the Remix community.",
-            "section": "Introduction",
-            "slug": "/pwa/community",
-            "position": 3
-          },
-          {
-            "title": "Roadmap",
-            "description": "Take a peek at the next things rolling out. Should be updated regularly",
-            "section": "Introduction",
-            "slug": "/pwa/roadmap",
-            "position": 4
-          },
-          {
-            "title": "Contribute",
-            "description": "Wanna contribute to `remix-pwa`? Here's how to get started.",
-            "section": "Introduction",
-            "slug": "/pwa/contribute",
-            "position": 5
-          },
-          {
-            "title": "FAQs",
-            "description": "Popular questions (and answers!) I've gotten so far about Remix PWA plus some.",
-            "section": "Introduction",
-            "slug": "/pwa/faq",
-            "position": 6
-          }
-        ]
+        "title": "Installation",
+        "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+        "section": "Getting Started",
+        "slug": "/installation",
+        "position": 1
       },
       {
-        "name": "Guides",
-        "position": 2,
-        "children": [
-          {
-            "title": "Quickstart",
-            "description": "This guide will get you all set up and ready to use `remix-pwa` in your Remix application.",
-            "section": "Guides",
-            "slug": "/pwa/quickstart",
-            "position": 1
-          },
-          {
-            "title": "Skip remix-pwa",
-            "description": "Build your PWA from scratch with `remix-pwa` modules",
-            "section": "Guides",
-            "slug": "/pwa/without-cli",
-            "position": 2
-          }
-        ]
-      },
-      {
-        "name": "Packages",
-        "position": 3,
-        "children": [
-          {
-            "title": "@remix-pwa/sw",
-            "description": "Everything Service Worker is being handled here. Come and check it out!",
-            "section": "Packages",
-            "slug": "/pwa/remix-pwa-sw",
-            "position": 1
-          },
-          {
-            "title": "@remix-pwa/push",
-            "description": "Push notifications for your PWA (rolling out soon)",
-            "section": "Packages",
-            "slug": "/pwa/remix-pwa-push",
-            "position": 2
-          },
-          {
-            "title": "@remix-pwa/client",
-            "description": "Everything utils and APIs to give your PWA superpowers and the authentic feeling!",
-            "section": "Packages",
-            "slug": "/pwa/remix-pwa-client",
-            "position": 3
-          }
-        ]
-      },
-      {
-        "name": "Examples",
-        "position": 4,
-        "children": []
+        "title": "FAQ",
+        "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+        "section": "Getting Started",
+        "slug": "/faq",
+        "position": 2
       }
     ]
   },
   {
-    "slug": "sw",
-    "children": [
-      {
-        "name": "Introduction",
-        "position": 1,
-        "children": [
-          {
-            "title": "Introduction",
-            "description": "Explore the realms of Service Workers with Remix utilizing Remix PWA's very own extensible module!",
-            "section": "Introduction",
-            "slug": "/sw",
-            "position": 1
-          },
-          {
-            "title": "Upgrade Guide",
-            "description": "A guide to upgrade to the latest version of `@remix-pwa/sw` from previous versions.",
-            "section": "Introduction",
-            "slug": "/sw/upgrade-guide",
-            "position": 2
-          }
-        ]
-      },
-      {
-        "name": "Guides",
-        "position": 2,
-        "children": [
-          {
-            "title": "Basic Setup",
-            "description": "Learn how to install and setup a basic Service Worker in Remix",
-            "section": "Guides",
-            "slug": "/sw/basic-setup",
-            "position": 1
-          },
-          {
-            "title": "Extending your SW",
-            "description": "Learn how to extend the capabilities of your Service Worker and Remix PWA with this guide.",
-            "section": "Guides",
-            "slug": "/sw/extending",
-            "position": 2
-          },
-          {
-            "title": "Workbox",
-            "description": "Take advantage of Workbox in your Remix applications.",
-            "section": "Guides",
-            "slug": "/sw/workbox",
-            "position": 3
-          }
-        ]
-      },
-      {
-        "name": "Hooks",
-        "position": 3,
-        "children": [
-          {
-            "title": "useSWEffect()",
-            "description": "A hook to monitor and handle navigation events in your Remix application.",
-            "section": "Hooks",
-            "slug": "/sw/use-sw-effect",
-            "position": 1
-          }
-        ]
-      },
-      {
-        "name": "Plugins",
-        "position": 4,
-        "children": [
-          {
-            "title": "Explore Plugins",
-            "description": "Check out all the new fuzzy and fiery plugins available for Remix PWA 🔥",
-            "section": "Plugins",
-            "slug": "/sw/plugins",
-            "position": 1
-          },
-          {
-            "title": "Create a Plugin",
-            "description": "Understand how plugins works and how you can create one to plug into @remix-pwa/sw module",
-            "section": "Plugins",
-            "slug": "/sw/create-plugin",
-            "position": 2
-          }
-        ]
-      },
-      {
-        "name": "API Reference",
-        "position": 5,
-        "children": [
-          {
-            "title": "Cache Strategy",
-            "description": "Under-the-hood view of what makes up caching in Remix PWA",
-            "section": "API Reference",
-            "slug": "/sw/cache-strategy",
-            "position": 1
-          },
-          {
-            "title": "Message Handler",
-            "description": "Explore how Remix PWA handles communication between the Service Worker and your application.",
-            "section": "API Reference",
-            "slug": "/sw/message-handler",
-            "position": 2
-          },
-          {
-            "title": "Plugin Reference",
-            "description": "Check the interfaces that make up the plugin system in Remix PWA. Plus, how to implement them yourself.",
-            "section": "API Reference",
-            "slug": "/sw/plugin-reference",
-            "position": 3
-          },
-          {
-            "title": "Helper Reference",
-            "description": "Check out the little, yet mighty functions exposed by Remix PWA sw module to help you build your own custom service worker.",
-            "section": "API Reference",
-            "slug": "/sw/helper-reference",
-            "position": 4
-          }
-        ]
-      }
-    ]
+    "name": "Pages",
+    "position": 2,
+    "children": []
   },
   {
-    "slug": "push",
-    "children": [
-      {
-        "name": "Introduction",
-        "position": 1,
-        "children": [
-          {
-            "title": "Introduction",
-            "description": "Integrate Push Notifications into your Remix app easier than ever before!",
-            "section": "Introduction",
-            "slug": "/push",
-            "position": 1
-          }
-        ]
-      },
-      {
-        "name": "Guides",
-        "position": 2,
-        "children": [
-          {
-            "title": "Get Started",
-            "description": "Learn how to get started with the Remix PWA Push package.",
-            "section": "Guides",
-            "slug": "/push/get-started",
-            "position": 1
-          },
-          {
-            "title": "Create a strategy",
-            "description": "Extend your Service Worker by creating your own Push custom strategy.",
-            "section": "Guides",
-            "slug": "/push/custom-push",
-            "position": 2
-          },
-          {
-            "title": "Create a Plugin",
-            "description": "Learn how to create a plugin for your custom Push strategy.",
-            "section": "Guides",
-            "slug": "/push/custom-plugin",
-            "position": 3
-          },
-          {
-            "title": "Chat Application",
-            "description": "Learn how to utilise Push Notifications well by building a chat application.",
-            "section": "Guides",
-            "slug": "/push/chat-push",
-            "position": 4
-          }
-        ]
-      },
-      {
-        "name": "API Reference",
-        "position": 3,
-        "children": [
-          {
-            "title": "Push API Reference",
-            "description": "Explore the Push API Reference for Remix PWA.",
-            "section": "API Reference",
-            "slug": "/push/push-reference",
-            "position": 1
-          }
-        ]
-      }
-    ]
+    "name": "Route Module API",
+    "position": 3,
+    "children": []
   },
   {
-    "slug": "client",
-    "children": [
-      {
-        "name": "Introduction",
-        "position": 1,
-        "children": [
-          {
-            "title": "Introduction",
-            "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
-            "section": "Introduction",
-            "slug": "/client",
-            "position": 1
-          }
-        ]
-      },
-      {
-        "name": "Guides",
-        "position": 2,
-        "children": []
-      },
-      {
-        "name": "API Reference",
-        "position": 3,
-        "children": []
-      }
-    ]
+    "name": "Hooks & Components",
+    "position": 4,
+    "children": []
+  },
+  {
+    "name": "Utilities",
+    "position": 5,
+    "children": []
+  },
+  {
+    "name": "Guides",
+    "position": 6,
+    "children": []
   }
 ]
