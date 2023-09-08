@@ -3,7 +3,6 @@ import { Repo } from "../handlers/github-api";
 import { readFile } from "fs-extra";
 import { resolve } from "path";
 import { z } from "zod";
-import type { ValidPackages } from "../PackageHelpers";
 
 const octokit = request.defaults({
   headers: {
@@ -33,23 +32,18 @@ const MetaDataObjectSchema = z.object({
 
 export type MetaDataObject = z.infer<typeof MetaDataObjectSchema>;
 
-const LocalMetaDataFileSchema = z.object({
-  slug: z.union([z.literal("pwa"), z.literal("client"), z.literal("push"), z.literal("sw")]),
-  children: z.array(MetaDataObjectSchema)
-});
-
 /**
  *
  * @param packageSlug - Slug of the package we're interested in
  * @param slug - Slug of the post we're interested in
  * @returns
  */
-export const getPostContent = async (packageSlug: ValidPackages, slug: string | undefined) => {
+export const getPostContent = async (slug: string | undefined) => {
   /**
    * If we are in development mode, we can just read the file from the file system.
    */
   if (process.env.NODE_ENV === "development") {
-    const content = await readFile(resolve(__dirname, "../", `posts/${packageSlug}/${slug || "intro"}.mdx`), "utf-8");
+    const content = await readFile(resolve(__dirname, "../", `posts/${slug || "installation"}.mdx`), "utf-8");
 
     if (!content) {
       return null;
@@ -59,7 +53,7 @@ export const getPostContent = async (packageSlug: ValidPackages, slug: string | 
 
   const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
     ...Repo,
-    path: `posts/${packageSlug}/${slug || "intro"}.mdx`,
+    path: `posts/${slug || "installation"}.mdx`,
     ref: "docs"
   });
 
@@ -93,7 +87,7 @@ export const getPostMetaData = async () => {
     }
     const parsed_content = JSON.parse(content);
 
-    return z.array(LocalMetaDataFileSchema).parse(parsed_content);
+    return z.array(MetaDataObjectSchema).parse(parsed_content);
   }
 
   const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
@@ -111,7 +105,7 @@ export const getPostMetaData = async () => {
   if (!content) {
     return null;
   }
-  // This might not be the right schema, Not sure if production data is any different from development, if so this schema needs to be updated.
-  const data = z.array(LocalMetaDataFileSchema).parse(JSON.parse(content));
+
+  const data = z.array(MetaDataObjectSchema).parse(JSON.parse(content));
   return data;
 };

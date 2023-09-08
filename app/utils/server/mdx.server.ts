@@ -1,5 +1,5 @@
 import { bundleMDX } from "mdx-bundler";
-import { importSlug, importEmoji, importGfm, importAutolink, importPrism, importPrismOG } from "../../exports/esm-modules";
+import { importSlug, importEmoji, importGfm, importAutolink, importPrism } from "../../exports/esm-modules";
 import { readFileSync } from "fs-extra";
 import { join } from "path";
 import { cwd } from "process";
@@ -25,7 +25,7 @@ export async function mdxToHtml(source: string) {
   const { default: slug } = await importSlug();
   const { default: rehypeAutolinkHeadings } = await importAutolink();
   const { default: rehypePrismCommon } = await importPrism();
-  const { default: prismOG } = await importPrismOG();
+  // const { default: prismOG } = await importPrismOG();
 
   const { code, frontmatter } = await bundleMDX<FrontMatterTypings>({
     source: source,
@@ -34,6 +34,8 @@ export async function mdxToHtml(source: string) {
       "./warn.tsx": readFileSync(join(cwd(), "app", "components/mdx/Warn.tsx")).toString(),
       "./link.tsx": readFileSync(join(cwd(), "app", "components/mdx/Link.tsx")).toString(),
       "./grid.tsx": readFileSync(join(cwd(), "app", "components/mdx/Grid.tsx")).toString(),
+      "./heading.tsx": readFileSync(join(cwd(), "app", "components/mdx/Heading.tsx")).toString(),
+
       "./arrow.tsx": readFileSync(join(cwd(), "app", "components/icons/Arrow.tsx")).toString(),
       "./plugin.tsx": readFileSync(join(cwd(), "app", "components/icons/Plugin.tsx")).toString(),
       "./swatch.tsx": readFileSync(join(cwd(), "app", "components/icons/Swatch.tsx")).toString(),
