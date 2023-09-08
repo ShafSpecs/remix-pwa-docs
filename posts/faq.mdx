@@ -8,6 +8,8 @@ position: 2
 
 import Warn from './warn.tsx'
 import Heading from './heading.tsx'
+import Details from './details.tsx'
+import Editor from './editor.tsx'
 
 ## FAQ 
 
@@ -15,7 +17,7 @@ Tryst!
 
 ## GFM
 
-## <Heading>testing</Heading>
+## <Heading ignore>testing</Heading>
 
 ## Tsk 
 
@@ -45,6 +47,10 @@ testing
   ## Strikethrough
   
   ~one~ or ~~two~~ tildes.
+
+  <Details title={"Guess what is hiding in here?"}>
+    Nothing ofc! Just pure old, boring text.
+  </Details>
   
   ## Table
   
@@ -60,7 +66,7 @@ testing
 
 Hello, World!
 
-```js {1,3-4} showLineNumbers
+```js {{ filename: 'tailwind.config.js' }}
   function fancyAlert(arg) {
     if (arg) {
       $.facebox({ div: '#foo' })
