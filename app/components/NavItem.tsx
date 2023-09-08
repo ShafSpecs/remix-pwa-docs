@@ -1,24 +1,31 @@
 import { NavLink } from "@remix-run/react";
+import clsx from "clsx";
+import { useMediaQuery } from "usehooks-ts";
 import type { MetaDataObject } from "~/types/mdx";
-import { classNames } from "~/utils/StyleHelpers";
 
 const NavItem = ({ name, children }: MetaDataObject) => {
+  const mobile = useMediaQuery('(max-width: 1024px)');
+  
   return (
-    <li>
-      <h2 className="font-medium font-display text-slate-900 dark:text-white">{name}</h2>
-      <ul className="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
+    <li className="mt-12 lg:mt-8">
+      <h3 className="mb-8 font-semibold lg:mb-3 text-slate-900 dark:text-slate-200">{name}</h3>
+      <ul className={clsx(
+        'space-y-6 lg:space-y-2 border-l border-slate-100',
+        mobile ? 'dark:border-slate-700' : 'dark:border-slate-800'
+      )}>
         {children.map((sub) => {
           return (
-            <li className="relative" key={sub.slug}>
-              <NavLink prefetch="render" to={sub.slug} end={true}>
+            <li className="" key={sub.slug}>
+              <NavLink prefetch="render" to={`/docs/${sub.slug.replace('/', '')}`} end={true}>
                 {({ isActive }) => (
                   <span
-                    className={classNames(
-                      "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
-                      isActive
-                        ? "font-semibold text-sky-500 before:bg-sky-500"
-                        : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
-                    )}
+                    className={clsx('block border-l pl-4 -ml-px', {
+                      'text-sky-500 border-current font-semibold dark:text-sky-400': isActive,
+                      'border-transparent hover:border-slate-400 dark:hover:border-slate-500': !isActive,
+                      'text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300':
+                        !isActive,
+                      'text-slate-400': !isActive,
+                    })}
                   >
                     {sub.title}
                   </span>
