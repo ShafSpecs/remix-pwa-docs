@@ -12,6 +12,7 @@ export const action = async ({ request }: ActionArgs) => {
   if (method === "post") {
     const formData = await request.formData();
     const theme = formData.get("theme");
+    
     if (theme === "dark") {
       const set_session = await SetTheme(request, "dark");
       return typedjson(
@@ -24,6 +25,7 @@ export const action = async ({ request }: ActionArgs) => {
         }
       );
     }
+
     if (theme === "light") {
       const set_session = await SetTheme(request, "light");
       return typedjson(
@@ -36,6 +38,7 @@ export const action = async ({ request }: ActionArgs) => {
         }
       );
     }
+
     return typedjson({ response: "Invalid Theme" }, { status: 400 });
   }
   return typedjson({ response: "Invalid Method" }, { status: 405 });
