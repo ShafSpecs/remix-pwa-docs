@@ -1,5 +1,5 @@
 import { bundleMDX } from "mdx-bundler";
-import { importSlug, importEmoji, importGfm, importAutolink, importPrism } from "../../exports/esm-modules";
+import { importSlug, importEmoji, importGfm, importToC, importExample, importHighlighter } from "../../exports/esm-modules";
 import { readFileSync } from "fs-extra";
 import { join } from "path";
 import { cwd } from "process";
@@ -23,9 +23,9 @@ export async function mdxToHtml(source: string) {
   const { default: gfm } = await importGfm();
   const { default: emoji } = await importEmoji();
   const { default: slug } = await importSlug();
-  const { default: rehypeAutolinkHeadings } = await importAutolink();
-  const { default: rehypePrismCommon } = await importPrism();
-  // const { default: prismOG } = await importPrismOG();
+  const { default: toc } = await importToC();
+  const { default: example } = await importExample();
+  const { default: highlight } = await importHighlighter();
 
   const { code, frontmatter } = await bundleMDX<FrontMatterTypings>({
     source: source,
@@ -35,6 +35,8 @@ export async function mdxToHtml(source: string) {
       "./link.tsx": readFileSync(join(cwd(), "app", "components/mdx/Link.tsx")).toString(),
       "./grid.tsx": readFileSync(join(cwd(), "app", "components/mdx/Grid.tsx")).toString(),
       "./heading.tsx": readFileSync(join(cwd(), "app", "components/mdx/Heading.tsx")).toString(),
+      "./details.tsx": readFileSync(join(cwd(), "app", "components/mdx/Details.tsx")).toString(),
+      "./editor.tsx": readFileSync(join(cwd(), "app", "components/mdx/Editor.tsx")).toString(),
 
       "./arrow.tsx": readFileSync(join(cwd(), "app", "components/icons/Arrow.tsx")).toString(),
       "./plugin.tsx": readFileSync(join(cwd(), "app", "components/icons/Plugin.tsx")).toString(),
@@ -44,14 +46,16 @@ export async function mdxToHtml(source: string) {
     mdxOptions(options, frontmatter) {
       options.rehypePlugins = [
         ...(options.rehypePlugins || []),
-        rehypeAutolinkHeadings,
         slug,
-        rehypePrismCommon,
+        // rehypePrismCommon,
         // [prismOG, { plugins: ["copy-to-clipboard", "toolbar"] }]
       ];
       options.remarkPlugins = [
         ...(options.remarkPlugins || []),
-        gfm,
+        gfm, // create plugin to clear all input[type=checkbox] elements
+        toc,
+        example,
+        highlight,
         emoji
       ];
 
