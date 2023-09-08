@@ -3,8 +3,9 @@ import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo, useRef, useState, useEffect, Fragment } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { useIsFirstRender } from "usehooks-ts";
-import type { loader as ExampleLoaderResponse } from "~/routes/$package.($slug)";
+import type { loader as ExampleLoaderResponse } from "~/routes/docs.($slug)";
 import { useRoot } from "~/utils/providers/RootProvider";
+import SidebarLayout from "./Sidebar";
 
 export type Heading = {
   id: string;
@@ -14,7 +15,7 @@ export type Heading = {
 };
 
 /**
- * @description - We can easily use this component if we at minimum return the result of mdxToHtml spread from our loader like:
+ * @description We can easily use this component if we at minimum return the result of mdxToHtml spread from our loader like:
  * @example
  * ```ts
  * const code = await mdxToHtml(doc);
@@ -71,7 +72,7 @@ export function Doc() {
 
         if (heading.level === 2) {
           let headingId = heading.text
-            .replaceAll(/[#'?$]/g, "")
+            .replaceAll(/[#'?$!]/g, "")
             .replaceAll(" ", "-")
             .toLowerCase();
 
@@ -86,20 +87,35 @@ export function Doc() {
               // eslint-disable-next-line no-loop-func
               <li
                 key={headings[i + 1].id}
+                className="ml-4"
                 ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)}
               >
                 <Link
                   className={`${activeHeading!.id ===
                     headings[i + 1].text
-                      .replaceAll(/[#'?$]/g, "")
+                      .replaceAll(/[#'?$!]/g, "")
                       .replaceAll(" ", "-")
                       .toLowerCase()
-                    ? "text-sky-500"
-                    : "hover:text-slate-600 dark:hover:text-slate-300"
-                    }`}
-                  to={`${location.pathname}#${headings[i + 1]!.text.replaceAll(" ", "-").toLowerCase()}`}
+                    ? "text-sky-500 dark:text-sky-400"
+                    : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
+                    } group flex items-start py-1`}
+                  to={`${location.pathname}#${headings[i + 1]!.text.replaceAll(" ", "-").replaceAll(/[#'?$!]/g, "").toLowerCase()}`}
                 >
-                  {headings[i + 1].text}
+                  <svg
+                    width={3}
+                    height={24}
+                    viewBox="0 -9 3 24"
+                    className="mr-2 overflow-visible text-slate-400 group-hover:text-slate-600 dark:text-slate-600 dark:group-hover:text-slate-500"
+                  >
+                    <path
+                      d="M0 0L3 3L0 6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  &nbsp;{headings[i + 1].text}
                 </Link>
               </li>
             );
@@ -110,42 +126,57 @@ export function Doc() {
             <li key={heading.id}>
               <h3 ref={(el: HTMLHeadingElement) => (headingsRef.current[headingsRef.current.length] = el)}>
                 <Link
-                  to={`${location.pathname}#${headingId}`}
+                  to={`${location.pathname}#${headingId.replaceAll(/[#'?$!]/g, "").replaceAll(" ", "-")}`}
                   className={`${activeHeading!.id == headingId || (activeH2 && activeH2.id == headingId)
-                    ? "text-sky-500"
-                    : "font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
-                    }`}
+                    ? "font-medium text-sky-500 dark:text-sky-400"
+                    : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
+                    } ${subheadings.length > 0 ? "font-medium" : ""} block py-1`}
                 >
                   {heading.text}
                 </Link>
               </h3>
               {subheadings.length > 0 && (
-                <ol className="pl-5 mt-2 space-y-3 text-slate-500 dark:text-slate-400">{subheadings}</ol>
+                <Fragment>{subheadings}</Fragment>
               )}
             </li>
           );
         } else if (heading.level === 3) {
           let headingId = heading.text
-            .replaceAll(/[#'?$]/g, "")
+            .replaceAll(/[#'?$!]/g, "")
             .replaceAll(" ", "-")
             .toLowerCase();
 
           if (!currentOl) {
             currentOl = (
-              <ol className="pl-5 mt-2 space-y-3 text-slate-500 dark:text-slate-400" key={headings[i - 1].id}>
+              <Fragment>
                 {[]}
-              </ol>
+              </Fragment>
             );
           }
 
           currentOl.props.children.push(
-            <li key={heading.id} ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)}>
+            <li key={heading.id} ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)} className="ml-4">
               <Link
-                className={`${activeHeading!.id === headingId ? "text-sky-500" : "hover:text-slate-600 dark:hover:text-slate-300"
-                  }`}
-                to={`${location.pathname}#${heading.text.replaceAll(" ", "-").toLowerCase()}}`}
+                className={`${activeHeading!.id === headingId ? "text-sky-500 dark:text-sky-400"
+                  : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
+                  } group flex items-start py-1`}
+                to={`${location.pathname}#${heading.text.replaceAll(" ", "-").replaceAll(/[#'?$!]/g, "").toLowerCase()}}`}
               >
-                {heading.text}
+                <svg
+                  width={3}
+                  height={24}
+                  viewBox="0 -9 3 24"
+                  className="mr-2 overflow-visible text-slate-400 group-hover:text-slate-600 dark:text-slate-600 dark:group-hover:text-slate-500"
+                >
+                  <path
+                    d="M0 0L3 3L0 6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                &nbsp;{heading.text}
               </Link>
             </li>
           );
@@ -203,73 +234,81 @@ export function Doc() {
       }
     }
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+      capture: true
+    });
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [headings, activeHeading, isFirstRender, activeH2]);
 
   return (
-    <Fragment>
-      <div className="flex-auto max-w-2xl min-w-0 px-4 py-16 scroll-smooth lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
-        <article>
-          <header className="space-y-1 mb-9">
-            <p className="text-sm font-medium font-display text-sky-500">{frontmatter.section}</p>
-            <h1 className="text-4xl tracking-tight font-display text-slate-900 dark:text-white">{frontmatter.title}</h1>
-          </header>
-          <main
-            ref={docRef}
-            className="prose scroll-smooth table-auto prose-slate max-w-none dark:prose-invert dark:text-slate-400 prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-normal lg:prose-headings:scroll-mt-[8.5rem] prose-lead:text-slate-500 dark:prose-lead:text-slate-400 prose-a:font-semibold dark:prose-a:text-sky-400 prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,theme(colors.sky.300))] hover:prose-a:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:theme(colors.slate.900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,theme(colors.sky.800))] dark:hover:prose-a:[--tw-prose-underline-size:6px] prose-pre:rounded-xl prose-pre:bg-slate-900 prose-pre:shadow-lg dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10 dark:prose-hr:border-slate-800"
-          >
-            {frontmatter.description &&
-              <Fragment>
-                <p>
-                  {/* Todo: (ShafSpecs) Transform backticks to code tags */}
-                  {frontmatter.description}
+    <SidebarLayout>
+      <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
+        <div className="flex-auto max-w-2xl min-w-0 px-4 py-16 scroll-smooth lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
+          <article>
+            <header id="header" className="relative z-20">
+              <div>
+                <p className="mb-2 text-sm font-semibold leading-6 text-sky-500 dark:text-sky-400">
+                  {frontmatter.section}
                 </p>
-                <hr />
-              </Fragment>
-            }
-            <Component />
-          </main>
-        </article>
-        <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
-          {prev && (
-            <div>
-              <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Previous</dt>
-              <dd className="mt-1">
-                <Link
-                  className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-                  to={prev.slug}
-                >
-                  <span aria-hidden="true">←</span> {prev.title}
-                </Link>
-              </dd>
-            </div>
-          )}
-          {next && (
-            <div className="ml-auto text-right">
-              <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Next</dt>
-              <dd className="mt-1">
-                <Link
-                  className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-                  to={next.slug}
-                >
-                  {next.title}
-                  {/* */} <span aria-hidden="true">→</span>
-                </Link>
-              </dd>
-            </div>
-          )}
-        </dl>
+                <div className="flex items-center">
+                  <h1 className="inline-block text-2xl font-extrabold tracking-tight sm:text-3xl text-slate-900 dark:text-slate-200">
+                    {frontmatter.title}
+                  </h1>
+                </div>
+              </div>
+              <p className="mt-2 text-lg text-slate-700 dark:text-slate-400">
+                {frontmatter.description}
+              </p>
+            </header>
+
+            <main
+              ref={docRef}
+              className="relative z-20 mt-8 prose prose-slate dark:prose-dark scroll-smooth"
+            >
+              <Component />
+            </main>
+          </article>
+          <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
+            {prev && (
+              <div>
+                <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Previous</dt>
+                <dd className="mt-1">
+                  <Link
+                    className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
+                    to={`/docs/${prev.slug.replace('/', '')}`}
+                  >
+                    <span aria-hidden="true">←</span>&nbsp;{prev.title}
+                  </Link>
+                </dd>
+              </div>
+            )}
+            {next && (
+              <div className="ml-auto text-right">
+                <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Next</dt>
+                <dd className="mt-1">
+                  <Link
+                    className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
+                    to={`/docs/${next.slug.replace('/', '')}`}
+                  >
+                    {next.title}
+                    {/* */}&nbsp;<span aria-hidden="true">→</span>
+                  </Link>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </div>
+        <div className="fixed z-20 top-[3.8125rem] bottom-0 right-[max(0px,calc(50%-45rem))] w-[19.5rem] py-10 overflow-y-auto hidden xl:block">
+          <nav aria-labelledby="on-this-page-title" className="px-8">
+            <h2 id="on-this-page-title" className="mb-4 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100">
+              On this page
+            </h2>
+            <ol className="text-sm leading-6 text-slate-700">{listItems}</ol>
+          </nav>
+        </div>
       </div>
-      <div className="hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6">
-        <nav aria-labelledby="on-this-page-title" className="w-56">
-          <h2 id="on-this-page-title" className="text-sm font-medium font-display text-slate-900 dark:text-white">
-            On this page
-          </h2>
-          <ol className="mt-4 space-y-3 text-sm">{listItems}</ol>
-        </nav>
-      </div>
-    </Fragment>
+    </SidebarLayout>
   );
 }
