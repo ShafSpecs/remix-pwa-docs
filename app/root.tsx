@@ -19,6 +19,7 @@ import { Analytics } from "@vercel/analytics/react"
 import tailwind from "./tailwind.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
+import fonts from "./styles/fonts.css";
 import toolbar from "./styles/toolbar.min.css";
 
 import { GetTheme } from "./session.server";
@@ -40,6 +41,7 @@ export const links: LinksFunction = () => {
     { rel: "stylesheet", href: tailwind },
     { rel: "stylesheet", href: theme },
     { rel: "stylesheet", href: prism },
+    { rel: "stylesheet", href: fonts },
     { rel: "stylesheet", href: toolbar }
   ];
 };
