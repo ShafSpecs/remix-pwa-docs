@@ -39,7 +39,6 @@ export function Doc() {
   const [listItems, setListItems] = useState<any[]>([]);
 
   const isFirstRender = useIsFirstRender();
-  const headingsRef = useRef<HTMLElement[]>([]);
 
   const [activeHeading, setActiveHeading] = useState<Element | HTMLElement | null>(null);
   const [activeH2, setActiveH2] = useState<Element | HTMLElement | null>(null);
@@ -48,8 +47,6 @@ export function Doc() {
     e.preventDefault();
 
     const scrollTo = docRef.current.querySelector(`#${el.getAttribute('href')!.replace('#', '')}`);
-
-    console.log("Click!")
 
     if (scrollTo) {
       const scrollToRect = scrollTo.getBoundingClientRect();
@@ -64,6 +61,7 @@ export function Doc() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+
       const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
       const toc: Heading[] = [];
 
@@ -92,8 +90,6 @@ export function Doc() {
       for (let i = 0; i < headings.length; i++) {
         const heading = headings[i];
 
-        let headingId = slugify(heading.text);
-
         if (currentOl) {
           listItems.push(currentOl);
           currentOl = null;
@@ -102,58 +98,19 @@ export function Doc() {
         const subheadings = [];
         while (i + 1 < headings.length && headings[i + 1].level === 3) {
           subheadings.push(
-            // eslint-disable-next-line no-loop-func
-            <li
-              key={headings[i + 1].id}
-              className="ml-4"
-              ref={(el: HTMLLIElement) => (headingsRef.current[headingsRef.current.length] = el)}
-            >
-              <Link
-                className={`${activeHeading!.id ===
-                  slugify(headings[i + 1].text)
-                  ? "text-sky-500 dark:text-sky-400"
-                  : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
-                  } group flex items-start py-1 toc-anchor`}
-                to={`${location.pathname}#${slugify(headings[i + 1]!.text)}`}
-              >
-                <svg
-                  width={3}
-                  height={24}
-                  viewBox="0 -9 3 24"
-                  className="mr-2 overflow-visible text-slate-400 group-hover:text-slate-600 dark:text-slate-600 dark:group-hover:text-slate-500"
-                >
-                  <path
-                    d="M0 0L3 3L0 6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                {" "}{headings[i + 1].text}
-              </Link>
-            </li>
+            {
+              text: headings[i + 1].text,
+            }
           );
           i++;
         }
 
         listItems.push(
-          <li key={heading.id}>
-            <h3 ref={(el: HTMLHeadingElement) => (headingsRef.current[headingsRef.current.length] = el)}>
-              <Link
-                to={`${location.pathname}#${slugify(headingId)}`}
-                className={`${activeHeading!.id == headingId || (activeH2 && activeH2.id == headingId)
-                  ? "font-medium text-sky-500 dark:text-sky-400"
-                  : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
-                  } ${subheadings.length > 0 ? "font-medium" : ""} block py-1 toc-anchor`}
-              >
-                {heading.text}
-              </Link>
-            </h3>
-            {subheadings.length > 0 && (
-              <Fragment>{subheadings}</Fragment>
-            )}
-          </li>
+          {
+            text: heading.text,
+            subheadings: subheadings,
+            hasSubheadings: subheadings.length > 0
+          }
         );
       }
 
@@ -179,8 +136,9 @@ export function Doc() {
 
       const topDistances = headingElements.map((headingElement) => ({
         element: headingElement,
-        topDistance: Math.abs(headingElement.getBoundingClientRect().top)
+        topDistance: Math.abs(headingElement.getBoundingClientRect().top - 109)
       }));
+
       topDistances.sort((a, b) => a.topDistance - b.topDistance);
       const closestHeadingElement = topDistances[0].element;
       const closestHeading = headings.find((heading) => heading.id === closestHeadingElement.id);
@@ -206,6 +164,11 @@ export function Doc() {
 
         setActiveHeading(closestHeading.element);
       }
+
+      if (activeHeading?.tagName.includes("2") && activeH2?.id !== activeHeading.id) {
+        setActiveH2(activeHeading);
+        setActiveHeading(activeHeading);
+      }
     }
 
     window.addEventListener("scroll", handleScroll, {
@@ -216,10 +179,33 @@ export function Doc() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [headings, activeHeading, isFirstRender, activeH2]);
 
-  useEffect(() => {
+  useEffect(() => {    
     if (typeof window !== "undefined") {
+
       docRef.current.querySelectorAll('a').forEach((el) => {
         el.addEventListener('click', (e) => scrollIntoView(e, el))
+      });
+
+      tocRef.current.querySelectorAll('a').forEach((el) => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const hrefAttr = el.getAttribute('href')!;
+          const substr = hrefAttr.search('#');
+          const href = hrefAttr.substring(substr + 1);
+
+          const scrollTo = docRef.current.querySelector(`#${href}`);
+
+          if (scrollTo) {
+            const scrollToRect = scrollTo.getBoundingClientRect();
+            const offsetPos = scrollToRect.top + window.scrollY - 106;
+
+            window.scrollTo({
+              top: offsetPos,
+              behavior: 'smooth'
+            });
+          }
+        })
       });
 
       return () => {
@@ -228,11 +214,30 @@ export function Doc() {
         });
 
         document.getElementById('toc-id')!.querySelectorAll('a').forEach((el) => {
-          el.removeEventListener('click', (e) => scrollIntoView(e, el))
+          el.removeEventListener('click', (e) => {
+            e.preventDefault();
+
+            const hrefAttr = el.getAttribute('href')!;
+            const substr = hrefAttr.search('#');
+            const href = hrefAttr.substring(substr + 1);
+
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            const scrollTo = docRef.current.querySelector(`#${href}`);
+
+            if (scrollTo) {
+              const scrollToRect = scrollTo.getBoundingClientRect();
+              const offsetPos = scrollToRect.top + window.scrollY - 106;
+
+              window.scrollTo({
+                top: offsetPos,
+                behavior: 'smooth'
+              });
+            }
+          })
         });
       };
     }
-  }, [])
+  }, [listItems])
 
   return (
     <Fragment>
@@ -265,7 +270,7 @@ export function Doc() {
               <main
                 ref={docRef}
                 id="article-main"
-                className="relative z-20 mt-8 prose prose-slate dark:prose-dark scroll-smooth"
+                className="relative z-20 mt-8 prose prose-slate dark:prose-dark scroll-smooth prose-h2:flex prose-h2:whitespace-pre-wrap prose-h2:not-prose prose-h2:mb-2 prose-h2:text-sm prose-h2:leading-6 prose-h2:text-sky-500 prose-h2:font-semibold prose-h2:tracking-normal prose-h2:dark:text-sky-400"
               >
                 <Component />
               </main>
@@ -277,7 +282,7 @@ export function Doc() {
                   <dd className="mt-1">
                     <Link
                       className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-                      to={`/docs/${prev.slug.replace('/', '')}`}
+                      to={`/docs/${slugify(prev.shortTitle)}`}
                     >
                       <span aria-hidden="true">←</span>&nbsp;{prev.title}
                     </Link>
@@ -290,7 +295,7 @@ export function Doc() {
                   <dd className="mt-1">
                     <Link
                       className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-                      to={`/docs/${next.slug.replace('/', '')}`}
+                      to={`/docs/${slugify(next.shortTitle)}`}
                     >
                       {next.title}
                       {/* */}&nbsp;<span aria-hidden="true">→</span>
@@ -305,7 +310,65 @@ export function Doc() {
               <h2 id="on-this-page-title" className="mb-4 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100">
                 On this page
               </h2>
-              <ol className="text-sm leading-6 text-slate-700" id="toc-id" ref={tocRef}>{listItems}</ol>
+              <ol className="text-sm leading-6 text-slate-700" id="toc-id" ref={tocRef}>
+                {
+                  listItems.map((item, i) => {
+                    return (
+                      <li key={i}>
+                        <h3>
+                          <Link
+                            to={`${location.pathname}#${slugify(item.text)}`}
+                            className={`${activeHeading!.id == slugify(item.text) || (activeH2 && activeH2.id == slugify(item.text))
+                              ? "font-medium text-sky-500 dark:text-sky-400"
+                              : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
+                              } ${item.hasSubheadings ? "font-medium" : ""} block py-1 toc-anchor`}
+                          >
+                            {item.text}
+                          </Link>
+                        </h3>
+                        {
+                          item.hasSubheadings && (
+                            <ol className="ml-4">
+                              {
+                                item.subheadings.map((subheading: { text: string }, i: number) => {
+                                  return (
+                                    <li key={i}>
+                                      <Link
+                                        to={`${location.pathname}#${slugify(subheading.text)}`}
+                                        className={`${activeHeading!.id ===
+                                          slugify(subheading.text)
+                                          ? "text-sky-500 dark:text-sky-400"
+                                          : "hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300"
+                                          } group flex items-start py-1 toc-anchor`}
+                                      >
+                                        <svg
+                                          width={3}
+                                          height={24}
+                                          viewBox="0 -9 3 24"
+                                          className="mr-2 overflow-visible text-slate-400 group-hover:text-slate-600 dark:text-slate-600 dark:group-hover:text-slate-500"
+                                        >
+                                          <path
+                                            d="M0 0L3 3L0 6"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                          />
+                                        </svg>
+                                        {" "}{subheading.text}
+                                      </Link>
+                                    </li>
+                                  )
+                                })
+                              }
+                            </ol>
+                          )
+                        }
+                      </li>
+                    )
+                  })
+                }
+              </ol>
             </nav>
           </div>
         </div>
