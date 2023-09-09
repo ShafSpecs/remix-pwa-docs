@@ -84,7 +84,7 @@ const metaData = async () => {
         title: m.title,
         description: m.description,
         section: m.section,
-        slug: m.slug,
+        shortTitle: m.shortTitle,
         position: m.position
       })
 
