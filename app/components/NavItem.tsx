@@ -1,4 +1,5 @@
 import { NavLink } from "@remix-run/react";
+import slugify from "@sindresorhus/slugify";
 import clsx from "clsx";
 import { useMediaQuery } from "usehooks-ts";
 import type { MetaDataObject } from "~/types/mdx";
@@ -15,8 +16,8 @@ const NavItem = ({ name, children }: MetaDataObject) => {
       )}>
         {children.map((sub) => {
           return (
-            <li className="" key={sub.slug}>
-              <NavLink prefetch="render" to={`/docs/${sub.slug.replace('/', '')}`} end={true}>
+            <li className="" key={sub.shortTitle}>
+              <NavLink prefetch="render" to={`/docs/${slugify(sub.shortTitle)}`} end={true}>
                 {({ isActive }) => (
                   <span
                     className={clsx('block border-l pl-4 -ml-px', {
@@ -27,7 +28,7 @@ const NavItem = ({ name, children }: MetaDataObject) => {
                       'text-slate-400': !isActive,
                     })}
                   >
-                    {sub.title}
+                    {sub.shortTitle}
                   </span>
                 )}
               </NavLink>
