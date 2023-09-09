@@ -1,11 +1,9 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
-  //serverBuildTarget: "vercel",
   server: process.env.NODE_ENV === "development" ? undefined : "./server.js",
   ignoredRouteFiles: ["**/.*"],
   publicPath: "/build/",
   serverBuildPath: "api/index.js",
-  //serverMainFields: ["main, module"],
   serverModuleFormat: "cjs",
   serverPlatform: "node",
   serverMinify: false,
@@ -42,6 +40,7 @@ module.exports = {
     /^slugify.*/,
     /^@sindresorhus.*/,
     "redent",
+    "indent-string",
     "@sindresorhus/slugify",
     "@sindresorhus/transliterate",
     "strip-indent",
