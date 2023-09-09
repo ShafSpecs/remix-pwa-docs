@@ -1,0 +1,5 @@
+#article-main {
+  & :is(:where(input):not(:where([class~="not-prose"] *)):where(input[type="checkbox"])) {
+    display: none;
+  }
+}
