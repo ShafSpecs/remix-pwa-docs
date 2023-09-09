@@ -1,21 +1,17 @@
 import { bundleMDX } from "mdx-bundler";
-import { importSlug, importEmoji, importGfm, importToC, importExample, importHighlighter } from "../../exports/esm-modules";
+import {
+  importSlug,
+  importEmoji,
+  importGfm,
+  importToC,
+  importExample,
+  importHighlighter,
+  importRole,
+  importCheckbox
+} from "../../exports/esm-modules";
 import { readFileSync } from "fs-extra";
 import { join } from "path";
 import { cwd } from "process";
-
-// import "prismjs/components/prism-typescript";
-// import "prismjs/components/prism-jsx";
-// import "prismjs/components/prism-bash";
-// import "prismjs/components/prism-json";
-// import "prismjs/components/prism-css";
-// import "prismjs/components/prism-tsx";
-// import "prismjs/components/prism-javascript";
-// import "prismjs/components/prism-sql";
-
-// import "prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard";
-// import "prismjs/plugins/toolbar/prism-toolbar";
-// import "prismjs/plugins/file-highlight/prism-file-highlight";
 
 import type { FrontMatterTypings } from "~/types/mdx";
 
@@ -26,6 +22,8 @@ export async function mdxToHtml(source: string) {
   const { default: toc } = await importToC();
   const { default: example } = await importExample();
   const { default: highlight } = await importHighlighter();
+  const { default: role } = await importRole();
+  const { default: checkbox } = await importCheckbox();
 
   const { code, frontmatter } = await bundleMDX<FrontMatterTypings>({
     source: source,
@@ -34,6 +32,7 @@ export async function mdxToHtml(source: string) {
       "./warn.tsx": readFileSync(join(cwd(), "app", "components/mdx/Warn.tsx")).toString(),
       "./link.tsx": readFileSync(join(cwd(), "app", "components/mdx/Link.tsx")).toString(),
       "./grid.tsx": readFileSync(join(cwd(), "app", "components/mdx/Grid.tsx")).toString(),
+      "./tip.tsx": readFileSync(join(cwd(), "app", "components/mdx/Tip.tsx")).toString(),
       "./heading.tsx": readFileSync(join(cwd(), "app", "components/mdx/Heading.tsx")).toString(),
       "./details.tsx": readFileSync(join(cwd(), "app", "components/mdx/Details.tsx")).toString(),
       "./editor.tsx": readFileSync(join(cwd(), "app", "components/mdx/Editor.tsx")).toString(),
@@ -41,12 +40,13 @@ export async function mdxToHtml(source: string) {
       "./arrow.tsx": readFileSync(join(cwd(), "app", "components/icons/Arrow.tsx")).toString(),
       "./plugin.tsx": readFileSync(join(cwd(), "app", "components/icons/Plugin.tsx")).toString(),
       "./swatch.tsx": readFileSync(join(cwd(), "app", "components/icons/Swatch.tsx")).toString(),
-      "./widget.tsx": readFileSync(join(cwd(), "app", "components/icons/Widget.tsx")).toString(),
+      "./widget.tsx": readFileSync(join(cwd(), "app", "components/icons/Widget.tsx")).toString()
     },
     mdxOptions(options, frontmatter) {
       options.rehypePlugins = [
         ...(options.rehypePlugins || []),
         slug,
+        role
         // rehypePrismCommon,
         // [prismOG, { plugins: ["copy-to-clipboard", "toolbar"] }]
       ];
@@ -56,7 +56,8 @@ export async function mdxToHtml(source: string) {
         toc,
         example,
         highlight,
-        emoji
+        emoji,
+        checkbox
       ];
 
       return options;
