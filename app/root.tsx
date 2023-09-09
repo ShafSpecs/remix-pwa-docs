@@ -20,6 +20,7 @@ import tailwind from "./tailwind.css";
 import theme from "./styles/night-owl.css";
 import prism from "./styles/code.css";
 import fonts from "./styles/fonts.css";
+import docs from "./styles/docs.css";
 import toolbar from "./styles/toolbar.min.css";
 
 import { GetTheme } from "./session.server";
@@ -29,6 +30,7 @@ import { RootContext } from "./utils/providers/RootProvider";
 
 import type { LinksFunction, MetaFunction, LoaderArgs } from "@remix-run/node";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
+import slugify from "@sindresorhus/slugify";
 
 export type PrevOrNextLink = FrontMatterTypings | null;
 
@@ -41,6 +43,7 @@ export const links: LinksFunction = () => {
     { rel: "stylesheet", href: tailwind },
     { rel: "stylesheet", href: theme },
     { rel: "stylesheet", href: prism },
+    { rel: "stylesheet", href: docs },
     { rel: "stylesheet", href: fonts },
     { rel: "stylesheet", href: toolbar }
   ];
@@ -164,7 +167,7 @@ export default function App() {
       })
       .flat();
 
-    const currentRouteIndex = routes.findIndex((route) => `/docs/${route.slug.replace('/', '')}` === currentRoute);
+    const currentRouteIndex = routes.findIndex((route) => `/docs/${slugify(route.shortTitle)}` === currentRoute);
 
     let nextRoute: PrevOrNextLink = null;
     let prevRoute: PrevOrNextLink = null;
@@ -202,13 +205,6 @@ export default function App() {
   return (
     <MainDocumentWithProviders ssr_theme={theme}>
       <RootContext.Provider value={{ state, dispatch }}>
-        {/* <ClientOnly
-          fallback={<ClientHeader />}
-          children={
-            () => <Header scrollTop={scrollTop} />
-            // Todo: Create a fallback component
-          }
-        /> */}
         <Outlet />
       </RootContext.Provider>
     </MainDocumentWithProviders>
