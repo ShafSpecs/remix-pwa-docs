@@ -1,7 +1,7 @@
 ---
 title: FAQ
 description: Possimus saepe veritatis sint nobis et quam eos. Kudos!
-slug: /faq
+shortTitle: FAQ
 section: 'Getting Started'
 position: 2
 ---
@@ -10,6 +10,8 @@ import Warn from './warn.tsx'
 import Heading from './heading.tsx'
 import Details from './details.tsx'
 import Editor from './editor.tsx'
+
+import { TipGood, TipBad } from './tip.tsx'
 
 ## FAQ 
 
@@ -27,6 +29,16 @@ testing
   :+1:
 
   ### <Heading>testing 3</Heading>
+
+  <TipGood>Try to wash your feet</TipGood>
+
+  ```js
+  function fancyAlert(arg) {
+    if (arg) {
+      $.facebox({ div: '#foo' })
+    }
+  }
+  ```
 
   ### Warning
 
