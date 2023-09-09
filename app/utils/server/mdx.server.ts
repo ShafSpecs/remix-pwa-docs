@@ -4,7 +4,6 @@ import {
   importEmoji,
   importGfm,
   importToC,
-  importExample,
   importHighlighter,
   importRole,
   importCheckbox
@@ -20,7 +19,6 @@ export async function mdxToHtml(source: string) {
   const { default: emoji } = await importEmoji();
   const { default: slug } = await importSlug();
   const { default: toc } = await importToC();
-  const { default: example } = await importExample();
   const { default: highlight } = await importHighlighter();
   const { default: role } = await importRole();
   const { default: checkbox } = await importCheckbox();
@@ -36,6 +34,7 @@ export async function mdxToHtml(source: string) {
       "./heading.tsx": readFileSync(join(cwd(), "app", "components/mdx/Heading.tsx")).toString(),
       "./details.tsx": readFileSync(join(cwd(), "app", "components/mdx/Details.tsx")).toString(),
       "./editor.tsx": readFileSync(join(cwd(), "app", "components/mdx/Editor.tsx")).toString(),
+      "./snippet.tsx": readFileSync(join(cwd(), "app", "components/mdx/Snippet.tsx")).toString(),
 
       "./arrow.tsx": readFileSync(join(cwd(), "app", "components/icons/Arrow.tsx")).toString(),
       "./plugin.tsx": readFileSync(join(cwd(), "app", "components/icons/Plugin.tsx")).toString(),
@@ -54,7 +53,7 @@ export async function mdxToHtml(source: string) {
         ...(options.remarkPlugins || []),
         gfm, // create plugin to clear all input[type=checkbox] elements
         toc,
-        example,
+        // example,
         highlight,
         emoji,
         checkbox
