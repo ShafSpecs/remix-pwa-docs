@@ -46,14 +46,11 @@ export async function mdxToHtml(source: string) {
         ...(options.rehypePlugins || []),
         slug,
         role
-        // rehypePrismCommon,
-        // [prismOG, { plugins: ["copy-to-clipboard", "toolbar"] }]
       ];
       options.remarkPlugins = [
         ...(options.remarkPlugins || []),
         gfm, // create plugin to clear all input[type=checkbox] elements
         toc,
-        // example,
         highlight,
         emoji,
         checkbox
