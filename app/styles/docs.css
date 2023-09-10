@@ -2,4 +2,8 @@
   & :is(:where(input):not(:where([class~="not-prose"] *)):where(input[type="checkbox"])) {
     display: none;
   }
+
+  & :is(:where(pre):has(code)) > code {
+      @apply font-normal !important;
+  }
 }
