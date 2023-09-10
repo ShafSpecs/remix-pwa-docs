@@ -204,7 +204,9 @@ module.exports = {
         },
       }),
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans]
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        mono: ['JetBrains Mono', ...defaultTheme.fontFamily.mono],
+        fira: ['Fira Code', ...defaultTheme.fontFamily.mono],
       },
       maxWidth: {
         '8xl': '90rem',
