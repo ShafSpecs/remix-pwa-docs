@@ -14,7 +14,7 @@ const RemixLogo = ({ mobile, height, width }: { mobile?: boolean; height?: strin
 
   return (
     <RemixDark
-      className={`text-slate-700 dark:text-sky-100 ${h} ${w} -ml-2 ${!mobile ? "hidden lg:block" : "lg:hidden"} `}
+      className={`text-slate-700 dark:text-sky-100 ${h} ${w} -ml-2 ${!mobile ? "hidden md:block" : "md:hidden"} `}
     />
   );
 };

@@ -1,0 +1,19 @@
+{
+  "Documentation Post": {
+    "prefix": ["new", "doc"],
+    "body": [
+      "---",
+      "title: $1",
+      "description: $2",
+      "shortTitle: $1",
+      "section: $3",
+      "position: $4",
+      "---",
+      "\n",
+      "$BLOCK_COMMENT_START Do not remove this line! $BLOCK_COMMENT_END",
+      "import Heading from './heading.tsx'\n$0"
+    ],
+    "description": "A new documentation post",
+    "scope": "markdown,md,mdx"
+  }
+}
