@@ -1,7 +1,7 @@
 export type FrontMatterTypings = {
   title: string;
   description?: string;
-  slug: string;
+  shortTitle: string;
   section: string;
   position: number;
 }
