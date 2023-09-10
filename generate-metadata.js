@@ -62,11 +62,10 @@ const getMetaDataSHA = async () => {
 const metaData = async () => {
   const metadata = [
     { "name": "Getting Started", position: 1, children: [] },
-    { "name": "Pages", position: 2, children: [] },
-    { "name": "Route Module API", position: 3, children: [] },
-    { "name": "Hooks & Components", position: 4, children: [] },
-    { "name": "Utilities", position: 5, children: [] },
-    { "name": "Guides", position: 6, children: [] }
+    { "name": "Routes & Worker API", position: 2, children: [] },
+    { "name": "Hooks & Components", position: 3, children: [] },
+    { "name": "Utilities", position: 4, children: [] },
+    { "name": "Guides", position: 5, children: [] }
   ];
 
   const postsMetadata = await getPostsMeta();

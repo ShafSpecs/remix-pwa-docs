@@ -16,3 +16,5 @@ node_modules
 *.worker.js
 
 /app/styles/app.css
+
+guide.txt
