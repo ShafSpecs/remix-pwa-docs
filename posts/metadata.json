@@ -5,16 +5,16 @@
     "children": [
       {
         "title": "Installation",
-        "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+        "description": "Possimus saepe veritatis sint nobis et quam eos.",
         "section": "Getting Started",
-        "slug": "/installation",
+        "shortTitle": "Installation",
         "position": 1
       },
       {
         "title": "FAQ",
-        "description": "Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste.",
+        "description": "Possimus saepe veritatis sint nobis et quam eos. Kudos!",
         "section": "Getting Started",
-        "slug": "/faq",
+        "shortTitle": "FAQ",
         "position": 2
       }
     ]
