@@ -31,6 +31,7 @@ import { RootContext } from "./utils/providers/RootProvider";
 import type { LinksFunction, MetaFunction, LoaderArgs } from "@remix-run/node";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import slugify from "@sindresorhus/slugify";
+import { cssBundleHref } from "@remix-run/css-bundle";
 
 export type PrevOrNextLink = FrontMatterTypings | null;
 
@@ -41,11 +42,9 @@ export type RootOutletContext = UpdateLinks;
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwind },
-    // { rel: "stylesheet", href: theme },
-    // { rel: "stylesheet", href: prism },
     { rel: "stylesheet", href: docs },
-    { rel: "stylesheet", href: fonts }
-    // { rel: "stylesheet", href: toolbar }
+    { rel: "stylesheet", href: fonts },
+    ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   ];
 };
 
