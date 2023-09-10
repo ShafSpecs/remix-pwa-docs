@@ -17,6 +17,7 @@ export default () => {
       if (!/^{\s*{.*?example:/.test(meta)) {
         return
       }
+      // return; // end it right here. Example ain't allowed
 
       node.type = 'mdxJsxFlowElement'
       node.name = 'Example'
