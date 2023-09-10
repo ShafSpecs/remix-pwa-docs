@@ -7,6 +7,7 @@ import { createContext, useRef, useState } from "react";
 import { useIsomorphicLayoutEffect, useMediaQuery } from "usehooks-ts";
 import { useLocation } from "@remix-run/react";
 import { Dialog } from "@headlessui/react";
+import { useActionKey } from "~/hooks/useActionKey";
 
 /**
  * Find the nearst scrollable ancestor (or self if scrollable)
@@ -56,6 +57,7 @@ export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fa
   // @ts-ignore
   const { meta } = useTypedRouteLoaderData<typeof RootLoader>('root');
   const location = useLocation();
+  const actionKey = useActionKey();
 
   const mobile = useMediaQuery('(max-width: 1024px)');
 
@@ -97,40 +99,38 @@ export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fa
         <div className="relative bg-white pointer-events-auto dark:bg-slate-900">
           {/* Todo: Extract this as a separate `SearchButton` */}
           <button type="button" className="hidden w-full lg:flex items-center text-sm leading-6 text-slate-400 rounded-md  ring-slate-900/10 outline-none shadow-sm py-1.5 pl-2 pr-3 hover:ring-slate-300 dark:bg-slate-800 dark:highlight-white/5 dark:hover:bg-slate-700">
-            {/* {({ actionKey }) => ( */}
-              <>
-                <svg
-                  width="24"
-                  height="24"
-                  fill="none"
-                  aria-hidden="true"
-                  className="flex-none mr-3"
-                >
-                  <path
-                    d="m19 19-3.5-3.5"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <circle
-                    cx="11"
-                    cy="11"
-                    r="6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Quick search...
-                {/* {actionKey && (
-                  <span className="flex-none pl-3 ml-auto text-xs font-semibold">
-                    {actionKey[0]}K
-                  </span>
-                )} */}
-              </>
-            {/* )} */}
+            <>
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                aria-hidden="true"
+                className="flex-none mr-3"
+              >
+                <path
+                  d="m19 19-3.5-3.5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Quick search...
+              {actionKey && (
+                <span className="flex-none pl-3 ml-auto text-xs font-semibold">
+                  {actionKey[0]}K
+                </span>
+              )}
+            </>
           </button>
         </div>
         {!mobile && <div className="h-8 bg-gradient-to-b from-white dark:from-slate-900" />}
