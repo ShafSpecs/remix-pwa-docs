@@ -1,4 +1,4 @@
-import { loadServiceWorker } from "@remix-pwa/sw";
+// import { loadServiceWorker } from "@remix-pwa/sw";
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
@@ -20,4 +20,4 @@ if (typeof requestIdleCallback === "function") {
   setTimeout(hydrate, 1);
 }
 
-loadServiceWorker();
+// loadServiceWorker();

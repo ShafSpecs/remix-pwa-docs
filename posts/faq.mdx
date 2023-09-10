@@ -1,0 +1,89 @@
+---
+title: FAQ
+description: Possimus saepe veritatis sint nobis et quam eos. Kudos!
+shortTitle: 'FAQ'
+section: 'Getting Started'
+position: 2
+---
+
+import Warn from './warn.tsx'
+import Heading from './heading.tsx'
+import Details from './details.tsx'
+import Editor from './editor.tsx'
+
+import { TipGood, TipBad } from './tip.tsx'
+
+## FAQ 
+
+Tryst!
+
+## GFM
+
+`backticks()`
+
+## <Heading ignore>testing</Heading>
+
+## Tsk 
+
+testing
+  
+## Autolink literals
+  :+1:
+
+  ### <Heading>testing 3</Heading>
+
+  <TipGood>Try to wash your feet</TipGood>
+
+  ```js
+  function fancyAlert(arg) {
+    if (arg) {
+      $.facebox({ div: '#foo' })
+    }
+  }
+  ```
+
+  ### Warning
+
+  ### Another h3
+
+  <Warn>Hello from MDX!</Warn>
+  🎈
+  
+  www.example.com, https://example.com, and contact@example.com.
+  
+  ## Footnote
+  ### Ahhh!
+  
+  A note[^1]
+  
+  [^1]: Big note.
+  
+  ## Strikethrough
+  
+  ~one~ or ~~two~~ tildes.
+
+  <Details title={"Guess what is hiding in here?"}>
+    Nothing ofc! Just pure old, boring text.
+  </Details>
+  
+  ## Table
+  
+  | Item         | Price | # In stock |
+  |--------------|:-----:|-----------:|
+  | Juicy Apples |  1.99 |        739 |
+  | Bananas      |  1.89 |          6 |
+  
+  ## Tasklist
+  
+  * [ ] to do
+  * [x] done
+
+Hello, World!
+
+```js {{ filename: 'tailwind.config.js' }}
+  function fancyAlert(arg) {
+    if (arg) {
+      $.facebox({ div: '#foo' })
+    }
+  }
+```
