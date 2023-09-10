@@ -11,37 +11,74 @@
         "position": 1
       },
       {
+        "title": "Upgrade Guide",
+        "description": "Learn how to upgrade to your Remix App to v3.0",
+        "section": "Getting Started",
+        "shortTitle": "Upgrade Guide",
+        "position": 2
+      },
+      {
+        "title": "Contribute",
+        "description": "Learn how you can contribute to the Remix PWA Ecosystem.",
+        "section": "Getting Started",
+        "shortTitle": "Contribute",
+        "position": 3
+      },
+      {
+        "title": "Community",
+        "description": "Communities are the heart of the open source movement. Find out how you can get involved with Remix community and join in on the action.",
+        "section": "Getting Started",
+        "shortTitle": "Community",
+        "position": 4
+      },
+      {
         "title": "FAQ",
         "description": "Possimus saepe veritatis sint nobis et quam eos. Kudos!",
         "section": "Getting Started",
         "shortTitle": "FAQ",
-        "position": 2
+        "position": 5
+      },
+      {
+        "title": "Resources",
+        "description": "Extra resources to help you get started with Remix PWA and PWAs in general.",
+        "section": "Getting Started",
+        "shortTitle": "Resources",
+        "position": 6
+      },
+      {
+        "title": "Technical Explanantion",
+        "description": "An technical explanantion of Remix PWA v3 internals",
+        "section": "Getting Started",
+        "shortTitle": "Technical Explanantion",
+        "position": 7
+      },
+      {
+        "title": "Packages",
+        "description": "An overview of all the new packages that ships with Remix PWA v3",
+        "section": "Getting Started",
+        "shortTitle": "Packages",
+        "position": 8
       }
     ]
   },
   {
-    "name": "Pages",
+    "name": "Routes & Worker API",
     "position": 2,
     "children": []
   },
   {
-    "name": "Route Module API",
+    "name": "Hooks & Components",
     "position": 3,
     "children": []
   },
   {
-    "name": "Hooks & Components",
+    "name": "Utilities",
     "position": 4,
     "children": []
   },
   {
-    "name": "Utilities",
-    "position": 5,
-    "children": []
-  },
-  {
     "name": "Guides",
-    "position": 6,
+    "position": 5,
     "children": []
   }
 ]
