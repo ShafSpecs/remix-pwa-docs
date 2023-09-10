@@ -17,11 +17,11 @@ import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
 import { Analytics } from "@vercel/analytics/react"
 
 import tailwind from "./tailwind.css";
-import theme from "./styles/night-owl.css";
-import prism from "./styles/code.css";
 import fonts from "./styles/fonts.css";
 import docs from "./styles/docs.css";
-import toolbar from "./styles/toolbar.min.css";
+// import theme from "./styles/night-owl.css";
+// import prism from "./styles/code.css";
+// import toolbar from "./styles/toolbar.min.css";
 
 import { GetTheme } from "./session.server";
 import type { FrontMatterTypings } from "./types/mdx";
@@ -36,16 +36,16 @@ export type PrevOrNextLink = FrontMatterTypings | null;
 
 export type UpdateLinks = { prev: PrevOrNextLink; next: PrevOrNextLink };
 
-export type RootOutletContext = { prev: PrevOrNextLink; next: PrevOrNextLink };
+export type RootOutletContext = UpdateLinks;
 
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwind },
-    { rel: "stylesheet", href: theme },
-    { rel: "stylesheet", href: prism },
+    // { rel: "stylesheet", href: theme },
+    // { rel: "stylesheet", href: prism },
     { rel: "stylesheet", href: docs },
-    { rel: "stylesheet", href: fonts },
-    { rel: "stylesheet", href: toolbar }
+    { rel: "stylesheet", href: fonts }
+    // { rel: "stylesheet", href: toolbar }
   ];
 };
 
