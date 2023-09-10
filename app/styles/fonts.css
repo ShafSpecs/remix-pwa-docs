@@ -36,3 +36,21 @@
   font-named-instance: 'Italic';
   src: url('/fonts/Inter/Inter-italic.var.woff2') format('woff2');
 }
+
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 400;
+  font-display: block;
+  font-style: normal;
+  font-named-instance: 'Regular';
+  src: url('/fonts/FiraCode/FiraCode-Regular.ttf') format('ttf');
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 500;
+  font-display: block;
+  font-style: normal;
+  font-named-instance: 'Medium';
+  src: url('/fonts/FiraCode/FiraCode-Medium.ttf') format('ttf');
+}
