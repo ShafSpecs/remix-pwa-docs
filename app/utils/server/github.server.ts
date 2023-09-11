@@ -1,19 +1,15 @@
-import { request } from "@octokit/request";
-import { Repo } from "../handlers/github-api";
 import { readFile } from "fs-extra";
 import { resolve } from "path";
 import { z } from "zod";
+import { S3 } from "@aws-sdk/client-s3";
 
-const octokit = request.defaults({
-  headers: {
-    authorization: `token ${process.env.GITHUB_KEY}`
+let s3 = new S3({
+  apiVersion: "2012-10-17",
+  region: "eu-north-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ''
   }
-});
-
-const octokitWithDownloadUrl = z.object({
-  data: z.object({
-    download_url: z.string()
-  })
 });
 
 const FrontMatterTypingsSchema = z.object({
@@ -48,22 +44,16 @@ export const getPostContent = async (slug: string | undefined) => {
     if (!content) {
       return null;
     }
+
     return content;
   }
 
-  const postData = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
-    ...Repo,
-    path: `posts/${slug || "installation"}.mdx`,
-    ref: "docs"
-  });
+  const promise = await s3.getObject({
+    Bucket: process.env.AWS_BUCKET_NAME || '',
+    Key: `posts_v3/${slug || "installation"}.mdx`
+  })
 
-  if (postData.status !== 200) {
-    return null;
-  }
-  const download_url_obj = octokitWithDownloadUrl.parse(postData);
-  const content = await fetch(download_url_obj.data.download_url).then((res) => res.text());
-
-  return content;
+  return await promise.Body?.transformToString();
 };
 
 export const getPostMetaData = async () => {
@@ -90,21 +80,12 @@ export const getPostMetaData = async () => {
     return z.array(MetaDataObjectSchema).parse(parsed_content);
   }
 
-  const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
-    ...Repo,
-    path: "posts/metadata.json",
-    ref: "control"
-  });
-  const download_url_obj = octokitWithDownloadUrl.parse(meta);
-  const content = await fetch(download_url_obj.data.download_url)
-    .then((res) => res.text())
-    .catch((err) => {
-      return null;
-    });
+  const promise = await s3.getObject({
+    Bucket: process.env.AWS_BUCKET_NAME || '',
+    Key: `posts_v3/metadata.json`
+  })
 
-  if (!content) {
-    return null;
-  }
+  const content = await promise.Body?.transformToString() || '[{}]';
 
   const data = z.array(MetaDataObjectSchema).parse(JSON.parse(content));
   return data;

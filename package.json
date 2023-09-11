@@ -12,6 +12,7 @@
     "lint": "eslint --fix ./**/*.tsx"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.410.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@octokit/core": "^5.0.0",

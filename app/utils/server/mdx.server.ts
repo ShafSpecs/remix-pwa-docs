@@ -47,11 +47,14 @@ export async function mdxToHtml(source: string) {
       "./swatch.tsx": readFileSync(join(cwd(), "app", "components/icons/Swatch.tsx")).toString(),
       "./widget.tsx": readFileSync(join(cwd(), "app", "components/icons/Widget.tsx")).toString()
     },
+    globals: {
+      // redent: 'redent'
+    },
     mdxOptions(options, frontmatter) {
       options.rehypePlugins = [...(options.rehypePlugins || []), slug, role];
       options.remarkPlugins = [
         ...(options.remarkPlugins || []),
-        gfm, // create plugin to clear all input[type=checkbox] elements
+        gfm,
         toc,
         highlight,
         emoji,
