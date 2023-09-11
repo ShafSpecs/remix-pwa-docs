@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import redent from 'redent'
+import redent from '../../utils/redent'
 
 function CopyButton({ code }: { code: string }) {
   let [{ state, i }, setState] = useState({ state: 'idle', i: 0 })
