@@ -1,3 +1,4 @@
 .vscode/**
 .github/**
 .env.example
+posts/**
