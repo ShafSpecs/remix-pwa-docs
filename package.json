@@ -23,6 +23,7 @@
     "@remix-run/serve": "1.19.3",
     "@remix-run/vercel": "1.19.3",
     "@sindresorhus/slugify": "^2.2.1",
+    "@supabase/supabase-js": "^2.33.2",
     "@tailwindcss/typography": "^0.5.9",
     "@vercel/analytics": "^1.0.2",
     "@vercel/node": "2.10.3",
