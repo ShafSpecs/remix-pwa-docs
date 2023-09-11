@@ -4,15 +4,15 @@
     "position": 1,
     "children": [
       {
-        "title": "Installation",
-        "description": "Possimus saepe veritatis sint nobis et quam eos.",
+        "title": "Get Started with Remix PWA",
+        "description": "Remix PWA is a compiler that bundles your service workers as well as provide utilities and modules to build your application.",
         "section": "Getting Started",
         "shortTitle": "Installation",
         "position": 1
       },
       {
         "title": "Upgrade Guide",
-        "description": "Learn how to upgrade to your Remix App to v3.0",
+        "description": "Learn how to upgrade to your Remix PWA App to v3.0",
         "section": "Getting Started",
         "shortTitle": "Upgrade Guide",
         "position": 2
@@ -33,7 +33,7 @@
       },
       {
         "title": "FAQ",
-        "description": "Possimus saepe veritatis sint nobis et quam eos. Kudos!",
+        "description": "Frequently asked questions about Remix PWA.",
         "section": "Getting Started",
         "shortTitle": "FAQ",
         "position": 5
@@ -47,7 +47,7 @@
       },
       {
         "title": "Technical Explanantion",
-        "description": "An technical explanantion of Remix PWA v3 internals",
+        "description": "An technical explanantion of Remix PWA v3.0 internals",
         "section": "Getting Started",
         "shortTitle": "Technical Explanantion",
         "position": 7
