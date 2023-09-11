@@ -10,10 +10,21 @@
       "position: $4",
       "---",
       "\n",
-      "$BLOCK_COMMENT_START Do not remove this line! $BLOCK_COMMENT_END",
-      "import Heading from './heading.tsx'\n$0"
+      "$BLOCK_COMMENT_START Do not remove these lines! $BLOCK_COMMENT_END",
+      "import Heading from './heading.tsx'",
+      "import Editor from './editor.tsx'\n$0",
     ],
     "description": "A new documentation post",
+    "scope": "markdown,md,mdx"
+  },
+  "Imports": {
+    "prefix": ["import"],
+    "body": [
+      "$BLOCK_COMMENT_START Do not remove these lines! $BLOCK_COMMENT_END",
+      "import Heading from './heading.tsx'",
+      "import Editor from './editor.tsx'\n$0",
+    ],
+    "description": "Add necessary doc imports",
     "scope": "markdown,md,mdx"
   }
 }
