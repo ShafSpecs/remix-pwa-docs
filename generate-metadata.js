@@ -29,7 +29,7 @@ const getPostsMeta = async () => {
 
 
   const posts = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
-    owner: "remix-pwa",
+    owner: "ShafSpecs",
     repo: "remix-pwa-docs",
     path: "posts",
     ref: "docs"
@@ -50,7 +50,7 @@ const getPostsMeta = async () => {
 
 const getMetaDataSHA = async () => {
   const meta = await octokit("GET /repos/{owner}/{repo}/contents/{path}", {
-    owner: "remix-pwa",
+    owner: "ShafSpecs",
     repo: "remix-pwa-docs",
     path: "posts/metadata.json",
     ref: "control"
@@ -97,7 +97,7 @@ const metaData = async () => {
 
   if (process.env.NODE_ENV !== "development")
     await octokit('PUT /repos/{owner}/{repo}/contents/{path}', {
-      owner: "remix-pwa",
+      owner: "ShafSpecs",
       repo: "remix-pwa-docs",
       path: "posts/metadata.json",
       branch: "control",

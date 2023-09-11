@@ -23,6 +23,12 @@ export async function mdxToHtml(source: string) {
   const { default: role } = await importRole();
   const { default: checkbox } = await importCheckbox();
 
+  if (process.platform === "win32") {
+    process.env.ESBUILD_BINARY_PATH = join(process.cwd(), "node_modules", "esbuild", "esbuild.exe");
+  } else {
+    process.env.ESBUILD_BINARY_PATH = join(process.cwd(), "node_modules", "esbuild", "bin", "esbuild");
+  }
+
   const { code, frontmatter } = await bundleMDX<FrontMatterTypings>({
     source: source,
     files: {
@@ -42,11 +48,7 @@ export async function mdxToHtml(source: string) {
       "./widget.tsx": readFileSync(join(cwd(), "app", "components/icons/Widget.tsx")).toString()
     },
     mdxOptions(options, frontmatter) {
-      options.rehypePlugins = [
-        ...(options.rehypePlugins || []),
-        slug,
-        role
-      ];
+      options.rehypePlugins = [...(options.rehypePlugins || []), slug, role];
       options.remarkPlugins = [
         ...(options.remarkPlugins || []),
         gfm, // create plugin to clear all input[type=checkbox] elements
