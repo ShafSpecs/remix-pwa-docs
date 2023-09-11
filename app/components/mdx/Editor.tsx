@@ -1,4 +1,55 @@
 import clsx from 'clsx'
+import { useEffect, useState } from 'react'
+import redent from 'redent'
+
+function CopyButton({ code }: { code: string }) {
+  let [{ state, i }, setState] = useState({ state: 'idle', i: 0 })
+
+  useEffect(() => {
+    if (state === 'copied') {
+      let handle = window.setTimeout(() => {
+        setState({ state: 'idle', i: i + 1 })
+      }, 1500)
+      return () => {
+        window.clearTimeout(handle)
+      }
+    }
+  }, [state, i])
+
+  return (
+    <div className="relative flex -mr-2">
+      <button
+        type="button"
+        className={clsx({
+          'text-slate-500 hover:text-slate-400': state === 'idle',
+          'text-emerald-400': state === 'copied',
+        })}
+        onClick={() => {
+          navigator.clipboard.writeText(redent(code.replace(/^[+>-]/gm, ' '))).then(() => {
+            setState({ state: 'copied', i: i + 1 })
+          })
+        }}
+      >
+        {state !== 'copied' ? <svg
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          className="w-8 h-8"
+        >
+          <path d="M13 10.75h-1.25a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h8.5a2 2 0 0 0 2-2v-8.5a2 2 0 0 0-2-2H19" />
+          <path d="M18 12.25h-4a1 1 0 0 1-1-1v-1.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1ZM13.75 16.25h4.5M13.75 19.25h4.5" />
+        </svg> :
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 mr-2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        }
+      </button>
+    </div>
+  )
+}
 
 function TabBar({
   primary,
@@ -85,7 +136,9 @@ export function Frame({ className, color = 'sky', children }: { className?: stri
 export function EditorPane({ filename, scroll = false, code, children }: { filename: string; scroll?: boolean; code?: string; children?: any }) {
   return (
     <div className="pt-2 shadow-lg bg-slate-800 group">
-      <TabBar primary={{ name: filename }} showTabMarkers={false} />
+      <TabBar primary={{ name: filename }} showTabMarkers={false}>
+        <CopyButton code={code?.replace(/<[^>]+>/g, '') || ''} />
+      </TabBar>
       <div
         className={clsx(
           'children:my-0 children:!shadow-none children:bg-transparent',
@@ -97,7 +150,19 @@ export function EditorPane({ filename, scroll = false, code, children }: { filen
             'scrollbar-track:rounded'
           )
         )}
-        {...(code ? { dangerouslySetInnerHTML: { __html: code } } : { children })}
+        {...(code ? {
+          dangerouslySetInnerHTML: {
+            __html: code
+              // .split('\n')
+              // .map((line) => {
+              //   if (filename.toLowerCase() === 'terminal') {
+              //     line = `<span class="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" class="flex-none overflow-visible text-pink-400 w-auto h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="flex-auto">${line}</span></span>`
+              //   }
+              //   return line
+              // })
+              // .join(filename.toLowerCase() === 'terminal' ? '' : '\n'),
+          }
+        } : { children })}
       />
     </div>
   )
