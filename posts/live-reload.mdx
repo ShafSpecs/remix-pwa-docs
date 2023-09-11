@@ -1,0 +1,32 @@
+---
+title: LiveReload
+description: Remix PWA LiveReload Component
+shortTitle: LiveReload
+section: 'Hooks & Components'
+position: 1
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+
+## `LiveReload`
+
+This component is a reimplementation of Remix [`LiveReload`](https://remix.run/docs/en/main/components/live-reload) component but
+with support for Remix PWA. It performs the same function as the original component, but it also updates the service worker
+when the browser detects a new version of the service worker (e.g when a change is made to a route with the worker thread present in it).
+
+```tsx {{ filename:'root.tsx' }}
+import { LiveReload } from "@remix-run/react";
+
+export default function Root() {
+  return (
+    <html>
+      <head />
+      <body>
+        <LiveReload />
+      </body>
+    </html>
+  );
+}
+```
