@@ -54,12 +54,11 @@ export function Doc() {
         })
       );
 
-      if (toc.length > 0 && headings.length !== toc.length) {
+      const found = headings[0] && headings[0].id === toc[0].id; // this takes time, optimise it later
+
+      if (toc.length > 0 && !found) {
         setHeadings(toc);
         setActiveHeading(headingElements[0]);
-        if (headingElements[0].tagName.includes("2")) {
-          setActiveH2(headingElements[0]);
-        }
       }
 
       let currentOl = null;
@@ -147,6 +146,14 @@ export function Doc() {
         if (activeHeading?.tagName.includes("2") && activeH2?.id !== activeHeading.id) {
           setActiveH2(activeHeading);
           setActiveHeading(activeHeading);
+        }
+
+        if(!activeHeading) {
+          setActiveHeading(headings[0].element);
+
+          if (headings[0].level === 2) {
+            setActiveH2(headings[0].element);
+          }
         }
       }
 
@@ -282,6 +289,8 @@ export function Doc() {
                     <Link
                       className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
                       to={`/docs/${slugify(prev.shortTitle)}`}
+                      // reloadDocument={true}
+                      // prefetch="intent"
                     >
                       <span aria-hidden="true">←</span>&nbsp;{prev.title}
                     </Link>
@@ -295,6 +304,8 @@ export function Doc() {
                     <Link
                       className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
                       to={`/docs/${slugify(next.shortTitle)}`}
+                      // reloadDocument={true}
+                      // prefetch="intent"
                     >
                       {next.title}
                       {/* */}&nbsp;<span aria-hidden="true">→</span>

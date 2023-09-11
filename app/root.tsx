@@ -19,9 +19,6 @@ import { Analytics } from "@vercel/analytics/react"
 import tailwind from "./tailwind.css";
 import fonts from "./styles/fonts.css";
 import docs from "./styles/docs.css";
-// import theme from "./styles/night-owl.css";
-// import prism from "./styles/code.css";
-// import toolbar from "./styles/toolbar.min.css";
 
 import { GetTheme } from "./session.server";
 import type { FrontMatterTypings } from "./types/mdx";
@@ -60,7 +57,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       { meta, theme },
       {
         headers: {
-          "Cache-Control": "max-age=0, s-maxage=86400"
+          "Cache-Control": "max-age=600, s-maxage=86400"
         }
       }
     );
