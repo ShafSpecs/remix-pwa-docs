@@ -2,7 +2,6 @@ import { useLocation, Link } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo, useRef, useState, useEffect, Fragment } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
-import { useIsFirstRender } from "usehooks-ts";
 import type { loader as ExampleLoaderResponse } from "~/routes/docs.($slug)";
 import { useRoot } from "~/utils/providers/RootProvider";
 import SidebarLayout from "./Sidebar";
@@ -38,43 +37,22 @@ export function Doc() {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [listItems, setListItems] = useState<any[]>([]);
 
-  const isFirstRender = useIsFirstRender();
-
   const [activeHeading, setActiveHeading] = useState<Element | HTMLElement | null>(null);
   const [activeH2, setActiveH2] = useState<Element | HTMLElement | null>(null);
 
-  const scrollIntoView = (e: MouseEvent, el: Element) => {
-    e.preventDefault();
-
-    const scrollTo = docRef.current.querySelector(`#${el.getAttribute('href')!.replace('#', '')}`);
-
-    if (scrollTo) {
-      const scrollToRect = scrollTo.getBoundingClientRect();
-      const offsetPos = scrollToRect.top + window.scrollY - 106;
-
-      window.scrollTo({
-        top: offsetPos,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   useEffect(() => {
     if (typeof window !== "undefined") {
-
       const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
       const toc: Heading[] = [];
 
-      if (toc.length == 0) {
-        headingElements.map((heading) =>
-          toc.push({
-            text: heading.textContent!,
-            level: parseInt(heading.tagName[1]),
-            id: heading.id,
-            element: heading
-          })
-        );
-      }
+      headingElements.map((heading) =>
+        toc.push({
+          text: heading.textContent!,
+          level: parseInt(heading.tagName[1]),
+          id: heading.id,
+          element: heading
+        })
+      );
 
       if (toc.length > 0 && headings.length !== toc.length) {
         setHeadings(toc);
@@ -123,64 +101,83 @@ export function Doc() {
   }, [activeH2, activeHeading, headings, location]);
 
   useEffect(() => {
-    if (isFirstRender) {
-      return;
-    }
+    if (typeof window !== "undefined") {
+      const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
 
-    const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
+      function handleScroll() {
+        if (headingElements.length === 0) {
+          return;
+        }
 
-    function handleScroll() {
-      if (headingElements.length === 0) {
-        return;
-      }
+        const topDistances = headingElements.map((headingElement) => ({
+          element: headingElement,
+          topDistance: Math.abs(headingElement.getBoundingClientRect().top - 109)
+        }));
 
-      const topDistances = headingElements.map((headingElement) => ({
-        element: headingElement,
-        topDistance: Math.abs(headingElement.getBoundingClientRect().top - 109)
-      }));
+        topDistances.sort((a, b) => a.topDistance - b.topDistance);
+        const closestHeadingElement = topDistances[0].element;
+        const closestHeading = headings.find((heading) => heading.id === closestHeadingElement.id);
 
-      topDistances.sort((a, b) => a.topDistance - b.topDistance);
-      const closestHeadingElement = topDistances[0].element;
-      const closestHeading = headings.find((heading) => heading.id === closestHeadingElement.id);
+        if (!closestHeading) {
+          return;
+        }
 
-      const activeIndex = headings.findIndex((h) => h.id === closestHeading!.id);
+        const activeIndex = headings.findIndex((h) => h.id === closestHeading!.id);
 
-      // Update the active heading if it's different from the current active heading
-      if (closestHeading && closestHeading.id !== activeHeading!.id) {
-        if (activeIndex > 0 && headings[activeIndex].level === 3) {
-          // Find the index of the last level 2 (h2) heading before the active heading
-          for (let i = activeIndex - 1; i >= 0; i--) {
-            if (headings[i].level === 2) {
-              const lastH2 = headings[i];
-              lastH2 !== undefined && setActiveH2(lastH2.element);
-              break;
+        // Update the active heading if it's different from the current active heading
+        if (closestHeading && closestHeading.id !== activeHeading!.id) {
+          if (activeIndex > 0 && headings[activeIndex].level === 3) {
+            // Find the index of the last level 2 (h2) heading before the active heading
+            for (let i = activeIndex - 1; i >= 0; i--) {
+              if (headings[i].level === 2) {
+                const lastH2 = headings[i];
+                lastH2 !== undefined && setActiveH2(lastH2.element);
+                break;
+              }
             }
           }
+
+          if (activeIndex > 0 && headings[activeIndex].level === 2) {
+            setActiveH2(closestHeading.element);
+          }
+
+          setActiveHeading(closestHeading.element);
         }
 
-        if (activeIndex > 0 && headings[activeIndex].level === 2) {
-          setActiveH2(closestHeading.element);
+        if (activeHeading?.tagName.includes("2") && activeH2?.id !== activeHeading.id) {
+          setActiveH2(activeHeading);
+          setActiveHeading(activeHeading);
         }
-
-        setActiveHeading(closestHeading.element);
       }
 
-      if (activeHeading?.tagName.includes("2") && activeH2?.id !== activeHeading.id) {
-        setActiveH2(activeHeading);
-        setActiveHeading(activeHeading);
-      }
+      window.addEventListener("scroll", handleScroll, {
+        passive: true,
+        capture: true
+      });
+
+      return () => window.removeEventListener("scroll", handleScroll);
     }
+  }, [headings, activeHeading, activeH2, location]);
 
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-      capture: true
-    });
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [headings, activeHeading, isFirstRender, activeH2]);
-
-  useEffect(() => {    
+  useEffect(() => {
     if (typeof window !== "undefined") {
+      const scrollIntoView = (e: MouseEvent, el: Element) => {
+        e.preventDefault();
+
+        const scrollTo = docRef.current.querySelector(`#${el.getAttribute('href')!.replace('#', '')}`);
+
+        if (scrollTo) {
+          const scrollToRect = scrollTo.getBoundingClientRect();
+          const offsetPos = scrollToRect.top + window.scrollY - 106;
+
+          window.scrollTo({
+            top: offsetPos,
+            behavior: 'smooth'
+          });
+
+          window.history.pushState(null, '', `${location.pathname}#${el.getAttribute('href')!.replace('#', '')}`);
+        }
+      };
 
       docRef.current.querySelectorAll('a').forEach((el) => {
         el.addEventListener('click', (e) => scrollIntoView(e, el))
@@ -199,6 +196,8 @@ export function Doc() {
           if (scrollTo) {
             const scrollToRect = scrollTo.getBoundingClientRect();
             const offsetPos = scrollToRect.top + window.scrollY - 106;
+
+            window.history.pushState(null, '', `${location.pathname}#${el.getAttribute('href')!.replace('#', '')}`);
 
             window.scrollTo({
               top: offsetPos,
@@ -237,7 +236,7 @@ export function Doc() {
         });
       };
     }
-  }, [listItems])
+  }, [listItems, location.pathname])
 
   return (
     <Fragment>
