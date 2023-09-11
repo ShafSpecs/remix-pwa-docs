@@ -69,7 +69,22 @@
   {
     "name": "Hooks & Components",
     "position": 3,
-    "children": []
+    "children": [
+      {
+        "title": "LiveReload",
+        "description": "Remix PWA LiveReload Component",
+        "section": "Hooks & Components",
+        "shortTitle": "LiveReload",
+        "position": 1
+      },
+      {
+        "title": "useSWEffect",
+        "description": "useSWEffect is a React hook exported from the @remix-pwa/sw package that updates the Service Worker with changes in the main thread.",
+        "section": "Hooks & Components",
+        "shortTitle": "useSWEffect",
+        "position": 2
+      }
+    ]
   },
   {
     "name": "Utilities",
