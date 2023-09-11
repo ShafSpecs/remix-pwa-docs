@@ -25,6 +25,7 @@ module.exports = {
     /^vfile.*/,
     /^mdx.*/,
     /^github-slugger.*/,
+    /^redent.*/,
     /^refractor.*/,
     /^emoticon.*/,
     /^zwitch.*/,
@@ -45,8 +46,7 @@ module.exports = {
     "@sindresorhus/transliterate",
     "strip-indent",
     "escape-string-regexp",
-    "web-namespaces",
-    "redent"
+    "web-namespaces"
   ],
   appDirectory: "app",
   future: {
