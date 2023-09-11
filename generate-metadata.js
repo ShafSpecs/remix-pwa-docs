@@ -1,4 +1,5 @@
 // Anytime push is made to `docs`, sync it with S3 bucket
+// run this before syncing to S3
 const grayMatter = require("gray-matter");
 const fs = require("fs");
 const path = require("path");
