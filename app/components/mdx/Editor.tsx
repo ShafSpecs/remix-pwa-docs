@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import redent from '../../utils/redent'
 
 function CopyButton({ code }: { code: string }) {
   let [{ state, i }, setState] = useState({ state: 'idle', i: 0 })
@@ -25,7 +24,7 @@ function CopyButton({ code }: { code: string }) {
           'text-emerald-400': state === 'copied',
         })}
         onClick={() => {
-          navigator.clipboard.writeText(redent(code.replace(/^[+>-]/gm, ' '))).then(() => {
+          navigator.clipboard.writeText(/* Todo: Add redent later */(code.replace(/^[+>-]/gm, ' '))).then(() => {
             setState({ state: 'copied', i: i + 1 })
           })
         }}
