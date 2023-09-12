@@ -67,28 +67,28 @@
     "children": [
       {
         "title": "defaultFetchHandler",
-        "description": "defaultFetchHandler",
+        "description": "Default handler for fetch requests in the worker",
         "section": "Routes & Worker API",
         "shortTitle": "defaultFetchHandler",
         "position": 1
       },
       {
         "title": "errorHandler",
-        "description": "errorHandler",
+        "description": "Error Handling in Remix PWA",
         "section": "Routes & Worker API",
         "shortTitle": "errorHandler",
         "position": 2
       },
       {
         "title": "getLoadContext",
-        "description": "getLoadContext",
+        "description": "Global context object for the worker thread.",
         "section": "Routes & Worker API",
         "shortTitle": "getLoadContext",
         "position": 3
       },
       {
         "title": "workerAction",
-        "description": "worker action description",
+        "description": "Worker-only handlers for non-GET requests",
         "section": "Routes & Worker API",
         "shortTitle": "workerAction",
         "position": 4
