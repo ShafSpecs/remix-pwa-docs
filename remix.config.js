@@ -46,7 +46,8 @@ module.exports = {
     "@sindresorhus/transliterate",
     "strip-indent",
     "escape-string-regexp",
-    "web-namespaces"
+    "web-namespaces",
+    "clsx",
   ],
   appDirectory: "app",
   future: {
