@@ -9,7 +9,6 @@
       "section: $3",
       "position: $4",
       "---",
-      "\n",
       "$BLOCK_COMMENT_START Do not remove these lines! $BLOCK_COMMENT_END",
       "import Heading from './heading.tsx'",
       "import Editor from './editor.tsx'\n$0",
