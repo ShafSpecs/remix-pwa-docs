@@ -24,19 +24,16 @@ export const loader = async ({ params }: LoaderArgs) => {
 
   
   const code = await mdxToHtml(doc);
-  console.log(code);
 
-  return null;
-
-  // return typedjson({ ...code, slug }, 200);
+  return typedjson({ ...code, slug }, 200);
 };
 
-// export const meta: MetaFunction = ({ data }) => {
-//   return {
-//     title: `${data.slug ? data.slug[0].toUpperCase() + data.slug.substr(1) + " | " : ""}Remix Docs`,
-//     description: `${data.code && data.frontmatter.description}`,
-//   }
-// };
+export const meta: MetaFunction = ({ data }) => {
+  return {
+    title: `${data.slug ? data.slug[0].toUpperCase() + data.slug.substr(1) + " | " : ""}Remix Docs`,
+    description: `${data.code && data.frontmatter.description}`,
+  }
+};
 
 export default function DocPage() {
   return <ClientOnly fallback={<Skeleton />} children={() => (<p>Component</p>)} />;
