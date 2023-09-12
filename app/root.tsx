@@ -14,7 +14,6 @@ import { getPostMetaData } from "./utils/server/github.server";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
-import { Analytics } from "@vercel/analytics/react"
 
 import tailwind from "./tailwind.css";
 import fonts from "./styles/fonts.css";
@@ -121,7 +120,6 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
       >
         {children}
         <ScrollRestoration />
-        <Analytics />
         <Scripts />
         <LiveReload />
       </body>
