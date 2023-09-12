@@ -21,12 +21,11 @@ export const loader = async ({ params }: LoaderArgs) => {
     console.error(`Invalid Slug: ${slug}`);
     throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });
   }
-
   
   const code = await mdxToHtml(doc);
 
   return typedjson({ ...code, slug }, 200);
-};
+}; 
 
 export const meta: MetaFunction = ({ data }) => {
   return {
@@ -36,7 +35,7 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 export default function DocPage() {
-  return <ClientOnly fallback={<Skeleton />} children={() => (<p>Component</p>)} />;
+  return <ClientOnly fallback={<Skeleton />} children={() => <Doc />} />;
 }
 
 export const ErrorBoundary = () => {

@@ -1,5 +1,5 @@
-// import clsx from 'clsx'
 import { useEffect, useState } from 'react'
+import redent from 'redent';
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -28,7 +28,7 @@ export function CopyButton({ code }: { code: string }) {
           state === 'copied' ? 'text-emerald-400' : '',
         )}
         onClick={() => {
-          navigator.clipboard.writeText(/* Todo: Add redent later */(code.replace(/^[+>-]/gm, ' '))).then(() => {
+          navigator.clipboard.writeText(redent(code.replace(/^[+>-]/gm, ' '))).then(() => {
             setState({ state: 'copied', i: i + 1 })
           })
         }}
@@ -140,7 +140,7 @@ export function EditorPane({ filename, scroll = false, code, children }: { filen
   return (
     <div className="pt-2 shadow-lg bg-slate-800 group">
       <TabBar primary={{ name: filename }} showTabMarkers={false}>
-        <CopyButton code={code?.replace(/<[^>]+>/g, '') || ''} />
+        <CopyButton code={redent(code?.replace(/<[^>]+>/g, '') ?? '') || ''} />
       </TabBar>
       <div
         className={classNames(

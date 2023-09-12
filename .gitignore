@@ -9,9 +9,6 @@ node_modules
 /build/
 /public/build
 /public/entry.worker.js
-/api/index.js
-/api/index.js.map
-/api/*.json
 
 *.worker.js
 

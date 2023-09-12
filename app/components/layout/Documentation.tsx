@@ -9,6 +9,13 @@ import Header from "../Header";
 import slugify from '@sindresorhus/slugify';
 import { useMediaQuery } from "usehooks-ts";
 import { ClientOnly } from "remix-utils";
+import clsx from "clsx";
+import redent from 'redent';
+import Editor from '../mdx/Editor';
+import SnippetGroup from '../mdx/Snippet';
+import Heading from "../mdx/Heading";
+import Info from "../mdx/Info";
+import Warn from "../mdx/Warn";
 
 export type Heading = {
   id: string;
@@ -29,7 +36,17 @@ export type Heading = {
 export function Doc() {
   const { code, frontmatter } = useTypedLoaderData<typeof ExampleLoaderResponse>();
   const { next, prev } = useRoot();
-  const Component = useMemo(() => getMDXComponent(code), [code]);
+  const Component = useMemo(() => getMDXComponent(code,
+    {
+      clsx,
+      redent,
+      Editor,
+      Snippet: SnippetGroup,
+      Heading,
+      Info,
+      Warn,
+    }
+  ), [code]);
   const location = useLocation();
   const mobile = useMediaQuery('(max-width: 1024px)');
 

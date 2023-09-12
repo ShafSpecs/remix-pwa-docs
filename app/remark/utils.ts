@@ -1,6 +1,6 @@
 import Prism from 'prismjs'
 import loadLanguages from 'prismjs/components/index.js'
-import redent from '../utils/redent'
+import redent from 'redent'
 import type { Node} from 'acorn';
 import { parse } from 'acorn'
 
