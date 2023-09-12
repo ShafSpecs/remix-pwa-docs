@@ -8,6 +8,7 @@ import SidebarLayout from "./Sidebar";
 import Header from "../Header";
 import slugify from '@sindresorhus/slugify';
 import { useMediaQuery } from "usehooks-ts";
+import { ClientOnly } from "remix-utils";
 
 export type Heading = {
   id: string;
@@ -248,16 +249,16 @@ export function Doc() {
 
   return (
     <Fragment>
-      <Header title={frontmatter.title} section={frontmatter.section} />
+      <ClientOnly fallback={<div>Header</div>} children={() => <Header title={frontmatter.title} section={frontmatter.section} />} />
       <SidebarLayout>
         <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
           <div className="flex-auto mb-8 scroll-smooth">
             <article>
               <header id="header" className="relative z-20">
                 <div>
-                  <p className="mb-2 text-sm font-semibold leading-6 text-sky-500 dark:text-sky-400">
+                  <h5 className="mb-2 text-sm font-semibold leading-6 text-sky-500 dark:text-sky-400">
                     {frontmatter.section}
-                  </p>
+                  </h5>
                   <div className="flex items-center">
                     <h1 className="inline-block text-2xl font-extrabold tracking-tight sm:text-3xl text-slate-900 dark:text-slate-200">
                       {frontmatter.title}
@@ -274,7 +275,7 @@ export function Doc() {
                 id="article-main"
                 className="relative z-20 mt-8 prose prose-slate dark:prose-dark scroll-smooth prose-h2:flex prose-h2:whitespace-pre-wrap prose-h2:not-prose prose-h2:mb-2 prose-h2:text-sm prose-h2:leading-6 prose-h2:text-sky-500 prose-h2:font-semibold prose-h2:tracking-normal prose-h2:dark:text-sky-400 prose-code:dark:text-[#e2e8f0] prose-code:font-medium prose-code:text-sm prose-code:font-fira"
               >
-                <Component />
+                {/* <Component /> */}
               </main>
             </article>
             <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
