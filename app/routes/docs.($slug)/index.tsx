@@ -1,4 +1,4 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import { json, type LoaderArgs, type MetaFunction } from "@remix-run/node";
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import { redirect, typedjson } from "remix-typedjson";
 import { ClientOnly } from "remix-utils";
@@ -25,7 +25,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   
   const code = await mdxToHtml(doc);
 
-  return typedjson({ ...code, slug }, 200);
+  return json({ ...code, slug }, 200);
 };
 
 export const meta: MetaFunction = ({ data }) => {
