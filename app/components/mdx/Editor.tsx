@@ -1,5 +1,6 @@
-import clsx from 'clsx'
+// import clsx from 'clsx'
 import { useEffect, useState } from 'react'
+import { classNames } from '~/utils/StyleHelpers'
 
 export function CopyButton({ code }: { code: string }) {
   let [{ state, i }, setState] = useState({ state: 'idle', i: 0 })
@@ -19,10 +20,10 @@ export function CopyButton({ code }: { code: string }) {
     <div className="relative flex -mr-2">
       <button
         type="button"
-        className={clsx({
-          'text-slate-500 hover:text-slate-400': state === 'idle',
-          'text-emerald-400': state === 'copied',
-        })}
+        className={classNames(
+          state === 'idle' ? `text-slate-500 hover:text-slate-400` : '',
+          state === 'copied' ? 'text-emerald-400' : '',
+        )}
         onClick={() => {
           navigator.clipboard.writeText(/* Todo: Add redent later */(code.replace(/^[+>-]/gm, ' '))).then(() => {
             setState({ state: 'copied', i: i + 1 })
@@ -87,16 +88,16 @@ function TabBar({
           ))}
       </div>
       <div
-        className={clsx(
+        className={classNames(
           'flex-auto flex items-center bg-slate-700/50 border border-slate-500/30',
           side === 'left' ? 'rounded-tl lg:rounded-tr' : 'rounded-tl',
-          translucent && 'dark:bg-slate-800/50'
+          translucent ? 'dark:bg-slate-800/50' : ''
         )}
       >
         {secondary.map(({ name, open = true, className }) => (
           <div
             key={name}
-            className={clsx('px-4 py-1 border-r border-slate-200/5', className, { italic: !open })}
+            className={classNames('px-4 py-1 border-r border-slate-200/5', className || '', !open ? 'italic' : '')}
           >
             {name}
           </div>
@@ -120,8 +121,8 @@ const frameColors = {
 export function Frame({ className, color = 'sky', children }: { className?: string; color?: string; children: any }) {
   return (
     <div
-      className={clsx(
-        className,
+      className={classNames(
+        className || '',
         // @ts-ignore
         frameColors[color],
         'relative -mx-4 pt-6 pl-4 bg-gradient-to-b sm:mx-0 sm:rounded-2xl sm:pt-12 sm:pl-12'
@@ -139,27 +140,27 @@ export function EditorPane({ filename, scroll = false, code, children }: { filen
         <CopyButton code={code?.replace(/<[^>]+>/g, '') || ''} />
       </TabBar>
       <div
-        className={clsx(
+        className={classNames(
           'children:my-0 children:!shadow-none children:bg-transparent',
-          scroll &&
-          clsx(
-            'overflow-y-auto max-h-96',
-            'scrollbar:w-4 scrollbar:h-4 scrollbar:transparent',
-            'scrollbar-thumb:border-4 scrollbar-thumb:border-solid scrollbar-thumb:border-slate-800 scrollbar-thumb:bg-slate-500/50 group-hover:scrollbar-thumb:bg-slate-500/60 scrollbar-thumb:rounded-full',
-            'scrollbar-track:rounded'
-          )
+          scroll ?
+            classNames(
+              'overflow-y-auto max-h-96',
+              'scrollbar:w-4 scrollbar:h-4 scrollbar:transparent',
+              'scrollbar-thumb:border-4 scrollbar-thumb:border-solid scrollbar-thumb:border-slate-800 scrollbar-thumb:bg-slate-500/50 group-hover:scrollbar-thumb:bg-slate-500/60 scrollbar-thumb:rounded-full',
+              'scrollbar-track:rounded'
+            ) : ''
         )}
         {...(code ? {
           dangerouslySetInnerHTML: {
             __html: code
-              // .split('\n')
-              // .map((line) => {
-              //   if (filename.toLowerCase() === 'terminal') {
-              //     line = `<span class="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" class="flex-none overflow-visible text-pink-400 w-auto h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="flex-auto">${line}</span></span>`
-              //   }
-              //   return line
-              // })
-              // .join(filename.toLowerCase() === 'terminal' ? '' : '\n'),
+            // .split('\n')
+            // .map((line) => {
+            //   if (filename.toLowerCase() === 'terminal') {
+            //     line = `<span class="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" class="flex-none overflow-visible text-pink-400 w-auto h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="flex-auto">${line}</span></span>`
+            //   }
+            //   return line
+            // })
+            // .join(filename.toLowerCase() === 'terminal' ? '' : '\n'),
           }
         } : { children })}
       />

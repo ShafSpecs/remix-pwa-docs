@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Tab } from '@headlessui/react'
-import clsx from 'clsx'
 //@ts-ignore
 import { Frame, CopyButton } from './editor.tsx';
+import { classNames } from '~/utils/StyleHelpers';
 
 /**
  * @typedef {React.ReactElement<{ filename?: string }>} CodeBlock
@@ -14,8 +14,8 @@ import { Frame, CopyButton } from './editor.tsx';
  * @param {object} props
  * @param {import('clsx').ClassValue} props.className
  */
-function TabAdornment({ className }: { className?: clsx.ClassValue }) {
-  return <div className={clsx('pointer-events-none absolute inset-0', className)} />
+function TabAdornment({ className }: { className?: any }) {
+  return <div className={classNames('pointer-events-none absolute inset-0', className)} />
 }
 
 /**
@@ -47,7 +47,7 @@ function TabItem({ children, selectedIndex, myIndex, marker }: { children: React
 
   return (
     <Tab
-      className={clsx(
+      className={classNames(
         'flex items-center relative z-10 overflow-hidden px-4 py-1 [&:not(:focus-visible)]:focus:outline-none',
         isSelected ? 'text-sky-300' : 'text-slate-400'
       )}
@@ -67,10 +67,10 @@ function TabItem({ children, selectedIndex, myIndex, marker }: { children: React
       {/* Inactive tabs with optional edge caps */}
       {!isSelected && (
         <TabAdornment
-          className={clsx(
+          className={classNames(
             'bg-slate-700/50 border-y border-slate-500/30',
-            edges.leading === 'capped' && 'border-l rounded-tl',
-            edges.trailing === 'capped' && 'border-r rounded-tr'
+            edges.leading === 'capped' ? 'border-l rounded-tl' : '',
+            edges.trailing === 'capped' ? 'border-r rounded-tr' : ''
           )}
         />
       )}
@@ -124,7 +124,7 @@ export default function SnippetGroup({ children, style = 'plain', actions, ...pr
           </Tab.List>
           <div className="flex flex-auto pt-2 overflow-hidden rounded-tr-xl">
             <div
-              className={clsx(
+              className={classNames(
                 'flex-auto flex justify-end bg-slate-700/50 border-y border-slate-500/30 pr-4',
                 selectedIndex === children.length - 1 ? 'rounded-tl border-l' : ''
               )}

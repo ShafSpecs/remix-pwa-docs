@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { classNames } from "~/utils/StyleHelpers"
 
 // Useful for preventing AlgoliaSearch from indexing a heading
 export default function Heading({
@@ -16,17 +16,16 @@ export default function Heading({
 
   return (
     <Component
-      className={clsx('flex whitespace-pre-wrap not-prose', className, {
-        'mb-2 text-sm leading-6 text-sky-500 font-semibold tracking-normal dark:text-sky-400':
-          level === 2 && nextElement?.type === 'heading' && nextElement?.depth === 3,
-      })}
+      className={classNames('flex whitespace-pre-wrap not-prose', className,
+        level === 2 && nextElement?.type === 'heading' && nextElement?.depth === 3 ? 'mb-2 text-sm leading-6 text-sky-500 font-semibold tracking-normal dark:text-sky-400' : ''
+      )}
       id={id}
       style={{ ...(hidden ? { marginBottom: 0 } : {}), ...style }}
       data-docsearch-ignore={ignore ? '' : undefined}
       {...props}
     >
       <a
-        className={clsx('group relative border-none', hidden ? 'sr-only' : 'lg:-ml-2 lg:pl-2')}
+        className={className('group relative border-none', hidden ? 'sr-only' : 'lg:-ml-2 lg:pl-2')}
         href={`#${id}`}
       >
         <div className="absolute items-center hidden -ml-8 border-0 opacity-0 group-hover:opacity-100 group-focus:opacity-100 lg:flex">

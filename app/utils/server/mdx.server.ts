@@ -39,6 +39,8 @@ export async function mdxToHtml(source: string) {
       "./details.tsx": readFileSync(join(cwd(), "app", "components/mdx/Details.tsx")).toString(),
       "./editor.tsx": readFileSync(join(cwd(), "app", "components/mdx/Editor.tsx")).toString(),
       "./snippet.tsx": readFileSync(join(cwd(), "app", "components/mdx/Snippet.tsx")).toString(),
+      '~/utils/StyleHelpers.js': readFileSync(join(cwd(), "app", "utils/StyleHelpers.tsx")).toString(),
+      '~/utils/StyleHelpers': readFileSync(join(cwd(), "app", "utils/StyleHelpers.tsx")).toString(),
     },
     globals: {
       // redent: 'redent'
