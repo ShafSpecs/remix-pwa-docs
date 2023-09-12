@@ -1,12 +1,6 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
-  server: process.env.NODE_ENV === "development" ? undefined : "./server.ts",
-  ignoredRouteFiles: ["**/.*"],
-  publicPath: "/build/",
-  serverBuildPath: "api/index.js",
   serverModuleFormat: "cjs",
-  serverPlatform: "node",
-  serverMinify: false,
   serverDependenciesToBundle: [
     /^rehype.*/,
     /^remark.*/,
