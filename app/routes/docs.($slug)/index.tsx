@@ -35,7 +35,7 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 export default function DocPage() {
-  return <ClientOnly fallback={<Skeleton />} children={() => (<Doc />)} />;
+  return <Doc />
 }
 
 export const ErrorBoundary = () => {
