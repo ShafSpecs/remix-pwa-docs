@@ -64,7 +64,43 @@
   {
     "name": "Routes & Worker API",
     "position": 2,
-    "children": []
+    "children": [
+      {
+        "title": "defaultFetchHandler",
+        "description": "defaultFetchHandler",
+        "section": "Routes & Worker API",
+        "shortTitle": "defaultFetchHandler",
+        "position": 1
+      },
+      {
+        "title": "errorHandler",
+        "description": "errorHandler",
+        "section": "Routes & Worker API",
+        "shortTitle": "errorHandler",
+        "position": 2
+      },
+      {
+        "title": "getLoadContext",
+        "description": "getLoadContext",
+        "section": "Routes & Worker API",
+        "shortTitle": "getLoadContext",
+        "position": 3
+      },
+      {
+        "title": "workerAction",
+        "description": "worker action description",
+        "section": "Routes & Worker API",
+        "shortTitle": "workerAction",
+        "position": 4
+      },
+      {
+        "title": "workerLoader",
+        "description": "workerLoader",
+        "section": "Routes & Worker API",
+        "shortTitle": "workerLoader",
+        "position": 5
+      }
+    ]
   },
   {
     "name": "Hooks & Components",
