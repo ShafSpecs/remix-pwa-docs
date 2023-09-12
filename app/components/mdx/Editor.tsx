@@ -1,6 +1,9 @@
 // import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import { classNames } from '~/utils/StyleHelpers'
+
+export function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
 
 export function CopyButton({ code }: { code: string }) {
   let [{ state, i }, setState] = useState({ state: 'idle', i: 0 })

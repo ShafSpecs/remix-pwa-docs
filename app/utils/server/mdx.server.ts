@@ -32,15 +32,13 @@ export async function mdxToHtml(source: string) {
   const { code, frontmatter } = await bundleMDX<FrontMatterTypings>({
     source,
     files: {
-      // "./info.tsx": readFileSync(join(cwd(), "app", "components/mdx/Info.tsx")).toString(),
-      // "./warn.tsx": readFileSync(join(cwd(), "app", "components/mdx/Warn.tsx")).toString(),
-      // "./tip.tsx": readFileSync(join(cwd(), "app", "components/mdx/Tip.tsx")).toString(),
+      "./info.tsx": readFileSync(join(cwd(), "app", "components/mdx/Info.tsx")).toString(),
+      "./warn.tsx": readFileSync(join(cwd(), "app", "components/mdx/Warn.tsx")).toString(),
+      "./tip.tsx": readFileSync(join(cwd(), "app", "components/mdx/Tip.tsx")).toString(),
       "./heading.tsx": readFileSync(join(cwd(), "app", "components/mdx/Heading.tsx")).toString(),
-      // "./details.tsx": readFileSync(join(cwd(), "app", "components/mdx/Details.tsx")).toString(),
+      "./details.tsx": readFileSync(join(cwd(), "app", "components/mdx/Details.tsx")).toString(),
       "./editor.tsx": readFileSync(join(cwd(), "app", "components/mdx/Editor.tsx")).toString(),
       "./snippet.tsx": readFileSync(join(cwd(), "app", "components/mdx/Snippet.tsx")).toString(),
-      // '~/utils/StyleHelpers.js': readFileSync(join(cwd(), "app", "utils/StyleHelpers.ts")).toString(),
-      // '~/utils/StyleHelpers': readFileSync(join(cwd(), "app", "utils/StyleHelpers.ts")).toString(),
     },
     globals: {
       // redent: 'redent'

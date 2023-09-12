@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { Tab } from '@headlessui/react'
 //@ts-ignore
 import { Frame, CopyButton } from './editor.tsx';
-import { classNames } from '~/utils/StyleHelpers';
+
+export function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
 
 /**
  * @typedef {React.ReactElement<{ filename?: string }>} CodeBlock

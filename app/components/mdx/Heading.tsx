@@ -1,4 +1,6 @@
-import { classNames } from "~/utils/StyleHelpers"
+export function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
 
 // Useful for preventing AlgoliaSearch from indexing a heading
 export default function Heading({
