@@ -1,0 +1,17 @@
+node_modules
+
+.cache
+.env
+.output
+.DS_Store
+
+/build/
+/public/build
+/public/entry.worker.js
+
+*.worker.js
+
+/app/styles/app.css
+
+guide.txt
+posts/**
