@@ -1,5 +1,3 @@
-import { Link } from "@remix-run/react"
-
 /* eslint-disable react/display-name */
 export default ({ icon, title, desc, to }: any) => {
   return (

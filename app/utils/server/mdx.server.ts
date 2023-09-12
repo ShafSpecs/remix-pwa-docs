@@ -30,22 +30,15 @@ export async function mdxToHtml(source: string) {
   }
 
   const { code, frontmatter } = await bundleMDX<FrontMatterTypings>({
-    source: source,
+    source,
     files: {
       "./info.tsx": readFileSync(join(cwd(), "app", "components/mdx/Info.tsx")).toString(),
       "./warn.tsx": readFileSync(join(cwd(), "app", "components/mdx/Warn.tsx")).toString(),
-      "./link.tsx": readFileSync(join(cwd(), "app", "components/mdx/Link.tsx")).toString(),
-      "./grid.tsx": readFileSync(join(cwd(), "app", "components/mdx/Grid.tsx")).toString(),
       "./tip.tsx": readFileSync(join(cwd(), "app", "components/mdx/Tip.tsx")).toString(),
       "./heading.tsx": readFileSync(join(cwd(), "app", "components/mdx/Heading.tsx")).toString(),
       "./details.tsx": readFileSync(join(cwd(), "app", "components/mdx/Details.tsx")).toString(),
       "./editor.tsx": readFileSync(join(cwd(), "app", "components/mdx/Editor.tsx")).toString(),
       "./snippet.tsx": readFileSync(join(cwd(), "app", "components/mdx/Snippet.tsx")).toString(),
-
-      "./arrow.tsx": readFileSync(join(cwd(), "app", "components/icons/Arrow.tsx")).toString(),
-      "./plugin.tsx": readFileSync(join(cwd(), "app", "components/icons/Plugin.tsx")).toString(),
-      "./swatch.tsx": readFileSync(join(cwd(), "app", "components/icons/Swatch.tsx")).toString(),
-      "./widget.tsx": readFileSync(join(cwd(), "app", "components/icons/Widget.tsx")).toString()
     },
     globals: {
       // redent: 'redent'
