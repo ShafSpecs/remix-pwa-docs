@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 
-function CopyButton({ code }: { code: string }) {
+export function CopyButton({ code }: { code: string }) {
   let [{ state, i }, setState] = useState({ state: 'idle', i: 0 })
 
   useEffect(() => {

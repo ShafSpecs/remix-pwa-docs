@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
-import { Frame } from './Editor';
+//@ts-ignore
+import { Frame, CopyButton } from './editor.tsx';
 
 /**
  * @typedef {React.ReactElement<{ filename?: string }>} CodeBlock
@@ -113,7 +114,7 @@ export default function SnippetGroup({ children, style = 'plain', actions, ...pr
   return (
     <Wrapper {...props}>
       <Tab.Group as="div" onChange={setSelectedIndex}>
-        <div className="flex">
+        <div className="relative flex">
           <Tab.List className="flex pt-2 overflow-hidden text-xs leading-6 text-slate-400 rounded-tl-xl">
             {children?.map((child: any, tabIndex: number) => (
               <TabItem key={child.props.filename} myIndex={tabIndex} selectedIndex={selectedIndex}>
@@ -129,9 +130,12 @@ export default function SnippetGroup({ children, style = 'plain', actions, ...pr
               )}
             />
           </div>
-          {actions ? (
-            <div className="absolute flex h-8 top-2 right-4">{actions({ selectedIndex })}</div>
-          ) : null}
+          {/* {actions ? ( */}
+            <div className="absolute flex h-8 top-2 right-4">
+              <CopyButton code={children[selectedIndex].props.code?.replace(/<[^>]+>/g, '') || ''} />
+              {/* {actions({ selectedIndex })} */}
+            </div>
+          {/* ) : null} */}
         </div>
         <Tab.Panels className="flex overflow-auto">
           {children.map((child: JSX.Element) => (
