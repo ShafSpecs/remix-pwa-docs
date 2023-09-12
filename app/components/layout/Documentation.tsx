@@ -5,9 +5,9 @@ import { useTypedLoaderData } from "remix-typedjson";
 import type { loader as ExampleLoaderResponse } from "~/routes/docs.($slug)";
 import { useRoot } from "~/utils/providers/RootProvider";
 import SidebarLayout from "./Sidebar";
-import Header, { ClientHeader } from "../Header";
-import { ClientOnly } from "remix-utils";
+import Header from "../Header";
 import slugify from '@sindresorhus/slugify';
+import { useMediaQuery } from "usehooks-ts";
 
 export type Heading = {
   id: string;
@@ -30,6 +30,7 @@ export function Doc() {
   const { next, prev } = useRoot();
   const Component = useMemo(() => getMDXComponent(code), [code]);
   const location = useLocation();
+  const mobile = useMediaQuery('(max-width: 1024px)');
 
   const docRef = useRef<HTMLDivElement>(null!);
   const tocRef = useRef<HTMLOListElement>(null!);
@@ -41,7 +42,7 @@ export function Doc() {
   const [activeH2, setActiveH2] = useState<Element | HTMLElement | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && !mobile) {
       const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
       const toc: Heading[] = [];
 
@@ -97,10 +98,10 @@ export function Doc() {
 
       setListItems(listItems);
     }
-  }, [activeH2, activeHeading, headings, location]);
+  }, [activeH2, activeHeading, headings, location, mobile]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && !mobile) {
       const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
 
       function handleScroll() {
@@ -148,7 +149,7 @@ export function Doc() {
           setActiveHeading(activeHeading);
         }
 
-        if(!activeHeading) {
+        if (!activeHeading) {
           setActiveHeading(headings[0].element);
 
           if (headings[0].level === 2) {
@@ -164,10 +165,10 @@ export function Doc() {
 
       return () => window.removeEventListener("scroll", handleScroll);
     }
-  }, [headings, activeHeading, activeH2, location]);
+  }, [headings, activeHeading, activeH2, location, mobile]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && !mobile) {
       const scrollIntoView = (e: MouseEvent, el: Element) => {
         e.preventDefault();
 
@@ -243,16 +244,11 @@ export function Doc() {
         });
       };
     }
-  }, [listItems, location.pathname])
+  }, [listItems, location.pathname, mobile])
 
   return (
     <Fragment>
-      <ClientOnly
-        fallback={<ClientHeader />}
-        children={
-          () => <Header />
-        }
-      />
+      <Header title={frontmatter.title} section={frontmatter.section} />
       <SidebarLayout>
         <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
           <div className="flex-auto mb-8 scroll-smooth">
@@ -289,8 +285,8 @@ export function Doc() {
                     <Link
                       className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
                       to={`/docs/${slugify(prev.shortTitle)}`}
-                      // reloadDocument={true}
-                      // prefetch="intent"
+                    // reloadDocument={true}
+                    // prefetch="intent"
                     >
                       <span aria-hidden="true">←</span>&nbsp;{prev.title}
                     </Link>
@@ -304,8 +300,8 @@ export function Doc() {
                     <Link
                       className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
                       to={`/docs/${slugify(next.shortTitle)}`}
-                      // reloadDocument={true}
-                      // prefetch="intent"
+                    // reloadDocument={true}
+                    // prefetch="intent"
                     >
                       {next.title}
                       {/* */}&nbsp;<span aria-hidden="true">→</span>
