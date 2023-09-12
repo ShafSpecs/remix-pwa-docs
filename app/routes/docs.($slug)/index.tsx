@@ -8,31 +8,31 @@ import Skeleton from "~/components/layout/Skeleton";
 import { getPostContent } from "~/utils/server/github.server";
 import { mdxToHtml } from "~/utils/server/mdx.server";
 
-export const loader = async ({ params }: LoaderArgs) => {
-  const slug = params.slug;
+// export const loader = async ({ params }: LoaderArgs) => {
+//   const slug = params.slug;
 
-  if (slug == undefined || slug == "") {
-    return redirect("/docs/installation");
-  }
+//   if (slug == undefined || slug == "") {
+//     return redirect("/docs/installation");
+//   }
 
-  const doc = await getPostContent(slug);
+//   const doc = await getPostContent(slug);
 
-  if (!doc) {
-    console.error(`Invalid Slug: ${slug}`);
-    throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });
-  }
+//   if (!doc) {
+//     console.error(`Invalid Slug: ${slug}`);
+//     throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });
+//   }
 
-  const code = await mdxToHtml(doc);
+//   const code = await mdxToHtml(doc);
 
-  return typedjson({ ...code, slug }, 200);
-};
+//   return typedjson({ ...code, slug }, 200);
+// };
 
-export const meta: MetaFunction = ({ data }) => {
-  return {
-    title: `${data.slug ? data.slug[0].toUpperCase() + data.slug.substr(1) + " | " : ""}Remix Docs`,
-    description: `${data.code && data.frontmatter.description}`,
-  }
-};
+// export const meta: MetaFunction = ({ data }) => {
+//   return {
+//     title: `${data.slug ? data.slug[0].toUpperCase() + data.slug.substr(1) + " | " : ""}Remix Docs`,
+//     description: `${data.code && data.frontmatter.description}`,
+//   }
+// };
 
 export default function DocPage() {
   return <ClientOnly fallback={<Skeleton />} children={() => (<p>Component</p>)} />;
