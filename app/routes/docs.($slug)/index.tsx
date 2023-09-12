@@ -22,11 +22,11 @@ export const loader = async ({ params }: LoaderArgs) => {
     throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });
   }
 
-  console.log(doc)
+  
+  const code = await mdxToHtml(doc);
+  console.log(code);
 
   return null;
-
-  // const code = await mdxToHtml(doc);
 
   // return typedjson({ ...code, slug }, 200);
 };
