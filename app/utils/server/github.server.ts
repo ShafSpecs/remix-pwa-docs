@@ -9,7 +9,8 @@ let s3 = new S3({
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ''
-  }
+  },
+  maxAttempts: 3
 });
 
 const FrontMatterTypingsSchema = z.object({

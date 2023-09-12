@@ -27,8 +27,6 @@ export async function mdxToHtml(source: string) {
     process.env.ESBUILD_BINARY_PATH = join(cwd(), "node_modules", "esbuild", "bin", "esbuild");
   }
 
-  console.log(process.env.NODE_ENV)
-
   try {
     const { code, frontmatter } = await bundleMDX<FrontMatterTypings>({
       source,
