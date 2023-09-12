@@ -1,7 +1,7 @@
 import { useTypedRouteLoaderData } from "remix-typedjson";
 import NavItem from "../NavItem";
 import type { loader as RootLoader } from "~/root";
-import type { MetaDataObject } from "~/utils/server/github.server";
+import type { MetaDataObject } from "~/utils/server/aws.server";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useRef, useState } from "react";
 import { useIsomorphicLayoutEffect, useMediaQuery } from "usehooks-ts";

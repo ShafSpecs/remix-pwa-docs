@@ -1,5 +1,5 @@
 import {type DataFunctionArgs} from '@remix-run/node'
-import { getPostMetaData } from '~/utils/server/github.server'
+import { getPostMetaData } from '~/utils/server/aws.server'
 
 export async function loader({request}: DataFunctionArgs) {
   try {

@@ -10,7 +10,7 @@ import {
   useLocation,
   useRouteError
 } from "@remix-run/react";
-import { getPostMetaData } from "./utils/server/github.server";
+import { getPostMetaData } from "./utils/server/aws.server";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";

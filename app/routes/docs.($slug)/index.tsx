@@ -5,7 +5,7 @@ import { ClientOnly } from "remix-utils";
 import GeneralError from "~/components/GeneralError";
 import { Doc } from "~/components/layout/Documentation";
 import Skeleton from "~/components/layout/Skeleton";
-import { getPostContent } from "~/utils/server/github.server";
+import { getPostContent } from "~/utils/server/aws.server";
 import { mdxToHtml } from "~/utils/server/mdx.server";
 
 export const loader = async ({ params }: LoaderArgs) => {

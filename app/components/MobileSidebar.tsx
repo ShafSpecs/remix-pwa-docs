@@ -10,7 +10,7 @@ import { Link } from "@remix-run/react";
 import { useTransition, animated } from "react-spring";
 import clsx from "clsx";
 import NavItem from "./NavItem";
-import type { MetaDataObject } from "~/utils/server/github.server";
+import type { MetaDataObject } from "~/utils/server/aws.server";
 
 const MobileSidebar = ({ open, set }: any) => {
   // @ts-ignore
