@@ -306,7 +306,7 @@ export function Doc() {
                     // reloadDocument={true}
                     // prefetch="intent"
                     >
-                      <span aria-hidden="true">←</span>&nbsp;{prev.title}
+                      <span aria-hidden="true">←</span>&nbsp;{prev.shortTitle}
                     </Link>
                   </dd>
                 </div>
@@ -321,7 +321,7 @@ export function Doc() {
                     // reloadDocument={true}
                     // prefetch="intent"
                     >
-                      {next.title}
+                      {next.shortTitle}
                       {/* */}&nbsp;<span aria-hidden="true">→</span>
                     </Link>
                   </dd>
