@@ -60,7 +60,8 @@ const metaData = async () => {
     { "name": "Routes & Worker API", position: 2, children: [] },
     { "name": "Hooks & Components", position: 3, children: [] },
     { "name": "Utilities", position: 4, children: [] },
-    { "name": "Guides", position: 5, children: [] }
+    { "name": "Other API", position: 5, children: [] },
+    { "name": "Guides", position: 6, children: [] }
   ];
 
   const postsMetadata = await getPostsMeta();
