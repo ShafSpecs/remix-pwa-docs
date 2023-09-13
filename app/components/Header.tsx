@@ -134,7 +134,7 @@ export default ({ title, section }: any) => {
 
   useEffect(() => {
     setClosed(true);
-  }, [location, setClosed]);
+  }, [location.pathname, setClosed]);
 
   return (
     <Fragment>
