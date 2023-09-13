@@ -5,7 +5,7 @@ import { useTypedLoaderData } from "remix-typedjson";
 import type { loader as ExampleLoaderResponse } from "~/routes/docs.($slug)";
 import { useRoot } from "~/utils/providers/RootProvider";
 import SidebarLayout from "./Sidebar";
-import Header from "../Header";
+import Header, { ClientHeader } from "../Header";
 import slugify from '@sindresorhus/slugify';
 import { useMediaQuery } from "usehooks-ts";
 import { ClientOnly } from "remix-utils";
@@ -60,8 +60,9 @@ export function Doc() {
   const [activeH2, setActiveH2] = useState<Element | HTMLElement | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && !mobile) {
-      const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
+    // Todo: Local Storage or inedexedDB
+    if (typeof window !== "undefined") {
+      const headingElements: HTMLHeadingElement[] = []
       const toc: Heading[] = [];
 
       headingElements.map((heading) =>
@@ -73,21 +74,25 @@ export function Doc() {
         })
       );
 
-      const found = headings[0] && headings[0].id === toc[0].id; // this takes time, optimise it later
+      if (toc.length === 0) {
+        return;
+      }
 
-      if (toc.length > 0 && !found) {
-        setHeadings(toc);
-        setActiveHeading(headingElements[0]);
+      setHeadings(toc);
+      setActiveHeading(headingElements[0]);
+
+      if (toc[0].level === 2) {
+        setActiveH2(headingElements[0]);
       }
 
       let currentOl = null;
-      const listItems = [];
+      const $listItems = [];
 
       for (let i = 0; i < headings.length; i++) {
         const heading = headings[i];
 
         if (currentOl) {
-          listItems.push(currentOl);
+          $listItems.push(currentOl);
           currentOl = null;
         }
 
@@ -101,7 +106,7 @@ export function Doc() {
           i++;
         }
 
-        listItems.push(
+        $listItems.push(
           {
             text: heading.text,
             subheadings: subheadings,
@@ -111,69 +116,61 @@ export function Doc() {
       }
 
       if (currentOl) {
-        listItems.push(currentOl);
+        $listItems.push(currentOl);
       }
 
-      setListItems(listItems);
+      setListItems($listItems);
     }
-  }, [activeH2, activeHeading, headings, location, mobile]);
+  }, [headings, location.pathname]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && !mobile) {
-      const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
+      //     const headingElements = Array.from(docRef.current.querySelectorAll("h2, h3"));
 
       function handleScroll() {
-        if (headingElements.length === 0) {
-          return;
-        }
+        //       if (headingElements.length === 0) {
+        //         return;
+        //       }
 
-        const topDistances = headingElements.map((headingElement) => ({
-          element: headingElement,
-          topDistance: Math.abs(headingElement.getBoundingClientRect().top - 109)
-        }));
+        //       const topDistances = headingElements.map((headingElement) => ({
+        //         element: headingElement,
+        //         topDistance: Math.abs(headingElement.getBoundingClientRect().top - 109)
+        //       }));
 
-        topDistances.sort((a, b) => a.topDistance - b.topDistance);
-        const closestHeadingElement = topDistances[0].element;
-        const closestHeading = headings.find((heading) => heading.id === closestHeadingElement.id);
+        //       topDistances.sort((a, b) => a.topDistance - b.topDistance);
+        //       const closestHeadingElement = topDistances[0].element;
+        //       const closestHeading = headings.find((heading) => heading.id === closestHeadingElement.id);
 
-        if (!closestHeading) {
-          return;
-        }
+        //       if (!closestHeading) {
+        //         return;
+        //       }
 
-        const activeIndex = headings.findIndex((h) => h.id === closestHeading!.id);
+        //       const activeIndex = headings.findIndex((h) => h.id === closestHeading!.id);
 
-        // Update the active heading if it's different from the current active heading
-        if (closestHeading && closestHeading.id !== activeHeading!.id) {
-          if (activeIndex > 0 && headings[activeIndex].level === 3) {
-            // Find the index of the last level 2 (h2) heading before the active heading
-            for (let i = activeIndex - 1; i >= 0; i--) {
-              if (headings[i].level === 2) {
-                const lastH2 = headings[i];
-                lastH2 !== undefined && setActiveH2(lastH2.element);
-                break;
-              }
-            }
-          }
+        //       // Update the active heading if it's different from the current active heading
+        //       if (closestHeading && closestHeading.id !== activeHeading!.id) {
+        //         if (activeIndex > 0 && headings[activeIndex].level === 3) {
+        //           // Find the index of the last level 2 (h2) heading before the active heading
+        //           for (let i = activeIndex - 1; i >= 0; i--) {
+        //             if (headings[i].level === 2) {
+        //               const lastH2 = headings[i];
+        //               lastH2 !== undefined && setActiveH2(lastH2.element);
+        //               break;
+        //             }
+        //           }
+        //         }
 
-          if (activeIndex > 0 && headings[activeIndex].level === 2) {
-            setActiveH2(closestHeading.element);
-          }
+        //         if (activeIndex > 0 && headings[activeIndex].level === 2) {
+        //           setActiveH2(closestHeading.element);
+        //         }
 
-          setActiveHeading(closestHeading.element);
-        }
+        //         setActiveHeading(closestHeading.element);
+        //       }
 
-        if (activeHeading?.tagName.includes("2") && activeH2?.id !== activeHeading.id) {
-          setActiveH2(activeHeading);
-          setActiveHeading(activeHeading);
-        }
-
-        if (!activeHeading) {
-          setActiveHeading(headings[0].element);
-
-          if (headings[0].level === 2) {
-            setActiveH2(headings[0].element);
-          }
-        }
+        //       if (activeHeading?.tagName.includes("2") && activeH2?.id !== activeHeading.id) {
+        //         setActiveH2(activeHeading);
+        //         setActiveHeading(activeHeading);
+        //       }
       }
 
       window.addEventListener("scroll", handleScroll, {
@@ -183,7 +180,7 @@ export function Doc() {
 
       return () => window.removeEventListener("scroll", handleScroll);
     }
-  }, [headings, activeHeading, activeH2, location, mobile]);
+  }, [headings, location.pathname, mobile, activeH2, activeHeading]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && !mobile) {
@@ -266,7 +263,7 @@ export function Doc() {
 
   return (
     <Fragment>
-      <ClientOnly fallback={<div>Header</div>} children={() => <Header title={frontmatter.title} section={frontmatter.section} />} />
+      <ClientOnly fallback={<ClientHeader />} children={() => <Header title={frontmatter.title} section={frontmatter.section} />} />
       <SidebarLayout>
         <div className="max-w-3xl mx-auto pt-10 xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
           <div className="flex-auto mb-8 scroll-smooth">
@@ -331,9 +328,9 @@ export function Doc() {
           </div>
           <div className="fixed z-20 top-[3.8125rem] bottom-0 right-[max(0px,calc(50%-45rem))] w-[19.5rem] py-10 overflow-y-auto hidden xl:block">
             <nav aria-labelledby="on-this-page-title" className="px-8">
-              <h2 id="on-this-page-title" className="mb-4 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100">
+              {listItems.length > 0 ? <h2 id="on-this-page-title" className="mb-4 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100">
                 On this page
-              </h2>
+              </h2> : <h5></h5>}
               <ol className="text-sm leading-6 text-slate-700" id="toc-id" ref={tocRef}>
                 {
                   listItems.map((item, i) => {
