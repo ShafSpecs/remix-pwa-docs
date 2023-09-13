@@ -125,11 +125,74 @@
   {
     "name": "Utilities",
     "position": 4,
-    "children": []
+    "children": [
+      {
+        "title": "Background Sync",
+        "description": "Background Sync allows you to defer actions until the user has stable connectivity. This is useful for ensuring that whatever the user wants to send, is actually sent.",
+        "section": "Utilities",
+        "shortTitle": "Background Sync",
+        "position": 1
+      },
+      {
+        "title": "defer",
+        "description": "A utility or creating a streaming/deferred response.",
+        "section": "Utilities",
+        "shortTitle": "defer",
+        "position": 2
+      },
+      {
+        "title": "json",
+        "description": "A utility to create application/json responses",
+        "section": "Utilities",
+        "shortTitle": "json",
+        "position": 3
+      },
+      {
+        "title": "logger",
+        "description": "A custom, enhanced logger for Remix PWA. Enables beautiful logging in the browser console in only development environments.",
+        "section": "Utilities",
+        "shortTitle": "logger",
+        "position": 4
+      },
+      {
+        "title": "redirect",
+        "description": "A utility to assist with sending 30x responses. Useful for redirects in the browser.",
+        "section": "Utilities",
+        "shortTitle": "redirect",
+        "position": 5
+      },
+      {
+        "title": "RemixCache",
+        "description": "A wrapper for the browser's Cache API. Use this to cache data in the browser with more control and less-hassle.",
+        "section": "Utilities",
+        "shortTitle": "RemixCache",
+        "position": 6
+      }
+    ]
+  },
+  {
+    "name": "Other API",
+    "position": 5,
+    "children": [
+      {
+        "title": "@remix-pwa/dev (CLI)",
+        "description": "Remix PWA CLI comes with the @remix-pwa/dev package. It also ships with the compiler, as well as templates for creating new Remix PWA projects. Let's explore the CLI in this section.",
+        "section": "Other API",
+        "shortTitle": "@remix-pwa/dev CLI",
+        "position": 1
+      },
+      {
+        "title": "@remix-pwa/{runtime}",
+        "description": "@remix-pwa/{runtime}",
+        "section": "Other API",
+        "shortTitle": "@remix-pwa/{runtime}",
+        "position": 2
+      }
+    ]
   },
   {
     "name": "Guides",
-    "position": 5,
+    "position": 6,
     "children": []
   }
 ]
