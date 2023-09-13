@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactNode, useReducer } from "react";
+import { useEffect, type ReactNode, useReducer } from "react";
 import {
   Links,
   LiveReload,
@@ -177,19 +177,6 @@ export default function App() {
 
     return { prev: prevRoute, next: nextRoute };
   };
-
-  const [, setScrollTop] = useState(0);
-
-  const onScroll = (e: any): void => {
-    setScrollTop(e.target.documentElement.scrollTop);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
 
   useEffect(() => {
     const { prev, next } = getPreviousAndNextRoute();
