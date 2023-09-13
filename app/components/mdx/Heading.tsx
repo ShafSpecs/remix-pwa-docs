@@ -14,8 +14,8 @@ export default function Heading({
   nextElement,
   ...props
 }: any) {
-  let Component = `h${level}`
-
+  const Component = `h${level}` as any
+  
   return (
     <Component
       className={classNames('flex whitespace-pre-wrap not-prose', className,
@@ -23,11 +23,11 @@ export default function Heading({
       )}
       id={id}
       style={{ ...(hidden ? { marginBottom: 0 } : {}), ...style }}
-      data-docsearch-ignore={ignore ? '' : undefined}
+      // data-docsearch-ignore={ignore ? '' : undefined}
       {...props}
     >
       <a
-        className={className('group relative border-none', hidden ? 'sr-only' : 'lg:-ml-2 lg:pl-2')}
+        className={classNames('group relative border-none', hidden ? 'sr-only' : 'lg:-ml-2 lg:pl-2')}
         href={`#${id}`}
       >
         <div className="absolute items-center hidden -ml-8 border-0 opacity-0 group-hover:opacity-100 group-focus:opacity-100 lg:flex">

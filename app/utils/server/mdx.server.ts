@@ -4,6 +4,7 @@ import {
   importEmoji,
   importGfm,
   importHighlighter,
+  importToC,
   importRole,
   importCheckbox
 } from "../../exports/esm-modules";
@@ -20,6 +21,7 @@ export async function mdxToHtml(source: string) {
   const { default: highlight } = await importHighlighter();
   const { default: role } = await importRole();
   const { default: checkbox } = await importCheckbox();
+  const { default: toc } = await importToC();
 
   if (process.platform === "win32") {
     process.env.ESBUILD_BINARY_PATH = join(cwd(), "node_modules", "esbuild", "esbuild.exe");
@@ -41,7 +43,7 @@ export async function mdxToHtml(source: string) {
       },
       mdxOptions(options, frontmatter) {
         options.rehypePlugins = [...(options.rehypePlugins || []), slug, role];
-        options.remarkPlugins = [...(options.remarkPlugins || []), gfm, highlight, emoji, checkbox];
+        options.remarkPlugins = [...(options.remarkPlugins || []), gfm, highlight, emoji, checkbox, toc];
 
         return options;
       }

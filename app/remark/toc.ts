@@ -1,9 +1,21 @@
-// @ts-nocheck
-import { addExport } from "./utils.js";
 import slugify from "@sindresorhus/slugify";
 import { toString } from "mdast-util-to-string";
-import { parseExpressionAt } from "acorn";
+import { parseExpressionAt, parse } from "acorn";
 import { filter } from "unist-util-filter";
+import type { Node } from "acorn";
+
+function addExport(
+  tree: { children: { type: string; value: any; data: { estree: Node } }[] },
+  name: any,
+  value: string
+) {
+  value = `export const ${name} = ${JSON.stringify(value)}`;
+  tree.children.push({
+    type: "mdxjsEsm",
+    value,
+    data: { estree: parse(value, { ecmaVersion: "latest", sourceType: "module" }) }
+  });
+}
 
 export default () => {
   return (tree: any) => {
@@ -14,9 +26,9 @@ export default () => {
 
       if (node.type === "heading" && [2, 3, 4].includes(node.depth)) {
         let level = node.depth;
+        //@ts-ignore
         let title = toString(filter(node, (n) => n.type !== "mdxJsxTextElement" || n.name !== "small"));
         let slug = slugify(title);
-
         let allOtherSlugs = contents.flatMap((entry) => [entry.slug, ...entry.children.map(({ slug }) => slug)]);
         let slugIndex = 1;
         while (allOtherSlugs.indexOf(slug) > -1) {
@@ -34,19 +46,22 @@ export default () => {
         if (tree.children[nodeIndex + 1]) {
           let { children, position, value, ...element } = tree.children[nodeIndex + 1];
           if (element.type === "heading") {
+            //@ts-ignore
             props.nextElement = element;
           }
         }
 
         if (node.children[0].type === "mdxJsxTextElement" && node.children[0].name === "Heading") {
-          let override = node.children[0].attributes.find((attr) => attr.name === "toc")?.value;
+          let override = node.children[0].attributes.find((attr: any) => attr.name === "toc")?.value;
           if (override) {
             title = override;
             slug = slugify(title);
             props.id = slug;
-            node.children[0].attributes = node.children[0].attributes.filter((attr) => attr.name !== "toc");
+            node.children[0].attributes = node.children[0].attributes.filter((attr: any) => attr.name !== "toc");
           }
+
           for (let prop in props) {
+            //@ts-ignore
             let value = JSON.stringify(props[prop]);
             node.children[0].attributes.push({
               type: "mdxJsxAttribute",
@@ -68,11 +83,14 @@ export default () => {
               }
             });
           }
+
           tree.children[nodeIndex] = node.children[0];
         } else {
           node.name = "Heading";
           node.attributes = [];
+
           for (let prop in props) {
+            //@ts-ignore
             let value = JSON.stringify(props[prop]);
             node.attributes.push({
               type: "mdxJsxAttribute",
@@ -99,8 +117,10 @@ export default () => {
         if (level === 2) {
           contents.push({ title, slug, children: [] });
         } else if (level === 3) {
+          //@ts-ignore
           contents[contents.length - 1].children.push({ title, slug, children: [] });
         } else {
+          //@ts-ignore
           contents[contents.length - 1].children[contents[contents.length - 1].children.length - 1].children.push({
             title,
             slug
@@ -109,6 +129,7 @@ export default () => {
       }
     }
 
+    //@ts-ignore
     addExport(tree, "tableOfContents", contents);
   };
 };
