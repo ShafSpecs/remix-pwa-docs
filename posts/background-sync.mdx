@@ -198,10 +198,9 @@ In a real world scenario, you would want to do some extra error handling cause b
 Additionally, you would probably want to send a notification (or something of that effect) to the user that the message has been queued and would be sent when the user is back online.
 
 <Warn>
-  The `queueToServer` function is only available in the `workerAction` function. If you try to use it in the `action` function, it would throw an error.
+The `queueToServer` function is only available in the `workerAction` function. If you try to use it in the `action` function, it would throw an error.
 
 It is reserved for just the worker thread, meaning that you can't even use it in the client which runs in the main thread.
-
 </Warn>
 
 ---
@@ -368,6 +367,8 @@ export const workerAction = async ({ request, context }: WorkerActionArgs) => {
 
 Now, when the user is offline and they try to borrow a book, the request would be added to the queue and fired when the user is back online.
 Same for wishlisting and saving for offline reading. 
+
+**Note:** You can use the same tag in multiple places. It's not a 1:1 relationship (one tag per request/action). You can have multiple requests/actions with the same tag.
 
 <Details title={"Why multiple tags when they all end up performing the same action?"}>
 Good question, two things:
