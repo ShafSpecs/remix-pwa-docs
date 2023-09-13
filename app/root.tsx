@@ -56,7 +56,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       { meta, theme },
       {
         headers: {
-          "Cache-Control": "max-age=600, s-maxage=86400"
+          "Cache-Control": "max-age=0, s-maxage=86400"
         }
       }
     );
@@ -72,24 +72,20 @@ export const meta: MetaFunction = () => {
     charset: "utf-8",
     title: "Remix PWA Docs",
     viewport: "width=device-width,initial-scale=1",
-    keywords: "Remix,ShafSpecs,Remix PWA,Remix PWA Docs,Remix PWA Documentation,Remix PWA Documentation,remix-pwa,remix-pwa-docs,@remix-pwa",
-    "twitter:image": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
-    "og:image": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
+    keywords: "Remix,ShafSpecs,Remix PWA,Remix PWA Docs,Remix PWA Documentation,Remix PWA Documentation,remix-pwa,remix-pwa-docs,@remix-pwa,v3",
     "twitter:card": "summary_large_image",
     "twitter:creator": "@ShafSpecs",
     "twitter:title": "Remix PWA Docs",
     "og:title": "Remix PWA Docs",
     "og:type": "website",
     "og:url": "https://remix-pwa-docs.vercel.app",
-    "twitter:description": "Progressively enhance your Remix application with PWA features like never before.",
+    // "twitter:description": "",
     "og:locale": "en_US",
     "og:image:alt": "Remix PWA Documentation",
     "og:image:width": "1200",
     "og:image:height": "630",
     "og:image:type": "image/png",
-    "og:image:secure_url": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
-    "og:image:url": "https://ucarecdn.com/87064c0f-8145-4d65-a3bb-aa4f8bfc9d2a/",
-    "og:description": "Progressively enhance your Remix application with PWA features like never before.",
+    // "og:description": "",
   }
 };
 
@@ -110,7 +106,12 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
-        {/* Todo: New dev icons */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+        <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#2b5797" />
+        <meta name="msapplication-TileColor" content="#2b5797" />
+        <meta name="theme-color" content="#ffffff" />
         <Links />
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
