@@ -185,6 +185,10 @@ export function Doc() {
   useEffect(() => {
     if (typeof window !== "undefined" && !mobile) {
       const scrollIntoView = (e: MouseEvent, el: Element) => {
+        if (!el.parentNode?.nodeName.toUpperCase().includes('H')) {
+          return;
+        }
+
         e.preventDefault();
 
         const scrollTo = docRef.current.querySelector(`#${el.getAttribute('href')!.replace('#', '')}`);
@@ -208,6 +212,11 @@ export function Doc() {
 
       tocRef.current.querySelectorAll('a').forEach((el) => {
         el.addEventListener('click', (e) => {
+          if (!el.parentNode?.nodeName.toUpperCase().includes('H')) {
+            el.setAttribute('target', '_blank')
+            return;
+          }
+          
           e.preventDefault();
 
           const hrefAttr = el.getAttribute('href')!;

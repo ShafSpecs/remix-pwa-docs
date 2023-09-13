@@ -24,7 +24,12 @@ export const loader = async ({ params }: LoaderArgs) => {
   
   const code = await mdxToHtml(doc);
 
-  return typedjson({ ...code, slug }, 200);
+  return typedjson({ ...code, slug }, {
+    headers: {
+      "Cache-Control": "public, max-age=86400",
+    },
+    status: 200
+  });
 }; 
 
 export const meta: MetaFunction = ({ data }) => {

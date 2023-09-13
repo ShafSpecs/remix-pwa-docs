@@ -18,7 +18,7 @@ export function classNames(...classes: string[]) {
  * @param {import('clsx').ClassValue} props.className
  */
 function TabAdornment({ className }: { className?: any }) {
-  return <div className={classNames('pointer-events-none absolute inset-0', className)} />
+  return <div className={classNames('pointer-events-none absolute inset-0 outline-none ring-0', className)} />
 }
 
 /**
@@ -51,7 +51,7 @@ function TabItem({ children, selectedIndex, myIndex, marker }: { children: React
   return (
     <Tab
       className={classNames(
-        'flex items-center relative z-10 overflow-hidden px-4 py-1 [&:not(:focus-visible)]:focus:outline-none',
+        'flex items-center relative z-10 overflow-hidden px-4 py-1 outline-none [&:not(:focus-visible)]:focus:outline-none',
         isSelected ? 'text-sky-300' : 'text-slate-400'
       )}
     >
