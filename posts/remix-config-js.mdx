@@ -1,0 +1,84 @@
+---
+title: Configuring with remix.config.js
+description: Remix configuration file just got a new addition! Read about the hijack and how to upgrade your config file.
+shortTitle: remix.config.js
+section: Utilities
+position: 6
+---
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+
+In case you've missed it, Remix PWA approach to development has been not to be unique. We try to follow the common standards and practices as much as possible. 
+
+We also try to build in line with the Remix team's vision. We want to ensure that Remix PWA is not just forward compatible but backwards compatible as well.
+The result of this would be ease of use and setting the learning curve as low as possible. And who knows, maybe one day Remix would natively add support 
+for somethings we do natively.
+
+Enough talk, in case you want a rundown of the remix config file, you can read about it [here](https://remix.run/docs/en/main/file-conventions/remix-config).
+
+To add type support to your remix config, remove the JSDoc comment at the top of the file and add the following instead:
+
+```js {{ filename:'remix.config.js' }}
+/** @type {import('@remix-pwa/dev').WorkerConfig} */
+module.exports = {
+  /*...*/
+}
+```
+
+Congrats! You have enabled type support for your remix config file. Now you can use your IDE's intellisense to help you out with filling out the config file
+including Remix PWA local configurations. Read on to learn more about the Remix PWA configurations.
+
+---
+
+## Remix PWA Configuration
+
+### `entryWorkerFile`
+
+The path to your entry worker file. Defaults to: `<appDir>/entry.worker.ts` (notice the `ts` extension and full path!).
+
+```js {{ filename:'remix.config.js' }}
+// default - `appDir` is the value of `appDirectory` in your remix config file
+exports.entryWorkerFile = '<appDir>/entry.worker.ts';
+
+// custom
+exports.entryWorkerFile = './app/worker.ts';
+```
+
+### `worker`
+
+The path to your worker runtime. Defaults to: `@remix-pwa/runtime`.
+
+```js {{ filename:'remix.config.js' }}
+// default
+exports.worker = '@remix-pwa/runtime';
+
+// custom
+exports.worker = 'my-custom-worker-runtime';
+// alternatively could be a single file
+exports.worker = './app/internal-worker.ts';
+```
+
+### `workerName`
+
+Name of the built, bundled worker file. Defaults to: `entry.worker` (notice that there's no extenstion!). Would end up being a `.js` file.
+
+```js {{ filename:'remix.config.js' }}
+// default
+exports.workerName = 'entry.worker';
+
+// custom
+exports.workerName = 'my-custom-worker';
+```
+
+### `workerMinify`
+
+Wether to minify the worker file or not. Defaults to: `false`.
+
+### `workerBuildDirectory`
+
+The directory to build the worker file in. Defaults to: `./public`.
+
+### `workerSourcemap`
+
+Wether to generate sourcemaps for the worker file or not. Defaults to: `false`.

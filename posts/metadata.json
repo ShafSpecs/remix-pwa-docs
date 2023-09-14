@@ -162,11 +162,18 @@
         "position": 5
       },
       {
+        "title": "Configuring with remix.config.js",
+        "description": "Remix configuration file just got a new addition! Read about the hijack and how to upgrade your config file.",
+        "section": "Utilities",
+        "shortTitle": "remix.config.js",
+        "position": 6
+      },
+      {
         "title": "RemixCache",
         "description": "A wrapper for the browser's Cache API. Use this to cache data in the browser with more control and less-hassle.",
         "section": "Utilities",
         "shortTitle": "RemixCache",
-        "position": 6
+        "position": 7
       }
     ]
   },
