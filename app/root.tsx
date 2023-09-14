@@ -56,7 +56,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       { meta, theme },
       {
         headers: {
-          "Cache-Control": "public, max-age=604800",
+          "Cache-Control": "public, max-age=84600",
         }
       }
     );

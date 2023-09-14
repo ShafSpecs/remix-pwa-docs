@@ -26,7 +26,7 @@ export const loader = async ({ params }: LoaderArgs) => {
 
   return typedjson({ ...code, slug }, {
     headers: {
-      "Cache-Control": "public, max-age=86400",
+      "Cache-Control": "public, max-age=18000",
     },
     status: 200
   });

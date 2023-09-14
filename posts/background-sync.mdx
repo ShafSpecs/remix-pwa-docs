@@ -20,7 +20,7 @@ them already support it. You can check the support status [here](https://caniuse
 By default, Remix actions are triggered when a non-GET request is made, and the response is sent back to the user. If for some unfortunate reason,
 the user loses connection, the action will not be performed and that's it, end of story. This is where Background Sync comes in handy.
 It allows you to defer actions until the user has stable connectivity. This is useful for ensuring that whatever the user wants to send, is actually sent.
-Remix PWA ships this feature with the `@remix-pwa/sw` package, now you can ensure an action is performed, bad connection or not.
+Remix PWA ships this feature with the `@remix-pwa/sync` package, now you can ensure an action is performed, bad connection or not.
 
 Thanks a lot to Workbox for [their approach](https://developer.chrome.com/docs/workbox/modules/workbox-background-sync/), it gave us a lot of inspiration as well as an idea
 of how people would use this API. As you might have noticed, we decided not to go unique with our approaches, sticking to the standards that people are used to as much as possible.
@@ -65,10 +65,10 @@ problem (there's actually a problem but let's not get into that).
 </Details>
 
 In Remix PWA, there's a shorthand to all of this. You can register a sync event by simply calling the `registerSync` (or `registerQueue`, whichever you prefer)
-function exported from `@remix-pwa/sw`.
+function exported from `@remix-pwa/sync`.
 
 ```js {{ filename:'entry.worker.ts' }}
-import { registerSync } from "@remix-pwa/sw";
+import { registerSync } from "@remix-pwa/sync";
 
 // registers a sync event with the tag 'myFirstSync'
 registerSync("myFirstSync");
@@ -78,7 +78,7 @@ If you want to register multiple sync events, you can do so by calling the `regi
 Or use the shorthand `registerAllSyncs` (or `registerAllQueues`) function, which takes an array of tags as an argument.
 
 ```js {{ filename:'entry.worker.ts' }}
-import { registerAllSyncs } from "@remix-pwa/sw";
+import { registerAllSyncs } from "@remix-pwa/sync";
 
 // registers multiple sync events with the tags 'myFirstSync', 'mySecondSync', 'myThirdSync'
 registerAllSyncs(["myFirstSync", "mySecondSync", "myThirdSync"]);
@@ -125,12 +125,12 @@ When the user has stable connection, the service worker fires a `sync` event wit
 
 The question now is, how do you add requests to the queue? Or in other words, how does Remix PWA know what requests to fire when the user has stable connection?
 
-To add the requests to the queue, you would utilise the `queueToServer` function exported from `@remix-pwa/sw`. This function takes two arguments, the tag of the sync event, and the request you want to fire.
+To add the requests to the queue, you would utilise the `queueToServer` function exported from `@remix-pwa/sync`. This function takes two arguments, the tag of the sync event, and the request you want to fire.
 
 <Snippet>
 
 ```js {{ filename:'entry.worker.ts' }}
-import { registerSync } from "@remix-pwa/sw";
+import { registerSync } from "@remix-pwa/sync";
 
 // ...
 
@@ -138,7 +138,7 @@ registerSync("myFirstSync");
 ```
 
 ```tsx {{ filename:'app/routes/send-message.ts' }}
-import { queueToServer } from "@remix-pwa/sw";
+import { queueToServer } from "@remix-pwa/sync";
 import { sendMessageToUser } from "../utils/send-message-to-user.server.ts";
 import { json } from "@remix-run/node"; // or cloudflare/deno
 
@@ -222,7 +222,7 @@ Firstly, we can register three sync events, one for each action.
 <Snippet>
 
 ```ts {{ filename:'entry.worker.ts' }}
-import { registerAllSyncs } from "@remix-pwa/sw";
+import { registerAllSyncs } from "@remix-pwa/sync";
 
 // registers multiple sync events with the tags 'borrowBook', 'saveBook', 'addToWishlist'
 registerAllSyncs(["borrowBook", "saveBook", "addToWishlist"]);
@@ -230,7 +230,7 @@ registerAllSyncs(["borrowBook", "saveBook", "addToWishlist"]);
 
 ```ts {{ filename:'app/routes/borrow-book.ts' }}
 // Resource route to borrow book and add it to the user's library
-import { queueToServer } from "@remix-pwa/sw";
+import { queueToServer } from "@remix-pwa/sync";
 import { borrowBook } from "../utils/borrow-book.server.ts";
 import { json } from "@remix-run/node"; // or cloudflare/deno
 
@@ -279,7 +279,7 @@ export const workerAction = async ({ request, context }: WorkerActionArgs) => {
 
 ```ts {{ filename:'app/routes/save-book.ts' }}
 // Resource route to save book for offline reading
-import { queueToServer } from "@remix-pwa/sw";
+import { queueToServer } from "@remix-pwa/sync";
 import { saveBook } from "../utils/save-book.server.ts";
 import { json } from "@remix-run/node"; // or cloudflare/deno
 
@@ -322,7 +322,7 @@ export const workerAction = async ({ request, context }: WorkerActionArgs) => {
 
 ```ts {{ filename:'app/routes/add-to-wishlist.ts' }}
 // Resource route to add book to wishlist
-import { queueToServer } from "@remix-pwa/sw";
+import { queueToServer } from "@remix-pwa/sync";
 import { addToWishlist } from "../utils/add-to-wishlist.server.ts";
 import { json } from "@remix-run/node"; // or cloudflare/deno
 
