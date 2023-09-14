@@ -51,7 +51,7 @@ function TabItem({ children, selectedIndex, myIndex, marker }: { children: React
   return (
     <Tab
       className={classNames(
-        'flex items-center relative z-10 overflow-hidden px-4 py-1 outline-none [&:not(:focus-visible)]:focus:outline-none',
+        'flex items-center relative z-10 overflow-hidden px-4 whitespace-nowrap  py-1 outline-none [&:not(:focus-visible)]:focus:outline-none',
         isSelected ? 'text-sky-300' : 'text-slate-400'
       )}
     >
@@ -115,10 +115,10 @@ export default function SnippetGroup({ children, style = 'plain', actions, ...pr
   let Wrapper = snippetGroupWrappers[style]
 
   return (
-    <Wrapper {...props}>
+    <Wrapper hidden={true} {...props}>
       <Tab.Group as="div" onChange={setSelectedIndex}>
-        <div className="relative flex">
-          <Tab.List className="flex pt-2 overflow-hidden text-xs leading-6 text-slate-400 rounded-tl-xl">
+        <div className="relative flex overflow-x-auto overflow-y-hidden">
+          <Tab.List className="flex pt-2 text-xs leading-6 text-slate-400 rounded-tl-xl">
             {children?.map((child: any, tabIndex: number) => (
               <TabItem key={child.props.filename} myIndex={tabIndex} selectedIndex={selectedIndex}>
                 {child.props.filename}
@@ -134,7 +134,7 @@ export default function SnippetGroup({ children, style = 'plain', actions, ...pr
             />
           </div>
           {/* {actions ? ( */}
-            <div className="absolute flex h-8 top-2 right-4">
+            <div className="absolute z-20 flex h-8 top-2 right-4">
               <CopyButton code={children[selectedIndex].props.code?.replace(/<[^>]+>/g, '') || ''} />
               {/* {actions({ selectedIndex })} */}
             </div>

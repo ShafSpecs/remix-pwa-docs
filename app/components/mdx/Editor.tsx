@@ -20,7 +20,7 @@ export function CopyButton({ code }: { code: string }) {
   }, [state, i])
 
   return (
-    <div className="relative flex -mr-2">
+    <div className="relative hidden -mr-2 lg:flex">
       <button
         type="button"
         className={classNames(
@@ -121,7 +121,7 @@ const frameColors = {
   purple: 'from-violet-500 to-purple-500',
 }
 
-export function Frame({ className, color = 'sky', children }: { className?: string; color?: string; children: any }) {
+export function Frame({ className, color = 'sky', children, hidden = true }: { className?: string; color?: string; children: any, hidden?: boolean }) {
   return (
     <div
       className={classNames(
@@ -131,7 +131,7 @@ export function Frame({ className, color = 'sky', children }: { className?: stri
         'relative -mx-4 pt-6 pl-4 bg-gradient-to-b sm:mx-0 sm:rounded-2xl sm:pt-12 sm:pl-12'
       )}
     >
-      <div className="overflow-hidden rounded-tl-xl sm:rounded-br-xl">{children}</div>
+      <div className={`overflow-y-hidden ${hidden ? 'overflow-x-hidden' : 'overflow-x-auto'} rounded-tl-xl sm:rounded-br-xl`}>{children}</div>
     </div>
   )
 }
