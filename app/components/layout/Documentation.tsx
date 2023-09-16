@@ -234,7 +234,7 @@ export function Doc() {
       };
 
       const scrollIntoviewToC = (e: MouseEvent, el: HTMLAnchorElement) => {
-        if (!el.parentNode?.nodeName.toUpperCase().includes('H')) {
+        if (!el.parentNode?.nodeName.toUpperCase().includes('H') && !el.classList.contains('toc-anchor')) {
           el.setAttribute('target', '_blank');
           el.click();
           return;
@@ -275,26 +275,7 @@ export function Doc() {
         });
 
         document.getElementById('toc-id')!.querySelectorAll('a').forEach((el) => {
-          el.removeEventListener('click', (e) => {
-            e.preventDefault();
-
-            const hrefAttr = el.getAttribute('href')!;
-            const substr = hrefAttr.search('#');
-            const href = hrefAttr.substring(substr + 1);
-
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            const scrollTo = docRef.current.querySelector(`#${href}`);
-
-            if (scrollTo) {
-              const scrollToRect = scrollTo.getBoundingClientRect();
-              const offsetPos = scrollToRect.top + window.scrollY - 106;
-
-              window.scrollTo({
-                top: offsetPos,
-                behavior: 'smooth'
-              });
-            }
-          })
+          el.removeEventListener('click', (e) => scrollIntoviewToC(e, el))
         });
       };
     }
