@@ -188,7 +188,7 @@ export const workerAction = async ({ request, context }: WorkerActionArgs) => {
 
 </Snippet>
 
-I hope you didn't get surprised a seemingly working code snippet ✨. Let's look at it.
+I hope you didn't get surprised I wrote a seemingly working code snippet ✨. Let's look at it.
 
 This is a pseudocode for sending message to a user. As you might have guessed, this is a resource route and whenever a non-`GET` request
 is made to this route, the `action` is triggered. But the `workerAction` intercepts it and then sends the request to the server like normal,
