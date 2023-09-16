@@ -57,7 +57,7 @@
         "description": "An overview of all the new packages that ships with Remix PWA v3",
         "section": "Getting Started",
         "shortTitle": "Packages",
-        "position": 8
+        "position": 9
       }
     ]
   },
@@ -203,24 +203,31 @@
     "children": [
       {
         "title": "Browser Support",
-        "description": "Not all browsers are created equal. A quick rundown of what you should be on the llokout for when developing.",
+        "description": "Not all browsers are created equal. A quick rundown of what you should be on the lookout for when developing.",
         "section": "Guides",
         "shortTitle": "Browser Support",
         "position": 1
+      },
+      {
+        "title": "Gotchas",
+        "description": "A list of what-not-to-do's and gotchas 😜 in Remix PWA. Safety first!",
+        "section": "Guides",
+        "shortTitle": "Gotchas",
+        "position": 2
       },
       {
         "title": "TypeScript Support",
         "description": "Typescript and Remix PWA",
         "section": "Guides",
         "shortTitle": "TypeScript",
-        "position": 2
+        "position": 3
       },
       {
         "title": "Versioning in Remix PWA",
-        "description": "How versions work in Remix PWA",
+        "description": "A short exceprt on how versioning work in Remix PWA",
         "section": "Guides",
         "shortTitle": "Versioning",
-        "position": 3
+        "position": 4
       }
     ]
   }

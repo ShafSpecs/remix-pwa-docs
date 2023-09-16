@@ -1,0 +1,89 @@
+---
+title: Gotchas
+description: A list of what-not-to-do's and gotchas 😜 in Remix PWA. Safety first!
+shortTitle: Gotchas
+section: Guides
+position: 2
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Details from './details.tsx'
+import Info from './info.tsx'
+
+Like all things in life, there are some nopesies and ah-ahs that you should be very aware of when using Remix PWA. 
+
+Introducing a compiler, a runtime, route `worker` functions and many more could potentially lead some to take some hazardous
+routes/shortcuts/decisions that break the app unintentionally. And as I like to say: 
+
+> *If you're going to break it, break it good!*
+
+Sorry, not that quote. I meant:
+
+> A broken service worker is worse than no service worker at all.
+
+Your Service Worker acts as an intermediary, a server of sorts to your client. Break that and your client becomes a sad, unusable panda.
+Because of that, we've started compiling a list of things that you should avoid doing in your Remix PWA app.
+
+---
+
+## Gotchas
+
+### Don't handle `fetch` events
+
+Let me re-phrase that: never, ever listen to the `fetch` event in your service worker. That's the job of [runtimes](/docs/technical-explanantion#runtimes)
+in Remix PWA. 
+
+<Details title={"What happens if I do? It's my code after all!"}>
+You are quite right! And the broken service worker will be your fault.
+
+On a more serious note, the `fetch` event is intercepted by runtimes in Remix PWA and they do more than just handling fetch events. They
+are also responsible for `workerAction` and `workerLoader` functions to work as they should. Tamper with it, and you would break the app.
+</Details>
+
+You can read more about runtimes [here](/docs/technical-explanantion#runtimes) to understand why this is a no-no. In case you feel adventurous,
+feel free to create your own runtime and handle `fetch` events there. A guide on that is coming soon enough 🥱.
+
+### Remix PWA is all ESM
+
+All packages in Remix PWA are ESM. From `@remix-pwa/dev` to `sw`, they are all ES Modules. That means on installing them, don't forget to add
+them to your `serverDependenciesToBundle` 
+
+<Info>
+This should not be an issue anymore in Remix v2
+</Info>
+
+### `workerLoader` break on document requests
+
+No, they don't break. But they don't work either.
+
+During inital load (SSR moment), a `fetch` never occurs (as opposed to client-side navigation). The HTML document is served directly from
+the server with the data already in it. This means that a fetch never happens hence the `workerLoader` function is never called.
+
+If you need to do something on initial load, you can use the Service Worker `message` event instead. That one gets notified of all requests,
+client or not (via `useSWEffect`).
+
+### Caching in `workerAction`
+
+Caching in workerAction is tricky. You can do it, but you need to be very careful.
+
+They aren't tricky actually, but remember one golden rule about using the `Cache API`:
+
+> **You can not cache non-`GET` requests**
+
+Wether in your Service Worker, or routes. This would throw an error if you try it. Instead, if you want to save something to the cache and it is non-`GET`,
+utilise the next best thing: `indexedDB`. It is a store that is available in the browser and can be used to store anything, plus it feels like
+a mini-database 😎.
+
+In case, `indexedDB` seems a bit technical to use, there are a few libraries that can help with that. A favourite of mine is [`idb`](https://www.npmjs.com/package/idb) (which `@remix-pwa/sync` uses under the hood),
+there's also [`Dexie`](https://dexie.org/) which is another viable option. Dexie comes with cloud support too, so you can sync your data to the cloud if you want 🔥.
+
+<Info>
+If you want to go down the route of using `indexedDB`, I would recommend setting up a store (of sorts) in your Service Worker file with schema defined,
+and using `getLoadContext`, expose it to the rest of your app. That way, you can use it in your routes and in your Service Worker with typings and consistency.
+</Info>
+
+<Details title={"Why didn't you mention localStorage or sessionStorage?"}>
+Because they are not available in the Service Worker. They are only available in the client (main thread). So you can't use them in the worker thread.
+</Details>
