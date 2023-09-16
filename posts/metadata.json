@@ -200,6 +200,28 @@
   {
     "name": "Guides",
     "position": 6,
-    "children": []
+    "children": [
+      {
+        "title": "Browser Support",
+        "description": "Not all browsers are created equal. A quick rundown of what you should be on the llokout for when developing.",
+        "section": "Guides",
+        "shortTitle": "Browser Support",
+        "position": 1
+      },
+      {
+        "title": "TypeScript Support",
+        "description": "Typescript and Remix PWA",
+        "section": "Guides",
+        "shortTitle": "TypeScript",
+        "position": 2
+      },
+      {
+        "title": "Versioning in Remix PWA",
+        "description": "How versions work in Remix PWA",
+        "section": "Guides",
+        "shortTitle": "Versioning",
+        "position": 3
+      }
+    ]
   }
 ]
