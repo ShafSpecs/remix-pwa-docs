@@ -31,7 +31,7 @@ Everything in Remix PWA starts with a compiler: `remix-pwa build`. Using [esbuil
 - Exposes the worker thread to your Remix routes. This is done by emptying out all routes save for the `workerLoader` and `workerAction` functions, 
 and then building a map out of that. This map is then used by the worker thread to know which route to load for a given request as well as replicate Remix's parent-child relationships
 that loaders & actions have.
-- Builds all your Remix routes (based on a meanifest graph), extracts all `workerLoader` and `workerAction` functions, then bundles them into the built worker file.
+- Builds all your Remix routes (based on a manifest graph), extracts all `workerLoader` and `workerAction` functions, then bundles them into the built worker file.
 - Creates a worker build. By default, this is in `public/entry.worker.js` (can be changed from your Remix configuration file).
 - Creates a worker routes and asset manifest. This is a global map available to the worker thread that allows it to know which route to load for a given request
 as well as generate a dependency graph and resource map for the worker to use.
@@ -44,7 +44,8 @@ The CLI is a simple executable that is used to run the compiler, as well as a fe
 - `remix-pwa build`: Runs the compiler in `build` mode.
 - `remix-pwa dev`: Runs the compiler in `dev` mode. This is a special mode that is used to run the compiler in watch mode,
 as well as reloads your application (via `@remix-pwa/sw` `LiveReload` component)
-- `remix-pwa packages`: Installs all required packages for Remix PWA to work. This is a special command that is used to install all required packages for Remix PWA to work.
+
+Check out the full guide [here](/docs/remix-pwa-dev-cli)
 
 ### Service Worker Framework
 
