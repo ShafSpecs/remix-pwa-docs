@@ -17,7 +17,7 @@ with support for Remix PWA. It performs the same function as the original compon
 when the browser detects a new version of the service worker (e.g when a change is made to a route with the worker thread present in it).
 
 ```tsx {{ filename:'root.tsx' }}
-import { LiveReload } from "@remix-run/react";
+import { LiveReload } from "@remix-pwa/sw";
 
 export default function Root() {
   return (

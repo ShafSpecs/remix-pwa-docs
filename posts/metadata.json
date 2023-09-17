@@ -88,7 +88,7 @@
       },
       {
         "title": "workerAction",
-        "description": "Worker-only handlers for non-GET requests",
+        "description": "Worker-only handlers for non-GET requests. Intercept and handle requests meant for the action easily in the worker thread.",
         "section": "Routes & Worker API",
         "shortTitle": "workerAction",
         "position": 4
@@ -216,18 +216,25 @@
         "position": 2
       },
       {
+        "title": "Precaching",
+        "description": "Caching before you need it. Explore precaching and learn how to cache before your users even know they need it.",
+        "section": "Guides",
+        "shortTitle": "Precaching",
+        "position": 3
+      },
+      {
         "title": "TypeScript Support",
         "description": "Typescript and Remix PWA",
         "section": "Guides",
         "shortTitle": "TypeScript",
-        "position": 3
+        "position": 4
       },
       {
         "title": "Versioning in Remix PWA",
         "description": "A short exceprt on how versioning work in Remix PWA",
         "section": "Guides",
         "shortTitle": "Versioning",
-        "position": 4
+        "position": 5
       }
     ]
   }

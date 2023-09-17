@@ -1,6 +1,6 @@
 ---
 title: workerAction
-description: Worker-only handlers for non-GET requests
+description: Worker-only handlers for non-GET requests. Intercept and handle requests meant for the action easily in the worker thread.
 shortTitle: workerAction
 section: "Routes & Worker API"
 position: 4
@@ -50,7 +50,12 @@ export const workerAction = ({ context, request }) => {
 
 You can explore the arguments passed in detail in the [`defaultFetchHandler`](/docs/default-fetch-handler#api) page.
 
-<Warn>Never utilise `workerAction` in a route without an `action` as it could lead to unpredictable behaviour.</Warn> 
+<Warn>
+Avoid utilising `workerAction` in a route without an `action` as it <u>could</u> lead to unpredictable behaviour.
+
+This would be a problem if you forward requests to the server in your `workerAction` as it. But you can fetch external resources just fine in here,
+just note that this is the client you are running on. Don't expect to be able to access server-side resources or make the mistake of exposing secrets in here.
+</Warn> 
 
 ```tsx
 export const workerAction = ({ context, request }) => {
@@ -64,3 +69,50 @@ The `workerAction` differ from `action` based on where they run and what they ca
 while the `action` runs on the server and can only do things that the server can do (can't run client-side content, for example).
 
 Asides from that, they are pretty much the same. They both have access to the `context` (which are two different objects), `params` and `request` objects.
+
+## The Deep Dive 🤿
+
+### `WorkerActionArgs`
+
+The `workerAction` function is passed an object with the following properties:
+
+```tsx
+interface WorkerActionArgs {
+  context: WorkerContext
+  request: Request
+  params: string
+}
+```
+
+- `context` - The worker `context` object created by the [`getLoadContext`](/docs/get-load-context) function. It defaults to a simple object containing
+the `FetchEvent` object and a `fetchFromServer` function to forward requests to the server. You can add your own properties to this object by passing them to the `getLoadContext` function.
+- `request` - The request object of the request being handled. Note, like Remix, the `request` object is stripped of it's `_data` property. If you want the full request (including `_data`), you can access it via the `context` object.
+- `params` - The params of the route being handled. Exactly the same as the `params` passed to the `action` function.
+
+### How does it work?
+
+I've read the [technical explanation](/docs/technical-explanantion) and I still don't get how this works. It is very interesting yet difficult to grasp 🤯.
+
+No problem (or as we say here, [no wahala](https://www.urbandictionary.com/define.php?term=no+wahala) 😜), let me break it into small steps we can follow along:
+
+- First of all, you run `remix-pwa dev`. This starts up the compiler and starts a chain of events.
+- First, configs are loaded in from your `remix.config.js` file. The compiler then starts to compile your routes.
+- It goes through your entire application doing some magic stuffs ✨.
+- Part of that magic is emptying your entire routes of the component, loader, actions and whatever else you have in there. Except the `workerAction` and `workerLoader`.
+- It then builds a manifest of it's own using that information (Btw, this manifest is available in your service worker via `self.__workerManifest`).
+- It then builds all necessary information from your routes with your service worker into one massive service worker in the `public` folder.
+- When a fetch event happens, the service worker runtime intercepts it and then handles it. Using the manifest data as well as a few other information available to it,
+it checks wether that route has a `workerAction` (in the case of a non-`GET` request).
+- If it does have, it then leaves it in the hand of the `workerAction` to handle it. If it doesn't have, it then forwards the request to
+the `defaultFetchHandler` exported from your service worker, if it is not available, it just runs `fetch(request)`.
+
+That's it! That's how it works. I hope that was easy to follow along. If you have any questions, feel free to ask in the [Discord](https://rmx.as/discord) or [Github](https://github.com/remix-pwa/monorepo).
+
+## Tips
+
+### Keep things simple
+
+This is a constant advice throughout your usage of Remix PWA. The power is in your hands to do whatever you want, but you should always keep things simple.
+
+As you might have realised, you can transform `workerAction` into a server of sorts. You can also choose to manipulate requests and responses as much as you like
+with no constraints. But always try to keep it simple, when it's time to go complex (and you would know), then do so proudly. Asides from that, keep it simple :+1:.

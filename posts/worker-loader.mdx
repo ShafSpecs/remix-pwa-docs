@@ -22,7 +22,7 @@ export const loader = async () => {
 };
 
 export const workerLoader = async (request) => {
-  return json({ message: "worker loader"});
+  return client({ message: "worker loader"});
 };
 
 export default function Index() {
@@ -110,7 +110,7 @@ in the sense that whenever it is defined, it must return something.
 You can use Remix PWA's `json` helper to return JSON responses:
 
 ```ts
-import { json } from "@remix-run/pwa";
+import { json } from "@remix-pwa/pwa";
 
 // ...
 
@@ -118,5 +118,28 @@ export const workerLoader = async ({ request }) => {
   return json({ message: "worker loader found"});
 };
 ```
+
+## Throwing Errors from `workerLoader`
+
+You can throw errors from your `workerLoader` function. Remember, the client now views `workerLoader` as the new `loader` (server), so you can throw
+errors from it to help with redirecting or triggering `ErrorBoundary`:
+
+```ts {{ filename: 'app/routes/$invoiceId' }}
+import { redirect } from "@remix-pwa/sw";
+
+export const workerLoader = async ({ request, params }) => {
+  const invoiceId = params.invoiceId;
+
+  if (!invoiceId) {
+    throw redirect("/invoices");
+  }
+
+  // ...
+
+  return null // never forget to return something
+};
+```
+
+Curious about how `workerLoader` work? Check out the [`workerAction`](/docs/worker-action#how-does-it-work) page for the deep dive.
 
 Read up Remix [loader](https://remix.run/docs/en/main/route/loader#returning-response-instances) docs for additional info.
