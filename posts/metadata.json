@@ -19,7 +19,7 @@
       },
       {
         "title": "Contribute",
-        "description": "Learn how you can contribute to the Remix PWA Ecosystem.",
+        "description": "Learn how you can contribute to the Remix PWA Ecosystem. Thanks in advance for your help!",
         "section": "Getting Started",
         "shortTitle": "Contribute",
         "position": 3
@@ -47,14 +47,14 @@
       },
       {
         "title": "Technical Explanantion",
-        "description": "An technical explanantion of Remix PWA v3.0 internals",
+        "description": "An technical explanantion of Remix PWA v3.0 internals. This is for you if you love to know how things work under the hood.",
         "section": "Getting Started",
         "shortTitle": "Technical Explanantion",
         "position": 7
       },
       {
         "title": "Packages",
-        "description": "An overview of all the new packages that ships with Remix PWA v3",
+        "description": "An overview of all the new packages that ships with Remix PWA v3.0",
         "section": "Getting Started",
         "shortTitle": "Packages",
         "position": 9
@@ -67,21 +67,21 @@
     "children": [
       {
         "title": "defaultFetchHandler",
-        "description": "Default handler for fetch requests in the worker",
+        "description": "Default handler for fetching requests in the worker. Fallback for all request not handled by route worker APIs.",
         "section": "Routes & Worker API",
         "shortTitle": "defaultFetchHandler",
         "position": 1
       },
       {
         "title": "errorHandler",
-        "description": "Error Handling in Remix PWA",
+        "description": "Error Handling in Remix PWA. Catch, handle and diagnose errors that occur in your service worker.",
         "section": "Routes & Worker API",
         "shortTitle": "errorHandler",
         "position": 2
       },
       {
         "title": "getLoadContext",
-        "description": "Global context object for the worker thread.",
+        "description": "Global context object for the worker thread. Share data globally between your workers in your routes and your service worker.",
         "section": "Routes & Worker API",
         "shortTitle": "getLoadContext",
         "position": 3
@@ -95,7 +95,7 @@
       },
       {
         "title": "workerLoader",
-        "description": "workerLoader",
+        "description": "Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes.",
         "section": "Routes & Worker API",
         "shortTitle": "workerLoader",
         "position": 5
@@ -108,7 +108,7 @@
     "children": [
       {
         "title": "LiveReload",
-        "description": "Remix PWA LiveReload Component",
+        "description": "Remix PWA LiveReload Component. Provide HMR and reloading support to the worker thread in Remix PWA.",
         "section": "Hooks & Components",
         "shortTitle": "LiveReload",
         "position": 1
@@ -190,7 +190,7 @@
       },
       {
         "title": "@remix-pwa/{runtime}",
-        "description": "@remix-pwa/{runtime}",
+        "description": "Runtimes are the underlying Service Worker logic that Remix PWA uses to handle fetching, routing, caching, and more. This page contains all the official runtimes and community runtimes.",
         "section": "Other API",
         "shortTitle": "@remix-pwa/{runtime}",
         "position": 2
@@ -224,7 +224,7 @@
       },
       {
         "title": "TypeScript Support",
-        "description": "Typescript and Remix PWA",
+        "description": "Typescript and Remix PWA. A match made in heaven. Check out our thoughts on TypeScript and our support for it in Remix PWA.",
         "section": "Guides",
         "shortTitle": "TypeScript",
         "position": 4
