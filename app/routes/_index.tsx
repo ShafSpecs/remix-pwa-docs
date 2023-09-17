@@ -1,10 +1,13 @@
-import { redirect } from "@remix-run/node"
-
-export const loader = () => {
-  return redirect('/docs/installation');
-}
+import { useNavigate } from "@remix-run/react";
+import { useEffect } from "react";
 
 export default function Index() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/docs/installation");  
+  }, [navigate]);
+
   return (
     <div>
     </div>

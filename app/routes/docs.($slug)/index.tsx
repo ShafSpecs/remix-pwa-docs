@@ -33,9 +33,29 @@ export const loader = async ({ params }: LoaderArgs) => {
 }; 
 
 export const meta: MetaFunction = ({ data }) => {
+  const { title, description }: { title: string, description: string } = data.frontmatter;
+
+  const url = new URL("https://remix-pwa.run/og-image");
+  url.searchParams.set("title", title);
+  url.searchParams.set("description", description);
+
   return {
-    title: `${data.slug ? data.slug[0].toUpperCase() + data.slug.substr(1) + " | " : ""}Remix Docs`,
-    description: `${data.code && data.frontmatter.description}`,
+    title: data.code ? `${title} - Remix PWA` : "Remix PWA",
+    description: `${data.code && description}`,
+    "og:title": data.code ? `${title} - Remix PWA` : "Remix PWA",
+    "og:description": `${data.code && description}`,
+    "og:image": url.href,
+    "og:image:url": url.href,
+    "og:image:secure_url": url.href,
+    "og:image:alt": title,
+    "og:image:type": "image/png",
+    "og:image:width": "1200",
+    "og:image:height": "630",
+    "twitter:title": data.code ? `${title} - Remix PWA` : "Remix PWA",
+    "twitter:description": `${data.code && description}`,
+    "twitter:image": url.href,
+    "twitter:image:alt": title,
+    "twitter:card": "summary_large_image",
   }
 };
 

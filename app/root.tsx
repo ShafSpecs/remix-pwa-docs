@@ -76,16 +76,20 @@ export const meta: MetaFunction = () => {
     "twitter:card": "summary_large_image",
     "twitter:creator": "@ShafSpecs",
     "twitter:title": "Remix PWA Docs",
+    "twitter:image": "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/",
     "og:title": "Remix PWA Docs",
     "og:type": "website",
-    "og:url": "https://remix-pwa-docs.vercel.app",
-    // "twitter:description": "",
+    "og:url": "https://remix-pwa.run",
+    "twitter:description": "The home of Remix PWA. Enhance your Remix application with PWA functionalities like never before.",
     "og:locale": "en_US",
+    "og:image": "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/",
+    "og:image:url": "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/",
+    "og:image:secure_url": "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/",
     "og:image:alt": "Remix PWA Documentation",
     "og:image:width": "1200",
     "og:image:height": "630",
     "og:image:type": "image/png",
-    // "og:description": "",
+    "og:description": "The home of Remix PWA. Enhance your Remix application with PWA functionalities like never before.",
   }
 };
 
