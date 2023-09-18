@@ -227,6 +227,15 @@ module.exports = {
       addVariant('scrollbar-thumb', '&::-webkit-scrollbar-thumb')
       addVariant('demo-dark', '.demo-dark &')
     },
+    require("tailwind-heropatterns")({
+      variants: [],
+      patterns: ["topography", "slanted-stars", "circuit-board", "floating-cogs"],
+      opacity: {
+        default: "0.4",
+        "100": "1.0"
+      },
+      includeThemeColors: true,
+    }),
     function ({ addUtilities, theme }) {
       let backgroundSize = '7.07px 7.07px'
       let backgroundImage = (color) =>
