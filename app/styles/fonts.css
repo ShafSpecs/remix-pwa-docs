@@ -27,37 +27,71 @@
 }
 
 @font-face {
-  font-family: 'Inter var';
+  font-family: "Inter var";
   font-weight: 100 900;
   font-display: block;
   font-style: normal;
-  font-named-instance: 'Regular';
-  src: url('/fonts/Inter/Inter-roman.var.woff2') format('woff2');
+  font-named-instance: "Regular";
+  src: url("/fonts/Inter/Inter-roman.var.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Inter var';
+  font-family: "Inter var";
   font-weight: 100 900;
   font-display: block;
   font-style: italic;
-  font-named-instance: 'Italic';
-  src: url('/fonts/Inter/Inter-italic.var.woff2') format('woff2');
+  font-named-instance: "Italic";
+  src: url("/fonts/Inter/Inter-italic.var.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Fira Code';
+  font-family: "Fira Code";
   font-weight: 400;
   font-display: block;
   font-style: normal;
-  font-named-instance: 'Regular';
-  src: url('/fonts/FiraCode/FiraCode-Regular.ttf') format('ttf');
+  font-named-instance: "Regular";
+  src: url("/fonts/FiraCode/FiraCode-Regular.ttf") format("ttf");
 }
 
 @font-face {
-  font-family: 'Fira Code';
+  font-family: "Fira Code";
   font-weight: 500;
   font-display: block;
   font-style: normal;
-  font-named-instance: 'Medium';
-  src: url('/fonts/FiraCode/FiraCode-Medium.ttf') format('ttf');
+  font-named-instance: "Medium";
+  src: url("/fonts/FiraCode/FiraCode-Medium.ttf") format("ttf");
+}
+
+/* For some reason, this only works here ;( */
+
+.hidden-custom {
+  opacity: 0;
+  filter: blur(1rem);
+  transform: translateX(-100%);
+}
+
+.show-custom {
+  filter: blur(0);
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media screen and (min-width: 1024px) {
+  .feature:nth-child(2) {
+    transition-delay: 150ms !important;
+  }
+
+  .feature:nth-child(3) {
+    transition-delay: 300ms !important;
+  }
+
+  .feature:nth-child(4) {
+    transition-delay: 450ms !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hidden-custom {
+    transition: all .75s;
+  }
 }
