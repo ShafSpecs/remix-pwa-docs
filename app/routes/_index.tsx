@@ -360,7 +360,7 @@ const Contributors = () => {
 const Footer = () => {
   return (
     <div className="justify-end py-6 mx-4 border-t text-slate-900 dark:text-white">
-      <SVGComponent className="h-12 text-red-500 hidden dark:flex" />
+      <SVGComponent className="hidden h-12 text-red-500 dark:flex" />
       <span>The Remix PWA Framework that redefines web experiences.</span>
     </div>
   )
