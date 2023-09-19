@@ -1,0 +1,226 @@
+---
+title: Caching Strategies
+description: Cache according to how you want it. Introducing strategies for more granular control over your caching process.
+shortTitle: Caching Strategies 
+section: Guides
+position: 2
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Snippet from './snippet.tsx'
+import Info from './info.tsx'
+
+If you've been a user of Remix PWA, you'll know that stratgies are not a new thing. It's something Workbox does too, and is a common
+approach for caching in web applications for a while even though some don't even know they are ustilizing a strategy. Remix PWA does 
+nothing exactly new, but we did add some sugar to make it easier to use.
+
+---
+
+## Caching Strategies
+
+### Remix PWA v3.0 implementation
+
+If you've used Remix PWA v2.0, caching looked something like this:
+
+```ts
+const dataHandler = new NetworkFirst(/* ... */);
+const assetHandler = new CacheFirst(/* ... */);
+// and so on.
+```
+
+where you create an instance of a `Strategy` and then using your `fetch` event handler and a bit of request mix-and-matching, detect what type
+of request is being made and react with the appropriate strategy.
+
+In Remix PWA v3.0, thanks to the expansion of Service Workers across your application, plus, we wanted to reduce the reliance on strategy caching
+for any bit of caching, we tweaked the way you strategy is handled. First of, instead of a bulk instance that monitors every request, you can now
+use it for just a single request (like in a `workerLoader` for example) or use it to monitor a whole set of requests (like in your `defaultFetchHandler`).
+
+<Snippet>
+
+```ts {{ filename:'entry.worker.ts' }}
+import { cacheFirst } from '@remix-pwa/strategy';
+
+// I can use it to monitor a whole load of requests
+const assetHandler = cacheFirst(/* ... */);
+
+export const defaultFetchHandler = ({ context }) => {
+  // la la la. some nightmarish code...
+
+  if (request.url.includes('/assets/')) {
+    // This caches every request that has `/assets/` in the URL
+    // using a cache first strategy - which means, if the cache 
+    // is available, use it, otherwise fetch from the network 
+    // and cache it.
+    //
+    // we pass in the context `request` because we want the
+    // raw URL instead of stripped.
+    return cacheFirstHandler(context.event.request)
+  }
+
+  // a terrible PR by an intern lives beyond this point
+}
+```
+
+```tsx {{ filename:'app/routes/profile.tsx' }}
+import { staleWhileRevalidate } from '@remix-pwa/strategy';
+
+// loader function right here...
+
+export const workerLoader = ({ context }) => {
+  // ...
+
+  const cachifier = staleWhileRevalidate(/* ... */);
+
+  try {
+    // This is a fancy `fetchFromServer` function.
+    // It takes in your request, and not only fetches
+    // it from the server, but also caches it in the
+    // background.
+    const response = await cachifier(context.event.request);
+
+    // do something with the response
+  } catch (error) {
+    // error handling
+  }
+
+  // ...
+}
+
+// rest of the route code...
+```
+
+</Snippet>
+
+We have two very different use-cases above. One is a global fetch handler that monitors every request and caches it if it matches a certain criteria.
+The second is a very specific use-case in a very specific route for a very specific request. Both of them use the same strategy, but in different ways.
+
+This was our goal. This is the power of Remix PWA v3.0. You can use the same strategy in different ways, it's all up to you and your use-case.
+
+### Mini API Reference
+
+To avoid repetition, there are some common interfaces and types that are used across all strategies. Let's go through them first.
+
+Firstly, all strategies tale in few options, some of them extend the interface but the base interface is as follows:
+
+```ts
+interface StrategyOptions {
+  cache: string | RemixCache;
+  cacheOptions?: Omit<RemixCacheOptions, 'name'>;
+  cacheQueryOptions?: CacheQueryOptions;
+}
+```
+
+The options can be surmised as:
+
+- **`cache`**: This is the name of the cache you want to use. It could also be a `RemixCache` instance, provided by `Storage.open()`. *Required.*
+- **`cacheOptions`**: If you are creating a cache on the fly, you can pass in the options for the cache here. *Optional.*
+- **`cacheQueryOptions`**: If you want to customize the way the cache is queried, you can pass in the options here, more info on [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Cache/match#parameters). *Optional.*
+
+Secondly, all strategies follow the following interface:
+
+```
+type StrategyResponse = (request: Request) => Promise<Response>
+
+interface Strategy {
+  (options: T extends StrategyOptions): StrategyResponse;
+}
+```
+
+<Info>
+`T` above doesn't mean anything, it's just a placeholder for the type of options the strategy takes in. For example, `cacheFirst` takes in `CacheFirstOptions` and `networkFirst` takes in `NetworkFirstOptions`
+both of which extend `StrategyOptions`.
+</Info>
+
+Every strategy handler returns a function that takes in a `Request` and returns a `Promise<Response>`. It is this function that then does the heavy lifting of caching and fetching.
+
+### Network First
+
+This is the de-facto, default for a lot of applications. Attempt to fetch the resource from the network, and if it fails, fallback to the cache.
+
+In Remix PWA and PWAs in general, heck in web applications in general, this is the most common and default strategy. It's very straight-forward, easy to understand
+and implement and is the most common use-case. Nothing much more to be said.
+
+```ts
+networkFirst({
+  cache: string | RemixCache;
+  cacheOptions?: Omit<RemixCacheOptions, 'name'>;
+  cacheQueryOptions?: CacheQueryOptions;
+  fetchDidFail?: (() => void | (() => Promise<void>))[] | undefined;
+  fetchDidSucceed?: (() => void | (() => Promise<void>))[] | undefined;
+  networkTimeoutSeconds?: number;
+});
+```
+
+It takes in a few options (which extends [`StrategyOptions`](/docs/caching-strategies#mini-api-reference)) that you can use to customize your strategy. Let's go through them one by one.
+
+- **`fetchDidFail`**: A callback that is called when the fetch fails, can pass in your background sync queue function, or logger, etc. *Optional.*
+- **`fetchDidSucceed`**: A callback that is called when the fetch succeeds. *Optional.*
+- **`networkTimeoutSeconds`**: The number of seconds to wait for the network to respond before falling back to the cache. *Optional.*
+
+### Cache First
+
+This is the second most common strategy. Attempt to fetch the resource from the cache, and if it fails, fallback to the network.
+
+```ts
+cacheFirst({
+  cache: string | RemixCache;
+  cacheOptions?: Omit<RemixCacheOptions, 'name'>;
+  cacheQueryOptions?: CacheQueryOptions;
+  fetchDidFail?: (() => void | (() => Promise<void>))[] | undefined;
+});
+```
+
+This takes in just one extra options, and that's `fetchDidFail` which is the same as `networkFirst` above.
+
+### Cache Only
+
+This is the third most common strategy. Attempt to fetch the resource from the cache, and if it fails, 
+returns undefined (usually a `400` or `404`). In other words, always make sure the resource is persisted in cache.
+
+```ts
+cacheOnly({
+  cache: string | RemixCache;
+  cacheOptions?: Omit<RemixCacheOptions, 'name'>;
+  cacheQueryOptions?: CacheQueryOptions;
+});
+```
+
+This takes in no extra options. Nothing special here.
+
+### Network Only
+
+This is the default of your default `fetch` (to be honest, I have no idea why you would reach for this strategy, but it's here for completeness sake).
+Attempt to fetch the resource from the network, and if it fails, return undefined (usually an error `500` is returned).
+
+```ts
+networkOnly({
+  fetchDidFail?: (() => void | (() => Promise<void>))[] | undefined;
+  fetchDidSucceed?: (() => void | (() => Promise<void>))[] | undefined;
+  networkTimeoutSeconds?: number;
+});
+```
+
+This takes in the same options as `networkFirst` above. The difference is that it doesn't cache at any point in time.
+
+### Stale While Revalidate (SWR)
+
+The new homeboy in town 🤠. This is a very powerful strategy that is used in a lot of applications. It's a combination of `cacheFirst` and `networkFirst`.
+The SWR caching strategy is like having your cake and eating it too. It serves a cached version of your content (stale) while fetching a fresh one in the 
+background (revalidate). This keeps your app feeling snappy while ensuring your users always get the latest updates.
+
+```ts
+staleWhileRevalidate({
+  cache: string | RemixCache;
+  cacheOptions?: Omit<RemixCacheOptions, 'name'>;
+  cacheQueryOptions?: CacheQueryOptions;
+  fetchDidFail?: (() => void | (() => Promise<void>))[] | undefined;
+});
+```
+
+This takes in the same options as `cacheFirst` above. The difference is that it fetches from the network in the background and updates the cache.
+
+The benefits of SWR is huge. For one, since you are serving from cache, you get maintain a snappy, responsive user interface. Secondly, you are always
+fetching from the network in the background and caching, so you are always up-to-date and never get stale data. And finally, it is efficient, you are
+not fetching from the network on every request, you are only fetching when the cache is stale.

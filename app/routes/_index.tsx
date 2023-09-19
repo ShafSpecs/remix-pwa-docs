@@ -244,13 +244,13 @@ const Hero = () => {
   )
 }
 
-const Testimonials = () => {
-  return (
-    <div className="max-w-5xl pt-20 mx-auto sm:pt-24 lg:pt-36">
-      <span>The Remix PWA Framework that redefines web experiences.</span>
-    </div>
-  )
-}
+// const Testimonials = () => {
+//   return (
+//     <div className="max-w-5xl pt-20 mx-auto sm:pt-24 lg:pt-36">
+//       <span>The Remix PWA Framework that redefines web experiences.</span>
+//     </div>
+//   )
+// }
 
 const Features = () => {
   const mainFeatRed = useRef<HTMLDivElement>(null!);
@@ -391,25 +391,17 @@ Mette Nordqvist" tag="mettson" image="https://media.licdn.com/dms/image/C4E03AQG
 }
 
 const Footer = () => {
-  // const [theme,] = useTheme();
-
   return (
     <div className="flex justify-between px-4 py-6 border-t sm:px-6 text-slate-900 dark:text-white dark:bg-black">
-      <span className="text-lg font-medium">Remix PWA </span>
+      <span className="text-lg font-medium pointer-events-none">Remix PWA </span>
       <div>
-        <span>MIT License&nbsp;&copy;&nbsp;{new Date().getFullYear()}</span>
+        <span><a href='https://github.com/remix-pwa/monorepo/blob/main/LICENSE.md' target='_blank' className="hover:underline">MIT License</a>&nbsp;&copy;&nbsp;{new Date().getFullYear()}</span>
       </div>
     </div>
   )
 }
 
 export default function Index() {
-  const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   navigate("/docs/installation");  
-  // }, [navigate]);
-
   return (
     <div className="flex flex-col h-screen overflow-x-hidden">
       <ClientOnly fallback={<div></div>} children={() => <Header />} />
