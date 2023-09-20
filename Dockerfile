@@ -16,6 +16,7 @@ RUN apt-get update -qq && \
     apt-get install -y build-essential pkg-config python-is-python3
 
 COPY --link package-lock.json package.json ./
+RUN npm i -g npm@latest
 RUN npm ci --include=dev
 
 # Copy application code
