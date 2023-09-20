@@ -395,7 +395,7 @@ const Footer = () => {
     <div className="flex justify-between px-4 py-6 border-t sm:px-6 text-slate-900 dark:text-white dark:bg-black">
       <span className="text-lg font-medium pointer-events-none">Remix PWA </span>
       <div>
-        <span><a href='https://github.com/remix-pwa/monorepo/blob/main/LICENSE.md' target='_blank' className="hover:underline">MIT License</a>&nbsp;&copy;&nbsp;{new Date().getFullYear()}</span>
+        <span><a href='https://github.com/remix-pwa/monorepo/blob/main/LICENSE.md' target='_blank' className="hover:underline" rel="noreferrer">MIT License</a>&nbsp;&copy;&nbsp;{new Date().getFullYear()}</span>
       </div>
     </div>
   )
