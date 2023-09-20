@@ -158,3 +158,8 @@ A few types to assist with `defaultFetchHandler` are shipped with the `@remix-pw
 // The type of the `defaultFetchHandler` handler itself
 type GetLoadContextFunction = (event: FetchEvent) => WorkerLoadContext;
 ```
+
+<Info>
+`defaultFetchHandler` is a reserved export name, like other exports in Remix PWA.
+You can't rename before of modify them (like Remix's loaders and actions).
+</Info>
