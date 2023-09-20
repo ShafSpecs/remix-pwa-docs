@@ -1,0 +1,309 @@
+---
+title: Client Utilities
+description: Remix PWA library of client utilities to spice up your PWA native experience. APIs to add that cherry-on-top feel to your PWA.
+shortTitle: Client Utilities
+section: Guides
+position: 3
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+
+A new addition to the Remix PWA collection is `@remix-pwa/client`, a library dedicated to enhancing in-browser experience.
+
+The list might seem scanty :wink:, but the functionalities supported here are those widely supported by browsers. A lot of
+the features are still in the works by browsers, but we are excited to share what we have so far. This docs
+format would be breaking down each API based on a collective API (Clipboard API, for example). Without further ado,
+let's get started.
+
+One more thing to note, almost every API returns a minimum of a `Promise` object. This is to ensure that the API
+is asynchronous and doesn't block the main thread and also as a checker (wether things went well or south), the interface
+can be defined as follows:
+
+```ts
+type ClientAPI = Promise<ClientResponse>;
+
+// When things do work
+interface ClientResponse {
+  ok: boolean; // true
+  message: string;
+}
+
+// When things go south (or break)
+// i.e an error is thrown
+interface ClientError {
+  ok: boolean; // false
+  message: string;
+}
+```
+
+Note, that in some cases (like [`readTextFromClipboard`](/docs/client-utilities#read-text-from-clipboard)), it returns additional fields with it (in this case, `text`
+is returned with the two fields). And some don't return anything at all.
+
+---
+
+## Clipboard API
+
+### `copyTextToClipboard`
+
+This API allows you to copy text to the clipboard. It's a simple API that takes in a string as its only argument.
+
+```ts
+import { copyTextToClipboard } from '@remix-pwa/client'
+
+copyTextToClipboard('Hello, world!')
+```
+
+### `copyImageToClipboard`
+
+This API allows you to copy an image to the clipboard. It takes in an image URL as its only argument.
+
+```ts
+import { copyImageToClipboard } from '@remix-pwa/client'
+
+copyImageToClipboard('https://example.com/image.png')
+```
+
+### `readTextFromClipboard`
+
+This API allows you to read text from the clipboard. It returns a `Promise` object with the text as its value.
+
+```ts
+import { readTextFromClipboard } from '@remix-pwa/client'
+
+readTextFromClipboard().then(({ text }) => {
+  console.log(text)
+});
+
+// or await it if you wish
+const { text } = await readTextFromClipboard();
+```
+
+### `readFilesFromClipboard`
+
+This API allows you to read files from the clipboard. It returns a `Promise` object with the files as its value.
+
+```ts
+import { readFilesFromClipboard } from '@remix-pwa/client'
+
+readFilesFromClipboard().then(({ files }) => {
+  console.log(files)
+});
+```
+
+### `clipboardSupported`
+
+This API allows you to check if the clipboard API is supported by the browser. It returns a `Promise` object with a boolean as its value.
+
+It is typically a feature of every major section, it's a good thing to have on hand when you need to check if the API is supported :+1:.
+
+```ts
+import { clipboardSupported } from '@remix-pwa/client'
+
+const isSupported = await clipboardSupported();
+```
+
+---
+
+## Badge API
+
+### `setBadge`
+
+This API allows you to set a badge on the browser tab. It takes in a number as it's only argument (number of notifications, in other words).
+
+```ts
+import { setBadge } from '@remix-pwa/client'
+
+setBadge(10)
+```
+
+### `clearBadge`
+
+This API allows you to clear the badge on the browser tab.
+
+```ts
+import { clearBadge } from '@remix-pwa/client'
+
+clearBadge()
+```
+
+### `badgingSupported`
+
+This API allows you to check if the badging API is supported by the browser. It returns a `Promise` object with a boolean as its value.
+
+```ts
+import { badgingSupported } from '@remix-pwa/client'
+
+const isBadgeSupported = await badgingSupported();
+```
+
+---
+
+## Connectivity API
+
+### `checkConnectivity`
+
+A scanty section, I know. This function is used to check if the user is connected to the internet. If so, it runs a callback function passed by the user,
+if online, it runs another callback function passed by the user. 
+
+```ts
+const checkConnectivity: (online: () => void, offline: () => void) => Promise<ClientResponse>
+```
+
+A simple example would be:
+
+```ts
+import { checkConnectivity } from '@remix-pwa/client'
+
+const isOnline = () => console.log('You are online');
+const isOffline = () => console.log('You are offline');
+
+checkConnectivity(isOnline, isOffline);
+```
+
+---
+
+## Share API
+
+### `shareData`
+
+This API allows you to share data to other apps. It takes in a [`ShareData`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share#parameters) object as its only argument. The object is defined as follows:
+
+```ts
+interface ShareData {
+  title?: string;
+  text?: string;
+  url?: string;
+  files?: File[];
+}
+```
+
+An example:
+
+```ts
+import { shareData } from '@remix-pwa/client'
+
+// share a URL
+
+const data = await shareData({
+  title: 'Remix PWA',
+  text: 'A PWA library for the modern web',
+  url: 'https://remix-pwa.run'
+});
+
+// alternatively, share a file
+const fileData = await shareData({
+  title: 'Remix PWA',
+  text: 'A PWA library for the modern web',
+  url: 'https://remix-pwa.run',
+  files: [new File(['hello'], 'hello.txt', { type: 'text/plain' })]
+});
+
+// data.ok can be checked here if you need confirmation and then, you can 
+// go about your business like before.
+```
+
+By the way, supported, shareable file formats can be viewed [here](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share#shareable_file_types).
+
+### `shareSupported`
+
+This API allows you to check if the share API is supported by the browser. It returns a `Promise` object with a boolean as its value.
+
+```ts
+import { shareSupported } from '@remix-pwa/client'
+
+const isShareSupported = await shareSupported();
+```
+
+### `shareFilesSupported`
+
+Can be used interchangeably with `shareSupported`, but this checks if the browser supports sharing files. It returns a `Promise` object with a boolean as its value.
+
+```ts
+import { shareFilesSupported } from '@remix-pwa/client'
+
+const isShareFilesSupported = await shareFilesSupported();
+```
+
+## Display API
+
+### `displayMode`
+
+A function that takes in a callback and returns `void`. It can be summed up in the following interface:
+
+```ts
+const displayMode: (callback: (mode: Mode) => void) => void
+```
+
+The `DisplayMode` type is defined as follows:
+
+```ts
+type Mode = 'standalone' | 'minimal-ui' | 'fullscreen' | 'broswer-tab';
+```
+
+You can then do something based off of that:
+
+```ts
+import { displayMode } from '@remix-pwa/client'
+
+displayMode((mode) => {
+  if (mode === 'standalone') {
+    // do something
+  }
+});
+```
+
+## Usage APIs
+
+### `checkVisibility`
+
+Checks if the page is visible to the user. It returns a `Promise` object with a `ClientResponse` as its value.
+
+```ts
+import { checkVisibility } from '@remix-pwa/client'
+
+checkVisibility().then(({ ok }) => {
+  if (ok) {
+    // do something
+  }
+});
+```
+
+Would be useful, for instances where for example, you want to stop playing an audio when a
+user navigates away from the tab.
+
+```ts
+import { checkVisibility } from '@remix-pwa/client'
+
+checkVisibility().then(({ ok }) => {
+  if (!ok) {
+    // stop playing audio
+  }
+});
+```
+
+### `wakeLock`
+
+This API allows you to keep the screen awake. It doesn't take in any argument.
+
+```ts
+import { wakeLock } from '@remix-pwa/client'
+
+wakeLock(); // keeps your screen 'awake'
+```
+
+### `wakeLockSupported`
+
+This API allows you to check if the wake lock API is supported by the browser. It returns a `Promise` object with a boolean as its value.
+
+```ts
+import { wakeLockSupported } from '@remix-pwa/client'
+
+const isWakeLockSupported = await wakeLockSupported();
+```
+
+---
+
+There are a lot to unpack, and there's more to come (I personally can't wait for QR code support to come natively into the browser :laughing:),
+and we definitely be on the watch and update the docs as well as the package when more APIs become mainstream.

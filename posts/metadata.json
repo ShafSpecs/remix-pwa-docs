@@ -216,32 +216,39 @@
         "position": 2
       },
       {
+        "title": "Client Utilities",
+        "description": "Remix PWA library of client utilities to spice up your PWA native experience. APIs to add that cherry-on-top feel to your PWA.",
+        "section": "Guides",
+        "shortTitle": "Client Utilities",
+        "position": 3
+      },
+      {
         "title": "Gotchas",
         "description": "A list of what-not-to-do's and gotchas 😜 in Remix PWA. Safety first!",
         "section": "Guides",
         "shortTitle": "Gotchas",
-        "position": 3
+        "position": 4
       },
       {
         "title": "Precaching",
         "description": "Caching before you need it. Explore precaching and learn how to cache before your users even know they need it.",
         "section": "Guides",
         "shortTitle": "Precaching",
-        "position": 4
+        "position": 5
       },
       {
         "title": "TypeScript Support",
         "description": "Typescript and Remix PWA. A match made in heaven. Check out our thoughts on TypeScript and our support for it in Remix PWA.",
         "section": "Guides",
         "shortTitle": "TypeScript",
-        "position": 5
+        "position": 6
       },
       {
         "title": "Versioning in Remix PWA",
         "description": "A short exceprt on how versioning work in Remix PWA",
         "section": "Guides",
         "shortTitle": "Versioning",
-        "position": 6
+        "position": 7
       }
     ]
   }
