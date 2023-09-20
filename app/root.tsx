@@ -1,7 +1,6 @@
 import { useEffect, type ReactNode, useReducer } from "react";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -28,6 +27,7 @@ import type { LinksFunction, MetaFunction, LoaderArgs } from "@remix-run/node";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import slugify from "@sindresorhus/slugify";
 import { cssBundleHref } from "@remix-run/css-bundle";
+import { LiveReloadV1, useSWEffect } from "@remix-pwa/sw";
 
 export type PrevOrNextLink = FrontMatterTypings | null;
 
@@ -104,6 +104,7 @@ export const meta: MetaFunction = () => {
 const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme: Theme | null }) => {
   const [theme] = useTheme();
   const [closed] = useSidebar();
+  useSWEffect();
 
   return (
     <html lang="en" className={`antialiased ${theme || ""}`}>
@@ -126,7 +127,7 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         {children}
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+        <LiveReloadV1 />
       </body>
     </html>
   );
