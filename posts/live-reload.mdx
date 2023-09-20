@@ -9,6 +9,7 @@ position: 1
 {/* Do not remove these lines! */}
 import Heading from './heading.tsx'
 import Editor from './editor.tsx'
+import Info from './info.tsx'
 
 ## `LiveReload`
 
@@ -25,6 +26,27 @@ export default function Root() {
       <head />
       <body>
         <LiveReload />
+      </body>
+    </html>
+  );
+}
+```
+
+<Info>
+This component is for Remix v2 and above! If you are using Remix v1.x.x, keep reading.
+</Info>
+
+If you are using Remix `v1.x.x`, you can  use the `LiveReloadV1` component instead.
+
+```tsx {{ filename:'root.tsx' }}
+import { LiveReloadV1 } from "@remix-pwa/sw";
+
+export default function Root() {
+  return (
+    <html>
+      <head />
+      <body>
+        <LiveReloadV1 />
       </body>
     </html>
   );
