@@ -34,6 +34,7 @@ module.exports = {
     /^stringify.*/,
     /^slugify.*/,
     /^@sindresorhus.*/,
+    /^@remix-pwa\/.*/,
     "redent",
     "indent-string",
     "@sindresorhus/slugify",
