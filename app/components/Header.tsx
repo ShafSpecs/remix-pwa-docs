@@ -33,7 +33,7 @@ export const ClientHeader = () => {
             </Disclosure.Button>
           </div>
           <div className="relative flex items-center flex-grow basis-0">
-            <Link aria-label="Home page" to="/" className="lg:flex">
+            <Link aria-label="Home page" to="/" className="lg:flex" reloadDocument>
               <RemixLogo mobile height="h-10" width="w-11" />
               <RemixLogo height="h-9" width="w-10" />
 
@@ -183,7 +183,7 @@ export default ({ title, section }: any) => {
                 )}
               >
                 <div className="relative flex items-center">
-                  <Link aria-label="Home page" to="/" className="md:flex">
+                  <Link aria-label="Home page" to="/" reloadDocument className="md:flex">
                     <span className="sr-only">Remix PWA home page</span>
                     <RemixLogo mobile height="h-10" width="w-11" />
                     <RemixLogo height="h-9" width="w-10" />

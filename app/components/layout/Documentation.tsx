@@ -2,7 +2,7 @@ import { useLocation, Link } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo, useRef, useState, useEffect, Fragment } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
-import type { loader as ExampleLoaderResponse } from "~/routes/docs.($slug)";
+import type { loader as ExampleLoaderResponse } from "~/routes/docs.$slug";
 import { useRoot } from "~/utils/providers/RootProvider";
 import SidebarLayout from "./Sidebar";
 import Header, { ClientHeader } from "../Header";
