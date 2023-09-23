@@ -21,6 +21,7 @@ const assetCache = Storage.open(ASSETS);
 self.addEventListener('install', (event: ExtendableEvent) => {
   logger.log('Service worker installed');
   event.waitUntil(self.skipWaiting());
+  assetCache.add('https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=026');
 });
 
 self.addEventListener('activate', (event: ExtendableEvent) => {
@@ -39,6 +40,14 @@ const assetsHandler = cacheFirst({
     ignoreVary: true,
   },
 });
+
+// export const getLoadContext: GetLoadContextFunction = (event) => {
+//   const { request } = event;
+  
+//   return {
+//     fetchFromServer: () => fetch(request, { }),
+//   }
+// }
 
 // The default fetch event handler will be invoke if the
 // route is not matched by any of the worker action/loader.

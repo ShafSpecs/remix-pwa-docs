@@ -252,7 +252,9 @@ export function Doc() {
           const scrollToRect = scrollTo.getBoundingClientRect();
           const offsetPos = scrollToRect.top + window.scrollY - 106;
 
-          window.history.pushState(null, '', `${location.pathname}#${el.getAttribute('href')!.replace('#', '')}`);
+          const docSlug = location.pathname.split('#').pop() ?? '';
+
+          window.history.pushState(null, '', `${location.pathname}#${docSlug}`);
 
           window.scrollTo({
             top: offsetPos,

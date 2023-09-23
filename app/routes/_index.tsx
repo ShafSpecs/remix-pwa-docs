@@ -13,6 +13,7 @@ import clsx from "clsx";
 import RemixLogo from "~/components/RemixLogo";
 import { ToggleTheme } from "~/components/ToggleTheme";
 import { ClientOnly } from "remix-utils";
+import { copyTextToClipboard } from '@remix-pwa/client';
 
 export const ClientHeader = () => {
   const [theme,] = useTheme();
@@ -319,7 +320,7 @@ const Sponsor = ({
 }) => {
   return (
     <div className="flex flex-col content-center">
-      <img className="w-16 h-16 mx-auto rounded-full sm:w-24 sm:h-24" src={image} alt={name} />
+      <img className="w-20 mx-auto rounded-full sm:h-20 lg:w-24 lg:h-24" src={image} alt={name} />
       <span className="mt-2 text-sm text-center dark:text-white text-slate-900 sm:text-base">{name}</span>
       <p className="text-xs text-center pointer-events-none sm:text-sm dark:text-gray-500 text-slate-400">{tag}</p>
     </div>
@@ -330,18 +331,23 @@ const Sponsors = () => {
   return (
     <div className="max-w-5xl px-4 pt-12 mx-auto sm:pt-20 lg:pt-24">
       <h3 className="max-w-4xl text-xl font-semibold tracking-tight text-center text-slate-900 dark:text-white sm:text-2xl md:text-3xl lg:text-4xl">Remix PWA is free, and Open Source Software made possible by our awesome sponsors</h3>
-      <div className="grid grid-cols-3 mt-8 sm:mt-10 lg:mt-12">
+      <div className="grid grid-cols-2 mt-8 gap-y-4 sm:grid-cols-4 sm:mt-10 lg:mt-12">
         <Sponsor name={"Anirudh Ravichandran"} image={"https://images.opencollective.com/anirudh-ravichandran/f6363f4/avatar/256.png?height=256"} tag="@aniravi24" />
         <Sponsor name={"Raphaël Moreau"} image={"https://images.opencollective.com/rphlmr/34235d1/avatar/256.png?height=256"} tag="@rphlmr" />
         <Sponsor name={"Alem Tuzlak"} image={"https://media.licdn.com/dms/image/D4D03AQH_TaZ3S3vfbg/profile-displayphoto-shrink_400_400/0/1677009352791?e=1700697600&v=beta&t=UdUzKEwPXj2yabvQDuolTZMiz_TS_N2YQQ95UBuYg1Y"} tag="@AlemTuzlak" />
+        <Sponsor name={"Onur Guvenc"} image={"https://pbs.twimg.com/profile_images/1178585409271582720/I7FgUqMz_400x400.jpg"} tag="@OnurGvnc" />
       </div>
-      <div className="flex justify-center mt-6 space-x-6 sm:mt-10">
+      <div className="flex flex-col justify-center mt-6 sm:space-x-6 sm:flex-row sm:mt-10">
         <a href={"https://opencollective.com/remix-pwa"} target="_blank" className="flex content-center justify-center px-6 py-3 my-6 font-semibold text-center text-white transition-all rounded-lg cursor-pointer hover:shadow-md bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-sky-500 dark:highlight-white/20" rel="noreferrer">
           Become a Sponsor 🤝
         </a>
-        <a href={"https://www.buymeacoffee.com/shafspecs"} target="_blank" className="flex content-center justify-center px-6 py-3 my-6 font-semibold text-center text-white transition-all rounded-lg cursor-pointer hover:shadow-md bg-slate-900 hover:bg-yellow-300 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-yellow-500 dark:highlight-white/20" rel="noreferrer">
+        <a href={"https://www.buymeacoffee.com/shafspecs"} target="_blank" className="flex content-center justify-center px-6 py-3 my-0 font-semibold text-center text-white transition-all rounded-lg cursor-pointer sm:my-6 hover:shadow-md bg-slate-900 hover:bg-yellow-300 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-yellow-500 dark:highlight-white/20" rel="noreferrer">
           Buy me a coffee ☕
         </a>
+        <button onClick={() => { copyTextToClipboard('0xf210441358C53dA8B210Fa554e91EF5E59e69d56'); alert('Copied text to clipboard') }} className="flex content-center justify-center px-6 py-3 my-6 font-semibold text-center text-white transition-all rounded-lg cursor-pointer hover:shadow-md bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-sky-500 dark:highlight-white/20">
+          <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=026" alt="ETH" className="w-5 h-5" />
+          <p>ETH Address</p>
+        </button>
       </div>
     </div>
   )
