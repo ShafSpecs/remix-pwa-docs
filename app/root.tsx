@@ -32,8 +32,8 @@ import RootReducer from "./rootReducer";
 import { type ValidPackages, packages, valid_packages } from "./utils/PackageHelpers";
 import { RootContext } from "./utils/providers/RootProvider";
 
-import type { LinksFunction, MetaFunction,LoaderArgs } from "@remix-run/node";
-import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules"; 
+import type { LinksFunction, MetaFunction, LoaderArgs } from "@remix-run/node";
+import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 
 export type PrevOrNextLink = FrontMatterTypings | null;
 
@@ -319,6 +319,12 @@ export default function App() {
   return (
     <MainDocumentWithProviders ssr_theme={theme}>
       <RootContext.Provider value={{ state, dispatch }}>
+        <div className="fixed z-50 flex content-center justify-center w-full h-10 font-medium text-center text-white bg-gradient-to-r from-sky-700 to-purple-700">
+          <p className="flex content-center justify-center mr-2 leading-10 text-center max-h-fit">This is the home of Remix PWA v2.0. Remix PWA v3.0 is out 🎉!</p>
+          <button onClick={() => {
+            window.location.href = "https://remix-pwa.run";
+          }} className="h-8 px-4 mt-1 border border-white rounded-lg max-h-fit">Let's Go</button>
+        </div>
         <ClientOnly
           fallback={<></>}
           children={
