@@ -1,3 +1,7 @@
+body {
+  @apply transition-all duration-300 !important;
+}
+
 #article-main {
   & :is(:where(input):not(:where([class~="not-prose"] *)):where(input[type="checkbox"])) {
     display: none;
@@ -24,6 +28,42 @@
   & :is(:where(h2):has(code)) > code {
     @apply text-xl font-bold !important;
   }
+}
+
+.sidebar-content::-webkit-scrollbar {
+  width: 8px;
+  background: #0000000c;
+}
+
+.dark .sidebar-content::-webkit-scrollbar {
+  width: 8px;
+  background: #ffffff0c;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: #0000001a;
+}
+
+.dark .sidebar-content::-webkit-scrollbar-thumb {
+  background: #ffffff1a;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: #00000034;
+  cursor: pointer;
+}
+
+.dark .sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: #ffffff34;
+  cursor: pointer;
+}
+
+.sidebar-content::-webkit-scrollbar-track:hover {
+  background: #0000001a;
+}
+
+.dark .sidebar-content::-webkit-scrollbar-track:hover {
+  background: #ffffff1a;
 }
 
 .dark section[data-remix-pwa-hero]::before {
