@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode, useReducer } from "react";
+import { useEffect, type ReactNode, useReducer, useCallback } from "react";
 import {
   Links,
   Meta,
@@ -6,11 +6,13 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
+  useBeforeUnload,
+  useLoaderData,
   useLocation,
+  useNavigation,
   useRouteError
 } from "@remix-run/react";
 import { getPostMetaData } from "./utils/server/aws.server";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
 
@@ -23,7 +25,7 @@ import type { FrontMatterTypings } from "./types/mdx";
 import RootReducer from "./rootReducer";
 import { RootContext } from "./utils/providers/RootProvider";
 
-import type { LinksFunction, MetaFunction, LoaderArgs } from "@remix-run/node";
+import { type LinksFunction, type MetaFunction, type LoaderArgs, json } from "@remix-run/node";
 import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import slugify from "@sindresorhus/slugify";
 import { cssBundleHref } from "@remix-run/css-bundle";
@@ -52,7 +54,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (meta_nullable) {
     const meta = meta_nullable;
 
-    return typedjson(
+    return json(
       { meta, theme },
       {
         headers: {
@@ -93,6 +95,96 @@ export const meta: MetaFunction = () => {
   }
 };
 
+function ElementScrollRestoration({
+	elementQuery,
+	...props
+}: { elementQuery: string } & React.HTMLProps<HTMLScriptElement>) {
+	const STORAGE_KEY = `position:${elementQuery}`
+	const navigation = useNavigation()
+	const location = useLocation()
+
+	const updatePositions = useCallback(() => {
+		const element = document.querySelector(elementQuery)
+		if (!element) return
+		let positions = {}
+		try {
+			const rawPositions = JSON.parse(
+				sessionStorage.getItem(STORAGE_KEY) || '{}',
+			)
+			if (typeof rawPositions === 'object' && rawPositions !== null) {
+				positions = rawPositions
+			}
+		} catch (error) {
+			console.warn(`Error parsing scroll positions from sessionStorage:`, error)
+		}
+		const newPositions = {
+			...positions,
+			[location.key]: element.scrollTop,
+		}
+		sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newPositions))
+	}, [STORAGE_KEY, elementQuery, location.key])
+
+	useEffect(() => {
+		if (navigation.state === 'idle') {
+			const element = document.querySelector(elementQuery)
+			if (!element) return
+			try {
+				const positions = JSON.parse(
+					sessionStorage.getItem(STORAGE_KEY) || '{}',
+				) as any
+				const storedY = positions[window.history.state.key]
+				if (typeof storedY === 'number') {
+					element.scrollTop = storedY
+				}
+			} catch (error: unknown) {
+				console.error(error)
+				sessionStorage.removeItem(STORAGE_KEY)
+			}
+		} else {
+			updatePositions()
+		}
+	}, [STORAGE_KEY, elementQuery, navigation.state, updatePositions])
+
+	useBeforeUnload(() => {
+		updatePositions()
+	})
+
+	function restoreScroll(storageKey: string, elementQuery: string) {
+		const element = document.querySelector(elementQuery)
+		if (!element) {
+			console.warn(`Element not found: ${elementQuery}. Cannot restore scroll.`)
+			return
+		}
+		if (!window.history.state || !window.history.state.key) {
+			const key = Math.random().toString(32).slice(2)
+			window.history.replaceState({ key }, '')
+		}
+		try {
+			const positions = JSON.parse(
+				sessionStorage.getItem(storageKey) || '{}',
+			) as any
+			const storedY = positions[window.history.state.key]
+			if (typeof storedY === 'number') {
+				element.scrollTop = storedY
+			}
+		} catch (error: unknown) {
+			console.error(error)
+			sessionStorage.removeItem(storageKey)
+		}
+	}
+	return (
+		<script
+			{...props}
+			suppressHydrationWarning
+			dangerouslySetInnerHTML={{
+				__html: `(${restoreScroll})(${JSON.stringify(
+					STORAGE_KEY,
+				)}, ${JSON.stringify(elementQuery)})`,
+			}}
+		/>
+	)
+}
+
 /**
  * @description Separate out main styles and desired components from the App component so that we have a baseline for any errors that happen.
  *
@@ -122,10 +214,11 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
       </head>
       <body
         className={`${!closed && "overflow-hidden"
-          } bg-white transition-colors scroll-smooth antialiased duration-300 dark:bg-slate-900`}
+          } bg-white scroll-smooth antialiased dark:bg-slate-900`}
       >
         {children}
         <ScrollRestoration />
+        <ElementScrollRestoration elementQuery="[data-restore-scroll='true']" />
         <Scripts />
         <LiveReloadV1 />
       </body>
@@ -152,7 +245,7 @@ const MainDocumentWithProviders = ({ ssr_theme, children }: { ssr_theme: Theme |
 };
 
 export default function App() {
-  const { meta, theme } = useTypedLoaderData<typeof loader>();
+  const { meta, theme } = useLoaderData<typeof loader>();
   let location = useLocation();
 
   const [state, dispatch] = useReducer(RootReducer, { prev: null, next: null });
