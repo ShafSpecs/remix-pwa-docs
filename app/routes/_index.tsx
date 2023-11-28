@@ -337,15 +337,13 @@ const Sponsors = () => {
         <Sponsor name={"Alem Tuzlak"} image={"https://media.licdn.com/dms/image/D4D03AQH_TaZ3S3vfbg/profile-displayphoto-shrink_400_400/0/1677009352791?e=1700697600&v=beta&t=UdUzKEwPXj2yabvQDuolTZMiz_TS_N2YQQ95UBuYg1Y"} tag="@AlemTuzlak" />
         <Sponsor name={"Onur Guvenc"} image={"https://pbs.twimg.com/profile_images/1178585409271582720/I7FgUqMz_400x400.jpg"} tag="@OnurGvnc" />
       </div>
-      <div className="flex flex-col justify-center mt-6 sm:space-x-6 sm:flex-row sm:mt-10">
-        <a href={"https://opencollective.com/remix-pwa"} target="_blank" className="flex content-center justify-center px-6 py-3 my-6 font-semibold text-center text-white transition-all rounded-lg cursor-pointer hover:shadow-md bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-sky-500 dark:highlight-white/20" rel="noreferrer">
-          Become a Sponsor 🤝
+      <div aria-label="GitHub Sponsor" className="flex flex-col justify-center mt-6 sm:space-x-6 sm:flex-row sm:mt-10">
+        <a href={"https://github.com/sponsors/ShafSpecs"} target="_blank" className="flex content-center justify-center px-6 py-3 my-2 sm:my-6 font-semibold text-center text-white transition-all rounded-lg cursor-pointer hover:shadow-md bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-sky-500 dark:highlight-white/20" rel="noreferrer">
+          💖 Become a Sponsor
         </a>
-        <a href={"https://www.buymeacoffee.com/shafspecs"} target="_blank" className="flex content-center justify-center px-6 py-3 my-0 font-semibold text-center text-white transition-all rounded-lg cursor-pointer sm:my-6 hover:shadow-md bg-slate-900 hover:bg-yellow-300 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-yellow-500 dark:highlight-white/20" rel="noreferrer">
-          Buy me a coffee ☕
-        </a>
-        <button onClick={() => { copyTextToClipboard('0xf210441358C53dA8B210Fa554e91EF5E59e69d56'); alert('Copied text to clipboard') }} className="flex content-center justify-center px-6 py-3 my-6 font-semibold text-center text-white transition-all rounded-lg cursor-pointer hover:shadow-md bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-sky-500 dark:highlight-white/20">
+        <button aria-label="ETH Wallet" onClick={() => { copyTextToClipboard('0xf210441358C53dA8B210Fa554e91EF5E59e69d56'); alert('Copied text to clipboard') }} className="flex content-center justify-center px-6 py-3 my-2 sm:my-6 font-semibold text-center text-white transition-all rounded-lg cursor-pointer hover:shadow-md bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-0 sm:w-fit dark:bg-sky-600 dark:hover:bg-sky-500 dark:highlight-white/20">
           <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=026" alt="ETH" className="w-5 h-5" />
+          &nbsp;
           <p>ETH Address</p>
         </button>
       </div>
