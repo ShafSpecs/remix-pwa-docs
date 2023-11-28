@@ -157,7 +157,7 @@ export default function SidebarLayout({
     <SidebarContext.Provider value={{ navIsOpen, setNavIsOpen }}>
       <Wrapper allowOverflow={allowOverflow}>
         <div className="px-4 mx-auto max-w-8xl sm:px-6 md:px-8">
-          <div className="hidden lg:block fixed z-20 inset-0 top-[3.8125rem] left-[max(0px,calc(50%-45rem))] right-auto w-[19rem] pb-10 pl-8 pr-6 overflow-y-auto">
+          <div className="hidden lg:block fixed z-20 inset-0 top-[3.8125rem] left-[max(0px,calc(50%-45rem))] right-auto w-[19rem] sidebar-content pb-10 pl-8 pr-6 overflow-y-auto">
             <Nav fallbackHref={''} />
           </div>
           <div className="lg:pl-[19.5rem]">{children}</div>
