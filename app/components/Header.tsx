@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import { Disclosure } from "@headlessui/react";
+import { Disclosure, Menu } from "@headlessui/react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Fragment, useEffect, useState } from "react";
@@ -13,6 +13,13 @@ import RemixLogo from "./RemixLogo";
 import { MoonIcon, SunIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import MobileSidebar from "./MobileSidebar";
+
+const VERSIONS = [
+  {
+    name: "v3.0",
+    displayName: "v3.0",
+  }
+]
 
 export const ClientHeader = () => {
   const [theme,] = useTheme();
@@ -48,6 +55,34 @@ export const ClientHeader = () => {
               </p>
             </Link>
           </div>
+          {/* <Menu>
+            <Menu.Button>More</Menu.Button>
+            <Menu.Items>
+              <Menu.Item>
+                {({ active }) => (
+                  <a
+                    className={`${active && 'bg-blue-500'}`}
+                    href="/account-settings"
+                  >
+                    Account settings
+                  </a>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <a
+                    className={`${active && 'bg-blue-500'}`}
+                    href="/account-settings"
+                  >
+                    Documentation
+                  </a>
+                )}
+              </Menu.Item>
+              <Menu.Item disabled>
+                <span className="opacity-75">Invite a friend (coming soon!)</span>
+              </Menu.Item>
+            </Menu.Items>
+          </Menu> */}
           <div className="mr-6 -my-5 sm:mr-8 md:mr-0">
             <button
               type="button"
