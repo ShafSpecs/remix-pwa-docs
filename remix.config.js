@@ -2,6 +2,7 @@
 module.exports = {
   serverModuleFormat: "cjs",
   serverDependenciesToBundle: [
+    /^remix-utils.*/,
     /^rehype.*/,
     /^remark.*/,
     /^unified.*/,
@@ -45,11 +46,5 @@ module.exports = {
     "clsx",
   ],
   appDirectory: "app",
-  future: {
-    v2_errorBoundary: true,
-    v2_meta: false,
-    v2_normalizeFormMethod: true,
-    v2_routeConvention: true
-  },
   tailwind: true
 };

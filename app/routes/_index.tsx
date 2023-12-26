@@ -12,7 +12,8 @@ import { MoonIcon, SunIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import RemixLogo from "~/components/RemixLogo";
 import { ToggleTheme } from "~/components/ToggleTheme";
-import { ClientOnly } from "remix-utils";
+// @ts-ignore
+import { ClientOnly } from "remix-utils/client-only";
 import { copyTextToClipboard } from '@remix-pwa/client';
 
 export const ClientHeader = () => {

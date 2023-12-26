@@ -3,10 +3,9 @@ import { XMarkIcon } from "@heroicons/react/20/solid";
 import { useRef } from "react";
 import { useSidebar } from "~/utils/providers/SidebarProvider";
 import RemixLogo from "./RemixLogo";
-import { useTypedRouteLoaderData } from "remix-typedjson";
 import type { loader as RootLoader } from "~/root";
 import { useOnClickOutside } from "usehooks-ts";
-import { Link } from "@remix-run/react";
+import { Link, useRouteLoaderData } from "@remix-run/react";
 import { useTransition, animated } from "react-spring";
 import clsx from "clsx";
 import NavItem from "./NavItem";
@@ -14,7 +13,7 @@ import type { MetaDataObject } from "~/utils/server/aws.server";
 
 const MobileSidebar = ({ open, set }: any) => {
   // @ts-ignore
-  const { meta } = useTypedRouteLoaderData<typeof RootLoader>('root');
+  const { meta } = useRouteLoaderData<typeof RootLoader>('root');
   const [closed, setClosed] = useSidebar();
   const sideBartransitions = useTransition(!closed, {
     from: { opacity: 0, transform: "translateX(-100%)" },

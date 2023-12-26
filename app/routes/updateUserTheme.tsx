@@ -1,13 +1,12 @@
-import type { ActionArgs } from "@remix-run/node";
+import { json, type ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "react-router-dom";
-import { typedjson } from "remix-typedjson";
 import { SetTheme } from "~/session.server";
 
 export const loader = () => {
   return redirect("/");
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const method = request.method.toLowerCase();
   if (method === "post") {
     const formData = await request.formData();
@@ -15,7 +14,7 @@ export const action = async ({ request }: ActionArgs) => {
     
     if (theme === "dark") {
       const set_session = await SetTheme(request, "dark");
-      return typedjson(
+      return json(
         { response: "dark" },
         {
           status: 200,
@@ -28,7 +27,7 @@ export const action = async ({ request }: ActionArgs) => {
 
     if (theme === "light") {
       const set_session = await SetTheme(request, "light");
-      return typedjson(
+      return json(
         { response: "light" },
         {
           status: 200,
@@ -39,7 +38,7 @@ export const action = async ({ request }: ActionArgs) => {
       );
     }
 
-    return typedjson({ response: "Invalid Theme" }, { status: 400 });
+    return json({ response: "Invalid Theme" }, { status: 400 });
   }
-  return typedjson({ response: "Invalid Method" }, { status: 405 });
+  return json({ response: "Invalid Method" }, { status: 405 });
 };

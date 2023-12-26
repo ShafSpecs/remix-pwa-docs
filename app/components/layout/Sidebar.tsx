@@ -1,11 +1,10 @@
-import { useTypedRouteLoaderData } from "remix-typedjson";
 import NavItem from "../NavItem";
 import type { loader as RootLoader } from "~/root";
 import type { MetaDataObject } from "~/utils/server/aws.server";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useRef, useState } from "react";
 import { useIsomorphicLayoutEffect, useMediaQuery } from "usehooks-ts";
-import { useLocation } from "@remix-run/react";
+import { useLocation, useRouteLoaderData } from "@remix-run/react";
 import { Dialog } from "@headlessui/react";
 import { useActionKey } from "~/hooks/useActionKey";
 
@@ -55,7 +54,7 @@ function Wrapper({ allowOverflow, children }: { allowOverflow?: boolean; childre
 
 export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fallbackHref?: string }) {
   // @ts-ignore
-  const { meta } = useTypedRouteLoaderData<typeof RootLoader>('root');
+  const { meta } = useRouteLoaderData<typeof RootLoader>('root');
   const location = useLocation();
   const actionKey = useActionKey();
 

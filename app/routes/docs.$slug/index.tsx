@@ -1,14 +1,14 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import { redirect, type LoaderFunctionArgs, type MetaFunction, json } from "@remix-run/node";
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import { redirect, typedjson } from "remix-typedjson";
-import { ClientOnly } from "remix-utils";
+//@ts-ignore
+import { ClientOnly } from "remix-utils/client-only";
 import GeneralError from "~/components/GeneralError";
 import { Doc } from "~/components/layout/Documentation";
 import Skeleton from "~/components/layout/Skeleton";
 import { getPostContent } from "~/utils/server/aws.server";
 import { mdxToHtml } from "~/utils/server/mdx.server";
 
-export const loader = async ({ params }: LoaderArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const slug = params.slug;
 
   if (slug == undefined || slug == "") {
@@ -19,12 +19,12 @@ export const loader = async ({ params }: LoaderArgs) => {
 
   if (!doc) {
     console.error(`Invalid Slug: ${slug}`);
-    throw typedjson(null, { status: 404, statusText: "Oops! This page could not be found." });
+    throw json(null, { status: 404, statusText: "Oops! This page could not be found." });
   }
   
   const code = await mdxToHtml(doc);
 
-  return typedjson({ ...code, slug }, {
+  return json({ ...code, slug }, {
     headers: {
       "Cache-Control": "public, max-age=600",
     },
@@ -32,31 +32,31 @@ export const loader = async ({ params }: LoaderArgs) => {
   });
 };
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: MetaFunction = ({ data }: { data: any }) => {
   const { title, description }: { title: string, description: string } = data.frontmatter;
 
   const url = new URL("https://remix-pwa.run/og-image");
   url.searchParams.set("title", title);
   url.searchParams.set("description", description);
 
-  return {
-    title: data.code ? `${title} - Remix PWA` : "Remix PWA",
-    description: `${data.code && description}`,
-    "og:title": data.code ? `${title} - Remix PWA` : "Remix PWA",
-    "og:description": `${data.code && description}`,
-    "og:image": url.href,
-    "og:image:url": url.href,
-    "og:image:secure_url": url.href,
-    "og:image:alt": title,
-    "og:image:type": "image/png",
-    "og:image:width": "1200",
-    "og:image:height": "630",
-    "twitter:title": data.code ? `${title} - Remix PWA` : "Remix PWA",
-    "twitter:description": `${data.code && description}`,
-    "twitter:image": url.href,
-    "twitter:image:alt": title,
-    "twitter:card": "summary_large_image",
-  }
+  return [
+    {title: data.code ? `${title} - Remix PWA` : "Remix PWA"},
+    {name: "description", content: `${data.code && description}`,},
+    {property: "og:title", content: data.code ? `${title} - Remix PWA` : "Remix PWA",},
+    {property: "og:description", content: `${data.code && description}`,},
+    {property: "og:image", content: url.href,},
+    {property: "og:image:url", content: url.href,},
+    {property: "og:image:secure_url", content: url.href,},
+    {property: "og:image:alt", content: title,},
+    {property: "og:image:type", content: "image/png",},
+    {property: "og:image:width", content: "1200",},
+    {property: "og:image:height", content: "630",},
+    {property: "twitter:title", content: data.code ? `${title} - Remix PWA` : "Remix PWA",},
+    {property: "twitter:description", content: `${data.code && description}`,},
+    {property: "twitter:image", content: url.href,},
+    {property: "twitter:image:alt", content: title,},
+    {property: "twitter:card", content: "summary_large_image",},
+  ]
 };
 
 export default function DocPage() {

@@ -1,14 +1,13 @@
-import { useLocation, Link } from "@remix-run/react";
+import { useLocation, Link, useRouteLoaderData } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo, useRef, useState, useEffect, Fragment } from "react";
-import { useTypedLoaderData } from "remix-typedjson";
-import type { loader as ExampleLoaderResponse } from "~/routes/docs.$slug";
 import { useRoot } from "~/utils/providers/RootProvider";
 import SidebarLayout from "./Sidebar";
 import Header, { ClientHeader } from "../Header";
 import slugify from '@sindresorhus/slugify';
 import { useMediaQuery } from "usehooks-ts";
-import { ClientOnly } from "remix-utils";
+//@ts-ignore
+import { ClientOnly } from "remix-utils/client-only";
 import clsx from "clsx";
 import redent from 'redent';
 import Editor from '../mdx/Editor';
@@ -34,7 +33,7 @@ export type Heading = {
  * @returns
  */
 export function Doc() {
-  const { code, frontmatter } = useTypedLoaderData<typeof ExampleLoaderResponse>();
+  const { code, frontmatter } = useRouteLoaderData<any>('routes/docs.$slug');
   const { next, prev } = useRoot();
   const Component = useMemo(() => getMDXComponent(code,
     {
