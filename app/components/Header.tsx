@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
-import { Disclosure, Menu } from "@headlessui/react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "@remix-run/react";
 import { useWindowSize } from "usehooks-ts";
@@ -13,13 +13,6 @@ import RemixLogo from "./RemixLogo";
 import { MoonIcon, SunIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import MobileSidebar from "./MobileSidebar";
-
-const VERSIONS = [
-  {
-    name: "v3.0",
-    displayName: "v3.0",
-  }
-]
 
 export const ClientHeader = () => {
   const [theme,] = useTheme();
@@ -99,7 +92,7 @@ export const ClientHeader = () => {
             </button>
           </div>
           <div className="relative flex justify-end gap-6 basis-0 sm:gap-8 md:flex-grow">
-            <div className="relative flex content-center justify-end gap-6 basis-0 sm:gap-8 md:flex-grow">
+            <div className="relative flex content-center justify-end gap-5 basis-0 sm:gap-8 md:flex-grow">
               <label className="sr-only">Theme</label>
               <div className="relative z-10">
                 <button
@@ -221,9 +214,9 @@ export default ({ title, section }: any) => {
                   <Link aria-label="Home page" to="/" reloadDocument className="md:flex">
                     <span className="sr-only">Remix PWA home page</span>
                     <RemixLogo mobile height="h-10" width="w-11" />
-                    <RemixLogo height="h-9" width="w-10" />
+                    <RemixLogo height="h-10" width="w-11" />
                     <p
-                      className="hidden md:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 text-2xl relative -ml-2.5"
+                      className="hidden md:flex font-[Benzin] font-bold text-slate-700 dark:text-sky-100 text-2xl relative -ml-[9px]"
                       style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text', top: '5.25px' }}
                     >
                       emix&nbsp;
@@ -232,8 +225,47 @@ export default ({ title, section }: any) => {
                       </span>
                     </p>
                   </Link>
+                  <div className="relative ml-3">
+                    <Menu as="div" className="relative inline-block text-left">
+                      <div>
+                        <Menu.Button className="leading-5 font-semibold text-sm rounded-full bg-slate-400/10 text-slate-400 py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">
+                          v3.0.31
+                          <ChevronDownIcon
+                            className="w-3 h-3 ml-2 stroke-2 stroke-slate-400"
+                            aria-hidden="true"
+                          />
+                        </Menu.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="absolute left-0 top-full mt-1 w-40 origin-top-left py-2 rounded-lg bg-white shadow ring-1 ring-slate-900/5 text-sm leading-6 font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:highlight-white/5">
+                          <Menu.Item disabled>
+                            <span className="flex items-center justify-between px-3 py-1 text-sky-500 dark:text-sky-400">
+                              v3.0.31
+                              <svg width="24" height="24" fill="none" aria-hidden="true">
+                                <path
+                                  d="m7.75 12.75 2.25 2.5 6.25-6.5"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </span>
+                          </Menu.Item>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  </div>
                   <div className="relative flex justify-end flex-grow gap-6 basis-0 sm:gap-8">
-                    <div className="relative flex content-center justify-end gap-6 basis-0 sm:gap-8 md:flex-grow">
+                    <div className="relative flex content-center justify-end gap-6 basis-0 sm:gap-6 md:flex-grow">
                       <button
                         type="button"
                         className="flex w-6 h-6 lg:hidden"
