@@ -260,6 +260,19 @@ export default ({ title, section }: any) => {
                               </svg>
                             </span>
                           </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="https://v2.remix-pwa.run"
+                                className={clsx(
+                                  'block px-3 py-1',
+                                  active && 'bg-slate-50 text-slate-900 dark:bg-slate-600/30 dark:text-white'
+                                )}
+                              >
+                                v2.0.4
+                              </a>
+                            )}
+                          </Menu.Item>
                         </Menu.Items>
                       </Transition>
                     </Menu>
