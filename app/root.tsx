@@ -25,11 +25,12 @@ import type { FrontMatterTypings } from "./types/mdx";
 import RootReducer from "./rootReducer";
 import { RootContext } from "./utils/providers/RootProvider";
 
-import { type LinksFunction, type MetaFunction, type LoaderArgs, json } from "@remix-run/node";
-import type { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
+import { type LinksFunction, type MetaFunction, type LoaderFunctionArgs, json } from "@remix-run/node";
 import slugify from "@sindresorhus/slugify";
 import { cssBundleHref } from "@remix-run/css-bundle";
-import { LiveReloadV1, useSWEffect } from "@remix-pwa/sw";
+import { LiveReload, useSWEffect } from "@remix-pwa/sw";
+import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
+import { pageview } from "./utils/client/gtag.client";
 
 export type PrevOrNextLink = FrontMatterTypings | null;
 
@@ -46,7 +47,7 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const meta_nullable = await getPostMetaData();
   const theme = await GetTheme(request);
 
@@ -55,7 +56,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     const meta = meta_nullable;
 
     return json(
-      { meta, theme },
+      { meta, theme, gaTrackingId: process.env.GOOGLE_ANALYTICS_ID ?? '' },
       {
         headers: {
           "Cache-Control": "public, max-age=84600",
@@ -70,119 +71,119 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction = () => {
-  return {
-    charset: "utf-8",
-    title: "Remix PWA Docs",
-    viewport: "width=device-width,initial-scale=1",
-    keywords: "Remix,ShafSpecs,Remix PWA,Remix PWA Docs,Remix PWA Documentation,Remix PWA Documentation,remix-pwa,remix-pwa-docs,@remix-pwa,v3",
-    "twitter:card": "summary_large_image",
-    "twitter:creator": "@ShafSpecs",
-    "twitter:title": "Remix PWA Docs",
-    "twitter:image": "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/",
-    "og:title": "Remix PWA Docs",
-    "og:type": "website",
-    "og:url": "https://remix-pwa.run",
-    "twitter:description": "The home of Remix PWA. Enhance your Remix application with PWA functionalities like never before.",
-    "og:locale": "en_US",
-    "og:image": "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/",
-    "og:image:url": "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/",
-    "og:image:secure_url": "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/",
-    "og:image:alt": "Remix PWA Documentation",
-    "og:image:width": "1200",
-    "og:image:height": "630",
-    "og:image:type": "image/png",
-    "og:description": "The home of Remix PWA. Enhance your Remix application with PWA functionalities like never before.",
-  }
+  return [
+    { name: "charset", content: "utf-8" },
+    { title: "Remix PWA Docs" },
+    { name: "viewport", content: "width=device-width,initial-scale=1" },
+    { name: "keywords", content: "Remix,ShafSpecs,Remix PWA,Remix PWA Docs,Remix PWA Documentation,Remix PWA Documentation,remix-pwa,remix-pwa-docs,@remix-pwa,v3" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:creator", content: "@ShafSpecs" },
+    { name: "twitter:title", content: "Remix PWA Docs" },
+    { name: "twitter:image", content: "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/" },
+    { name: "og:title", content: "Remix PWA Docs" },
+    { name: "og:type", content: "website" },
+    { name: "og:url", content: "https://remix-pwa.run" },
+    { name: "twitter:description", content: "The home of Remix PWA. Enhance your Remix application with PWA functionalities like never before." },
+    { name: "og:locale", content: "en_US" },
+    { name: "og:image", content: "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/" },
+    { name: "og:image:url", content: "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/" },
+    { name: "og:image:secure_url", content: "https://ucarecdn.com/43135828-6822-4549-a0b7-23219e7353d1/-/preview/1200x630/-/quality/smart_retina/-/format/auto/" },
+    { name: "og:image:alt", content: "Remix PWA Documentation", },
+    { name: "og:image:width", content: "1200", },
+    { name: "og:image:height", content: "630", },
+    { name: "og:image:type", content: "image/png", },
+    { name: "og:description", content: "The home of Remix PWA. Enhance your Remix application with PWA functionalities like never before.", },
+  ]
 };
 
 function ElementScrollRestoration({
-	elementQuery,
-	...props
+  elementQuery,
+  ...props
 }: { elementQuery: string } & React.HTMLProps<HTMLScriptElement>) {
-	const STORAGE_KEY = `position:${elementQuery}`
-	const navigation = useNavigation()
-	const location = useLocation()
+  const STORAGE_KEY = `position:${elementQuery}`
+  const navigation = useNavigation()
+  const location = useLocation()
 
-	const updatePositions = useCallback(() => {
-		const element = document.querySelector(elementQuery)
-		if (!element) return
-		let positions = {}
-		try {
-			const rawPositions = JSON.parse(
-				sessionStorage.getItem(STORAGE_KEY) || '{}',
-			)
-			if (typeof rawPositions === 'object' && rawPositions !== null) {
-				positions = rawPositions
-			}
-		} catch (error) {
-			console.warn(`Error parsing scroll positions from sessionStorage:`, error)
-		}
-		const newPositions = {
-			...positions,
-			[location.key]: element.scrollTop,
-		}
-		sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newPositions))
-	}, [STORAGE_KEY, elementQuery, location.key])
+  const updatePositions = useCallback(() => {
+    const element = document.querySelector(elementQuery)
+    if (!element) return
+    let positions = {}
+    try {
+      const rawPositions = JSON.parse(
+        sessionStorage.getItem(STORAGE_KEY) || '{}',
+      )
+      if (typeof rawPositions === 'object' && rawPositions !== null) {
+        positions = rawPositions
+      }
+    } catch (error) {
+      console.warn(`Error parsing scroll positions from sessionStorage:`, error)
+    }
+    const newPositions = {
+      ...positions,
+      [location.key]: element.scrollTop,
+    }
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newPositions))
+  }, [STORAGE_KEY, elementQuery, location.key])
 
-	useEffect(() => {
-		if (navigation.state === 'idle') {
-			const element = document.querySelector(elementQuery)
-			if (!element) return
-			try {
-				const positions = JSON.parse(
-					sessionStorage.getItem(STORAGE_KEY) || '{}',
-				) as any
-				const storedY = positions[window.history.state.key]
-				if (typeof storedY === 'number') {
-					element.scrollTop = storedY
-				}
-			} catch (error: unknown) {
-				console.error(error)
-				sessionStorage.removeItem(STORAGE_KEY)
-			}
-		} else {
-			updatePositions()
-		}
-	}, [STORAGE_KEY, elementQuery, navigation.state, updatePositions])
+  useEffect(() => {
+    if (navigation.state === 'idle') {
+      const element = document.querySelector(elementQuery)
+      if (!element) return
+      try {
+        const positions = JSON.parse(
+          sessionStorage.getItem(STORAGE_KEY) || '{}',
+        ) as any
+        const storedY = positions[window.history.state.key]
+        if (typeof storedY === 'number') {
+          element.scrollTop = storedY
+        }
+      } catch (error: unknown) {
+        console.error(error)
+        sessionStorage.removeItem(STORAGE_KEY)
+      }
+    } else {
+      updatePositions()
+    }
+  }, [STORAGE_KEY, elementQuery, navigation.state, updatePositions])
 
-	useBeforeUnload(() => {
-		updatePositions()
-	})
+  useBeforeUnload(() => {
+    updatePositions()
+  })
 
-	function restoreScroll(storageKey: string, elementQuery: string) {
-		const element = document.querySelector(elementQuery)
-		if (!element) {
-			console.warn(`Element not found: ${elementQuery}. Cannot restore scroll.`)
-			return
-		}
-		if (!window.history.state || !window.history.state.key) {
-			const key = Math.random().toString(32).slice(2)
-			window.history.replaceState({ key }, '')
-		}
-		try {
-			const positions = JSON.parse(
-				sessionStorage.getItem(storageKey) || '{}',
-			) as any
-			const storedY = positions[window.history.state.key]
-			if (typeof storedY === 'number') {
-				element.scrollTop = storedY
-			}
-		} catch (error: unknown) {
-			console.error(error)
-			sessionStorage.removeItem(storageKey)
-		}
-	}
-	return (
-		<script
-			{...props}
-			suppressHydrationWarning
-			dangerouslySetInnerHTML={{
-				__html: `(${restoreScroll})(${JSON.stringify(
-					STORAGE_KEY,
-				)}, ${JSON.stringify(elementQuery)})`,
-			}}
-		/>
-	)
+  function restoreScroll(storageKey: string, elementQuery: string) {
+    const element = document.querySelector(elementQuery)
+    if (!element) {
+      console.warn(`Element not found: ${elementQuery}. Cannot restore scroll.`)
+      return
+    }
+    if (!window.history.state || !window.history.state.key) {
+      const key = Math.random().toString(32).slice(2)
+      window.history.replaceState({ key }, '')
+    }
+    try {
+      const positions = JSON.parse(
+        sessionStorage.getItem(storageKey) || '{}',
+      ) as any
+      const storedY = positions[window.history.state.key]
+      if (typeof storedY === 'number') {
+        element.scrollTop = storedY
+      }
+    } catch (error: unknown) {
+      console.error(error)
+      sessionStorage.removeItem(storageKey)
+    }
+  }
+  return (
+    <script
+      {...props}
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{
+        __html: `(${restoreScroll})(${JSON.stringify(
+          STORAGE_KEY,
+        )}, ${JSON.stringify(elementQuery)})`,
+      }}
+    />
+  )
 }
 
 /**
@@ -193,7 +194,7 @@ function ElementScrollRestoration({
  *
  * @returns The main styles and components of the app
  */
-const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme: Theme | null }) => {
+const MainDocument = ({ children, ssr_theme, gaTrackingId }: { children: ReactNode; ssr_theme: Theme | null, gaTrackingId: string | null }) => {
   const [theme] = useTheme();
   const [closed] = useSidebar();
   useSWEffect();
@@ -209,6 +210,25 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#2b5797" />
         <meta name="msapplication-TileColor" content="#2b5797" />
         <meta name="theme-color" content="#ffffff" />
+        {process.env.NODE_ENV === "development" || !gaTrackingId ? null : (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`}
+            />
+            <script
+              async
+              id="gtag-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js',new Date());
+                gtag('config','${gaTrackingId}',{page_path: window.location.pathname});`,
+              }}
+            />
+          </>
+        )}
         <Links />
         <StopFOUC ssr_theme={ssr_theme !== null} />
       </head>
@@ -220,7 +240,7 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
         <ScrollRestoration />
         <ElementScrollRestoration elementQuery="[data-restore-scroll='true']" />
         <Scripts />
-        <LiveReloadV1 />
+        <LiveReload />
       </body>
     </html>
   );
@@ -234,18 +254,18 @@ const MainDocument = ({ children, ssr_theme }: { children: ReactNode; ssr_theme:
  *
  * @returns
  */
-const MainDocumentWithProviders = ({ ssr_theme, children }: { ssr_theme: Theme | null; children: ReactNode }) => {
+const MainDocumentWithProviders = ({ ssr_theme, children, gaTrackingId }: { ssr_theme: Theme | null; children: ReactNode, gaTrackingId: string | null }) => {
   return (
     <ThemeProvider ssr_theme={ssr_theme}>
       <SidebarProvider>
-        <MainDocument ssr_theme={ssr_theme}>{children}</MainDocument>
+        <MainDocument ssr_theme={ssr_theme} gaTrackingId={gaTrackingId}>{children}</MainDocument>
       </SidebarProvider>
     </ThemeProvider>
   );
 };
 
 export default function App() {
-  const { meta, theme } = useLoaderData<typeof loader>();
+  const { meta, theme, gaTrackingId } = useLoaderData<typeof loader>();
   let location = useLocation();
 
   const [state, dispatch] = useReducer(RootReducer, { prev: null, next: null });
@@ -277,13 +297,19 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (gaTrackingId) {
+      pageview(location.pathname, gaTrackingId);
+    }
+  }, [location, gaTrackingId]);
+
+  useEffect(() => {
     const { prev, next } = getPreviousAndNextRoute();
     dispatch({ type: "updateLinks", payload: { prev, next } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return (
-    <MainDocumentWithProviders ssr_theme={theme}>
+    <MainDocumentWithProviders ssr_theme={theme} gaTrackingId={gaTrackingId}>
       <RootContext.Provider value={{ state, dispatch }}>
         <Outlet />
       </RootContext.Provider>
@@ -291,7 +317,7 @@ export default function App() {
   );
 }
 
-export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
+export const ErrorBoundary: ErrorBoundaryComponent = () => {
   const error = useRouteError();
   let message: string | number = "";
   let stack: undefined | string = "";
@@ -304,7 +330,7 @@ export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
     stack = error.statusText;
   }
   return (
-    <MainDocumentWithProviders ssr_theme={null}>
+    <MainDocumentWithProviders gaTrackingId={null} ssr_theme={null}>
       <h1>Status: {message}</h1>
       <h2>StatusText: {stack}</h2>
     </MainDocumentWithProviders>
