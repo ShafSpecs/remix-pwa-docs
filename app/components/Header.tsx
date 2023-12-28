@@ -3,7 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Fragment, useEffect, useState } from "react";
-import { Link, useLocation } from "@remix-run/react";
+import { Link, useLocation, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import { useWindowSize } from "usehooks-ts";
 import { useTheme } from "~/utils/providers/ThemeProvider";
 import { useSidebar } from "~/utils/providers/SidebarProvider";
@@ -129,8 +129,10 @@ export const ClientHeader = () => {
 export default ({ title, section }: any) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setClosed] = useSidebar();
+  const { version } = useRouteLoaderData<any>('routes/docs.($version).$slug');
   const { width } = useWindowSize();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [isOpaque, setIsOpaque] = useState(false);
 
@@ -163,6 +165,11 @@ export default ({ title, section }: any) => {
   useEffect(() => {
     setClosed(true);
   }, [location.pathname, setClosed]);
+
+  const getCurrentVersion = () => {
+    const version = location.pathname.split('/')[2];
+    return version;
+  }
 
   return (
     <Fragment>
@@ -229,7 +236,7 @@ export default ({ title, section }: any) => {
                     <Menu as="div" className="relative inline-block text-left">
                       <div>
                         <Menu.Button className="leading-5 font-semibold text-sm rounded-full bg-slate-400/10 text-slate-400 py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">
-                          v3.0.31
+                          {version}
                           <ChevronDownIcon
                             className="w-3 h-3 ml-2 stroke-2 stroke-slate-400"
                             aria-hidden="true"
@@ -246,19 +253,49 @@ export default ({ title, section }: any) => {
                         leaveTo="transform opacity-0 scale-95"
                       >
                         <Menu.Items className="absolute left-0 top-full mt-1 w-40 origin-top-left py-2 rounded-lg bg-white shadow ring-1 ring-slate-900/5 text-sm leading-6 font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:highlight-white/5">
-                          <Menu.Item disabled>
-                            <span className="flex items-center justify-between px-3 py-1 text-sky-500 dark:text-sky-400">
-                              v3.0.31
-                              <svg width="24" height="24" fill="none" aria-hidden="true">
-                                <path
-                                  d="m7.75 12.75 2.25 2.5 6.25-6.5"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            </span>
+                          <Menu.Item disabled={getCurrentVersion() === 'main'}>
+                            {({ active }) => (
+                              <span className={clsx(
+                                getCurrentVersion() === 'main' ? 'flex items-center justify-between px-3 py-1 text-sky-500 dark:text-sky-400' : 'block px-3 py-1',
+                                active && getCurrentVersion() !== 'main' && 'bg-slate-50 text-slate-900 dark:bg-slate-600/30 dark:text-white cursor-pointer',
+                              )}
+                                onClick={() => navigate(`/docs/main/installation`)}
+                              >
+                                main
+                                {getCurrentVersion() === 'main' ?
+                                  <svg width="24" height="24" fill="none" aria-hidden="true">
+                                    <path
+                                      d="m7.75 12.75 2.25 2.5 6.25-6.5"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg> : null}
+                              </span>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item disabled={getCurrentVersion() === 'dev'}>
+                            {({ active }) => (
+                              <span className={clsx(
+                                getCurrentVersion() === 'dev' ? 'flex items-center justify-between px-3 py-1 text-sky-500 dark:text-sky-400' : 'block px-3 py-1',
+                                active && getCurrentVersion() !== 'dev' && 'bg-slate-50 text-slate-900 dark:bg-slate-600/30 dark:text-white cursor-pointer',
+                              )}
+                                onClick={() => navigate(`/docs/dev/installation`)}
+                              >
+                                dev
+                                {getCurrentVersion() === 'dev' ?
+                                  <svg width="24" height="24" fill="none" aria-hidden="true">
+                                    <path
+                                      d="m7.75 12.75 2.25 2.5 6.25-6.5"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg> : null}
+                              </span>
+                            )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (

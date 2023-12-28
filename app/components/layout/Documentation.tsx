@@ -33,7 +33,7 @@ export type Heading = {
  * @returns
  */
 export function Doc() {
-  const { code, frontmatter } = useRouteLoaderData<any>('routes/docs.$slug');
+  const { code, frontmatter } = useRouteLoaderData<any>('routes/docs.($version).$slug');
   const { next, prev } = useRoot();
   const Component = useMemo(() => getMDXComponent(code,
     {

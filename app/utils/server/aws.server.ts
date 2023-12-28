@@ -36,7 +36,7 @@ export type MetaDataObject = z.infer<typeof MetaDataObjectSchema>;
  * @param slug - Slug of the post we're interested in
  * @returns
  */
-export const getPostContent = async (slug: string | undefined) => {
+export const getPostContent = async (slug: string | undefined, version: string = "main") => {
   /**
    * If we are in development mode, we can just read the file from the file system.
    */
@@ -58,7 +58,7 @@ export const getPostContent = async (slug: string | undefined) => {
   return await promise.Body?.transformToString();
 };
 
-export const getPostMetaData = async () => {
+export const getPostMetaData = async (version: string = "main") => {
   /**
    * If we are in development mode, we can just read the file from the file system.
    */

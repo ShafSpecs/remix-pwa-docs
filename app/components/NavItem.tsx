@@ -17,7 +17,7 @@ const NavItem = ({ name, children }: MetaDataObject) => {
         {children.map((sub) => {
           return (
             <li className="" key={sub.shortTitle}>
-              <NavLink prefetch="intent" to={`/docs/${slugify(sub.shortTitle)}`} end={true}>
+              <NavLink prefetch="intent" to={`/docs/main/${slugify(sub.shortTitle)}`} end={true}>
                 {({ isActive }) => (
                   <span
                     className={clsx('block border-l pl-4 -ml-px', {

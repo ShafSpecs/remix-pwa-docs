@@ -9,13 +9,18 @@ import { getPostContent } from "~/utils/server/aws.server";
 import { mdxToHtml } from "~/utils/server/mdx.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
+  const version = params.version;
   const slug = params.slug;
 
   if (slug == undefined || slug == "") {
-    return redirect("/docs/installation");
+    return redirect("/docs/main/installation");
   }
 
-  const doc = await getPostContent(slug);
+  if (version == undefined || version == "") {
+    return redirect(`/docs/main/${slug}`);
+  }
+
+  const doc = await getPostContent(slug, version);
 
   if (!doc) {
     console.error(`Invalid Slug: ${slug}`);
@@ -24,7 +29,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   
   const code = await mdxToHtml(doc);
 
-  return json({ ...code, slug }, {
+  return json({ ...code, slug, version }, {
     headers: {
       "Cache-Control": "public, max-age=600",
     },
