@@ -198,7 +198,7 @@ const Hero = () => {
     <section className="relative px-4" data-remix-pwa-hero>
       <section className="max-w-5xl pt-20 mx-auto sm:pt-24 lg:pt-32">
         <div className="flex mt-5 font-[Benzin] text-center w-full font-bold text-slate-900 dark:text-white text-4xl tracking-tight sm:text-5xl lg:text-6xl">A Remix PWA Framework that redefines web experiences.</div>
-        <p className="max-w-3xl mx-auto mt-5 text-lg text-center md:text-xl xl:text-xl text-slate-600 dark:text-slate-400">Unleash Remix PWA, the PWA artisan's toolbox, where innovation meets limitless creativity. Craft captivating, lightning-fast PWAs with ease ⚡️. Your canvas: the browser 🎨. Your medium: Remix's visionary class of app alchemy 🦄.</p>
+        <p className="max-w-3xl mx-auto mt-5 text-lg text-center md:text-xl xl:text-xl text-slate-600 dark:text-slate-300">Unleash Remix PWA, the PWA artisan's toolbox, where innovation meets limitless creativity. Craft captivating, lightning-fast PWAs with ease ⚡️. Your canvas: the browser 🎨. Your medium: Remix's visionary class of app alchemy 🦄.</p>
         <div className="flex justify-center mt-6 space-x-6 sm:mt-10">
           <Link to={"/docs/installation"} className="flex items-center justify-center w-full h-12 px-6 font-semibold text-white rounded-lg bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 sm:w-auto dark:bg-sky-600 dark:highlight-white/20 dark:hover:bg-sky-500">Get Started</Link>
           <div className="bg-gradient-to-r p-0.5 shadow-sm dark:from-sky-600 from-slate-900 to-blue-500 h-12 via-red-600 rounded-lg dark:to-purple-500 text-white hidden sm:flex">
