@@ -129,7 +129,7 @@ export const ClientHeader = () => {
 export default ({ title, section }: any) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setClosed] = useSidebar();
-  const { version } = useRouteLoaderData<any>('routes/docs.($version).$slug');
+  const { version } = useRouteLoaderData<any>('routes/docs.$version.$slug');
   const { width } = useWindowSize();
   const location = useLocation();
   const navigate = useNavigate();
@@ -281,7 +281,7 @@ export default ({ title, section }: any) => {
                                 getCurrentVersion() === 'dev' ? 'flex items-center justify-between px-3 py-1 text-sky-500 dark:text-sky-400' : 'block px-3 py-1',
                                 active && getCurrentVersion() !== 'dev' && 'bg-slate-50 text-slate-900 dark:bg-slate-600/30 dark:text-white cursor-pointer',
                               )}
-                                onClick={() => navigate(`/docs/dev/installation`)}
+                                onClick={() => navigate(`/docs/dev/installation`, {})}
                               >
                                 dev
                                 {getCurrentVersion() === 'dev' ?

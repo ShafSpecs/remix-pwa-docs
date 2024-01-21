@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode, useReducer, useCallback } from "react";
+import { useEffect, type ReactNode, useCallback } from "react";
 import {
   Links,
   Meta,
@@ -12,7 +12,6 @@ import {
   useNavigation,
   useRouteError
 } from "@remix-run/react";
-import { getPostMetaData } from "./utils/server/aws.server";
 import { StopFOUC, type Theme, ThemeProvider, useTheme } from "./utils/providers/ThemeProvider";
 import { SidebarProvider, useSidebar } from "./utils/providers/SidebarProvider";
 
@@ -22,11 +21,8 @@ import docs from "./styles/docs.css";
 
 import { GetTheme } from "./session.server";
 import type { FrontMatterTypings } from "./types/mdx";
-import RootReducer from "./rootReducer";
-import { RootContext } from "./utils/providers/RootProvider";
 
 import { type LinksFunction, type MetaFunction, type LoaderFunctionArgs, json } from "@remix-run/node";
-import slugify from "@sindresorhus/slugify";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import { LiveReload, useSWEffect } from "@remix-pwa/sw";
 import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
@@ -48,26 +44,16 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const meta_nullable = await getPostMetaData();
   const theme = await GetTheme(request);
 
-  // can add session theme data here if we want to store that. Otherwise, just using the regular script tag in the document works.
-  if (meta_nullable) {
-    const meta = meta_nullable;
-
-    return json(
-      { meta, theme, gaTrackingId: process.env.GOOGLE_ANALYTICS_ID ?? '' },
-      {
-        headers: {
-          "Cache-Control": "public, max-age=84600",
-        }
+  return json(
+    { meta, theme, gaTrackingId: process.env.GOOGLE_ANALYTICS_ID ?? '' },
+    {
+      headers: {
+        "Cache-Control": "public, max-age=84600",
       }
-    );
-  }
-
-  // throw error? How necessary is meta? Seems pretty necessary.
-  // Depending on how much we need meta, we can just return null and handle it where meta would go.
-  throw new Error("Uh oh! Something went wrong!");
+    }
+  );
 };
 
 export const meta: MetaFunction = () => {
@@ -265,36 +251,8 @@ const MainDocumentWithProviders = ({ ssr_theme, children, gaTrackingId }: { ssr_
 };
 
 export default function App() {
-  const { meta, theme, gaTrackingId } = useLoaderData<typeof loader>();
+  const { theme, gaTrackingId } = useLoaderData<typeof loader>();
   let location = useLocation();
-
-  const [state, dispatch] = useReducer(RootReducer, { prev: null, next: null });
-
-  const getPreviousAndNextRoute = (): UpdateLinks => {
-    const currentRoute = location.pathname;
-
-    let routes: FrontMatterTypings[] = [];
-    routes = meta
-      .map((route) => {
-        return route.children;
-      })
-      .flat();
-
-    const currentRouteIndex = routes.findIndex((route) => `/docs/${slugify(route.shortTitle)}` === currentRoute);
-
-    let nextRoute: PrevOrNextLink = null;
-    let prevRoute: PrevOrNextLink = null;
-
-    if (currentRouteIndex < routes.length - 1) {
-      nextRoute = routes[currentRouteIndex + 1];
-    }
-
-    if (currentRouteIndex > 0) {
-      prevRoute = routes[currentRouteIndex - 1];
-    }
-
-    return { prev: prevRoute, next: nextRoute };
-  };
 
   useEffect(() => {
     if (gaTrackingId) {
@@ -302,17 +260,9 @@ export default function App() {
     }
   }, [location, gaTrackingId]);
 
-  useEffect(() => {
-    const { prev, next } = getPreviousAndNextRoute();
-    dispatch({ type: "updateLinks", payload: { prev, next } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
-
   return (
     <MainDocumentWithProviders ssr_theme={theme} gaTrackingId={gaTrackingId}>
-      <RootContext.Provider value={{ state, dispatch }}>
-        <Outlet />
-      </RootContext.Provider>
+      <Outlet />
     </MainDocumentWithProviders>
   );
 }

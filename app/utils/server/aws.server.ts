@@ -41,7 +41,7 @@ export const getPostContent = async (slug: string | undefined, version: string =
    * If we are in development mode, we can just read the file from the file system.
    */
   if (process.env.NODE_ENV === "development") {
-    const content = await readFile(resolve(__dirname, "../", `posts/${slug || "installation"}.mdx`), "utf-8");
+    const content = await readFile(resolve(__dirname, "../", `${version === 'main' ? 'posts' : 'posts_dev'}/${slug || "installation"}.mdx`), "utf-8");
 
     if (!content) {
       return null;
@@ -52,7 +52,7 @@ export const getPostContent = async (slug: string | undefined, version: string =
 
   const promise = await s3.getObject({
     Bucket: process.env.AWS_BUCKET_NAME || '',
-    Key: `posts_v3/${slug || "installation"}.mdx`
+    Key: `${version === 'main' ? 'posts_v3' : 'posts_v3_dev'}/${slug || "installation"}.mdx`
   })
 
   return await promise.Body?.transformToString();
@@ -72,7 +72,7 @@ export const getPostMetaData = async (version: string = "main") => {
      *
      * Todo: Generate metadata in development without the use of a github token.
      */
-    const content = await readFile(resolve(__dirname, "../", `posts/metadata.json`), "utf-8");
+    const content = await readFile(resolve(__dirname, "../", `${version === 'main' ? 'posts' : 'posts_dev'}/metadata.json`), "utf-8");
 
     if (!content) {
       return null;
@@ -84,7 +84,7 @@ export const getPostMetaData = async (version: string = "main") => {
 
   const promise = await s3.getObject({
     Bucket: process.env.AWS_BUCKET_NAME || '',
-    Key: `posts_v3/metadata.json`
+    Key: `${version === 'main' ? 'posts_v3' : 'posts_v3_dev'}/metadata.json`
   })
 
   const content = await promise.Body?.transformToString() || '[{}]';

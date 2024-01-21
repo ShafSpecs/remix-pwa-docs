@@ -1,10 +1,11 @@
-import { NavLink } from "@remix-run/react";
+import { NavLink, useRouteLoaderData } from "@remix-run/react";
 import slugify from "@sindresorhus/slugify";
 import clsx from "clsx";
 import { useMediaQuery } from "usehooks-ts";
 import type { MetaDataObject } from "~/types/mdx";
 
 const NavItem = ({ name, children }: MetaDataObject) => {
+  const { version } = useRouteLoaderData('routes/docs.$version') as any;
   const mobile = useMediaQuery('(max-width: 1024px)');
   
   return (
@@ -17,7 +18,7 @@ const NavItem = ({ name, children }: MetaDataObject) => {
         {children.map((sub) => {
           return (
             <li className="" key={sub.shortTitle}>
-              <NavLink prefetch="intent" to={`/docs/main/${slugify(sub.shortTitle)}`} end={true}>
+              <NavLink prefetch="intent" to={`/docs/${version}/${slugify(sub.shortTitle)}`} end={true}>
                 {({ isActive }) => (
                   <span
                     className={clsx('block border-l pl-4 -ml-px', {

@@ -13,7 +13,7 @@ import type { MetaDataObject } from "~/utils/server/aws.server";
 
 const MobileSidebar = ({ open, set }: any) => {
   // @ts-ignore
-  const { meta } = useRouteLoaderData<typeof RootLoader>('root');
+  const { meta } = useRouteLoaderData<typeof RootLoader>('routes/docs.$version');
   const [closed, setClosed] = useSidebar();
   const sideBartransitions = useTransition(!closed, {
     from: { opacity: 0, transform: "translateX(-100%)" },

@@ -1,10 +1,10 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import type { SatoriOptions } from 'satori/wasm';
 import satori from 'satori';
 import svg2img from 'svg2img';
 import invariant from 'tiny-invariant';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)
   const title = url.searchParams.get("title")
   invariant(title, "Title is required")

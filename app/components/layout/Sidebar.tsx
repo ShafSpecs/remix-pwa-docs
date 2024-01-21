@@ -54,7 +54,7 @@ function Wrapper({ allowOverflow, children }: { allowOverflow?: boolean; childre
 
 export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fallbackHref?: string }) {
   // @ts-ignore
-  const { meta } = useRouteLoaderData<typeof RootLoader>('root');
+  const { meta } = useRouteLoaderData<typeof RootLoader>('routes/docs.$version');
   const location = useLocation();
   const actionKey = useActionKey();
 
