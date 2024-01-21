@@ -23,4 +23,3 @@ jobs:
         AWS_REGION: 'eu-north-1'
         SOURCE_DIR: 'posts'
         DEST_DIR: 'posts_v3'
-      
