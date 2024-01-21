@@ -82,7 +82,7 @@ body {
   user-select: none;
   height: 105%;
   filter: blur(40px);
-  background: url("/images/hero-img.png") no-repeat center center;
+  background: url("/images/hero-img.webp") no-repeat center center;
   background-color: rgba(15, 23, 42, .6);
   background-blend-mode: darken;
 }
