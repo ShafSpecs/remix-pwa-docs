@@ -1,0 +1,134 @@
+---
+title: Get Started with Remix PWA
+description: Remix PWA is a compiler that bundles your service workers as well as provide utilities to build your PWA.
+shortTitle: 'Installation'
+section: 'Getting Started'
+position: 1
+---
+
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Info from './info.tsx'
+import Warn from './warn.tsx'
+
+Remix PWA v3.1 release focuses on Vite and Vite support, although, Remix Esbuild is still supported in Remix PWA 3.1, it is highly recommended to use Vite instead. If you still insist, check out [v3.0 docs](/docs/main/installation) for a more
+comprehensive guide on how to use Remix PWA with Remix Esbuild.
+
+<Info>
+Remix PWA now supports Vite right out of the box 🎉!
+</Info>
+
+---
+
+## Installation
+
+### Remix PWA + Vite
+
+<Warn>
+Remix PWA requires a Remix application to work! If you haven't created one yet, you can
+easily create one by running `npx create-remix@latest` in your terminal.
+</Warn>
+
+To install Remix PWA for Vite, run the command:
+
+```sh {{ filename:"Terminal" }}
+npm install --save-dev @remix-pwa/dev@dev
+```
+
+<Info>
+Remix PWA CLI doesn't provide support for Vite yet, so you'll have to install it manually.
+</Info>
+
+---
+
+## Vite Configuration
+
+### Registering the Plugin
+
+To utilise Vite with Remix PWA, you'll need to add the following to your `vite.config.ts`:
+
+```ts {{ filename:"vite.config.ts" }}
+import { defineConfig } from 'vite'
+import { unstable_RemixPWA as remixPWA } from '@remix-pwa/dev'
+
+export default defineConfig({
+  plugins: [/* other plugins */, remixPWA()],
+})
+```
+
+---
+
+## App Configuration
+
+### Registering Service Workers
+
+Thanks to the new Vite plugin, you no longer need to register your Service Worker manually. The plugin would automatically inject
+the necessary scripts required. You can also customise the registration parameters via the plugin.
+
+```ts {{ filename:"vite.config.ts" }}
+// ...
+remixPWA({
+  // ... other options
+  scope: string, // SW scope. defaults to '/'
+  workerName: string, // built SW name. defaults to 'entry.worker'
+}),
+```
+
+This replaces the need for `loadServiceWorker` in your `entry.client.tsx` file. However, if you still want to use `loadServiceWorker` or handle it manually in `root.tsx`, you can
+disable the plugin's automatic registration by setting `registerSW: null` in the plugin options.
+
+```ts {{ filename:"vite.config.ts" }}
+// ...
+remixPWA({
+  // ... other options
+  registerSW: null,
+}),
+```
+
+Check out the plugin's [API Reference]() for more information about the plugin options.
+
+### Setup Service Worker Communication
+
+To enable caching on client-side navigation or precaching or just to communicate with your service worker, you'll need to add the
+`useSWEffect` hook to your root component in the `root.tsx` file.
+
+```tsx {{ filename:"app/root.tsx" }}
+import { useSWEffect } from '@remix-pwa/sw'
+
+export default function App() {
+  useSWEffect()
+  return (
+    <html lang="en">
+      {/* ... */}
+    </html>
+  );
+}
+```
+
+<Info>
+The `useSWEffect` hook has had quite a few extra functionalities added to it since its last releaseEvents.
+Check out the [`useSWEffect`]() page for more information.
+</Info>
+
+### Add Service Worker HMR support 
+
+In your `root.tsx` file, replace the `LiveReload` component from `@remix-run/react` with `LiveReload` from `@remix-pwa/sw`. This will
+enable HMR support for your service worker and allow you to see changes in the service worker thread in real time.
+
+```tsx {{ filename:"app/root.tsx" }}
+import { LiveReload } from '@remix-pwa/sw'
+
+export default function App() {
+  return (
+    <html lang="en">
+      {/* ... */}
+      <body>
+        {/* ... */}
+        <LiveReload />
+      </body>
+    </html>
+  );
+}
+```
+
+That's it! If you followed the guide correctly, you are now good to go with utilizing Vite with Remix PWA 🚀.
