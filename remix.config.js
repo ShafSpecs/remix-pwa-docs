@@ -46,5 +46,6 @@ module.exports = {
     "clsx",
   ],
   appDirectory: "app",
-  tailwind: true
+  tailwind: true,
+  serverBuildPath: "build/index.js",
 };
