@@ -1,4 +1,4 @@
-name: Generate metadata
+name: Generate main metadata
 
 on:
   push:
