@@ -2,16 +2,13 @@ node_modules
 
 .cache
 .env
-.vercel
 .output
 .DS_Store
 
-/build/
-/public/build
+/build
+
 /public/entry.worker.js
 
-*.worker.js
-
-/app/styles/app.css
-
-guide.txt
+./test-results
+./coverage
+./playwright-report/**
