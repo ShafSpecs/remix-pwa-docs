@@ -1,15 +1,12 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: "class",
-  content: ["./app/**/*.{js,ts,jsx,tsx}"],
-  experimental: {
-    optimizeUniversalDefaults: true,
-  },
+export default {
+  content: ['./app/**/*.{tsx,ts,jsx,js}'],
+  darkMode: 'class',
   theme: {
     extend: {
-      typography: (theme) => ({
+      typography: theme => ({
         DEFAULT: {
           css: {
             maxWidth: 'none',
@@ -203,15 +200,33 @@ module.exports = {
           },
         },
       }),
+      colors: {
+        'background-color': 'var(--background-color)',
+        // slate: {
+        //   50: 'var(--slate-50)',
+        //   100: 'var(--slate-100)',
+        //   200: 'var(--slate-200)',
+        //   300: 'var(--slate-300)',
+        //   400: 'var(--slate-400)',
+        //   500: 'var(--slate-500)',
+        //   600: 'var(--slate-600)',
+        //   700: 'var(--slate-700)',
+        //   800: 'var(--slate-800)',
+        //   900: 'var(--slate-900)',
+        //   950: 'var(--slate-950)',
+        //   1000: 'var(--slate-1000)',
+        // },
+      },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
         mono: ['JetBrains Mono', ...defaultTheme.fontFamily.mono],
         fira: ['Fira Code', ...defaultTheme.fontFamily.mono],
+        space: ['Space', ...defaultTheme.fontFamily.sans],
       },
       maxWidth: {
         '8xl': '90rem',
       },
-    }
+    },
   },
   plugins: [
     require('@tailwindcss/typography'),
@@ -220,60 +235,15 @@ module.exports = {
         'supports-backdrop-blur',
         '@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))'
       )
-      addVariant('supports-scrollbars', '@supports selector(::-webkit-scrollbar)')
+      addVariant(
+        'supports-scrollbars',
+        '@supports selector(::-webkit-scrollbar)'
+      )
       addVariant('children', '& > *')
       addVariant('scrollbar', '&::-webkit-scrollbar')
       addVariant('scrollbar-track', '&::-webkit-scrollbar-track')
       addVariant('scrollbar-thumb', '&::-webkit-scrollbar-thumb')
       addVariant('demo-dark', '.demo-dark &')
     },
-    require("tailwind-heropatterns")({
-      variants: [],
-      patterns: ["topography", "slanted-stars", "circuit-board", "floating-cogs"],
-      opacity: {
-        default: "0.4",
-        "100": "1.0"
-      },
-      includeThemeColors: true,
-    }),
-    function ({ addUtilities, theme }) {
-      let backgroundSize = '7.07px 7.07px'
-      let backgroundImage = (color) =>
-        `linear-gradient(135deg, ${color} 10%, transparent 10%, transparent 50%, ${color} 50%, ${color} 60%, transparent 60%, transparent 100%)`
-      let colors = Object.entries(theme('backgroundColor')).filter(
-        ([, value]) => typeof value === 'object' && value[400] && value[500]
-      )
-
-      addUtilities(
-        Object.fromEntries(
-          colors.map(([name, colors]) => {
-            let backgroundColor = colors[400] + '1a' // 10% opacity
-            let stripeColor = colors[500] + '80' // 50% opacity
-
-            return [
-              `.bg-stripes-${name}`,
-              {
-                backgroundColor,
-                backgroundImage: backgroundImage(stripeColor),
-                backgroundSize,
-              },
-            ]
-          })
-        )
-      )
-
-      addUtilities({
-        '.bg-stripes-white': {
-          backgroundImage: backgroundImage('rgba(255 255 255 / 0.75)'),
-          backgroundSize,
-        },
-      })
-
-      addUtilities({
-        '.ligatures-none': {
-          fontVariantLigatures: 'none',
-        },
-      })
-    },
-  ]
-};
+  ],
+}

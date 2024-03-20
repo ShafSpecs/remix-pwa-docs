@@ -1,31 +1,6 @@
-@font-face {
-  font-family: "Benzin";
-  src: url("/fonts/Benzin/Benzin-Regular.ttf");
-  font-weight: 400;
-  font-style: normal;
-}
+/* Fonts Stylesheet */
 
-@font-face {
-  font-family: "Benzin";
-  src: url("/fonts/Benzin/Benzin-Medium.ttf");
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Benzin";
-  src: url("/fonts/Benzin/Benzin-Bold.ttf");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Nasa";
-  src: url("/fonts/Nasa/nasalization-rg.otf");
-  font-weight: 400;
-  font-style: normal;
-}
-
+/* -- Inter Font -- */
 @font-face {
   font-family: "Inter var";
   font-weight: 100 900;
@@ -44,13 +19,14 @@
   src: url("/fonts/Inter/Inter-italic.var.woff2") format("woff2");
 }
 
+/* -- FiraCode Font -- */
 @font-face {
   font-family: "Fira Code";
   font-weight: 400;
   font-display: block;
   font-style: normal;
   font-named-instance: "Regular";
-  src: url("/fonts/FiraCode/FiraCode-Regular.ttf") format("ttf");
+  src: url("/fonts/FiraCode/FiraCode-Regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -59,39 +35,16 @@
   font-display: block;
   font-style: normal;
   font-named-instance: "Medium";
-  src: url("/fonts/FiraCode/FiraCode-Medium.ttf") format("ttf");
+  src: url("/fonts/FiraCode/FiraCode-Medium.ttf");
 }
 
-/* For some reason, this only works here ;( */
 
-.hidden-custom {
-  opacity: 0;
-  filter: blur(1rem);
-  transform: translateX(-100%);
+/* -- SpaceTime Font -- */
+@font-face {
+  font-family: "Space";
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/Space/Space.woff2") format("woff2");
 }
 
-.show-custom {
-  filter: blur(0);
-  opacity: 1;
-  transform: translateX(0);
-}
-
-@media screen and (min-width: 1024px) {
-  .feature:nth-child(2) {
-    transition-delay: 150ms !important;
-  }
-
-  .feature:nth-child(3) {
-    transition-delay: 300ms !important;
-  }
-
-  .feature:nth-child(4) {
-    transition-delay: 450ms !important;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .hidden-custom {
-    transition: all .75s;
-  }
-}
+/* Feel free to add more fonts here! */
