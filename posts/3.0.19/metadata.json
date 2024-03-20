@@ -1,255 +1,294 @@
-[
-  {
-    "name": "Getting Started",
-    "position": 1,
-    "children": [
-      {
-        "title": "Get Started with Remix PWA",
-        "description": "Remix PWA is a compiler that bundles your service workers as well as provide utilities and modules to build your application.",
-        "section": "Getting Started",
-        "shortTitle": "Installation",
-        "position": 1
-      },
-      {
-        "title": "Upgrade Guide",
-        "description": "Learn how to upgrade to your Remix PWA App to v3.0",
-        "section": "Getting Started",
-        "shortTitle": "Upgrade Guide",
-        "position": 2
-      },
-      {
-        "title": "Contribute",
-        "description": "Learn how you can contribute to the Remix PWA Ecosystem. Thanks in advance for your help!",
-        "section": "Getting Started",
-        "shortTitle": "Contribute",
-        "position": 3
-      },
-      {
-        "title": "Community",
-        "description": "Communities are the heart of the open source movement. Find out how you can get involved with Remix community and join in on the action.",
-        "section": "Getting Started",
-        "shortTitle": "Community",
-        "position": 4
-      },
-      {
-        "title": "FAQ",
-        "description": "Frequently asked questions about Remix PWA.",
-        "section": "Getting Started",
-        "shortTitle": "FAQ",
-        "position": 5
-      },
-      {
-        "title": "Resources",
-        "description": "Extra resources to help you get started with Remix PWA and PWAs in general.",
-        "section": "Getting Started",
-        "shortTitle": "Resources",
-        "position": 6
-      },
-      {
-        "title": "Technical Explanantion",
-        "description": "An technical explanantion of Remix PWA v3.0 internals. This is for you if you love to know how things work under the hood.",
-        "section": "Getting Started",
-        "shortTitle": "Technical Explanantion",
-        "position": 7
-      },
-      {
-        "title": "Packages",
-        "description": "An overview of all the new packages that ships with Remix PWA v3.0",
-        "section": "Getting Started",
-        "shortTitle": "Packages",
-        "position": 9
-      }
-    ]
+{
+  "paths": {
+    "installation": "getting-started/installation",
+    "default-fetch-handler": "apis/default-fetch-handler",
+    "live-reload": "components/live-reload",
+    "background-sync": "utils/background-sync",
+    "remix-pwa-dev-cli": "other-apis/remix-pwa-dev-cli",
+    "browser-support": "guides/browser-support",
+    "upgrade-guide": "getting-started/upgrade-guide",
+    "error-handler": "apis/error-handler",
+    "use-sw-effect": "components/use-sw-effect",
+    "defer": "utils/defer",
+    "remix-pwa-runtime": "other-apis/remix-pwa-runtime",
+    "caching-strategies": "guides/caching-strategies",
+    "contribute": "getting-started/contribute",
+    "get-load-context": "apis/get-load-context",
+    "json": "utils/json",
+    "client-utilities": "guides/client-utilities",
+    "community": "getting-started/community",
+    "worker-action": "apis/worker-action",
+    "logger": "utils/logger",
+    "gotchas": "guides/gotchas",
+    "faq": "getting-started/faq",
+    "worker-loader": "apis/worker-loader",
+    "redirect": "utils/redirect",
+    "precaching": "guides/precaching",
+    "resources": "getting-started/resources",
+    "remix-config-js": "utils/remix-config-js",
+    "type-script": "guides/type-script",
+    "technical-explanantion": "getting-started/technical-explanantion",
+    "remix-cache": "utils/remix-cache",
+    "versioning": "guides/versioning",
+    "packages": "getting-started/packages"
   },
-  {
-    "name": "Routes & Worker API",
-    "position": 2,
-    "children": [
-      {
-        "title": "defaultFetchHandler",
-        "description": "Default handler for fetching requests in the worker. Fallback for all request not handled by route worker APIs.",
-        "section": "Routes & Worker API",
-        "shortTitle": "defaultFetchHandler",
-        "position": 1
-      },
-      {
-        "title": "errorHandler",
-        "description": "Error Handling in Remix PWA. Catch, handle and diagnose errors that occur in your service worker.",
-        "section": "Routes & Worker API",
-        "shortTitle": "errorHandler",
-        "position": 2
-      },
-      {
-        "title": "getLoadContext",
-        "description": "Global context object for the worker thread. Share data globally between your workers in your routes and your service worker.",
-        "section": "Routes & Worker API",
-        "shortTitle": "getLoadContext",
-        "position": 3
-      },
-      {
-        "title": "workerAction",
-        "description": "Worker-only handlers for non-GET requests. Intercept and handle requests meant for the action easily in the worker thread.",
-        "section": "Routes & Worker API",
-        "shortTitle": "workerAction",
-        "position": 4
-      },
-      {
-        "title": "workerLoader",
-        "description": "Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes.",
-        "section": "Routes & Worker API",
-        "shortTitle": "workerLoader",
-        "position": 5
-      }
-    ]
+  "sections": [
+    "Getting Started",
+    "Routes & Worker APIs",
+    "Hooks & Components",
+    "Utilities",
+    "Other APIs",
+    "Guides"
+  ],
+  "meta": {
+    "installation": {
+      "title": "Get Started with Remix PWA",
+      "alternateTitle": "Installation",
+      "description": "Remix PWA is a compiler that bundles your service workers as well as provide utilities and modules to build your application.",
+      "section": "Getting Started",
+      "slug": "installation",
+      "spacer": true
+    },
+    "default-fetch-handler": {
+      "title": "defaultFetchHandler",
+      "alternateTitle": "defaultFetchHandler",
+      "description": "Default handler for fetching requests in the worker. Fallback for all request not handled by route worker APIs.",
+      "section": "Routes & Worker APIs",
+      "slug": "default-fetch-handler",
+      "spacer": true
+    },
+    "live-reload": {
+      "title": "LiveReload",
+      "alternateTitle": "LiveReload",
+      "description": "Remix PWA LiveReload Component. Provide HMR and reloading support to the worker thread in Remix PWA.",
+      "section": "Hooks & Components",
+      "slug": "live-reload",
+      "spacer": true
+    },
+    "background-sync": {
+      "title": "Background Sync",
+      "alternateTitle": "Background Sync",
+      "description": "Background Sync allows you to defer actions until the user has stable connectivity. This is useful for ensuring that whatever the user wants to send, is actually sent.",
+      "section": "Utilities",
+      "slug": "background-sync",
+      "spacer": true
+    },
+    "remix-pwa-dev-cli": {
+      "title": "@remix-pwa/dev (CLI)",
+      "alternateTitle": "@remix-pwa/dev CLI",
+      "description": "Remix PWA CLI comes with the @remix-pwa/dev package. It also ships with the compiler, as well as templates for creating new Remix PWA projects. Let's explore the CLI in this section.",
+      "section": "Other APIs",
+      "slug": "remix-pwa-dev-cli",
+      "spacer": true
+    },
+    "browser-support": {
+      "title": "Browser Support",
+      "alternateTitle": "Browser Support",
+      "description": "Not all browsers are created equal. A quick rundown of what you should be on the lookout for when developing.",
+      "section": "Guides",
+      "slug": "browser-support",
+      "spacer": true
+    },
+    "upgrade-guide": {
+      "title": "Upgrade Guide",
+      "alternateTitle": "Upgrade Guide",
+      "description": "Learn how to upgrade to your Remix PWA App to v3.0",
+      "section": "Getting Started",
+      "slug": "upgrade-guide",
+      "spacer": true
+    },
+    "error-handler": {
+      "title": "errorHandler",
+      "alternateTitle": "errorHandler",
+      "description": "Error Handling in Remix PWA. Catch, handle and diagnose errors that occur in your service worker.",
+      "section": "Routes & Worker APIs",
+      "slug": "error-handler",
+      "spacer": true
+    },
+    "use-sw-effect": {
+      "title": "useSWEffect",
+      "alternateTitle": "useSWEffect",
+      "description": "useSWEffect is a React hook exported from the @remix-pwa/sw package that updates the Service Worker with changes in the main thread.",
+      "section": "Hooks & Components",
+      "slug": "use-sw-effect",
+      "spacer": true
+    },
+    "defer": {
+      "title": "defer",
+      "alternateTitle": "defer",
+      "description": "A utility or creating a streaming/deferred response.",
+      "section": "Utilities",
+      "slug": "defer",
+      "spacer": true
+    },
+    "remix-pwa-runtime": {
+      "title": "@remix-pwa/{runtime}",
+      "alternateTitle": "@remix-pwa/{runtime}",
+      "description": "Runtimes are the underlying Service Worker logic that Remix PWA uses to handle fetching, routing, caching, and more. This page contains all the official runtimes and community runtimes.",
+      "section": "Other APIs",
+      "slug": "remix-pwa-runtime",
+      "spacer": true
+    },
+    "caching-strategies": {
+      "title": "Caching Strategies",
+      "alternateTitle": "Caching Strategies",
+      "description": "Cache according to how you want it. Introducing strategies for more granular control over your caching process.",
+      "section": "Guides",
+      "slug": "caching-strategies",
+      "spacer": true
+    },
+    "contribute": {
+      "title": "Contribute",
+      "alternateTitle": "Contribute",
+      "description": "Learn how you can contribute to the Remix PWA Ecosystem. Thanks in advance for your help!",
+      "section": "Getting Started",
+      "slug": "contribute",
+      "spacer": true
+    },
+    "get-load-context": {
+      "title": "getLoadContext",
+      "alternateTitle": "getLoadContext",
+      "description": "Global context object for the worker thread. Share data globally between your workers in your routes and your service worker.",
+      "section": "Routes & Worker APIs",
+      "slug": "get-load-context",
+      "spacer": true
+    },
+    "json": {
+      "title": "json",
+      "alternateTitle": "json",
+      "description": "A utility to create application/json responses",
+      "section": "Utilities",
+      "slug": "json",
+      "spacer": true
+    },
+    "client-utilities": {
+      "title": "Client Utilities",
+      "alternateTitle": "Client Utilities",
+      "description": "Remix PWA library of client utilities to spice up your PWA native experience. APIs to add that cherry-on-top feel to your PWA.",
+      "section": "Guides",
+      "slug": "client-utilities",
+      "spacer": true
+    },
+    "community": {
+      "title": "Community",
+      "alternateTitle": "Community",
+      "description": "Communities are the heart of the open source movement. Find out how you can get involved with Remix community and join in on the action.",
+      "section": "Getting Started",
+      "slug": "community",
+      "spacer": true
+    },
+    "worker-action": {
+      "title": "workerAction",
+      "alternateTitle": "workerAction",
+      "description": "Worker-only handlers for non-GET requests. Intercept and handle requests meant for the action easily in the worker thread.",
+      "section": "Routes & Worker APIs",
+      "slug": "worker-action",
+      "spacer": true
+    },
+    "logger": {
+      "title": "logger",
+      "alternateTitle": "logger",
+      "description": "A custom, enhanced logger for Remix PWA. Enables beautiful logging in the browser console in only development environments.",
+      "section": "Utilities",
+      "slug": "logger",
+      "spacer": true
+    },
+    "gotchas": {
+      "title": "Gotchas",
+      "alternateTitle": "Gotchas",
+      "description": "A list of what-not-to-do's and gotchas 😜 in Remix PWA. Safety first!",
+      "section": "Guides",
+      "slug": "gotchas",
+      "spacer": true
+    },
+    "faq": {
+      "title": "FAQ",
+      "alternateTitle": "FAQ",
+      "description": "Frequently asked questions about Remix PWA.",
+      "section": "Getting Started",
+      "slug": "faq",
+      "spacer": true
+    },
+    "worker-loader": {
+      "title": "workerLoader",
+      "alternateTitle": "workerLoader",
+      "description": "Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes.",
+      "section": "Routes & Worker APIs",
+      "slug": "worker-loader",
+      "spacer": true
+    },
+    "redirect": {
+      "title": "redirect",
+      "alternateTitle": "redirect",
+      "description": "A utility to assist with sending 30x responses. Useful for redirects in the browser.",
+      "section": "Utilities",
+      "slug": "redirect",
+      "spacer": true
+    },
+    "precaching": {
+      "title": "Precaching",
+      "alternateTitle": "Precaching",
+      "description": "Caching before you need it. Explore precaching and learn how to cache before your users even know they need it.",
+      "section": "Guides",
+      "slug": "precaching",
+      "spacer": true
+    },
+    "resources": {
+      "title": "Resources",
+      "alternateTitle": "Resources",
+      "description": "Extra resources to help you get started with Remix PWA and PWAs in general.",
+      "section": "Getting Started",
+      "slug": "resources",
+      "spacer": true
+    },
+    "remix-config-js": {
+      "title": "Configuring with remix.config.js",
+      "alternateTitle": "remix.config.js",
+      "description": "Remix configuration file just got a new addition! Read about the hijack and how to upgrade your config file.",
+      "section": "Utilities",
+      "slug": "remix-config-js",
+      "spacer": true
+    },
+    "type-script": {
+      "title": "TypeScript Support",
+      "alternateTitle": "TypeScript",
+      "description": "Typescript and Remix PWA. A match made in heaven. Check out our thoughts on TypeScript and our support for it in Remix PWA.",
+      "section": "Guides",
+      "slug": "type-script",
+      "spacer": true
+    },
+    "technical-explanantion": {
+      "title": "Technical Explanantion",
+      "alternateTitle": "Technical Explanantion",
+      "description": "An technical explanantion of Remix PWA v3.0 internals. This is for you if you love to know how things work under the hood.",
+      "section": "Getting Started",
+      "slug": "technical-explanantion",
+      "spacer": true
+    },
+    "remix-cache": {
+      "title": "RemixCache",
+      "alternateTitle": "RemixCache",
+      "description": "A wrapper for the browser's Cache API. Use this to cache data in the browser with more control and less-hassle.",
+      "section": "Utilities",
+      "slug": "remix-cache",
+      "spacer": true
+    },
+    "versioning": {
+      "title": "Versioning in Remix PWA",
+      "alternateTitle": "Versioning",
+      "description": "A short exceprt on how versioning work in Remix PWA",
+      "section": "Guides",
+      "slug": "versioning",
+      "spacer": true
+    },
+    "packages": {
+      "title": "Packages",
+      "alternateTitle": "Packages",
+      "description": "An overview of all the new packages that ships with Remix PWA v3.0",
+      "section": "Getting Started",
+      "slug": "packages",
+      "spacer": true
+    }
   },
-  {
-    "name": "Hooks & Components",
-    "position": 3,
-    "children": [
-      {
-        "title": "LiveReload",
-        "description": "Remix PWA LiveReload Component. Provide HMR and reloading support to the worker thread in Remix PWA.",
-        "section": "Hooks & Components",
-        "shortTitle": "LiveReload",
-        "position": 1
-      },
-      {
-        "title": "useSWEffect",
-        "description": "useSWEffect is a React hook exported from the @remix-pwa/sw package that updates the Service Worker with changes in the main thread.",
-        "section": "Hooks & Components",
-        "shortTitle": "useSWEffect",
-        "position": 2
-      }
-    ]
-  },
-  {
-    "name": "Utilities",
-    "position": 4,
-    "children": [
-      {
-        "title": "Background Sync",
-        "description": "Background Sync allows you to defer actions until the user has stable connectivity. This is useful for ensuring that whatever the user wants to send, is actually sent.",
-        "section": "Utilities",
-        "shortTitle": "Background Sync",
-        "position": 1
-      },
-      {
-        "title": "defer",
-        "description": "A utility or creating a streaming/deferred response.",
-        "section": "Utilities",
-        "shortTitle": "defer",
-        "position": 2
-      },
-      {
-        "title": "json",
-        "description": "A utility to create application/json responses",
-        "section": "Utilities",
-        "shortTitle": "json",
-        "position": 3
-      },
-      {
-        "title": "logger",
-        "description": "A custom, enhanced logger for Remix PWA. Enables beautiful logging in the browser console in only development environments.",
-        "section": "Utilities",
-        "shortTitle": "logger",
-        "position": 4
-      },
-      {
-        "title": "redirect",
-        "description": "A utility to assist with sending 30x responses. Useful for redirects in the browser.",
-        "section": "Utilities",
-        "shortTitle": "redirect",
-        "position": 5
-      },
-      {
-        "title": "Configuring with remix.config.js",
-        "description": "Remix configuration file just got a new addition! Read about the hijack and how to upgrade your config file.",
-        "section": "Utilities",
-        "shortTitle": "remix.config.js",
-        "position": 6
-      },
-      {
-        "title": "RemixCache",
-        "description": "A wrapper for the browser's Cache API. Use this to cache data in the browser with more control and less-hassle.",
-        "section": "Utilities",
-        "shortTitle": "RemixCache",
-        "position": 7
-      }
-    ]
-  },
-  {
-    "name": "Other API",
-    "position": 5,
-    "children": [
-      {
-        "title": "@remix-pwa/dev (CLI)",
-        "description": "Remix PWA CLI comes with the @remix-pwa/dev package. It also ships with the compiler, as well as templates for creating new Remix PWA projects. Let's explore the CLI in this section.",
-        "section": "Other API",
-        "shortTitle": "@remix-pwa/dev CLI",
-        "position": 1
-      },
-      {
-        "title": "@remix-pwa/{runtime}",
-        "description": "Runtimes are the underlying Service Worker logic that Remix PWA uses to handle fetching, routing, caching, and more. This page contains all the official runtimes and community runtimes.",
-        "section": "Other API",
-        "shortTitle": "@remix-pwa/{runtime}",
-        "position": 2
-      }
-    ]
-  },
-  {
-    "name": "Guides",
-    "position": 6,
-    "children": [
-      {
-        "title": "Browser Support",
-        "description": "Not all browsers are created equal. A quick rundown of what you should be on the lookout for when developing.",
-        "section": "Guides",
-        "shortTitle": "Browser Support",
-        "position": 1
-      },
-      {
-        "title": "Caching Strategies",
-        "description": "Cache according to how you want it. Introducing strategies for more granular control over your caching process.",
-        "section": "Guides",
-        "shortTitle": "Caching Strategies",
-        "position": 2
-      },
-      {
-        "title": "Client Utilities",
-        "description": "Remix PWA library of client utilities to spice up your PWA native experience. APIs to add that cherry-on-top feel to your PWA.",
-        "section": "Guides",
-        "shortTitle": "Client Utilities",
-        "position": 3
-      },
-      {
-        "title": "Gotchas",
-        "description": "A list of what-not-to-do's and gotchas 😜 in Remix PWA. Safety first!",
-        "section": "Guides",
-        "shortTitle": "Gotchas",
-        "position": 4
-      },
-      {
-        "title": "Precaching",
-        "description": "Caching before you need it. Explore precaching and learn how to cache before your users even know they need it.",
-        "section": "Guides",
-        "shortTitle": "Precaching",
-        "position": 5
-      },
-      {
-        "title": "TypeScript Support",
-        "description": "Typescript and Remix PWA. A match made in heaven. Check out our thoughts on TypeScript and our support for it in Remix PWA.",
-        "section": "Guides",
-        "shortTitle": "TypeScript",
-        "position": 6
-      },
-      {
-        "title": "Versioning in Remix PWA",
-        "description": "A short exceprt on how versioning work in Remix PWA",
-        "section": "Guides",
-        "shortTitle": "Versioning",
-        "position": 7
-      }
-    ]
-  }
-]
+  "hasIndex": false
+}
