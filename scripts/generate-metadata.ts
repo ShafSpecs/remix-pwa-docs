@@ -91,9 +91,17 @@ tags.forEach(async tag => {
     })
     .filter(f => f.data.hidden !== true)
     .sort((a, b) => {
-      if (a.data.order === undefined || b.data.order === undefined) {
+      if (
+        (a.data.order === undefined || b.data.order === undefined) &&
+        (a.data.position === undefined || b.data.position === undefined)
+      ) {
         return a.data.title - b.data.title
       }
+
+      if (a.data.order === undefined || b.data.order === undefined) {
+        return a.data.position - b.data.position
+      }
+
       return a.data.order - b.data.order
     })
     .reduce((acc, curr) => {
