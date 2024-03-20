@@ -1,17 +1,18 @@
 node_modules
 
 .cache
+.github
 .env
 .output
 .DS_Store
 
-/build/
-/public/build
+/build
 /public/entry.worker.js
 
-*.worker.js
+./test-results
+./coverage
+./playwright-report/**
+./tests
+./scripts
 
-/app/styles/app.css
-
-guide.txt
-posts/**
+/posts
