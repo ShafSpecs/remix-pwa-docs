@@ -1,0 +1,144 @@
+---
+title: workerLoader
+description: Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes. 
+alternateTitle: workerLoader
+position: 5
+---
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Info from './info.tsx'
+import Warn from './warn.tsx'
+
+Each route can define a `workerLoader` that intercepts requests to the `loader`.
+
+```tsx
+import { json } from "@remix-run/node"; // or cloudflare/deno
+import { json as client } from "@remix-pwa/sw";
+
+export const loader = async () => {
+  return json({ message: "server" });
+};
+
+export const workerLoader = async (request) => {
+  return client({ message: "worker loader"});
+};
+
+export default function Index() {
+  return <h1>Index</h1>;
+}
+```
+
+## `request`
+
+This is a [Fetch Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) instance. Read up the MDN docs to learn more about it.
+
+The most common use case for this is actually fetching the request, reading cookies, getting URLs or caching a particular route:
+
+```ts
+export const workerLoader = async ({ request }) => {
+  // get the request method
+  const method = request.method;
+
+  // read a cookie
+  const cookie = request.headers.get("Cookie");
+
+  // parse the search params for `?q=`
+  const url = new URL(request.url);
+  const query = url.searchParams.get("q");
+};
+```
+
+<Warn>
+Remix PWA strips down the `request` object and removes the `_data` property (like Remix)
+
+If you want to access the original request, you can use `context.event.request` instead.
+</Warn>
+
+## `params`
+
+Route params are defined by route file names. If a segment begins with `$` like `$invoiceId`, the value from the URL for that segment will be passed to your fetch handler (just like Remix!).
+
+```ts {{ filename: 'app/routes/$invoiceId' }}
+import type { WorkerLoaderArgs } from "@remix-pwa/sw";
+
+export const workerLoader = async ({ request, params }: WorkerLoaderArgs) => {
+  // if the user visits /invoices/123
+  // params.invoiceId will be "123"
+  const invoiceId = params.invoiceId;
+};
+```
+
+## `context`
+
+This is the context passed into your fetch handlers via Remix PWA's [`getLoadContext`](/docs/get-load-context) function. This is a very powerful tool that allows you to pass data
+around the worker thread. A simple `getLoadContext` example:
+
+```ts {{ filename: 'entry.worker.ts' }}
+import type { GetLoadContextFunction } from "@remix-pwa/sw";
+
+export const getLoadContext: GetLoadContextFunction = async (event: fetchEvent) => {
+  const { request } = event;
+  const url = new URL(request.url);
+  const query = url.searchParams.get("filter");
+
+  return { filterQuery: query };
+};
+```
+
+And you can utilise this in your loader:
+
+```ts {{ filename: 'app/routes/text.tsx' }}
+export const workerLoader = async ({ request, context }) => {
+  const { filterQuery } = context;
+
+  // do something with filterQuery
+};
+```
+
+<Info>
+Remix PWA models its Route APIs after Remix's own. So `context`, `params` and `request` are no much different from how you approach
+them in `action`s or `loader`s.
+</Info>
+
+## Returning Responses from `workerLoader`
+
+You must return a `Response` object from your `workerLoader` function. `workerLoader` functions behave like Remix's loaders and actions 
+in the sense that whenever it is defined, it must return something. 
+
+You can use Remix PWA's `json` helper to return JSON responses:
+
+```ts
+import { json } from "@remix-pwa/pwa";
+
+// ...
+
+export const workerLoader = async ({ request }) => {
+  return json({ message: "worker loader found"});
+};
+```
+
+## Throwing Errors from `workerLoader`
+
+You can throw errors from your `workerLoader` function. Remember, the client now views `workerLoader` as the new `loader` (server), so you can throw
+errors from it to help with redirecting or triggering `ErrorBoundary`:
+
+```ts {{ filename: 'app/routes/$invoiceId' }}
+import { redirect } from "@remix-pwa/sw";
+
+export const workerLoader = async ({ request, params }) => {
+  const invoiceId = params.invoiceId;
+
+  if (!invoiceId) {
+    throw redirect("/invoices");
+  }
+
+  // ...
+
+  return null // never forget to return something
+};
+```
+
+Curious about how `workerLoader` work? Check out the [`workerAction`](/docs/worker-action#how-does-it-work) page for the deep dive.
+
+Read up Remix [loader](https://remix.run/docs/en/main/route/loader#returning-response-instances) docs for additional info.

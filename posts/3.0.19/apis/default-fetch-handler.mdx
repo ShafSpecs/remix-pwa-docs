@@ -1,0 +1,164 @@
+---
+title: defaultFetchHandler
+description: Default handler for fetching requests in the worker. Fallback for all request not handled by route worker APIs.
+alternateTitle: defaultFetchHandler
+position: 1
+---
+
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Info from './info.tsx'
+import Warn from './warn.tsx'
+import Snippet from './snippet.tsx'
+
+In a default (, de-facto) Remix application, whenever you make a request to a URL or route, the browser will make a request to the server and return the response.
+That is simple a `fetch(request)` call. Service Workers are a middle layer between the browser and the server, so they intercept requests being made by the browser
+and can respond to them themselves. Meaning, the service worker determines how the browser makes calls and what it recieves.
+
+In comes `defaultFetchHandler`. This is a handler exported from your service worker that Remix PWA will use to handle all requests from routes without [`workerLoader`](/docs/worker-loader)
+or [`workerAction`](/docs/worker-action). If you have used Remix PWA before, think of this as your normal fetch handler that you pass to the Service Worker `fetch` event handler.
+
+---
+
+## Basic Usage
+
+### Basic browser fetching
+
+```ts {{ filename:'entry.worker.ts' }}
+export const defaultFetchHandler = async ({ request }) => {
+  return fetch(request);
+};
+```
+
+At the most basic level, you can just return the fetch request. This will make the browser fetch the request as normal. This is how a standard Remix application works.
+
+But this is boring, and we want to do more with our service worker. So let's look at something a bit more.
+
+### A little bit of caching
+
+We can throw in some caching to make our application a bit faster. We can use the `cache` object to cache our requests. This is a simple key-value store that we can use to store
+responses from our server. We can then use the `cache.match` method to check if we have a cached response for a request. If we do, we can return that response, otherwise we can
+fetch the request and cache the response.
+
+```ts {{ filename:'entry.worker.ts' }}
+import type { WorkerDataFunctionArgs } from "@remix-pwa/sw";
+
+export const defaultFetchHandler = async ({ request }: WorkerDataFunctionArgs) => {
+  if (request.method.toUpperCase() !== "GET") 
+    return fetch(request);
+
+  const cache = await caches.open("remix-pwa");
+  const cachedResponse = await cache.match(request);
+
+  if (cachedResponse) 
+    return cachedResponse;
+
+  const response = await fetch(request);
+  await cache.put(request, response.clone());
+
+  return response;
+};
+```
+
+This now caches every single `GET` request that is made to the server and returns that cached response (this would cause stale data to pile though!). By now, you should have a very good 
+idea of how this works, you can expand this to do much more crazy things; like cache certain resources, rate limit requests, background syncing, etc. It is a very powerful tool.
+
+<Info>
+In summary, `defaultFetchHandler` is an exported handler from your service worker file that handles all incoming requests from your application
+and runs solely in the service worker. It is a fallback for all requests that are not handled by [`workerLoader`](/docs/worker-loader) or [`workerAction`](/docs/worker-action).
+</Info>
+
+---
+
+## API
+
+### `request`
+
+This is a [Fetch Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) instance. Read up the MDN docs to learn more about it.
+
+The most common use case for this is actually fetching the request, reading cookies, getting URLs or caching a particular route:
+
+```ts
+export const defaultFetchHandler = async ({ request }) => {
+  // get the request method
+  const method = request.method;
+
+  // read a cookie
+  const cookie = request.headers.get("Cookie");
+
+  // parse the search params for `?filter=`
+  const url = new URL(request.url);
+  const query = url.searchParams.get("filter");
+};
+```
+
+<Warn>
+Remix PWA strips down the `request` object and removes the `_data` property (like Remix)
+
+If you want to access the original request, you can use `context.event.request` instead.
+</Warn>
+
+### `params`
+
+Route params are defined by route file names. If a segment begins with `$` like `$invoiceId`, the value from the URL for that segment will be passed to your fetch handler (just like Remix!).
+
+```ts {{ filename: 'entry.worker.ts' }}
+export const defaultFetchHandler = async ({ request, params }) => {
+  // if the route is `/invoice/:invoiceId`
+  // and the URL is `/invoice/123`
+  // then params.invoiceId will be `123`
+  const invoiceId = params.invoiceId;
+};
+```
+
+### `context`
+
+This is the context passed into your fetch handlers via Remix PWA's [`getLoadContext`](/docs/get-load-context) function. This is a very powerful tool that allows you to pass data
+around the worker thread. A simple `getLoadContext` example:
+
+```ts {{ filename: 'entry.worker.ts' }}
+import type { GetLoadContextFunction } from "@remix-pwa/sw";
+
+export const getLoadContext: GetLoadContextFunction = async (event: fetchEvent) => {
+  const { request } = event;
+  const url = new URL(request.url);
+  const query = url.searchParams.get("filter");
+
+  // Assuming for some weird reason, you are filtering on almost all your routes.
+  return { filterQuery: query };
+};
+```
+
+And you can utilise this in your fetch handler:
+
+```ts {{ filename: 'entry.worker.ts' }}
+export const defaultFetchHandler = async ({ request, context }) => {
+  const { filterQuery } = context;
+
+  // do something with filterQuery
+};
+```
+
+<Info>
+Remix PWA models its Route APIs after Remix's own. So `context`, `params` and `request` are no much different from how you approach
+them in `action`s or `loader`s.
+</Info>
+
+---
+
+## TypeScript Support
+
+### Type Safety
+
+Remix PWA utilises a TypeScript-first approach. This means that all the APIs are typed and you get full type safety when using them.
+A few types to assist with `defaultFetchHandler` are shipped with the `@remix-pwa/sw` package:
+
+```ts
+// The type of the `defaultFetchHandler` handler itself
+type GetLoadContextFunction = (event: FetchEvent) => WorkerLoadContext;
+```
+
+<Info>
+`defaultFetchHandler` is a reserved export name, like other exports in Remix PWA.
+You can't rename before of modify them (like Remix's loaders and actions).
+</Info>

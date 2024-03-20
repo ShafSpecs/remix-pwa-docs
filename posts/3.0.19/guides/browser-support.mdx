@@ -1,0 +1,21 @@
+---
+title: Browser Support
+description: Not all browsers are created equal. A quick rundown of what you should be on the lookout for when developing.
+alternateTitle: Browser Support
+position: 1
+---
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+
+First thing of note, Remix PWA (like Remix) only runs on browsers that support ES Modules. Secondly, browsers that don't support Service Workers
+are incompatible with Remix PWA.
+
+## Feature-by-Feature Approach
+
+What this means is that although Remix PWA ships with **a lot** of features, not all of them are available on all browsers. I recommend a
+feature-by-feature approach meaning before implementing any major API (like Background Sync, WakeLock, QR Code Scanning 👀, etc.), confirm
+wether it is supported on the browsers you are targeting. 
+
+You can use [caniuse.com](https://caniuse.com) to check for browser support. For example, if you want to use the [WakeLock API](https://developer.mozilla.org/en-US/docs/Web/API/WakeLock), you can search for it on caniuse.com and see that it is only supported on browsers
+except Firefox (even Safari supports it, come on Mozilla 🙄).

@@ -1,0 +1,37 @@
+---
+title: errorHandler
+description: Error Handling in Remix PWA. Catch, handle and diagnose errors that occur in your service worker.
+alternateTitle: errorHandler
+position: 2
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Info from './info.tsx'
+
+First things first, we are humans. That means errors would occur and problems would arise. Smart people put this in mind when building anything
+and plan ahead for it. In programming it's called Error Handling. In Remix PWA, it's called `errorHandler`.
+
+The `errorHandler` function is a function that's exported from your service worker, it's called whenever an error occurs somewhere along
+the request-and-respond pipeline (when fetching the request, when caching the response, when responding to the request, etc).
+
+---
+
+## Error Handling
+
+Currently, the `errorhandler` is a simple function that takes in the error and returns `void` (it can return something but it would be unused). 
+The error is of type `Error` and it's the error that occurred. You can use this to log the error, send it to a third party service, or do whatever
+you want with it.
+
+```ts {{ filename:'entry.worker.ts' }}
+export function errorHandler(error: Error) {
+  console.error(error)
+}
+```
+
+<Info>
+This is a very simple error handler, but it's enough for most cases. We are planning to add more features to it in the future.
+
+If you have any idea or proposal for this, feel free to mention it on Remix's [Discord](https://rmx.as/discord) server.
+</Info>

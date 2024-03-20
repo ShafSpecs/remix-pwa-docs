@@ -1,0 +1,33 @@
+---
+title: Versioning in Remix PWA
+description: A short exceprt on how versioning work in Remix PWA
+alternateTitle: Versioning
+position: 7
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+
+## Versioning
+
+### What is versioning?
+
+Versioning is a way to keep track of changes to your application. It is a way to know what changes were made, when they were made, and who made them. 
+It is also a way to revert back to a previous version of your application if needed.
+
+### How does versioning work in Remix PWA?
+
+You might have noticed this article continously refer to the update as Remix PWA v3.0, whilst the versions of the `@remix-pwa/*` packages are
+all `2.x.x`. This is because Remix PWA adopted a two-way versioning system. Meaning there are two versions for every major update that comes out.
+
+A little bit of history, dim the lights please 💡! Remix PWA started out as a simple executable that scaffolds the app for you. It copied stuffs from a predefined template
+and pasted it into your application. Said bye-bye and you were on your own to grow the PWA from there. That was the v0.x.x (alpha and beta stages) and also v1.x.x (stable stage).
+
+Then came v2.x.x. This was a major update. It introduced a lot of new features and also a set of packages for doing multiple things. This was just `@remix-pwa/sw` and `@remix-pwa/push`
+but nonetheless, it was a major update. The packages were released as `1.x.x` (one major version lower than the actual executable).
+
+Now, v3.0 is here. Another major update, probably the biggest of them all and it follows the same convention, the `remix-pwa` executable is `3.x.x` and the packages are `2.x.x`,
+even those that were just released (e.g `@remix-pwa/dev`).
+
+That's it! That's how versioning works in Remix PWA 👋.

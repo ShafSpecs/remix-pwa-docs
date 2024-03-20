@@ -1,0 +1,169 @@
+---
+title: Precaching
+description: Caching before you need it. Explore precaching and learn how to cache before your users even know they need it.
+alternateTitle: Precaching
+position: 5
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Info from './info.tsx'
+
+## Precaching
+
+### What is precaching?
+
+Precaching is the process of caching assets before they are needed. This is useful for assets that are needed for the first page load, but not necessarily for the current page. For example,
+if you have a page that links to a blog post, you can precache the blog post page so that when the user clicks the link, the page loads instantly.
+
+Precaching is especially useful for static assets and/or pages that are frequently updated. This set of actions are usually run during the service worker installation phase.
+
+### Precaching in Remix PWA
+
+Remix PWA supports caching out-of-the-box with the `PrecacheHandler` available in the `@remix-pwa/sw` package. The `PrecacheHandler` is a class that takes in a three caches for storing
+assets, pages (documents) and data (loader responses). Currently, the `PrecacheHandler` makes use of the `message` event to handle it's precaching logic. This means that you will need to
+register the `PrecacheHandler` in your service worker file. Then pass that handler to the `message` event listener.
+
+```ts {{ filename:'entry.worker.ts' }}
+import { PrecacheHandler } from '@remix-pwa/sw'
+
+const precacheHandler = new PrecacheHandler({
+  dataCache: 'data',
+  documentCache: 'documents',
+  assetCache: 'assets',
+})
+
+self.addEventListener('message', (event) => {
+  precacheHandler.handle(event)
+})
+```
+
+The `PrecacheHandler` takes in three caches, `dataCache`, `documentCache` and `assetCache`. These caches are used to store the data, documents and assets respectively. The `PrecacheHandler`
+also has a `state` property which can be used to pass additional data to the message handler. 
+
+For `PrecacheHandler`, this is the `ignoredRoutes` property. This property is used to ignore certain routes from being precached. This is useful for routes that are not static and/or
+frequently updated. 
+
+```ts {{ filename:'entry.worker.ts' }}
+import { PrecacheHandler } from '@remix-pwa/sw'
+
+const precacheHandler = new PrecacheHandler({
+  dataCache: 'data',
+  documentCache: 'documents',
+  assetCache: 'assets',
+  ignoredRoutes: ['/dashboard', '/blog'],
+})
+```
+
+<Info>
+Parametized routes are always ignored by default. This is because parametized routes are dynamic and can change at any time.
+</Info>
+
+### How does it work?
+
+The `PrecacheHandler` uses the `message` event to handle precaching. The [`useSWEffect`](/docs/use-sw-effect) hook sends message to the service worker regarding the state of the app,
+and one of the key thing it sends is the route manifest (`window.__remixManifest`), utilizing this, the `PrecacheHandler` can precache the routes in the manifest by looping through the
+manifest and precaching each route.
+
+It also runs once, and that's when your app renders. This is because the `useSWEffect` sends information to the service worker on first render, and the `PrecacheHandler` uses this
+information to precache on first render only.
+
+### JiT Caching vs Precaching
+
+JiT (Just-in-Time) caching (or cache-as-needed) is a caching strategy where data is cached and retrieved dynamically as needed, rather than preloading and storing all possible data in advance.
+This is typically **after** the user has navigated to the page and the asset has been fetched by the network.
+
+Precaching is the process of caching (preloading) assets before they are needed. Hence, the fetching occurs only in the Service Worker and when the user navigates to the page, 
+the asset is served from cache.
+
+<Info>
+Note: 'asset' in this context doesn't just mean static assets like images, fonts, etc. It also includes pages and loader data (responses from loaders).
+</Info>
+
+### How do I choose?
+
+When implementing caching strategies with service workers. Each approach (precaching and JiT caching) has its own strengths and use cases.
+
+**Pre-Caching:**
+
+Pre-caching involves fetching and storing critical assets and data in the cache before they are actually needed. These assets are typically determined at build time 
+or during the initial application load. Pre-caching is beneficial in the following scenarios:
+
+- **Offline-First Apps:** When building offline-first applications, precaching ensures that essential resources are available even when the user is offline. This is ideal for progressive web apps (PWAs) and mobile applications that require seamless offline functionality.
+- **Performance Optimization:** Precaching can improve page load times by serving cached assets directly from the service worker, reducing the need for network requests. This is especially valuable for frequently accessed resources like images, stylesheets, and scripts.
+- **Predictable Resource Availability:** By precaching, you can ensure that specific versions of assets are consistently available, reducing the risk of serving outdated content to users.
+
+**JiT (Just-In-Time) Caching:**
+
+JIT caching, on the other hand, fetches and caches assets only when they are requested. This approach is dynamic and fetches resources in response to user interactions or application logic. JIT caching is advantageous in these situations:
+
+- **Dynamic Content:** When dealing with content that changes frequently, such as user-generated data or real-time updates, JIT caching ensures that the freshest data is always retrieved.
+- **Resource Efficiency:** JIT caching can be more resource-efficient because it doesn't pre-cache all assets, potentially saving storage space and reducing initial load times.
+- **Adaptive Caching:** JIT caching adapts to user behavior and application needs. It can be configured to cache only what's necessary, reducing unnecessary caching and minimizing cache maintenance.
+
+In summary, the choice between pre-caching and JIT caching depends on your web application's specific requirements and usage patterns. Pre-caching is suitable for delivering a consistent experience in offline and high-performance scenarios, 
+while JIT caching excels in situations where resource freshness, efficiency, and adaptability are paramount.
+
+Be aware that you can use both caching strategies in the same application. For example, you can pre-cache critical assets and data while using JIT caching for dynamic content.
+
+```ts {{ filename:'entry.worker.ts' }}
+import { PrecacheHandler, RemixNavigationHandler } from '@remix-pwa/sw'
+
+const precacheHandler = new PrecacheHandler({
+  dataCache: 'data',
+  documentCache: 'documents',
+  assetCache: 'assets',
+  ignoredRoutes: ['/dashboard', '/blog'],
+})
+
+const navigationHandler = new RemixNavigationHandler({
+  dataCache: 'data',
+  documentCache: 'documents',
+})
+
+self.addEventListener('message', (event) => {
+  event.waitUntil(
+    Promise.all([
+      precacheHandler.handle(event),
+      navigationHandler.handle(event),
+    ])
+  )
+})
+```
+
+## Roadmap
+
+### What's planned?
+
+Currently, in case you haven't noticed, precaching in Remix PWA is quite basic and quite frankly, not enough. We plan to add more features to the `PrecacheHandler` to make it more
+powerful and easier to use. Some of the features we plan to add are:
+
+- `whiteListedRoutes` - This would be used to whitelist certain routes for precaching. In other words, it would be used to precache only certain routes.
+- `staticAssets` - A list of assets you want to precache. This would be useful for assets that are not in the manifest or assets that **must** be pre-cached no matter what.
+- `ignoredRoutes` - Extending the functionality of this. Currently, it is quite powerful, being able to accept an of strings, RegExp patterns and functions that takes
+the form: `(entry: EntryRoute) => boolean`, but extending this would be nice.
+
+<Info>
+Help would be greatly appreciated in implementing these features. If you're interested, please open an issue or a PR.
+</Info>
+
+### Easter Eggs 🥚
+
+- `PrecacheHandler` is a class, an extended one too. You can create your own message handler if you want. Just extend the `Message` class and override the `_handleMessage` method.
+
+```ts {{ filename:'entry.worker.ts' }}
+import { Message } from '@remix-pwa/sw'
+
+class MyMessageHandler extends Message {
+  _handleMessage(event: ExtendableMessageEvent) {
+    // Do something
+  }
+}
+
+const message = new MyMessageHandler()
+
+self.addEventListener('message', (event) => {
+  event.waitUntil(message.handle(event))
+})
+```

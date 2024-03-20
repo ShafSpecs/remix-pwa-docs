@@ -1,0 +1,187 @@
+---
+title: getLoadContext
+description: Global context object for the worker thread. Share data globally between your workers in your routes and your service worker.
+alternateTitle: getLoadContext
+position: 3
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Snippet from './snippet.tsx'
+
+## getLoadContext
+
+### Basic Usage
+
+The `getLoadContext` function is used to create a global `context` object for the worker thread. You can utilize this to share data between your routes and your worker thread
+as well as common utilities, stores, etc.
+
+<Snippet>
+
+```ts {{ filename:'entry.worker.ts' }}
+export const getLoadContext = () => {
+  return {
+    foo: "bar",
+    key: "value"
+  };
+};
+```
+
+```tsx {{ filename:'app/routes/docs.tsx' }}
+export const workerLoader = async ({ context, request }) => {
+  const { foo, key } = context;
+
+  return new Response(`foo: ${foo}, key: ${key}`); // foo: bar, key: value
+};
+```
+
+</Snippet>
+
+This is a basic example showcasing how you can use the `context` object to share data between your routes and your worker thread.
+Let's try something a bit more complex.
+
+### Advanced Usage
+
+<Snippet>
+
+```ts {{ filename:'entry.worker.ts' }}
+import type { GetLoadContextFunction } from "@remix-pwa/sw";
+
+export const getLoadContext: GetLoadContextFunction = () => {
+  // a fake function supposed to return a store of strings
+  const store = createStoreRepo<string>();
+
+  return {
+    foo: "bar",
+    key: "value",
+    store,
+    utils: {
+      get: () => store.get(),
+      set: (value: string) => store.set(value),
+      del: (value: string) => store.del(value)
+    }
+  };
+};
+```
+
+```tsx {{ filename:'app/routes/form.tsx' }}
+import type { WorkerActionArgs } from "@remix-pwa/sw";
+
+export const action = async ({ request }) => {
+  const form = await request.formData();
+  const type = form.get("type");
+
+  if (!type || type.length < 2) {
+    return new Response("BAD_RESPONSE");
+  }
+
+  return new Response("ok");
+};
+
+export const workerAction = async ({ context }: WorkerActionArgs) => {
+  const { utils, fetchFromServer } = context;
+
+  try {
+    // This fetches from the route's action
+    const response = await fetchFromServer();
+
+    const text = await response.text();
+
+    if (text === "BAD_RESPONSE") {
+      return new Response("Bad Response", {
+        status: 400
+      });
+    }
+  } catch (err) {
+    console.error(err);
+
+    throw new Response("Internal Server Error", {
+      status: 500
+    });
+  }
+
+  const formData = await request.formData();
+  const type = formData.get("type");
+  const value = formData.get("value");
+
+  switch (type) {
+    case "get":
+      return new Response(utils.get());
+    case "set":
+      utils.set(value);
+      return new Response("ok");
+    case "del":
+      utils.del(value);
+      return new Response("ok");
+    default:
+      return new Response("invalid action");
+  }
+};
+```
+
+</Snippet>
+
+A bit more complex but still the same idea. We are creating a store and exposing it to the worker thread via the `context` object.
+Then consuming it in our route to create a simple form that can get, set, and delete values from the store whenever a submission is made.
+
+### Scenario
+
+Let me whip up a real-life scenario based on the last example to help you further understand what can be accomplished `context` object.
+
+Imagine we have a settings form on a settings page, we typically don't want to fetch settings from the database all the time so we decide
+to store it in the browser's indexedDB. The store **must** be synced with the database so we don't have issue with stale data. What we decided to do is
+introduce [`workerAction`]('/docs/worker-action'), a route action that is executed in the worker thread. This intercepts requests to Remix `action` in the route
+and allows us to do whatever we want with it. In this case, we want to sync the store with the database.
+
+We do this by calling `fetchFromServer` which is simply a function that passes the request onto the server (`fetch(request.clone())` under the hood)
+and this updates the database, if successful, it returns an 'ok' message. If not, it returns a 'Bad Response' message. We then check the response and
+if it's 'ok', we proceed to update the store with the data from the form. If not, we throw an error.
+
+This is a good illustration (in my opinion) of how you can use the `context` object to share data between your routes and your worker thread.
+
+---
+
+## API
+
+### API Reference
+
+By default, the `context` object ships with some utilities that you can use in your worker thread.
+
+```ts
+/* within the worker-runtime (under the hood) */
+function createContext(event: FetchEvent) {
+  const context = /*...*/.getLoadContext?.(event) || {}; // exported from worker file
+
+  return {
+    event,
+    fetchFromServer: () => fetch(event.request.clone()),
+    ...context
+  };
+}
+```
+
+- `event` - The `FetchEvent` object
+- `fetchFromServer` - A function that passes the request onto the server (`fetch(request.clone())`)
+- `...context` - The rest of the `context` object returned from `getLoadContext` (whatever else you export)
+
+Note, you can override these with your own defaults too. For example:
+
+```ts {{ filename:'entry.worker.ts' }}
+import type { GetLoadContextFunction } from "@remix-pwa/sw";
+
+export const getLoadContext: GetLoadContextFunction = () => {
+  return {
+    fetchFromServer: ({ action, data }) =>
+      fetch(action, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      }),
+    foo: "bar",
+    key: "value"
+  };
+};
+```

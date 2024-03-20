@@ -1,0 +1,46 @@
+---
+title: '@remix-pwa/{runtime}'
+description: Runtimes are the underlying Service Worker logic that Remix PWA uses to handle fetching, routing, caching, and more. This page contains all the official runtimes and community runtimes. 
+alternateTitle: '@remix-pwa/{runtime}'
+position: 2
+---
+
+{/* Do not remove these lines! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+import Info from './info.tsx'
+
+## Runtime
+
+### Official Adapters
+
+Remix PWA v3.0 is built to be as agnostic as possible when it comes to tools you can use to handle Service Workers. Because of this,
+we separated the uderlying Service Worker logic from the rest of the library, and created a set of adapters that you can use to
+integrate Remix PWA with your favorite Service Worker tool and plug into this logic.
+
+- `@remix-pwa/worker-runtime` - Fondly called 'Vanilla JS Runtime', this is the official adapter for vanilla JS Service Workers with no underlying tool like Workbox and also the default runtime for Remix PWA.
+
+### Community Adapters
+
+None
+
+### Creating your own runtime
+
+<Info>
+This section is still under construction. Creating your own runtime depends on some APIs that are still prone to breaking changes.
+
+If you want to create your own runtime, please refer to the source code of the [official runtime](https://github.com/remix-pwa/monorepo/blob/main/packages/worker-runtime/src).
+</Info>
+
+If you want to create your own runtime, it is made up of a few major components:
+
+- `createContext` - This is a function that creates the global `context` object that is passed to across the worker.
+- A `fetch` event listener - This is the event listener that handles all `fetch` events. This is your handler that handles everything that happens when a request is made.
+
+You also want to add a way to handle the `defaultfetchHandler` and `errorHandler` exported from the user's worker file. 
+
+> *More info and examples coming soon.*
+
+You might be interested in the fact that runtimes in Remix PWA are basically just Service Workers under the hood. Via some simple, yet not simple 
+methods, we are able to create a Service Worker that is not only agnostic to the underlying tool, but also to the environment it is running in 
+and is a combination of your entry worker file + router worker exports (`workerLoader` & `workerAction`).

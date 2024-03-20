@@ -1,0 +1,80 @@
+---
+title: Upgrade Guide
+description: Learn how to upgrade to your Remix PWA App to v3.0
+alternateTitle: Upgrade Guide
+position: 2
+---
+
+{/* Do not remove this line! */}
+import Heading from './heading.tsx'
+import Editor from './editor.tsx'
+
+Remix PWA v3.0 is a major, breaking release with a brand new compiler and CLI engine complete with new features, packages and new aarchitecture. 
+This guide will help you upgrade your Remix app to v3.0.
+
+To learn more about what's new in Remix PWA v3.0, check out the [release notes]().
+
+---
+
+## Install new packages
+
+At the core of this upgrade is `@remix-pwa/dev` which houses the compiler and CLI engine. Install this alongside a few other packages:
+
+```bash
+npm install @remix-pwa/dev @remix-pwa/cache
+```
+
+`@remix-pwa/cache` is a must if you intend to use `@remix-pwa/sw`. This package is a thin wrapper around the browser's Cache API
+that supercharges it with a few extra features like cache expiration and cache versioning.
+
+Alternatively, you can use the new CLI to do all the installation for you!
+
+```bash
+npx remix-pwa@latest packages
+```
+
+## Update your scripts
+
+Update your `package.json` worker scripts to use the new compiler:
+
+```json {{ filename:'package.json' }}
+{
+  "scripts": {
+    "dev:worker": "remix-pwa dev",
+    "build:worker": "remix-pwa build",
+  }
+}
+```
+
+That's all. This would automatically build your worker when needed, don't worry, we handled this one tight!
+
+## Add Worker HMR support to your app
+
+There are a few new thing in town and they're called `workerLoader` and `workerAction`. I can't wait to introduce them to you
+but not here, not now. For now, let's just add support for them in your app so you don't end up chasing me with a pitchfork when things 
+don't go as planned. We do this by replacing Remix's `LiveReload` with **our** `LiveReload` component.
+
+```tsx {{ filename:'app/root.tsx' }}
+import { LiveReload } from '@remix-pwa/sw'
+
+export default function App() {
+  return (
+    <html lang="en">
+      {/* ... */}
+      <body>
+        {/* ... */}
+        <LiveReload />
+      </body>
+    </html>
+  );
+}
+```
+
+## Purge your Service Worker file
+
+A lot of APIs from `@remix-pwa/sw` v1.x.x have been deprecated and removed. This means that you need to purge your Service Worker file
+completely, I would recommend removing everything except the `install` and `activate` event. 
+
+If you also have the pwa client utlility file, delete that and install `@remix-pwa/client` instead.
+
+That's it! You can now continue along with this guide to learn more about using Remix PWA v3.0 to its fullest.
