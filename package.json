@@ -1,5 +1,5 @@
 {
-  "name": "journal-stack",
+  "name": "remix-pwa-docs",
   "private": true,
   "sideEffects": false,
   "type": "module",
