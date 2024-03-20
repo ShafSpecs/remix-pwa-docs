@@ -324,7 +324,7 @@ export default function Header({
                   <div className="relative ml-3 pt-1.5">
                     <Menu as="div" className="relative inline-block text-left">
                       <div>
-                        <Menu.Button className="dark:highlight-white/5 flex items-center space-x-2 rounded-full bg-slate-400/10 px-3 py-1 text-sm font-semibold leading-5 text-slate-400 hover:bg-slate-400/20">
+                        <Menu.Button className="dark:highlight-white/5 flex items-center space-x-2 rounded-full bg-slate-400/10 px-3 py-1 text-sm font-medium leading-5 text-slate-400 hover:bg-slate-400/20">
                           {currentTag}
                           <ChevronDownIcon
                             className="ml-2 h-3 w-3 stroke-slate-400 stroke-2"
@@ -341,7 +341,7 @@ export default function Header({
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="dark:highlight-white/5 absolute left-0 top-full mt-1 w-40 origin-top-left rounded-lg bg-white py-2 text-sm font-semibold leading-6 text-slate-700 shadow ring-1 ring-slate-900/5 dark:bg-slate-800 dark:text-slate-300">
+                        <Menu.Items className="dark:highlight-white/5 absolute left-0 top-full mt-1 w-40 origin-top-left rounded-lg bg-white py-2 text-sm font-medium leading-6 text-slate-700 shadow ring-1 ring-slate-900/5 dark:bg-slate-800 dark:text-slate-300">
                           {versions.map((version: string) => (
                             <Menu.Item
                               key={version}

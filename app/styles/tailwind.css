@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .nunito-base {
+    @apply font-sans text-lg;
+  }
+
+  .nunito-lg {
+    @apply font-sans text-xl;
+  }
+
+  /* .inter {
+
+  } */
+}
+
 :root {
   --background-color: #fff;
 }
@@ -11,8 +25,11 @@
 }
 
 html {
-  font-family: 'Inter var', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue;
-  font-feature-settings: "cv02","cv03","cv04","cv11";
+  font-family: 'Styrene', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue;
+  font-feature-settings: "liga", 0;
+  /* font-feature-settings: "cv02","cv03","cv04","cv11"; */
+  font-size: 16px;
+  /* @apply nunito-base; */
 }
 
 body {

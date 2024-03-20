@@ -103,7 +103,7 @@ export function Documentation({
           <main
             ref={documentationRef}
             id="article-main"
-            className="prose-h2:not-prose prose prose-slate relative z-20 mt-8 scroll-smooth dark:prose-dark prose-h2:mb-2 prose-h2:flex prose-h2:whitespace-pre-wrap prose-h2:text-sm prose-h2:font-semibold prose-h2:leading-6 prose-h2:tracking-normal prose-h2:text-sky-500 prose-code:font-fira prose-code:text-sm prose-code:font-medium prose-h2:dark:text-sky-400 prose-code:dark:text-[#e2e8f0]"
+            className="prose-h2:not-prose prose prose-slate relative z-20 mt-8 scroll-smooth dark:prose-dark prose-h2:mb-2 prose-h2:flex prose-h2:whitespace-pre-wrap prose-h2:text-sm prose-h2:font-semibold prose-h2:leading-6 prose-h2:tracking-normal prose-h2:text-sky-500 prose-code:font-mono prose-code:text-sm prose-code:font-medium prose-h2:dark:text-sky-400 prose-code:dark:text-[#e2e8f0]"
           >
             <Component />
           </main>

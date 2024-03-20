@@ -38,6 +38,24 @@
   src: url("/fonts/FiraCode/FiraCode-Medium.ttf");
 }
 
+/* -- JetBrains Mono Font -- */
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: 400;
+  font-display: block;
+  font-style: normal;
+  font-named-instance: "Regular";
+  src: url("/fonts/JetBrains/JetBrainsMono-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: 500;
+  font-display: block;
+  font-style: normal;
+  font-named-instance: "Medium";
+  src: url("/fonts/JetBrains/JetBrainsMono-Medium.woff2") format("woff2");
+}
 
 /* -- SpaceTime Font -- */
 @font-face {
@@ -45,6 +63,80 @@
   font-weight: 400;
   font-style: normal;
   src: url("/fonts/Space/Space.woff2") format("woff2");
+}
+
+/* -- Benzin Font -- */
+@font-face {
+  font-family: "Benzin";
+  src: url("/fonts/Benzin/Benzin-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Benzin";
+  src: url("/fonts/Benzin/Benzin-Medium.ttf");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Benzin";
+  src: url("/fonts/Benzin/Benzin-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* -- Nasa Font -- */
+@font-face {
+  font-family: "Nasa";
+  src: url("/fonts/Nasa/nasalization-rg.otf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* -- Nunito Font -- */
+@font-face {
+  font-family: "Nunito";
+  font-weight: 100 900;
+  font-display: block;
+  font-style: normal;
+  font-named-instance: "Regular";
+  src: url("/fonts/Nunito/Nunito.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Nunito";
+  font-weight: 100 900;
+  font-display: block;
+  font-style: italic;
+  font-named-instance: "Italic";
+  src: url("/fonts/Nunito/Nunito-Italic.ttf") format("truetype");
+}
+
+/* -- Styrene Font -- */
+@font-face {
+  font-family: Styrene;
+  src: url("/fonts/Styrene/Styrene-Regular.otf") format("opentype");
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal
+}
+
+@font-face {
+  font-family: Styrene;
+  src: url("/fonts/Styrene/Styrene-Medium.otf") format("opentype");
+  font-display: swap;
+  font-weight: 500;
+  font-style: normal
+}
+
+@font-face {
+  font-family: Styrene;
+  src: url("/fonts/Styrene/Styrene-Bold.otf") format("opentype");
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal
 }
 
 /* Feel free to add more fonts here! */
