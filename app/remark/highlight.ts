@@ -1,21 +1,28 @@
-import { highlightCode } from './utils.js'
 import JSON5 from 'json5'
 import { parse } from 'acorn'
 import { visit } from 'unist-util-visit'
 
+import { highlightCode } from './utils'
+
 export default () => {
   return (tree: any) => {
-    visit(tree, 'code', (node) => {
+    visit(tree, 'code', node => {
       if (node.lang === null) return node
 
-      let re = /(<[^>]+)\s+dark-([a-z-]+)="([^"]+)"([^>]*>)/gi
+      const re = /(<[^>]+)\s+dark-([a-z-]+)="([^"]+)"([^>]*>)/gi
 
-      let lightCode = node.value.replace(
+      const lightCode = node.value.replace(
         re,
-        (_match: any, before: any, _key: any, _value: any, after: any) => `${before}${after}`
+        (_match: any, before: any, _key: any, _value: any, after: any) =>
+          `${before}${after}`
       )
-      let darkCode = node.value.replace(re, (_match: any, before: any, key: any, value: any, after: any) =>
-        `${before}${after}`.replace(new RegExp(`(\\s${key})="[^"]+"`), `$1="${value}"`)
+      const darkCode = node.value.replace(
+        re,
+        (_match: any, before: any, key: any, value: any, after: any) =>
+          `${before}${after}`.replace(
+            new RegExp(`(\\s${key})="[^"]+"`),
+            `$1="${value}"`
+          )
       )
 
       node.type = 'mdxJsxFlowElement'
@@ -43,8 +50,8 @@ export default () => {
       }
 
       if (!node.meta) {
-        let json = JSON.stringify(code)
-        let value = `{__html:${json}}`
+        const json = JSON.stringify(code)
+        const value = `{__html:${json}}`
         node.name = 'pre'
         node.attributes = [
           {
@@ -106,14 +113,18 @@ export default () => {
 
       props.code = code
 
-      for (let key in props) {
+      for (const key in props) {
         node.attributes.push({
           type: 'mdxJsxAttribute',
           name: key,
           value: {
             type: 'mdxJsxAttributeValueExpression',
             value: JSON.stringify(props[key]),
-            data: { estree: parse(JSON.stringify(props[key]), { ecmaVersion: 'latest' }) },
+            data: {
+              estree: parse(JSON.stringify(props[key]), {
+                ecmaVersion: 'latest',
+              }),
+            },
           },
         })
       }

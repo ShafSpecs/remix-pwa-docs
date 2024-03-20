@@ -1,12 +1,11 @@
-/* eslint-disable react/display-name */
-export default ({ children }: any) => {
+export const Warn = ({ children }: any) => {
   return (
-    <div className="flex p-6 my-8 rounded-3xl bg-amber-50 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10">
+    <div className="my-8 flex rounded-3xl bg-amber-50 p-6 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10">
       <svg
         aria-hidden="true"
         viewBox="0 0 32 32"
         fill="none"
-        className="h-8 w-8 flex-none [--icon-foreground:theme(colors.amber.900)] [--icon-background:theme(colors.amber.100)]"
+        className="h-8 w-8 flex-none [--icon-background:theme(colors.amber.100)] [--icon-foreground:theme(colors.amber.900)]"
       >
         <defs>
           <radialGradient
@@ -68,15 +67,16 @@ export default ({ children }: any) => {
           />
         </g>
       </svg>
-      <div className="flex-auto ml-4">
-        <p className="m-0 text-xl font-display text-amber-900 dark:text-amber-500">
+      <div className="ml-4 flex-auto">
+        <p className="font-display m-0 text-xl text-amber-900 dark:text-amber-500">
           Oh no! Something bad happened!
         </p>
-        <div className="prose mt-2.5 text-amber-800 [--tw-prose-underline:theme(colors.amber.400)] [--tw-prose-background:theme(colors.amber.50)] prose-a:text-amber-900 prose-code:text-amber-900 dark:text-slate-300 dark:[--tw-prose-underline:theme(colors.sky.700)] dark:prose-code:text-slate-300">
+        <div className="prose mt-2.5 text-amber-800 [--tw-prose-background:theme(colors.amber.50)] [--tw-prose-underline:theme(colors.amber.400)] prose-a:text-amber-900 prose-code:text-amber-900 dark:text-slate-300 dark:[--tw-prose-underline:theme(colors.sky.700)] dark:prose-code:text-slate-300">
           {children}
         </div>
       </div>
     </div>
-
   )
 }
+
+export default Warn

@@ -1,12 +1,11 @@
-/* eslint-disable react/display-name */
-export default ({ children }: any) => {
+export const Info = ({ children }: any) => {
   return (
-    <div className="flex p-6 my-8 rounded-3xl bg-sky-50 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10">
+    <div className="my-8 flex rounded-3xl bg-sky-50 p-6 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10">
       <svg
         aria-hidden="true"
         viewBox="0 0 32 32"
         fill="none"
-        className="h-8 w-8 flex-none [--icon-foreground:theme(colors.slate.900)] [--icon-background:theme(colors.white)]"
+        className="h-8 w-8 flex-none [--icon-background:theme(colors.white)] [--icon-foreground:theme(colors.slate.900)]"
       >
         <defs>
           <radialGradient
@@ -61,8 +60,8 @@ export default ({ children }: any) => {
           />
         </g>
       </svg>
-      <div className="flex-auto ml-4">
-        <p className="m-0 text-xl font-display text-sky-900 dark:text-sky-400">
+      <div className="ml-4 flex-auto">
+        <p className="font-display m-0 text-xl text-sky-900 dark:text-sky-400">
           You should know!
         </p>
         <div className="prose mt-2.5 text-sky-800 [--tw-prose-background:theme(colors.sky.50)] prose-a:text-sky-900 prose-code:text-sky-900 dark:text-slate-300 dark:prose-code:text-slate-300">
@@ -70,6 +69,7 @@ export default ({ children }: any) => {
         </div>
       </div>
     </div>
-
   )
 }
+
+export default Info

@@ -1,63 +1,40 @@
-import NavItem from "../NavItem";
-import type { loader as RootLoader } from "~/root";
-import type { MetaDataObject } from "~/utils/server/aws.server";
-import type { Dispatch, SetStateAction } from "react";
-import { createContext, useRef, useState } from "react";
-import { useIsomorphicLayoutEffect, useMediaQuery } from "usehooks-ts";
-import { useLocation, useRouteLoaderData } from "@remix-run/react";
-import { useActionKey } from "~/hooks/useActionKey";
+import { Fragment, useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
+import { NavLink, useLocation } from '@remix-run/react'
+import clsx from 'clsx'
 
-/**
- * Find the nearst scrollable ancestor (or self if scrollable)
- *
- * Code adapted and simplified from the smoothscroll polyfill
- *
- *
- * @param {Element} el
- */
-function nearestScrollableContainer(el: Element) {
-  /**
-   * indicates if an element can be scrolled
-   *
-   * @param {Node} el
-   */
-  function isScrollable(el: Element) {
-    const style = window.getComputedStyle(el)
-    const overflowX = style['overflowX']
-    const overflowY = style['overflowY']
-    const canScrollY = el.clientHeight < el.scrollHeight
-    const canScrollX = el.clientWidth < el.scrollWidth
+import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicLayoutEffect'
+import { useActionKey } from '~/hooks/useActionKey'
+import { nearestScrollableContainer } from '~/utils/client/nearest-scrollable-container'
+import { useMediaQuery } from '~/hooks/useMediaQuery'
+import type { MetadataMetaType, MetadataType } from '~/utils/server/doc.server'
+import { DEFAULT_TAG } from '~/utils/defatult'
 
-    const isScrollableY = canScrollY && (overflowY === 'auto' || overflowY === 'scroll')
-    const isScrollableX = canScrollX && (overflowX === 'auto' || overflowX === 'scroll')
+import Header from './Header'
 
-    return isScrollableY || isScrollableX
-  }
-
-  while (el !== document.body && isScrollable(el) === false) {
-    // @ts-ignore
-    el = el.parentNode || el.host
-  }
-
-  return el
+function Wrapper({
+  allowOverflow,
+  children,
+}: {
+  allowOverflow?: boolean
+  children?: ReactNode
+}) {
+  return (
+    <div className={allowOverflow ? undefined : 'overflow-hidden'}>
+      {children}
+    </div>
+  )
 }
 
-export const SidebarContext = createContext<{
-  navIsOpen: boolean;
-  setNavIsOpen: Dispatch<SetStateAction<boolean>>;
-}>({ navIsOpen: false, setNavIsOpen: () => { } });
+function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
+  const location = useLocation()
+  const actionKey = useActionKey()
 
-function Wrapper({ allowOverflow, children }: { allowOverflow?: boolean; children?: React.ReactNode }) {
-  return <div className={allowOverflow ? undefined : 'overflow-hidden'}>{children}</div>
-}
+  const mobile = useMediaQuery('(max-width: 1024px)')
 
-export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fallbackHref?: string }) {
-  // @ts-ignore
-  const { meta } = useRouteLoaderData<typeof RootLoader>('routes/docs.$version');
-  const location = useLocation();
-  const actionKey = useActionKey();
-
-  const mobile = useMediaQuery('(max-width: 1024px)');
+  const [docList, setDocList] = useState<
+    { section: string; children: any[] }[]
+  >([])
 
   const activeItemRef = useRef<HTMLElement>()
   const previousActiveItemRef = useRef<HTMLElement>()
@@ -85,25 +62,49 @@ export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fa
       const bottom = top - scrollRect.height + activeItemRect.height
 
       if (scrollable.scrollTop > top || scrollable.scrollTop < bottom) {
-        scrollable.scrollTop = top - scrollRect.height / 2 + activeItemRect.height / 2
+        scrollable.scrollTop =
+          top - scrollRect.height / 2 + activeItemRect.height / 2
       }
     }
   }, [location.pathname])
 
+  useEffect(() => {
+    const reduced = {} as any
+
+    for (const key in meta) {
+      const item = meta[key]
+      const section = item.section ?? ''
+
+      if (!reduced[section]) {
+        reduced[section] = []
+      }
+
+      reduced[section].push(item)
+    }
+
+    const result = Object.keys(reduced).map(section => {
+      return { section, children: reduced[section] }
+    })
+
+    setDocList(result)
+  }, [meta])
+
   return (
     <nav ref={scrollRef} id="nav" className="relative lg:text-sm lg:leading-6">
-      <div className="sticky top-0 -ml-0.5 pointer-events-none">
-        {!mobile && <div className="h-10 bg-white dark:bg-slate-900" />}
-        <div className="relative bg-white pointer-events-auto dark:bg-slate-900">
-          {/* Todo: Extract this as a separate `SearchButton` */}
-          <button type="button" className="hidden w-full lg:flex items-center text-sm leading-6 text-slate-400 rounded-md  ring-slate-900/10 outline-none shadow-sm py-1.5 pl-2 pr-3 hover:ring-slate-300 dark:bg-slate-800 dark:highlight-white/5 dark:hover:bg-slate-700">
+      <div className="pointer-events-none sticky top-0 -ml-0.5">
+        <div className="hidden h-10 bg-white dark:bg-slate-900 lg:block" />
+        <div className="pointer-events-auto relative hidden bg-white dark:bg-slate-900 lg:block">
+          <button
+            type="button"
+            className="dark:highlight-white/5 hidden w-full items-center rounded-md py-1.5 pl-2 pr-3 text-sm leading-6 text-slate-400 shadow-sm outline-none ring-slate-900/10 hover:ring-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 lg:flex"
+          >
             <>
               <svg
                 width="24"
                 height="24"
                 fill="none"
                 aria-hidden="true"
-                className="flex-none mr-3"
+                className="mr-3 flex-none"
               >
                 <path
                   d="m19 19-3.5-3.5"
@@ -123,44 +124,107 @@ export function Nav({ children, fallbackHref }: { children?: React.ReactNode, fa
                 />
               </svg>
               Quick search...
-              {actionKey && (
-                <span className="flex-none pl-3 ml-auto text-xs font-semibold">
+              {/* eslint-disable-next-line multiline-ternary */}
+              {actionKey ? (
+                <span className="ml-auto flex-none pl-3 text-xs font-semibold">
                   {actionKey[0]}K
                 </span>
-              )}
+              ) : null}
             </>
           </button>
         </div>
-        {!mobile && <div className="h-8 bg-gradient-to-b from-white dark:from-slate-900" />}
+        <div className="hidden h-8 bg-gradient-to-b from-white dark:from-slate-900 lg:block" />
       </div>
       <ul className="lg:-mt-6">
-        {meta.map((el: MetaDataObject, i: number) => (
-          <NavItem key={`${i}-${el.name}`} {...el} />
-        ))}
+        {docList.map(
+          (section: { section: string; children: any[] }, index: number) => {
+            return (
+              <li className="mt-12 lg:mt-8" key={index}>
+                <h3 className="mb-8 font-semibold text-slate-900 dark:text-slate-200 lg:mb-3">
+                  {section.section}
+                </h3>
+                <ul
+                  className={clsx(
+                    'space-y-6 border-l border-slate-100 lg:space-y-2',
+                    mobile ? 'dark:border-slate-700' : 'dark:border-slate-800'
+                  )}
+                >
+                  {section.children.map(sub => {
+                    return (
+                      <li className="" key={sub.alternateTitle ?? sub.title}>
+                        <NavLink
+                          prefetch="intent"
+                          to={`/docs/${tag ?? DEFAULT_TAG ?? 'main'}/${sub.slug}`}
+                          end={true}
+                        >
+                          {({ isActive }) => (
+                            <span
+                              className={clsx('-ml-px block border-l pl-4', {
+                                'border-current font-semibold text-sky-500 dark:text-sky-400':
+                                  isActive,
+                                'border-transparent hover:border-slate-400 dark:hover:border-slate-500':
+                                  !isActive,
+                                'text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300':
+                                  !isActive,
+                                'text-slate-400': !isActive,
+                              })}
+                            >
+                              {sub.alternateTitle ?? sub.title}
+                            </span>
+                          )}
+                        </NavLink>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </li>
+            )
+          }
+        )}
       </ul>
     </nav>
   )
 }
 
-export default function SidebarLayout({
+type SidebarProps = {
+  metadata: MetadataType
+  children?: ReactNode
+  layoutProps?: { allowOverflow?: boolean }
+}
+
+export function Sidebar({
   children,
   layoutProps: { allowOverflow = true } = {},
-}: {
-  children?: React.ReactNode
-  layoutProps?: { allowOverflow?: boolean }
-}) {
-  const [navIsOpen, setNavIsOpen] = useState(false)
+  metadata,
+}: SidebarProps) {
+  const location = useLocation()
+
+  const [currentTag, setTag] = useState<string>(location.pathname.split('/')[2])
+  const [currentSection, setCurrentSection] = useState<string>('')
+  const [currentTitle, setCurrentTitle] = useState<string>('')
+
+  useEffect(() => {
+    setTag(location.pathname.split('/')[2])
+
+    const currentPost = metadata.meta[location.pathname.split('/')[3]]
+
+    if (!currentPost) return
+
+    setCurrentSection(currentPost.section ?? '')
+    setCurrentTitle(currentPost.alternateTitle ?? currentPost.title)
+  }, [location.pathname, metadata])
 
   return (
-    <SidebarContext.Provider value={{ navIsOpen, setNavIsOpen }}>
+    <Fragment>
+      <Header section={currentSection} title={currentTitle} />
       <Wrapper allowOverflow={allowOverflow}>
-        <div className="px-4 mx-auto max-w-8xl sm:px-6 md:px-8">
-          <div className="hidden lg:block fixed z-20 inset-0 top-[3.8125rem] left-[max(0px,calc(50%-45rem))] right-auto w-[19rem] sidebar-content pb-10 pl-8 pr-6 overflow-y-auto">
-            <Nav fallbackHref={''} />
+        <div className="mx-auto max-w-8xl px-4 sm:px-6 md:px-8">
+          <div className="sidebar-content fixed inset-0 left-[max(0px,calc(50%-45rem))] right-auto top-[3.8125rem] z-20 hidden w-[19rem] overflow-y-auto pb-10 pl-8 pr-6 lg:block">
+            <DocList meta={metadata.meta} tag={currentTag} />
           </div>
           <div className="lg:pl-[19.5rem]">{children}</div>
         </div>
       </Wrapper>
-    </SidebarContext.Provider>
+    </Fragment>
   )
 }

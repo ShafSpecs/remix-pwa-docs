@@ -1,13 +1,9 @@
-export type FrontMatterTypings = {
-  title: string;
-  description?: string;
-  shortTitle: string;
-  section: string;
-  position: number;
-}
-
-export type MetaDataObject = {
-  name: string;
-  position: number;
-  children: FrontMatterTypings[]
+export type FrontMatterType = {
+  title: string
+  alternateTitle?: string
+  order?: number
+  description?: string
+  toc?: boolean
+  hidden?: boolean
+  spacer?: boolean
 }

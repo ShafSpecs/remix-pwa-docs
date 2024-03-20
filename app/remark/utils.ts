@@ -1,13 +1,14 @@
+/* eslint-disable indent */
 import Prism from 'prismjs'
 import loadLanguages from 'prismjs/components/index.js'
 import redent from 'redent'
-import type { Node} from 'acorn';
+import type { Node } from 'acorn'
 import { parse } from 'acorn'
 
 loadLanguages()
 
 const HTML_TAG =
-  /<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/gi
+  /<\/?(?!\d)[^\s>/=$<%]+(?:\s(?:\s*[^\s>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/gi
 const PSEUDO_CLASSES = [
   'active',
   'any-link',
@@ -73,7 +74,7 @@ const PSEUDO_CLASSES = [
   'where',
 ]
 
-Prism.hooks.add('wrap', (env) => {
+Prism.hooks.add('wrap', env => {
   if (env.type === 'atrule') {
     const content = env.content.replace(HTML_TAG, '')
     if (content.startsWith('@apply')) {
@@ -81,7 +82,7 @@ Prism.hooks.add('wrap', (env) => {
     }
   } else if (env.type === 'pseudo-class') {
     if (!new RegExp(`^::?(${PSEUDO_CLASSES.join('|')})`).test(env.content)) {
-      env.classes = env.classes.filter((x) => x !== 'pseudo-class')
+      env.classes = env.classes.filter(x => x !== 'pseudo-class')
     }
   }
 })
@@ -92,8 +93,8 @@ Prism.hooks.add('after-tokenize', ({ language, tokens }) => {
   }
 })
 
-export function fixSelectorEscapeTokens(tokens: any) {
-  for (let token of tokens) {
+function fixSelectorEscapeTokens(tokens: any) {
+  for (const token of tokens) {
     if (typeof token === 'string') continue
     if (token.type !== 'selector') continue
     for (let i = 0; i < token.content.length; i++) {
@@ -105,12 +106,18 @@ export function fixSelectorEscapeTokens(tokens: any) {
   }
 }
 
-export function addExport(tree: { children: { type: string; value: any; data: { estree: Node } }[] }, name: any, value: string) {
+export function addExport(
+  tree: { children: { type: string; value: any; data: { estree: Node } }[] },
+  name: any,
+  value: string
+) {
   value = `export const ${name} = ${JSON.stringify(value)}`
   tree.children.push({
     type: 'mdxjsEsm',
     value,
-    data: { estree: parse(value, { ecmaVersion: 'latest', sourceType: 'module' }) },
+    data: {
+      estree: parse(value, { ecmaVersion: 'latest', sourceType: 'module' }),
+    },
   })
 }
 
@@ -118,7 +125,9 @@ function hasLineHighlights(code: string) {
   if (!/^>/m.test(code)) {
     return false
   }
-  return code.split('\n').every((line: string) => line === '' || line === '>' || /^[> ] /.test(line))
+  return code
+    .split('\n')
+    .every((line: string) => line === '' || line === '>' || /^[> ] /.test(line))
 }
 
 export function highlightCode(code: string, prismLanguage: string) {
@@ -130,27 +139,30 @@ export function highlightCode(code: string, prismLanguage: string) {
     return Prism.util.encode(code)
   }
 
-  let addedLines: number[] = []
-  let removedLines: number[] = []
+  const addedLines: number[] = []
+  const removedLines: number[] = []
   if (isDiff) {
-    code = code.replace(/(?:^[+\- ] |^[+-]$)/gm, (match: string, offset: any) => {
-      let line = code.substr(0, offset).split('\n').length - 1
-      if (match.startsWith('+')) {
-        addedLines.push(line)
-      } else if (match.startsWith('-')) {
-        removedLines.push(line)
+    code = code.replace(
+      /(?:^[+\- ] |^[+-]$)/gm,
+      (match: string, offset: any) => {
+        const line = code.substr(0, offset).split('\n').length - 1
+        if (match.startsWith('+')) {
+          addedLines.push(line)
+        } else if (match.startsWith('-')) {
+          removedLines.push(line)
+        }
+        return ''
       }
-      return ''
-    })
+    )
   }
 
-  let highlightedLines: number[] = []
+  const highlightedLines: number[] = []
 
   if (hasLineHighlights(code)) {
     let match
-    let re = /^>/m
+    const re = /^>/m
     while ((match = re.exec(code)) !== null) {
-      let line = code.substr(0, match.index).split('\n').length - 1
+      const line = code.substr(0, match.index).split('\n').length - 1
       highlightedLines.push(line)
       code = code.substr(0, match.index) + ' ' + code.substr(match.index + 1)
     }
@@ -158,7 +170,7 @@ export function highlightCode(code: string, prismLanguage: string) {
   }
 
   function stringify(line: any[], className: string) {
-    let empty = line.every((token: { empty: any }) => token.empty)
+    const empty = line.every((token: { empty: any }) => token.empty)
 
     if (!className && empty) {
       return '\n'
@@ -166,21 +178,25 @@ export function highlightCode(code: string, prismLanguage: string) {
 
     let commonTypes: any[] = []
     for (let i = 0; i < line.length; i++) {
-      let token = line[i]
+      const token = line[i]
       if (i === 0) {
         commonTypes.push(...token.types)
       } else {
-        commonTypes = commonTypes.filter((type) => token.types.includes(type))
+        commonTypes = commonTypes.filter(type => token.types.includes(type))
       }
     }
     if (commonTypes.length) {
       for (let i = 0; i < line.length; i++) {
-        let token = line[i]
-        token.types = token.types.filter((type: any) => !commonTypes.includes(type))
+        const token = line[i]
+        token.types = token.types.filter(
+          (type: any) => !commonTypes.includes(type)
+        )
       }
     }
 
-    let lineClassName = ['token', ...commonTypes, className].filter(Boolean).join(' ')
+    const lineClassName = ['token', ...commonTypes, className]
+      .filter(Boolean)
+      .join(' ')
 
     if (empty) {
       return `<span class="${lineClassName}">\n</span>`
@@ -196,7 +212,9 @@ export function highlightCode(code: string, prismLanguage: string) {
   }
 
   if (isDiff || highlightedLines.length) {
-    let lines = normalizeTokens(Prism.util.encode(Prism.tokenize(code, grammar)))
+    const lines = normalizeTokens(
+      Prism.util.encode(Prism.tokenize(code, grammar))
+    )
 
     if (isDiff) {
       code = lines
@@ -207,8 +225,8 @@ export function highlightCode(code: string, prismLanguage: string) {
               addedLines.includes(index)
                 ? 'inserted'
                 : removedLines.includes(index)
-                ? 'deleted'
-                : 'unchanged'
+                  ? 'deleted'
+                  : 'unchanged'
             }`
           )
         )
@@ -234,7 +252,8 @@ export function highlightCode(code: string, prismLanguage: string) {
   return language === 'html'
     ? code.replace(
         /\*\*(.*?)\*\*/g,
-        (_: any, text: any) => `<span class="code-highlight bg-code-highlight">${text}</span>`
+        (_: any, text: any) =>
+          `<span class="code-highlight bg-code-highlight">${text}</span>`
       )
     : code
 }
@@ -271,7 +290,7 @@ function appendTypes(types: string | any[], add: any) {
 // are always of type "plain".
 // This is not recursive to avoid exceeding the call-stack limit, since it's unclear
 // how nested Prism's tokens can become
-export function normalizeTokens(tokens: any) {
+function normalizeTokens(tokens: any) {
   const typeArrStack: any = [[]]
   const tokenArrStack = [tokens]
   const tokenArrIndexStack = [0]
@@ -284,7 +303,9 @@ export function normalizeTokens(tokens: any) {
   const acc = [currentLine]
 
   while (stackIndex > -1) {
-    while ((i = tokenArrIndexStack[stackIndex]++) < tokenArrSizeStack[stackIndex]) {
+    while (
+      (i = tokenArrIndexStack[stackIndex]++) < tokenArrSizeStack[stackIndex]
+    ) {
       let content
       let types = typeArrStack[stackIndex]
 
@@ -338,12 +359,4 @@ export function normalizeTokens(tokens: any) {
 
   normalizeEmptyLines(currentLine)
   return acc
-}
-
-export function simplifyToken(token: { type: any; content: any[] }): any {
-  if (typeof token === 'string') return token
-  return [
-    token.type,
-    Array.isArray(token.content) ? token.content.map(simplifyToken) : token.content,
-  ]
 }
