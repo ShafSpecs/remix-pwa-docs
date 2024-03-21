@@ -1,0 +1,78 @@
+---
+title: Quick Start
+description: Discover how to get started with Remix PWA in a Remix project
+alternateTitle: Quick Start
+order: 1
+---
+
+Remix PWA is a tool that allows you to easily integrate Progressive Web App features into your Remix project. This guide will walk you through the steps to get started with Remix PWA.
+
+## Prerequisites
+
+I know you're excited to get started, but before we do, let's make sure we have the following checked off:
+
+- Remix project that utilises Remix version 2.8 or higher
+- Node.js version 18 or higher (I would recommend using version 20)
+- Remix is utilising **Vite**
+
+That's right, Remix PWA v4 is just supporting Vite. So if you want to use Remix Esbuild, you would have to revert back to [v3](/docs/3.0.19)
+(*or, just use Vite*)
+
+## Installation
+
+Installing Remix PWA is as simple as running the following commands:
+
+```bash
+npm i --save-dev @remix-pwa/dev
+# this saves us some manual setup
+npm i --save @remix-pwa/worker-runtime
+```
+
+Of course you would need to install some more packages to leverage the full power of PWAs but we are talking bare minimum here and that's it,
+that's all you need to get started.
+
+## Setting Up
+
+To add Remix PWA to your app, simply add it to your `vite.config.ts` file:
+
+```ts {{ filename: 'vite.config.ts' }}
+import { remixPWA } from '@remix-pwa/dev'
+
+export default defineConfig({
+  plugins: [
+    // other plugins,
+    remixPWA(),
+  ],
+})
+```
+
+The plugin does take in quite the options but don't worry too much about it for now. They would be explored later.
+
+To actually have a service worker, I guess you would need to create one. You can use `remix-pwa` CLI to generate a basic one
+on the spot:
+
+```bash
+npx remix-pwa sw
+```
+
+This creates an `entry.worker.ts` file in your `app` folder. Although, the service worker is quite useless and doesn't do anything
+asides installing and activating itself, it is good to go 😄.
+
+## Why use Remix PWA?
+
+A common question is what's the difference between Remix PWA and [Vite PWA](https://vite-pwa-org.netlify.app/)? Simply put, Remix PWA is built
+for Remix where Vite PWA isn't. Vite PWA has its perks like its agnostic nature with frameworks and its flexibility but Remix PWA is built
+purposely for the ever-changing landscape of Remix. Plus, we've got a few tricks up our sleeves that you would definitely love 😜.
+
+But... why use PWA at all? Good question! PWAs are the future of the web. Other than that, they provide the following benefits:
+
+- **Improved User Experience** - PWAs offer a native-like experience, with fast load times, smooth navigation, and offline functionality.
+- **Increased Engagement and Retention** - PWAs can be installed directly on the user's device, appearing like a regular app with an icon on the home screen.
+- **Improved Performance** - PWAs utilize modern web technologies like Service Workers, which enable features like caching, background sync, and push notifications.
+This results in faster load times, improved performance, and better resource utilization, even on low-end devices or poor network conditions.
+- **Cross-Platform Compatibility** - PWAs are built using standard web technologies, making them compatible across various platforms and devices,
+including desktops, mobiles, and tablets.
+
+Using Remix PWA, you can easily add PWA features to your Remix project, with little hassle and great ownership.
+
+With that, I think we are prepared to journey out into the wilderness of documentation. Lock and load, friend! Let's move out 🚀

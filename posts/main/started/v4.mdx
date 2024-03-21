@@ -1,0 +1,42 @@
+---
+title: Ugrading to v4
+description: This documentation covers the process of upgrading to v4 from older versions of Remix PWA.
+alternateTitle: Ugrading to v4
+order: 2
+---
+
+As the [Quick Start](/docs/main/quick-start) docs might have informed you, Remix PWA v4 utilises just Vite. Previously,
+Remix PWA utilised `esbuild` and was built to work in tandem with the Remix esbuild framework. As such, we needed to keep
+supporting Remix Esbuild going forward.
+
+Remix has made the decision to leave behind their esbuild compiler and move to Vite fully. This literally meant we had no
+reason to keep supporting esbuild. As such, we have made the decision to move to Vite fully as well. In other words, we have yeeted
+esbuild out of the window.
+
+## Upgrading from v3 to v4
+
+To ugrade from v3 to v4, you will first need to make sure your Remix application is a Vite one. That means no `remix.config.js` and
+a `@remix-run/*` version of at least `^2.8.1`. If you don't know how to do so, check out the [Remix documentation](https://remix.run/docs/en/main/future/vite#migrating) on how to do so and
+also [this](https://alemtuzlak.hashnode.dev/migrating-a-v1-cjs-remix-project-to-remix-vite-esm) great article by my friend, [Alem Tuzlak](https://github.com/AlemTuzlak) on converting
+Remix CJS apps to Vite ESM.
+
+Once you have done that, upgrade your `@remix-pwa/*` packages to the latest version (the version numbers aren't uniform, so just use the `latest` tag
+when installing). A few packages have also been deprecated: `@remix-pwa/cache` has been sunsetted (🚮) and also `@remix-pwa/strategy`. You can go ahead
+and remove both of them from your `package.json`, if present.
+
+Add the `remixPWA()` plugin to your newly created `vite.config.ts` file, Remix PWA now handles registration automatically (except you opt out), so you
+can also go ahead and delete the `loadServiceWorker` function present in the entry client file.
+
+Within your service worker, you also want to reduce your Service Worker down to just the `install` and `activate` handler. We would still be
+building it back up but a lot of breaking API changes have been made to the other APIs and would need to be re-implemented.
+
+Remix Vite (and Remix PWA) now handle HMR (Hot Module Reloading) internally, so if you are utilsing the `LiveReload` component, you can go ahead and remove it.
+
+That's about it. Upgrading from v3 to v4 isn't as hard as it seems. If you have any issues, feel free to open an issue on the [GitHub repository](https://github.com/remix-pwa/monorepo)
+
+## Upgrading from older versions to v4
+
+Firstly, allow me to ask: What happened? Why?
+
+Next, upgrading would be very similar too upgrading from v3. The most important thing in there is having a **Remix Vite** application.
+Once that's been covered, you can go ahead and follow the steps above.

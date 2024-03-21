@@ -1,5 +1,11 @@
 {
-  "paths": {},
+  "paths": {
+    "quick-start": "started/quick-start",
+    "v4": "started/v4",
+    "community": "started/community",
+    "technical-explanation": "started/technical-explanation",
+    "changelog": "started/changelog"
+  },
   "sections": [
     "Getting Started",
     "Route & Worker APIs",
@@ -7,6 +13,43 @@
     "Utilities",
     "Guides"
   ],
-  "meta": {},
+  "meta": {
+    "quick-start": {
+      "title": "Quick Start",
+      "alternateTitle": "Quick Start",
+      "description": "Discover how to get started with Remix PWA in a Remix project",
+      "section": "Getting Started",
+      "slug": "quick-start",
+      "spacer": true
+    },
+    "v4": {
+      "title": "Ugrading to v4",
+      "alternateTitle": "Ugrading to v4",
+      "description": "This documentation covers the process of upgrading to v4 from older versions of Remix PWA.",
+      "section": "Getting Started",
+      "slug": "v4"
+    },
+    "community": {
+      "title": "Community",
+      "alternateTitle": "Community",
+      "description": "",
+      "section": "Getting Started",
+      "slug": "community"
+    },
+    "technical-explanation": {
+      "title": "Technical Explanation",
+      "alternateTitle": "Technical Explanation",
+      "description": "",
+      "section": "Getting Started",
+      "slug": "technical-explanation"
+    },
+    "changelog": {
+      "title": "Changelog",
+      "alternateTitle": "Changelog",
+      "description": "",
+      "section": "Getting Started",
+      "slug": "changelog"
+    }
+  },
   "hasIndex": true
 }
