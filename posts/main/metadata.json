@@ -4,7 +4,12 @@
     "v4": "started/v4",
     "community": "started/community",
     "technical-explanation": "started/technical-explanation",
-    "changelog": "started/changelog"
+    "changelog": "started/changelog",
+    "default-fetch-handler": "apis/default-fetch-handler",
+    "error-handler": "apis/error-handler",
+    "get-load-context": "apis/get-load-context",
+    "worker-action": "apis/worker-action",
+    "worker-loader": "apis/worker-loader"
   },
   "sections": [
     "Getting Started",
@@ -32,23 +37,59 @@
     "community": {
       "title": "Community",
       "alternateTitle": "Community",
-      "description": "",
+      "description": "At the core of Remix PWA lies a passionate community of developers dedicated to open-source collaboration, knowledge-sharing, and driving the evolution of PWA technologies.",
       "section": "Getting Started",
       "slug": "community"
     },
     "technical-explanation": {
       "title": "Technical Explanation",
       "alternateTitle": "Technical Explanation",
-      "description": "",
+      "description": "Uncover the technical details and rationale behind Remix PWA's implementation, empowering you to leverage its full potential.",
       "section": "Getting Started",
       "slug": "technical-explanation"
     },
     "changelog": {
       "title": "Changelog",
       "alternateTitle": "Changelog",
-      "description": "",
+      "description": "Stay up-to-date with the latest changes, enhancements, bug fixes and the behind-the-scenes progress and improvements in Remix PWA with the changelog.",
       "section": "Getting Started",
       "slug": "changelog"
+    },
+    "default-fetch-handler": {
+      "title": "defaultFetchHander",
+      "alternateTitle": "defaultFetchHander",
+      "description": "",
+      "section": "Route & Worker APIs",
+      "slug": "default-fetch-handler",
+      "spacer": true
+    },
+    "error-handler": {
+      "title": "errorHandler",
+      "alternateTitle": "errorHandler",
+      "description": "",
+      "section": "Route & Worker APIs",
+      "slug": "error-handler"
+    },
+    "get-load-context": {
+      "title": "getLoadContext",
+      "alternateTitle": "getLoadContext",
+      "description": "",
+      "section": "Route & Worker APIs",
+      "slug": "get-load-context"
+    },
+    "worker-action": {
+      "title": "workerAction",
+      "alternateTitle": "workerAction",
+      "description": "",
+      "section": "Route & Worker APIs",
+      "slug": "worker-action"
+    },
+    "worker-loader": {
+      "title": "workerLoader",
+      "alternateTitle": "workerLoader",
+      "description": "",
+      "section": "Route & Worker APIs",
+      "slug": "worker-loader"
     }
   },
   "hasIndex": true

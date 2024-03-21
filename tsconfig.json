@@ -1,5 +1,6 @@
 {
   "include": ["env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "**/*.mdx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022", "WebWorker"],
     "isolatedModules": true,
