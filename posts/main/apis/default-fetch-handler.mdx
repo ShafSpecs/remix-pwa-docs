@@ -1,6 +1,87 @@
 ---
 title: defaultFetchHander
-description: ""
+description: "Your default handler for fetching requests in your Service Worker."
 alternateTitle: defaultFetchHander
 ---
 
+import Info from './info.tsx'
+import Warn from './warn.tsx'
+import Details from './details.tsx'
+
+In a normal client-server architecture, the client makes a request to the server, and the server responds with the requested data. When a Service Worker is introduced, there is a middleman between the client and the server. That intercepts requests and responses coming from both ends and forward it to the other end.
+
+That interception in the Service Worker is done by the `fetch` event. The `fetch` event is triggered whenever a request is made from the client. The Service Worker can intercept this request and respond with the data from a data source (could be the server, a cache storage, or any other source).
+
+In Remix PWA, the fetch event is handled implicitly (behind-the-scenes) by runtimes, so you don't get to listen to the fetch event directly. Instead, you can define a `defaultFetchHandler` export in your service worker file that would be used to handle (*almost all*) fetch requests.
+
+<Info>
+  The `defaultFetchHandler` is basically a fallback handler that is used when no appropriate handler is found in a route.
+
+  Route handlers in this case, or as we like to call them: route worker apis, are simply [`workerAction`](/docs/main/worker-action) and [`workerLoader`](/docs/main/worker-loader) exports in your routes that handle non-`GET` and `GET` requests respectively.
+</Info>
+
+## Usage
+
+### Using the defaultFetchHandler
+
+`defaultFetchHandler` should be defined in your service worker file, as mentioned earlier, they are the first fallback handler for all fetch requests.
+
+```tsx {{ filename: 'entry.worker.ts' }}
+import type { WorkerDataFunctionArgs } from '@remix-pwa/dev';
+
+export const defaultFetchHandler = async ({
+  request
+}: WorkerDataFunctionArgs) => {
+  const serverHost = 'https://api.example.com';
+  const url = new URL(request.url);
+
+  if (request.method.toLowercase() === 'get' && url.searchParams.get('_data'))
+    return fetch(`${serverHost}${url.pathname}`);
+
+  return fetch(request);
+}
+```
+
+In this little snippet, we are defining a `defaultFetchHandler` that intercepts data (loader) requests and forwards them to an external
+server that maps the same path as the request.
+
+<Warn>
+  You should note that like Remix server functions, you **must** return a response from the `defaultFetchHandler`. Unlike
+  Remix case where a simple `null` would suffice, you must return a `Response` object in the Service Worker.
+
+  Unlike Remix server functions, the `defaultFetchHandler` intercepts **every** fetch request, so you should always make sure to validate and vet
+  the requests before acting on them. And by default, just forward the request to the server (`fetch(request)`).
+</Warn>
+
+<Details title="What happens if I don't provide a default fetch handler?">
+  Well, in that case, it depends on the runtime. If you are using `@remix-pwa/worker-runtime`, the underlying behaviour is to just utilise a simple
+  `fetch` call to the server. As you can see, this behaviour is heavily dependent on the runtime, so you can customise it to suit your needs.
+</Details>
+
+## Arguments
+
+### `request`
+
+Remix PWA APIs are built to be as close as possible to Remix existing APIs. The `request` object is the fetch request originating from
+the client.
+
+> Note: Like Remix server functions, the request object being passed is a stripped down version of the actual request, if you would like
+> to access the full request object, you can use the `context` object (`context.event.request`).
+
+### `context`
+
+The `context` object is a global context object being passed around your service worker.
+
+<Info>
+  With Remix PWA, you should stop thinking of your Service Worker as just the entry worker file but as your whole application. Every `workerLoader`
+  and `workerAction` is a part of your Service Worker.
+  
+  Since they're spread across multiple files, the `context` object is a global object that is passed around and allows for
+  sharing of data and state between them.
+</Info>
+
+Creation of the `context` object is handled via the [`getLoadContext`](/docs/main/get-load-context) function in your entry worker file.
+
+### `params`
+
+The `params` object is the same as that utilised by Remix server functions.

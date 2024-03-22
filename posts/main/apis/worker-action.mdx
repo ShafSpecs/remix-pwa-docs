@@ -1,6 +1,98 @@
 ---
 title: workerAction
-description: ""
+description: "Route Worker API for intercepting and handling non-GET request within a route."
 alternateTitle: workerAction
 ---
 
+Remix PWA introduced route worker apis in v3 for intercepting and handling non-GET requests uniquely within a route. The flow is simple, where you have an [`action`](https://remix.run/docs/en/main/route/action), you have a `workerAction` in front of it.
+
+## workerAction
+
+### Synopsis
+
+Sometimes, when handling specific routes in the worker, you might want to run some particular code for that route. For example, within a news app, you might want to have a background sync function that is able to get the lastest news for the
+user as soon as the user comes online, even when the app is closed. Typically, you would do that within your service worker,
+utilising good old `switch` statements to match your routes.
+
+With `workerAction`, you can easily create and isolate worker functionalities for various routes within your app, whilst still being able to share and pass state around the worker. It is indeed glorious!
+
+### Usage
+
+`workerAction` are used like your typical route modules, you export the function, make sure to return a response, and you're good to go. On a more serious note, they are quite very similar to `action`.
+
+```tsx {{filename:'app/routes/todos.tsx'}}
+import type { WorkerActionArgs } from "@remix-pwa/sw";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { Form } from "@remix-run/react";
+
+import { TodoList } from "~/components/TodoList";
+import { fakeCreateTodo, fakeGetTodos } from "~/utils/db";
+
+export async function action({
+  request,
+}: ActionFunctionArgs) {
+  const body = await request.formData();
+  const todo = await fakeCreateTodo({
+    title: body.get("title"),
+  });
+  return redirect(`/todos/${todo.id}`);
+}
+
+export async workerAction({ context }: WorkerActionArgs) {
+  const { fetchFromServer } = context;
+  let response;
+
+  try {
+    response = await fetchFromServer();
+  } catch (err) {
+    console.error(err);
+    await queueToServer({
+      name: "todoSync",
+      request: event.request.clone()
+    });
+  }
+
+  if (response && response.ok) return response // would redirect
+  
+  return json({ message: "Network error occured! Waiting for network..." })
+}
+
+export async function loader() {
+  return json(await fakeGetTodos());
+}
+
+export default function Todos() {
+  const data = useLoaderData<typeof loader>();
+  const { message } = useActionData<typeof workerAction>();
+  return (
+    <div>
+      <TodoList todos={data} />
+      <Form method="post">
+        <input type="text" name="title" />
+        <button type="submit">Create Todo</button>
+      </Form>
+    </div>
+  );
+}
+```
+
+In this example, we adapted the code from Remix [action page](https://remix.run/docs/en/main/route/action) to include a `workerAction` that would save the request to indexedDB if network error occurs, and keep retrying until the network is back.
+
+### `workerActionArgs`
+
+`workerAction` receives an object with the following properties:
+
+- `context` - The worker global context object that's created via [`getLoadContext`](/docs/main/get-load-context) in your entry worker.
+- `params` - The route `params` properties. Matches dynamic routes, check out Remix docs for more info.
+- `request` - The request object.
+
+### `workerAction` vs `action`
+
+The `workerAction` differ from `action` based on where they run and what they can do. The `workerAction` runs on the worker thread and can only do things that the worker thread can do (can't run server-side content, for example) while the `action` runs on the server and can only do things that the server can do (can't run client-side content, for example).
+
+Simply put, `workerAction` runs within the worker thread, while `action` runs within your server. Asides from that, they are pretty much the same.
+
+---
+
+The possibilities for `workerAction` are plenty, including augmenting `clientAction` - serving as your server. Or straight up being used to further enhance your app's offline capabilities and user experience.

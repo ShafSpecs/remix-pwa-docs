@@ -1,6 +1,43 @@
 ---
 title: workerLoader
-description: ""
+description: "Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes."
 alternateTitle: workerLoader
 ---
 
+The counterpart to `workerAction`, `workerLoader` work very much the same way. The difference being the kind of requests they intercept.
+
+> Don't forget, you must return a response from your route worker APIs!
+
+## `request`
+
+Like `workerAction`, `workerLoader` also accespts the same arguments. Including the `request` object which is the incoming request object.
+
+## `context`
+
+The `context` object is the same as well. It holds the global state of the worker thread.
+
+## `params`
+
+The [`params`](https://remix.run/docs/en/main/route/loader#params) is the route object containing dynamic parameters defined by the route.
+
+## Gotchas
+
+`workerLoader` intercepts requests made to the loader within your app with one caveat: they don't run during the first load (document request). By default, they run on client-side navigation. This behaviour can be changed by revalidating within your
+`root` file:
+
+```ts {{filename:'app/root.tsx'}}
+export default function App () {
+  const revalidator = useRevalidator();
+
+  useEffect(() => {
+    revalidator.revalidate();
+  }, []);
+
+  // rest of your app component...
+}
+```
+
+This ensures that the worker loader runs on the first load as well.
+
+> What about if you don't want to revalidate and at the same time want to run it on first load? No idea. I am working
+> on improving this behaviour especially and haven't found a reliable way to do this yet.

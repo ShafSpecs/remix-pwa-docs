@@ -1,0 +1,27 @@
+---
+title: ManifestLink
+description: "A quick component to link to a manifest file."
+alternateTitle: ManifestLink
+order: 1
+toc: false
+---
+
+The `ManifestLink` component from `@remix-pwa/sw` is a utility component to help with registering a manifest file. Saves having
+to write the whole link tag yourself.
+
+Utilise it just above Remix's `<Links />` component within your app's root.
+
+It takes one prop: `manifestUrl` which is the URL to your manifest file. By default, this is `/manifest.webmanifest`.
+
+```tsx
+import { ManifestLink } from '@remix-pwa/sw';
+
+export default function App() {
+  return (
+    // Add the ManifestLink component just above Remix's Links component
+    <ManifestLink manifestUrl="/manifest.json" /> // can leave blank for default
+    <Links />
+    // Your app's content
+  );
+}
+```

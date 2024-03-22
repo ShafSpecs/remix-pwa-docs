@@ -9,7 +9,13 @@
     "error-handler": "apis/error-handler",
     "get-load-context": "apis/get-load-context",
     "worker-action": "apis/worker-action",
-    "worker-loader": "apis/worker-loader"
+    "worker-loader": "apis/worker-loader",
+    "manifest-link": "hooks/manifest-link",
+    "use-sw-effect": "hooks/use-sw-effect",
+    "use-badge-api": "hooks/use-badge-api",
+    "use-battery-manager": "hooks/use-battery-manager",
+    "use-network-connectivity": "hooks/use-network-connectivity",
+    "use-pwa-manager": "hooks/use-pwa-manager"
   },
   "sections": [
     "Getting Started",
@@ -58,7 +64,7 @@
     "default-fetch-handler": {
       "title": "defaultFetchHander",
       "alternateTitle": "defaultFetchHander",
-      "description": "",
+      "description": "Your default handler for fetching requests in your Service Worker.",
       "section": "Route & Worker APIs",
       "slug": "default-fetch-handler",
       "spacer": true
@@ -66,30 +72,73 @@
     "error-handler": {
       "title": "errorHandler",
       "alternateTitle": "errorHandler",
-      "description": "",
+      "description": "Your last defence against unhandled errors in your worker routes. Gracefully handle errors without breaking your Remix app.",
       "section": "Route & Worker APIs",
       "slug": "error-handler"
     },
     "get-load-context": {
       "title": "getLoadContext",
       "alternateTitle": "getLoadContext",
-      "description": "",
+      "description": "Global context object for the worker thread. Share data globally between your workers in your routes and the entry service worker.",
       "section": "Route & Worker APIs",
       "slug": "get-load-context"
     },
     "worker-action": {
       "title": "workerAction",
       "alternateTitle": "workerAction",
-      "description": "",
+      "description": "Route Worker API for intercepting and handling non-GET request within a route.",
       "section": "Route & Worker APIs",
       "slug": "worker-action"
     },
     "worker-loader": {
       "title": "workerLoader",
       "alternateTitle": "workerLoader",
-      "description": "",
+      "description": "Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes.",
       "section": "Route & Worker APIs",
       "slug": "worker-loader"
+    },
+    "manifest-link": {
+      "title": "ManifestLink",
+      "alternateTitle": "ManifestLink",
+      "description": "A quick component to link to a manifest file.",
+      "section": "Hooks & Components",
+      "slug": "manifest-link",
+      "spacer": true
+    },
+    "use-sw-effect": {
+      "title": "useSWEffect",
+      "alternateTitle": "useSWEffect",
+      "description": "",
+      "section": "Hooks & Components",
+      "slug": "use-sw-effect"
+    },
+    "use-badge-api": {
+      "title": "useBadgeApi",
+      "alternateTitle": "useBadgeApi",
+      "description": "",
+      "section": "Hooks & Components",
+      "slug": "use-badge-api"
+    },
+    "use-battery-manager": {
+      "title": "useBatteryManager",
+      "alternateTitle": "useBatteryManager",
+      "description": "",
+      "section": "Hooks & Components",
+      "slug": "use-battery-manager"
+    },
+    "use-network-connectivity": {
+      "title": "useNetworkConnectivity",
+      "alternateTitle": "useNetworkConnectivity",
+      "description": "",
+      "section": "Hooks & Components",
+      "slug": "use-network-connectivity"
+    },
+    "use-pwa-manager": {
+      "title": "usePWAManager",
+      "alternateTitle": "usePWAManager",
+      "description": "",
+      "section": "Hooks & Components",
+      "slug": "use-pwa-manager"
     }
   },
   "hasIndex": true

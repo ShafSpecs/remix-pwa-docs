@@ -1,6 +1,47 @@
 ---
 title: getLoadContext
-description: ""
+description: "Global context object for the worker thread. Share data globally between your workers in your routes and the entry service worker."
 alternateTitle: getLoadContext
+toc: false
 ---
 
+import Warn from './warn.tsx'
+import Info from './info.tsx'
+
+The `getLoadContext` function is another handler within the entry service worker that allows you to create a global context object for the worker thread.
+
+The output of this function is what determines what your `context` object would look anywhere within the various worker APIs that utilizes it. It takes in the fetch event object as its lone argument and should return an object.
+
+The `context` object by default, contains the following:
+
+- **`event`**: The fetch event object that triggered the worker.
+- **`fetchFromServer`**: A function utility that allows you to fetch the request (forward the request to the server).
+
+If no `getLoadContext` function is provided or is defined, but an empty object (`{}`) is returned, the default `context` object would be used.
+
+In the other case where a non-empty object is returned, the default `context` object would be merged with the object returned by the `getLoadContext` function.
+
+<Warn>
+  Note that this means you can override both `event` and `fetchFromServer` if you return an object with the same keys in your `getLoadContext` function. I won't recommend overriding `event` by the way.
+</Warn>
+
+Here's an example of how you can use the `getLoadContext` function:
+
+```tsx {{filename:'entry.worker.ts'}}
+export const getLoadContext = (event: FetchEvent) => {
+  return {
+    unStrippedRequest: event.request,
+    fetchFromServer: async (request: Request) => {
+      return await fetch(request)
+    }
+  }
+}
+```
+
+In this example, we override the `fetchFromServer` property of the default `context` object with a custom function that more or less does the same thing. And we also provided a new property `unStrippedRequest` that contains the original request object. The `context` object now available globally within the worker thread would now contain three properties: `event`, `fetchFromServer`, and `unStrippedRequest`.
+
+This can be extended to share cache objects, stores, or any other data you might want to share globally between your workers in your routes and the entry service worker.
+
+<Info>
+  Typings are not provided for the `context` object, so if utilizing TypeScript, I would very much advise you to create a type definition for your `context` object that you can then import across your app.
+</Info>

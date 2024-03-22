@@ -1,7 +1,23 @@
 ---
 title: errorHandler
-description: ""
+description: "Your last defence against unhandled errors in your worker routes. Gracefully handle errors without breaking your Remix app."
 alternateTitle: errorHandler
+toc: false
 ---
 
-Catch wrapper for worker loaders and actions
+The `errorHandler` can be simply explained as the `catch` block for route worker apis (`workerLoader` & `workerAction`).
+
+Like all the main Remix PWAs APIs, the `errorHandler` is a function that is exported from your entry worker file. It takes in two main arguments: the error and an object containing the `request` object, `params` and `context` object.
+
+The error handler returns nothing (`void`). Within this handler, you can log the error, send an email, or do whatever you want to do with the error. The runtime would take care of returning an appropriate response to the client.
+
+```ts
+type DefaultErrorHandler = (
+  error: Error,
+  args: {
+    request: Request;
+    params: Record<string, string>;
+    context: ContextObject;
+  }
+) => void;
+```
