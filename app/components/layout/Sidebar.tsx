@@ -219,7 +219,7 @@ export function Sidebar({
       <Header section={currentSection} title={currentTitle} />
       <Wrapper allowOverflow={allowOverflow}>
         <div className="mx-auto max-w-8xl px-4 sm:px-6 md:px-8">
-          <div className="sidebar-content fixed inset-0 left-[max(0px,calc(50%-45rem))] right-auto top-[3.8125rem] z-20 hidden w-[19rem] overflow-y-auto pb-10 pl-8 pr-6 lg:block">
+          <div className="sidebar-content fixed inset-0 left-[max(0px,calc(50%-45rem))] right-auto top-[72px] z-20 hidden w-[19rem] overflow-y-auto pb-10 pl-8 pr-6 lg:block">
             <DocList meta={metadata.meta} tag={currentTag} />
           </div>
           <div className="lg:pl-[19.5rem]">{children}</div>
