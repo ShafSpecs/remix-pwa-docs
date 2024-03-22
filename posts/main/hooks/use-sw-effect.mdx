@@ -1,8 +1,89 @@
 ---
 title: useSWEffect
-description: ""
+description: "React hook to facilitate worker messaging and notify Service Worker about location-based changes"
 alternateTitle: useSWEffect
 order: 2
 ---
 
-The only hook from sw
+The only hook from `@remix-pwa/sw`, the `useSWEffect` hook is used to send messages to the service worker on navigation events.
+
+Remix PWA uses it by default to handle document caching. When a client-side navigation occurs in Remix, a fetch is made to the loader directly
+from the client, but the response isn't a HTML page with embedded loader data but rather, a normal response containing data that is then embedded
+into the page. Which is great for handling data caching and interception, but when you want to cache the entire page (with the loader data) to serve when offline
+or as a fallback, you don't have a way to do that via the normal fetch event in the service worker.
+
+The role of the `useSWEffect` hook in this case, is to send a message to the service worker containing the current location on every client-side navigation
+(basically a `useEffect` with the `location` object as its dependency). Utilizing the `message` handler on the service worker end,
+we can then fetch the entire url (simulate a document fetch), and then cache (or whatever we want) the full HTML response.
+
+## Usage
+
+The `useSWEffect` hook is to be used in the root of your Remix application and it grants it access to all of the navigation events
+happening.
+
+```tsx {{filename:'app/root.tsx'}}
+import { useSWEffect } from '@remix-pwa/sw';
+
+export default function App() {
+  useSWEffect();
+  
+  // my app...
+}
+```
+
+## Customising the hook
+
+When sending messages to the Service Worker, you should be able to identify the source of the message within your Service
+Worker by a constant parameter sent in all messages that can be used to differentiate them from other messages. In the case
+of `useSWEffect`, the default message type when sending messages is `REMIX_NAVIGATION`.
+
+Remix PWA then provides utilities for handling this type of message (check out the Messaging page). There are two types of caching
+provided by Remix PWA: Just-In-Time (JiT) and Precaching. JiT is simply cache as I go, while Precaching is caching all the pages
+in one go, at the start.
+
+The hook takes in an object as an argument that allows you to customise the caching strategy you want to use. 
+
+```ts
+type UseSWEffectOptions =
+  | { cacheType?: 'jit' }
+  | { cacheType?: 'precache' }
+  | { cacheType: 'custom'; eventName: string; payload?: SWMessagePayload };
+```
+
+By default, the `cacheType` is set to `jit`. Which is intercepted by the appropriate message handler in the service worker. `precache` is
+still a work-in-progress, so currently, except you handle it yourself, there's no way to precache.
+
+## Extending `useSWEffect`
+
+It's also possible that you want to send your own location-based message to the worker, `useSWEffct` is now extended to
+facilitate that too. Setting the `cacheType` to `'custom'`, you can provide your own event name and a payload for passing
+extra information alongside the location to the service worker.
+
+> For more info on exactly how to handle this Service Worker-side, check out the Messaging page.
+
+As long as you pass in different `eventName`s, you can have multiple `useSWEffect` across your application. To further build on that,
+they don't have to be in your app root, you can scope them.
+
+Let's consider a few routes:
+
+| Route                  | `useSWEffect` scope                                                                      |
+|:-----------------------|:-----------------------------------------------------------------------------------------|
+| `app/root.tsx`         | `/`. The hook would be triggered for every client-side navigation within your app        |
+| `app/routes/_app.tsx`  | `/_app/$childRoute`. Any route sub-nested within the `_app` layout would trigger the hook |
+| `app/routes/admin.tsx` | `/admin`. The hook would only be triggered when navigating to the admin route            |
+
+```ts
+import { useSWEffect } from '@remix-pwa/sw';
+
+export default function LayoutRoute() {
+  useSWEffect({
+    cacheType: 'custom',
+    eventName: 'MY_CUSTOM_EVENT',
+    payload: {
+      loveMom: true // 🥰
+    } 
+  });
+  
+  // my route...
+}
+```

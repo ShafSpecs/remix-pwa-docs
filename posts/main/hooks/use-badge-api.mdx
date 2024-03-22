@@ -1,7 +1,72 @@
 ---
 title: useBadgeApi
-description: ""
+description: "A utility hook to interact with the Web Badging API, allowing you to set notification badges on your app."
 alternateTitle: useBadgeApi
 order: 3
 ---
 
+The `useBadgeApi` hook is a utility hook exported from `@remix-pwa/client` that allows you to interact with the
+[Web Badging API](https://developer.mozilla.org/en-US/docs/Web/API/Badging_API), allowing you to set notification badges
+on your app.
+
+The hook exports an object with a few common methods that helps simplify the interaction with the Badging API.
+
+## `badgeCount`
+
+The `badgeCount` value is a `number` that represents the current badge count on the app. Can be used easily determine parameters
+like maximum badge count, or to keep track of the count as the hook does not track the count internally.
+
+## `setBadgeCount`
+
+The `setBadgeCount` method is a function that allows you to set the badge count on the app. It takes a single argument, which
+is the new badge count you want to set.
+
+```tsx
+import { useBadgeApi } from '@remix-pwa/client';
+
+function MyComponent() {
+  const { badgeCount, setBadgeCount } = useBadgeApi();
+
+  return (
+    <div>
+      <button onClick={() => setBadgeCount(badgeCount + 1)}>Increment Badge Count</button>
+      <button onClick={() => setBadgeCount(0)}>Clear Badge Count</button>
+    </div>
+  );
+}
+```
+
+## `increment`
+
+Looking at the past example, that wasn't too pretty. The `increment` allows you to increment the badge count by a specified
+or one, if no argument is provided.
+
+```tsx
+import { useBadgeApi } from '@remix-pwa/client';
+
+function MyComponent() {
+  const { increment } = useBadgeApi();
+
+  return (
+    <div>
+      <button onClick={() => increment()}>Increment badge count by 1</button>
+      <button onClick={() => increment(7)}>Increment badge count by 7</button>
+    </div>
+  );
+}
+```
+
+## `decrement`
+
+Literally the opposite of `increment`, the `decrement` method allows you to decrement the badge count by a specified or one by default.
+
+## `clearBadge`
+
+This method allows you to clear the badge count on the app. Rsetting it back to zero.
+
+## `showNotificationDot`
+
+The badging API isn't just for numbers, sometimes you want to show a simple dot to indicate that there are notifications. The
+`showNotificationDot` method allows you to show a notification dot on the app.
+
+> Note that it doesn't reset the badge count.

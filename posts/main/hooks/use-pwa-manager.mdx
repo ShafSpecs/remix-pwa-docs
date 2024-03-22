@@ -1,7 +1,58 @@
 ---
 title: usePWAManager
-description: ""
+description: "A utility hook to manage your PWA application as a whole."
 alternateTitle: usePWAManager
 order: 6
 ---
 
+The `usePWAManager` hook is a utility hook exported from `@remix-pwa/client` that allows you to manage and access your PWA application
+main states like service worker registration and installation. The hook takes no argument and returns an object.
+
+{/* > This hook is done and a work-in-proress,  */}
+It has a type definition as follows:
+
+```ts
+usePWAManager: () => {
+  updateAvailable: boolean;
+  promptInstall: () => void;
+  swRegistration: ServiceWorkerRegistration | null;
+  userInstallChoice: "accepted" | "dismissed" | null;
+}
+```
+
+## `updateAvailable`
+
+This is a boolean value that indicates if there is an update available for the PWA application. It is `true` if there is an
+update available to the service worker and `false` otherwise.
+
+A good use case for this would be to implement a "prompt" to the user to reload the page when an update is available.
+
+## `promptInstall`
+
+This is a method that allows you to customise the installation prompt for your PWA application. It is a function that you **must**
+call via a user interaction (click, hover, etc.) to trigger the installation prompt.
+
+Currently, you can't customise the prompt. I am working on making that possible in the not-so-distant future.
+
+## `swRegistration`
+
+This is a `ServiceWorkerRegistration` object that represents the service worker registration for the PWA application. It is `null`
+if there is no service worker registered. Can be used to access the service worker registration object which opens up a lot of
+possibilities to build upon like sync, periodic sync and push notifications.
+
+## `userInstallChoice`
+
+This is a string value that represents the user's choice when prompted to install the PWA application. It can be one of the
+following values:
+
+- `accepted`: The user accepted the installation prompt.
+- `dismissed`: The user dismissed the installation prompt.
+- `null`: The user has not been prompted to install the PWA application.
+
+This can be used to track the user's choice and provide feedback to the user.
+
+---
+
+This hook is complete and also a work-in-progress, I am exploring ways to expand the capabilities of the hook to make it more
+useful and powerful (your PWA swiss knife). If you have any suggestions or ideas, feel free to discuss them in Remix PWA
+[Discussions](https://github.com/orgs/remix-pwa/discussions).

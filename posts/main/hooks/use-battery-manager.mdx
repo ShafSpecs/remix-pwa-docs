@@ -1,7 +1,60 @@
 ---
 title: useBatteryManager
-description: ""
+description: "The useBatteryManager hook to interact with the BatteryManager API."
 alternateTitle: useBatteryManager
 order: 4
+toc: false
 ---
 
+This hook is one of those utility hook that wouldn't see much use, buf if you need 'em, you gottem. The hook
+allows you to interact with the battery manager and access the device battery level and charging state.
+
+> Be sure to check its compatibility with your target browsers before using it.
+
+The hook has the following signature:
+
+```typescript
+useBatteryManager = (options?: {
+  onChargingChange?: (isCharging: boolean) => void;
+  onLevelChange?: (batteryLevel: number) => void;
+}) => {
+  batteryLevel: number;
+  isCharging: boolean;
+};
+```
+
+The `options` parameter is an object that can have two optional properties:
+
+- `onChargingChange`: A callback function that is called whenever the charging state changes.
+- `onLevelChange`: A callback function that is called whenever the battery level changes.
+
+It returns an object with two properties:
+
+- `batteryLevel`: The current battery level as a number between 0 and 1.
+- `isCharging`: A boolean indicating whether the device is currently charging.
+
+Here's an example of how you can use the `useBatteryManager` hook:
+
+```tsx
+import { useBatteryManager } from '@remix-pwa/client';
+
+function BatteryStatus() {
+  const { batteryLevel, isCharging } = useBatteryManager({
+    onChargingChange: (isCharging) => {
+      console.log('Charging state changed:', isCharging);
+    },
+    onLevelChange: (batteryLevel) => {
+      console.log('Battery level changed:', batteryLevel);
+    },
+  });
+
+  return (
+    <div>
+      <p>Battery Level: {batteryLevel}</p>
+      <p>Charging: {isCharging ? 'Yes' : 'No'}</p>
+    </div>
+  );
+}
+```
+
+If you are building a PWA that interacts with the battery in some way, you've got the right tool for the job 😉.

@@ -15,7 +15,15 @@
     "use-badge-api": "hooks/use-badge-api",
     "use-battery-manager": "hooks/use-battery-manager",
     "use-network-connectivity": "hooks/use-network-connectivity",
-    "use-pwa-manager": "hooks/use-pwa-manager"
+    "use-pwa-manager": "hooks/use-pwa-manager",
+    "cache-api": "utils/cache-api",
+    "defer": "utils/defer",
+    "json": "utils/json",
+    "logger": "utils/logger",
+    "misc": "utils/misc",
+    "pwa-utils": "utils/pwa-utils",
+    "redirect": "utils/redirect",
+    "vite-config": "utils/vite-config"
   },
   "sections": [
     "Getting Started",
@@ -108,37 +116,94 @@
     "use-sw-effect": {
       "title": "useSWEffect",
       "alternateTitle": "useSWEffect",
-      "description": "",
+      "description": "React hook to facilitate worker messaging and notify Service Worker about location-based changes",
       "section": "Hooks & Components",
       "slug": "use-sw-effect"
     },
     "use-badge-api": {
       "title": "useBadgeApi",
       "alternateTitle": "useBadgeApi",
-      "description": "",
+      "description": "A utility hook to interact with the Web Badging API, allowing you to set notification badges on your app.",
       "section": "Hooks & Components",
       "slug": "use-badge-api"
     },
     "use-battery-manager": {
       "title": "useBatteryManager",
       "alternateTitle": "useBatteryManager",
-      "description": "",
+      "description": "The useBatteryManager hook to interact with the BatteryManager API.",
       "section": "Hooks & Components",
       "slug": "use-battery-manager"
     },
     "use-network-connectivity": {
       "title": "useNetworkConnectivity",
       "alternateTitle": "useNetworkConnectivity",
-      "description": "",
+      "description": "A utility hook for interacting with device network connectivity state.",
       "section": "Hooks & Components",
       "slug": "use-network-connectivity"
     },
     "use-pwa-manager": {
       "title": "usePWAManager",
       "alternateTitle": "usePWAManager",
-      "description": "",
+      "description": "A utility hook to manage your PWA application as a whole.",
       "section": "Hooks & Components",
       "slug": "use-pwa-manager"
+    },
+    "cache-api": {
+      "title": "Cache API",
+      "alternateTitle": "Cache API",
+      "description": "",
+      "section": "Utilities",
+      "slug": "cache-api",
+      "spacer": true
+    },
+    "defer": {
+      "title": "defer",
+      "alternateTitle": "defer",
+      "description": "A utility to defer promises and stream responses to the client",
+      "section": "Utilities",
+      "slug": "defer"
+    },
+    "json": {
+      "title": "json",
+      "alternateTitle": "json",
+      "description": "A utility to create JSON responses from objects",
+      "section": "Utilities",
+      "slug": "json"
+    },
+    "logger": {
+      "title": "Logger",
+      "alternateTitle": "Logger",
+      "description": "",
+      "section": "Utilities",
+      "slug": "logger"
+    },
+    "misc": {
+      "title": "Miscellaneous",
+      "alternateTitle": "Miscellaneous",
+      "description": "",
+      "section": "Utilities",
+      "slug": "misc"
+    },
+    "pwa-utils": {
+      "title": "PWA Utilities",
+      "alternateTitle": "PWA Utilities",
+      "description": "",
+      "section": "Utilities",
+      "slug": "pwa-utils"
+    },
+    "redirect": {
+      "title": "redirect",
+      "alternateTitle": "redirect",
+      "description": "A utility to send a redirect response to the client.",
+      "section": "Utilities",
+      "slug": "redirect"
+    },
+    "vite-config": {
+      "title": "vite.config.ts",
+      "alternateTitle": "vite.config.ts",
+      "description": "",
+      "section": "Utilities",
+      "slug": "vite-config"
     }
   },
   "hasIndex": true

@@ -1,7 +1,41 @@
 ---
 title: useNetworkConnectivity
-description: ""
+description: "A utility hook for interacting with device network connectivity state."
 alternateTitle: useNetworkConnectivity
 order: 5
+toc: false
 ---
 
+The `useNetworkConnectivity` hook is a simple utility hook for interacting with device network connectivity status.
+
+It is a simple hook that returns a boolean value indicating whether the device is connected to the internet or not. It has the
+following signature:
+
+```typescript
+useNetworkConnectivity = (options?: {
+  onOnline?: (isOnline: boolean) => void;
+  onOffline?: (isOnline: boolean) => void;
+}) => boolean;
+```
+
+It takes in an optional `options` object with the following properties:
+
+- `onOnline`: A callback function that is called when the device goes online.
+- `onOffline`: A callback function that is called when the device goes offline.
+
+```tsx
+import { useNetworkConnectivity } from '@remix-pwa/client';
+
+const MyComponent = () => {
+  const isOnline = useNetworkConnectivity({
+    onOnline: (isOnline) => {
+      console.log('Device is online');
+    },
+    onOffline: (isOnline) => {
+      console.log('Device is offline');
+    },
+  });
+
+  return <div>{isOnline ? 'Online' : 'Offline'}</div>;
+};
+```
