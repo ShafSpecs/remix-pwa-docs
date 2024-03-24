@@ -23,7 +23,19 @@
     "misc": "utils/misc",
     "pwa-utils": "utils/pwa-utils",
     "redirect": "utils/redirect",
-    "vite-config": "utils/vite-config"
+    "vite-config": "utils/vite-config",
+    "background-sync": "guides/background-sync",
+    "browser-support": "guides/browser-support",
+    "cli": "guides/cli",
+    "contributing": "guides/contributing",
+    "deployment": "guides/deployment",
+    "enhanced-cache": "guides/enhanced-cache",
+    "env": "guides/env",
+    "gotchas": "guides/gotchas",
+    "messaging": "guides/messaging",
+    "runtimes": "guides/runtimes",
+    "versioning": "guides/versioning",
+    "web-manifest": "guides/web-manifest"
   },
   "sections": [
     "Getting Started",
@@ -151,7 +163,7 @@
     "cache-api": {
       "title": "Cache API",
       "alternateTitle": "Cache API",
-      "description": "",
+      "description": "This page takes you on a tour of caching in the browser with Remix PWA and the utilities provided",
       "section": "Utilities",
       "slug": "cache-api",
       "spacer": true
@@ -173,21 +185,21 @@
     "logger": {
       "title": "Logger",
       "alternateTitle": "Logger",
-      "description": "",
+      "description": "Logger is a logging utility build for better looking logs in the console.",
       "section": "Utilities",
       "slug": "logger"
     },
     "misc": {
       "title": "Miscellaneous",
       "alternateTitle": "Miscellaneous",
-      "description": "",
+      "description": "A list of Service Worker utilities not worthy to have pages of their own.",
       "section": "Utilities",
       "slug": "misc"
     },
     "pwa-utils": {
       "title": "PWA Utilities",
       "alternateTitle": "PWA Utilities",
-      "description": "",
+      "description": "A list of the numerous utilities Remix PWA ships with to help you build and fine-tune your PWA experience",
       "section": "Utilities",
       "slug": "pwa-utils"
     },
@@ -201,9 +213,94 @@
     "vite-config": {
       "title": "vite.config.ts",
       "alternateTitle": "vite.config.ts",
-      "description": "",
+      "description": "Remix PWA Vite plugin configurations",
       "section": "Utilities",
       "slug": "vite-config"
+    },
+    "background-sync": {
+      "title": "Background Sync API",
+      "alternateTitle": "Background Sync",
+      "description": "",
+      "section": "Guides",
+      "slug": "background-sync",
+      "spacer": true
+    },
+    "browser-support": {
+      "title": "Browser Support",
+      "alternateTitle": "Browser Support",
+      "description": "",
+      "section": "Guides",
+      "slug": "browser-support"
+    },
+    "cli": {
+      "title": "Remix PWA CLI",
+      "alternateTitle": "CLI",
+      "description": "",
+      "section": "Guides",
+      "slug": "cli"
+    },
+    "contributing": {
+      "title": "Contributing",
+      "alternateTitle": "Contributing",
+      "description": "",
+      "section": "Guides",
+      "slug": "contributing"
+    },
+    "deployment": {
+      "title": "Deployment",
+      "alternateTitle": "Deployment",
+      "description": "",
+      "section": "Guides",
+      "slug": "deployment"
+    },
+    "enhanced-cache": {
+      "title": "EnhancedCache",
+      "alternateTitle": "EnhancedCache",
+      "description": "",
+      "section": "Guides",
+      "slug": "enhanced-cache"
+    },
+    "env": {
+      "title": "Environment Variables",
+      "alternateTitle": "Environment Variables",
+      "description": "",
+      "section": "Guides",
+      "slug": "env"
+    },
+    "gotchas": {
+      "title": "Gotchas",
+      "alternateTitle": "Gotchas",
+      "description": "",
+      "section": "Guides",
+      "slug": "gotchas"
+    },
+    "messaging": {
+      "title": "Service Worker Messaging",
+      "alternateTitle": "Messaging",
+      "description": "",
+      "section": "Guides",
+      "slug": "messaging"
+    },
+    "runtimes": {
+      "title": "Worker Runtimes",
+      "alternateTitle": "Runtimes",
+      "description": "",
+      "section": "Guides",
+      "slug": "runtimes"
+    },
+    "versioning": {
+      "title": "Versioning",
+      "alternateTitle": "Versioning",
+      "description": "",
+      "section": "Guides",
+      "slug": "versioning"
+    },
+    "web-manifest": {
+      "title": "Web Manifest",
+      "alternateTitle": "Web Manifest",
+      "description": "",
+      "section": "Guides",
+      "slug": "web-manifest"
     }
   },
   "hasIndex": true

@@ -1,6 +1,33 @@
 ---
 title: Miscellaneous
-description: ""
+description: "A list of Service Worker utilities not worthy to have pages of their own."
 alternateTitle: Miscellaneous
 ---
 
+`@remix-pwa/sw` ships with a multitude of utilities to help you build your Service Worker and extend its capabilities.
+
+## `isLoaderRequest`
+
+The `isLoaderRequest` function allows you to check if a request is a loader request. It takes in the request as it's sole argument.
+
+## `timeout`
+
+A simple sleep function that resolves after a given time.
+
+## `isHttpRequest`
+
+The `isHttpRequest` function allows you to check if a request is an HTTP request. It takes in the request (or a url) as it's sole argument.
+
+> You'd be surprised to see service workers intercepting requests made by browser extensions. A good safeguard really.
+
+## `toJSON`
+
+The `toJSON` function allows you to convert a response object to a JSON object. Don't worry, it clones your response object before converting it.
+
+## `unregisterServiceWorker`
+
+If for some reason, you get fed up with your service worker and decide to not use it again, you can unregister it using the `unregisterServiceWorker` function.
+
+## `loadServiceWorker`
+
+The old classic! Allows you to manually register your service worker, be sure to disable `registerSW` in your vite config file first.

@@ -1,9 +1,372 @@
 ---
 title: Cache API
-description: ""
+description: "This page takes you on a tour of caching in the browser with Remix PWA and the utilities provided"
 alternateTitle: Cache API
 ---
 
+import Info from './info.tsx'
+import Details from './details.tsx'
+import Snippet from './snippet.tsx'
 
-{/* Have a separate guide going in-depth into enhanced cache, another for caching generally (practically - custom, working examples, etc.) */}
-{/* This here would just be a dive into the strategies, and a bit of enhanced and how it ties into normal cache */}
+Caching is a crucial part of a good Progressive Web App. It allows you to store assets and data in the browser for later use, reducing the need to fetch them from the network. This can lead to faster load times, reduced data usage, and a better user experience.
+
+In the browser, there are several key-value stores you can use for caching. There is the [Session Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) which is cleared when the browser is closed, [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) which persists even after the browser is closed, [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) which is a more powerful database-like storage, and the [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache) which is specifically designed for caching requests/responses.
+
+We would be focusing specifically on Cache API in this doc, so sit back, relax, make sure you have a warm cup of tea 🍵 and let's dive in.
+
+## Strategies
+
+Strategies in Remix PWA are a way to define how a cache should be used when fetching a resource. In other words, they are a wrapper around a basic browser cache that supercharges it with control and most importantly, behaviour.
+
+Let's break this down a bit more. When you fetch a resource, you can choose to cache it in different ways. You can cache it only if it's not already in the cache, you can cache it and update the cache with the new response, you can cache it and update the cache in the background, etc. You can even decide not to go to the server and utilise your cache as a one-stop pitstop. These are all behaviours.
+These are what strategies are all about. They define how a cache should be used when fetching a resource.
+
+Diving into Remix PWA strategies, there are 4 main strategies you can use:
+
+- `CacheFirst`
+- `NetworkFirst`
+- `StaleWhileRevalidate`
+- `CacheOnly`
+
+Why did we say main strategies? Because you can also create your own custom strategies! We would get to that soon enough.
+
+### `BaseStrategy`
+
+`BaseStrategy` is the base class for all strategies in Remix PWA. It is an abstract class that defines a few utilities and provides a common function that must be implemented by all strategies.
+
+The methods provided are:
+
+- `async openCache(): Promise<Cache>`: This method is used to open the cache that the strategy will use (which is provided during instantiation). It returns a promise that resolves to the cache (of `this` object).
+- `ensureRequest(request: Request | string | URL): Request`: This utility method is used to ensure that the request is a `Request` object. If it's a string or URL, it converts it to a `Request` object.
+- `async cleanupCache(): Promise<void>`: This method is used to clean up the cache based on pre-defined parameters. It returns a promise that resolves when the cleanup is done.
+- `addTimestampHeader(response: Response): Response`: This utility method is used to add a timestamp header to a response. This is used by the `cleanupCache` method to determine the age of an item in the cache.
+- `handleRequest(request: Request): Promise<Response>`: The abstract method of `BaseStrategy`. This method is used to handle the request and return a response. It must be implemented by all strategies.
+
+<Info>
+  Note that they are all protected except for `handleRequest`. This is because they are meant to be used internally by the strategies and not by external code.
+</Info>
+
+#### Cache Cleanup
+
+Cache cleanup is a crucial part of caching. It helps to ensure that the cache doesn't grow too large and that old, unused resources are removed. In Remix PWA, cache cleanup is handled via the `cleanupCache` method of the `BaseStrategy` class.
+
+Generally, the parameters for cleanup are based on two factors:
+
+- The maximum number of items in the cache
+- The maximum allowed age for an item in the cache
+
+We say generally because strategies can extend and define their own parameters for a cleanup. Or make cleanups redundant. We would be exploring how exactly this works as we explore strategies on a per-strategy basis.
+
+#### Type Signature
+
+It's important to note that the `BaseStrategy` class is an abstract class and cannot be instantiated directly. But it does have a constructor that is then used by the strategies that extend it. The constructor has the following signature:
+
+```ts
+export interface CacheOptions {
+  maxAgeSeconds?: number;
+  maxEntries?: number;
+}
+
+new BaseStrategy(cacheName: string, options?: CacheOptions)
+```
+
+where:
+
+- `cacheName` is the name of the cache that the strategy will use
+- `options` is an optional object that can contain the following properties:
+  - `maxAgeSeconds`: The maximum age (in seconds) of an item in the cache. If an item is older than this, it will be removed during cleanup.
+  - `maxEntries`: The maximum number of items in the cache. If the cache has more items than this, the oldest items will be removed during cleanup.
+
+### `CacheFirst`
+
+The `CacheFirst` strategy is a simple strategy that fetches the resource from the cache first and then falls back to the network if the resource is not in the cache. This is useful for resources that are expected to be in the cache most of the time.
+
+The `CacheFirst` strategy has the following signature:
+
+```ts
+type CacheableResponseOptions = {
+  statuses?: number[];
+  headers?: Record<string, string>;
+};
+
+interface CacheFriendlyOptions extends CacheOptions {
+  cacheableResponse?: CacheableResponseOptions | false;
+}
+
+new CacheFirst(cacheName: string, options?: CacheFriendlyOptions)
+```
+
+where:
+
+- `cacheName` is the name of the cache that the strategy will use
+- `options` is an optional object that can contain the following properties:
+  - `maxAgeSeconds`: The maximum age (in seconds) of an item in the cache. If an item is older than this, it will be removed during cleanup.
+  - `maxEntries`: The maximum number of items in the cache. If the cache has more items than this, the oldest items will be removed during cleanup.
+  - `cacheableResponse`: An object that defines the cacheable response options. This can be used to specify which status codes and headers should be cached (a status & headers filter). If set to `false`, all responses would be cached. *(Default: false)*
+
+This is the first strategy we see that extends `BaseStrategy` parameters. It adds a `cacheableResponse` parameter that allows you to specify which status codes and headers should be cached.
+
+### `NetworkFirst`
+
+The `NetworkFirst` strategy is the opposite of the `CacheFirst` strategy. It fetches the resource from the network first and then falls back to the cache if the network request fails. This is useful for resources that are expected to change frequently and should always be up-to-date.
+
+The `NetworkFirst` strategy has the following signature:
+
+```ts
+type CacheableResponseOptions = {
+  statuses?: number[];
+  headers?: Record<string, string>;
+};
+
+interface NetworkFriendlyOptions extends CacheOptions {
+  networkTimeoutInSeconds?: number;
+  cacheableResponse?: CacheableResponseOptions | false;
+}
+
+new NetworkFirst(cacheName: string, options?: NetworkFriendlyOptions)
+```
+
+where:
+
+- `cacheName` is the name of the cache that the strategy will use
+- `options` is an optional object that can contain the following properties:
+  - `maxAgeSeconds`: The maximum age (in seconds) of an item in the cache. If an item is older than this, it will be removed during cleanup.
+  - `maxEntries`: The maximum number of items in the cache. If the cache has more items than this, the oldest items will be removed during cleanup.
+  - `networkTimeoutInSeconds`: The timeout (in seconds) for the network request. If the network request takes longer than this, it would time out and attempt to fallback to cache, the cache will be used instead. *(Default: 10)*
+  - `cacheableResponse`: An object that defines the cacheable response options. This can be used to specify which status codes and headers should be cached (a response status & headers filter). If set to `false`, all responses would be cached.
+  
+### `StaleWhileRevalidate`
+
+The `StaleWhileRevalidate` strategy is a hybrid strategy that fetches the resource from the cache first and then fetches it from the network in the background. This is useful for resources that are expected to be in the cache most of the time but need to be updated periodically.
+
+The `StaleWhileRevalidate` strategy has the following signature:
+
+```ts
+interface SWROptions extends CacheOptions {}
+
+new StaleWhileRevalidate(cacheName: string, options?: SWROptions)
+```
+
+In this case, the `StaleWhileRevalidate` strategy does not have any additional parameters beyond the `BaseStrategy` parameters.
+
+`StaleWhileRevalidate` also has the least agressive cache cleanup and validation, as it is expected to be used for resources that are expected to be in the cache most of the time.
+
+> Regarding `SWROptions`, I am still exploring extra features to inject into this strategy. If you have any ideas, feel free to share them with me.
+>
+> Currently considering a notification system for when the cache is updated, and a way to define the revalidation interval, but not how useful they would be.
+
+### `CacheOnly`
+
+The `CacheOnly` strategy is the most aggressive caching strategy. It fetches the resource from the cache and does not make a network request at all. This is useful for resources that are expected to be in the cache all the time and should not be updated from the network.
+
+The `CacheOnly` strategy has the following signature:
+
+```ts
+interface CacheFriendlyOptions extends CacheOptions {
+  cacheableResponse?: CacheableResponseOptions | false;
+}
+
+new CacheOnly(cacheName: string, options?: CacheFriendlyOptions)
+```
+
+where:
+
+- `cacheName` is the name of the cache that the strategy will use
+- `options` is an optional object that can contain the following properties:
+  - `maxAgeSeconds`: The maximum age (in seconds) of an item in the cache. If an item is older than this, it will be removed during cleanup.
+  - `maxEntries`: The maximum number of items in the cache. If the cache has more items than this, the oldest items will be removed during cleanup.
+  - `cacheableResponse`: An object that defines the cacheable response options. This can be used to specify which status codes and headers should be cached (a response status & headers filter). If set to `false`, all responses would be cached.
+
+`CacheOnly` also exposes a method asides `handleRequest`, and that's the `putInCache` method. This method is used to put a response in the cache. It has the following signature:
+
+```ts
+putInCache(request: Request, response: Response): Promise<void>
+```
+
+The difference between this and a normal `put` is that the response in this case is given a special timestamp header that allows cleanup to occur.
+
+### Custom Strategies
+
+Custom strategies are a way to define your own caching strategy in Remix PWA. This is great and useful if you have specific requirements that are not met by the built-in strategies.
+
+To create a custom strategy, you need to extend the `BaseStrategy` class and implement the `handleRequest` method. This method is used to handle the request and return a response. Let's walkthrough a basic strategy that is basically a simplified `NetwrokFirst` strategy.
+
+```ts {{filename:'entry.worker.ts'}}
+import { BaseStrategy } from '@remix-pwa/sw';
+
+class CustomNetworkFirst extends BaseStrategy {
+  async handleRequest(request: Request): Promise<Response> {
+    return fetch(request);
+  }
+}
+```
+
+Calm down, this isn't the end of the line. We simply just defined a strategy that implements the `handleRequest` and return something. Now, let's actually get this to work
+
+```diff-ts {{filename:'entry.worker.ts'}}
+import { BaseStrategy } from '@remix-pwa/sw';
+
+class CustomNetworkFirst extends BaseStrategy {
+  async handleRequest(request: Request): Promise<Response> {
+-    return fetch(request);
++    try {
++      const response = await fetch(request);
++      const cache = await this.openCache();
++      const responseWithTimestamp = this.addTimestampHeader(response.clone());
++
++      await cache.put(request, responseWithTimestamp);
++
++      return response;
++    } catch (error) {
++      const cachedResponse = this.openCache().then(cache => cache.match(request));
++
++      if (cachedResponse) {
++        return cachedResponse;
++      }
++
++      throw error;
++    }
+   }
+}
+```
+
+Now, we have a custom strategy that fetches from the network first and falls back to the cache if the network request fails. If nothing is found in the cache though, well I hope you have a good `ErrorBoundary` 😅.
+
+But that's it! You have created your own custom strategy. You can now use this strategy in your Remix PWA application just like any other strategy. If you want, you can go ahead and implement the cleanup (*it's simply just a `this.cleanupCache()` call*) too. The sky is the limit!
+
+### Using Strategies
+
+Using strategies in Remix PWA is quite simple. After instantiation, to designate the behaviour of a strategy to a request, you simply call the `handleRequest` method of the strategy object with the request as the argument. In other words, you pass the request to the strategy and it handles the rest.
+
+```ts
+import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from '@remix-pwa/sw';
+
+// somewhere down the line, after instantiation...
+
+cacheFirst.handleRequest(request);
+networkFirst.handleRequest(request);
+staleWhileRevalidate.handleRequest(request);
+```
+
+That's it! We have now handle the same request but with three very different behaviours. The `CacheFirst` strategy would fetch from the cache first, the `NetworkFirst` strategy would fetch from the network first, and the `StaleWhileRevalidate` strategy would fetch from the cache first and then fetch from the network in the background.
+
+## Enhanced Cache
+
+We introduced strategies as super-charged caches. But what if I told you that you can supercharge your supercharged cache? That's what the enhanced cache is all about 🔥.
+
+The enhanced cache is basically a wrapper around strategies, currently it doesn't support custom strategies but more on that in a bit. Let's see how it works.
+
+> On a more informal note, the enhanced cache is the result of just building with no limits. It's like a strategy for strategies. It's like a strategy-ception 🤯.
+
+### The Basics
+
+Enhanced cache is a strategy that comes pre-built with extra utilities that make working with caches easier. It is a wrapper around a strategy that provides extra functionality like:
+
+- **Versioning**: Being able to version cache easily and update your caches in one go, easily allowing you to make data redundant between deployments.
+- **Precaching**: `EnhancedCache` comes with a `precacheUrls` method that allows you to easily cache a list of URLs when the service worker is installed.
+- **Restoration and Persistence**: Allows you to persist your cache to `IndexedDB` and restore from it 👀.
+- **Compression**: Compress and decompress large responses.
+
+and more! The enhanced cache is a powerful tool that can help you build more robust and performant Progressive Web Apps.
+
+> Check out the dedicated page on the enhanced cache for more information on how to use it and what it can do.
+
+### Usage
+
+Using `EnhancedCache` is like every other strategy, you instantiate an object of the `EnhancedCache` class that you can then use and pass around your service worker.
+
+```ts
+import { EnhancedCache } from '@remix-pwa/sw';
+
+const cache = new EnhancedCache('enhanced-cache', {
+  version: 'v1',
+  strategy: 'NetworkFirst',
+  strategyOptions: {
+    maxAgeSeconds: 60,
+    maxEntries: 50,
+  },
+});
+
+// somewhere down the line...
+
+cache.handleRequest(request);
+```
+
+<Info>
+  It is highly recommended to use `EnhancedCache` in your application as it provides you with extra utilities strategies don't provide.
+
+  Check out the `EnhancedCache` page for more information on the enhanced cache.
+</Info>
+
+## Using Caches
+
+This section is about interacting with the caches via the main web APIs: `Cache`, `CacheStorage`, etc. To interact with the caches from outside a strategy/enhanced cache context, there are a few things to take note of. Especially when wanting to ensure consistency and reliability.
+
+Firstly, as opposed to Remix PWA v3, where `RemixCache` was a thing, v4 strategies don't perform any mutation on the cache directly. They only interact with the cache via the `Cache` object and expose utilities to make it easier to work with the cache.
+
+### Main differences
+
+The main difference between using caches directly and using strategies is that strategies provide a layer of abstraction on top of the cache and appears to give them powers.
+
+The main difference between normal cache and using strategies is one header in the response: `sw-cache-timestamp` header. This header provides a reliable context for Remix PWA to know about a cache timespan within a cache.
+
+If, for example, you utilise the a strategy within your Service Worker, then came into your `clientLoader` and decide to utilise that very same cache, you would interact with it as you would a normal cache. But when you start handling and updating responses, you would have to be aware of the `sw-cache-timestamp` header. Probably adding them yourself if you are updating a response.
+
+<Details title="What if I don't bother about the header?">
+  Good question. If you skip out on maintaining the header and are also utilising strategies to update the cache, you might bring about a few inconsistencies in your cache cleanup. There are redundancies in place to ensure that the absense of the header doesn't break the cache behaviour, but it's always good to be on the safe side.
+</Details>
+
+### Interacting with the cache
+
+Let's get practical, say you have a strategy for handling requests with a cache-first behaviour in your service worker. And then decide to do some updates in a route's `clientLoader`, here's how that would go:
+
+<Snippet>
+
+```ts {{filename:'entry.worker.ts'}}
+import { CacheFirst } from '@remix-pwa/sw';
+
+const cacheFirst = new CacheFirst('cache-first', {
+  maxAgeSeconds: 60,
+  maxEntries: 50,
+});
+
+// somewhere down the line...
+
+cacheFirst.handleRequest(request);
+```
+
+```ts {{filename:'app/routes/my.special.route.tsx'}}
+export const clientLoader = (...) => {
+  const cache = await caches.open('cache-first');
+  const response = await cache.match(request);
+
+  // did some magic work here and decided to update cache 👇
+
+  if (response) {
+    const updatedResponse = new Response(response.body, {
+      headers: {
+        ...response.headers,
+        'sw-cache-timestamp': Date.now().toString(),
+      },
+    });
+
+    cache.put(request, updatedResponse);
+  }
+
+  // continue with your magic
+}
+```
+
+</Snippet>
+
+In this example, we have a `CacheFirst` strategy that is used to handle requests in the service worker. We then decide to update the cache in the `clientLoader` of our `/my/special/route` route. We made sure to add the `sw-cache-timestamp` header to the response before updating the cache to ensure consistency across the cache.
+
+## Caveats
+
+Caching is a powerful tool, but it can also be a double-edged sword. Here are a few gotchas to keep in mind when caching with Remix PWA:
+
+- **Compatibility**: As you build and extend your own stratgies with fancy features, always ensure that they are compatible with the browsers you are targeting.
+- **Cache Invalidation**: Always ensure that you have a way to invalidate the cache when necessary. Even when infrequent, ensure that you have a way to do so.
+- **Opaque Responses**: Responses that are opaque (like those from third-party APIs) cannot be cached by the browser. Always ensure that opaque responses are handled properly and separately.
+- **Network Failures**: Always have a fallback mechanism in place for when network requests fail. By default, Remix PWA strategies ship with fallbacks, but it's always good to have your own fallbacks in place :).
+- **Security Considerations**: Always ensure that you are not caching sensitive data or data that should not be cached. Always be mindful of what you are caching and how you are caching it. When dealing with sensitive data (which is almost any data), always ensure that you are following best practices for security.

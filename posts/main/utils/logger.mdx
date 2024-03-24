@@ -1,6 +1,80 @@
 ---
 title: Logger
-description: ""
+description: "Logger is a logging utility build for better looking logs in the console."
 alternateTitle: Logger
 ---
 
+`logger` is a `Console` wrapper for Remix PWA that provides much better looking logs in the console.
+
+It can be utilized like a normal logger:
+
+```ts
+import { logger } from '@remix-pwa/sw';
+
+logger.log('Hello, world!');
+```
+
+Or can be customised to provide better ownership
+
+## `Logger`
+
+The `Logger` class is a class that allows you to create your own logger, with your own styles, prefix and more.
+
+### Instantiating `Logger`
+
+To create a new `Logger` instance, you can easily do so via the `Logger` constructor:
+
+```ts
+import { Logger } from '@remix-pwa/sw';
+
+const logger = new Logger();
+```
+
+When no options are provided, the logger will use the default options.
+
+#### Constructor Options
+
+The `Logger` constructor accepts the following options:
+
+- `prefix` - The prefix to be used in the logs. By default, this is `remix-pwa`.
+- `logLevel` - The log level to be used. By default, this is `info`. Check out the [Log Levels](#log-levels) section for more information.
+- `styles` - The styles to be used in the logs. By default, this is a pre-defined set of styles for each log level, you
+can choose to extend or override these styles, individually or collectively.
+- `isProductionEnv` - This would be auto-filled in by Remix PWA Vite bundler. **Don't** set this manually.
+
+### `Logger` methods
+
+The `Logger` class provides the following methods:
+
+- `debug` - Logs a message with the `debug` log level.
+- `info` - Logs a message with the `info` log level.
+- `log` - Logs a message with the `log` log level.
+- `warn` - Logs a message with the `warn` log level.
+- `error` - Logs a message with the `error` log level.
+- `groupCollapsed` - Logs a group of messages with the `log` log level.
+- `groupEnd` - Ends a group of messages.
+
+They perform the same as the `console` methods, but with better looking logs.
+
+The other set fo not-so-conventional methods include:
+
+- `setLogLevel` - Sets the log level for the logger.
+- `setStyles` - Sets the styles for the logger. Can be used to override styles after instantiation.
+
+## Log Levels
+
+Log levels in Remix PWA `Logger` is a hierarchical structure, that allows you to filter out logs based on their severity.
+
+The log levels are as follows:
+
+- `debug` - The most verbose log level. Used for debugging purposes.
+- `info` - The default log level. Used for general information.
+- `log` - The default log level. Used for general information.
+- `warn` - The warning log level. Used for non-critical issues.
+- `error` - The error log level. Used for critical issues.
+
+The log levels are hierarchical, meaning that a log level will log all logs of its level and below.
+
+## `logger`
+
+The `logger` export is a pre-instantiated `Logger` instance with the default options.

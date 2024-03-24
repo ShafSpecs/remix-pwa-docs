@@ -1,6 +1,351 @@
 ---
 title: PWA Utilities
-description: ""
+description: "A list of the numerous utilities Remix PWA ships with to help you build and fine-tune your PWA experience"
 alternateTitle: PWA Utilities
 ---
 
+To help you build and scaffold your PWA without needing to re-write common (and no-so-common) utilities, Remix PWA ships with a
+few functions and apis to help speed up the process.
+
+## Badge API
+
+### `setBadgeCount`
+
+The `setBadgeCount` function allows you to set the badge count on the app icon. Note that this doesn't sync with the `useBadgeApi` hook.
+
+```ts
+import { setBadgeCount } from 'remix-pwa/client';
+
+setBadgeCount(5);
+```
+
+### `clearBadge`
+
+The `clearBadge` function allows you to clear the badge count on the app icon.
+
+```ts
+import { clearBadge } from 'remix-pwa/client';
+
+clearBadge();
+```
+
+### `isBadgingSupported`
+
+A good thing to do is ensuring browsers supporting the API you intend to use, that can be done via MDN or by using the `isBadgingSupported` function.
+
+```ts
+import { isBadgingSupported } from 'remix-pwa/client';
+
+if (isBadgingSupported()) {
+  // do something
+}
+```
+
+## Battery API
+
+### `getBatteryStatus`
+
+The `getBatteryStatus` function allows you to get the battery status of the device.
+
+```ts
+import { getBatteryStatus } from 'remix-pwa/client';
+
+getBatteryStatus().then((status) => {
+  console.log(status);
+});
+```
+
+The `status` object returned contains the following properties:
+
+- `charging`: A boolean indicating whether the device is charging or not.
+- `chargingTime`: A number indicating the time left for the device to be fully charged.
+- `dischargingTime`: A number indicating the time left for the device to be fully discharged.
+- `level`: A number (between 0 and 1) indicating the battery level.
+
+## Clipboard API
+
+### `copyTextToClipboard`
+
+The `copyTextToClipboard` function allows you to copy text to the clipboard.
+
+```ts
+import { copyTextToClipboard } from 'remix-pwa/client';
+
+copyTextToClipboard('Hello, world!');
+```
+
+### `readTextFromClipboard`
+
+The `readTextFromClipboard` function allows you to read text from the clipboard.
+
+```ts
+import { readTextFromClipboard } from 'remix-pwa/client';
+
+readTextFromClipboard().then((text) => {
+  console.log(text);
+});
+```
+
+### `copyImageToClipboard`
+
+The `copyImageToClipboard` function allows you to copy an image to the clipboard.
+
+```ts
+import { copyImageToClipboard } from 'remix-pwa/client';
+
+copyImageToClipboard('https://example.com/image.jpg');
+```
+
+### `readFilesFromClipboard`
+
+The `readFilesFromClipboard` function allows you to read files from the clipboard.
+
+```ts
+import { readFilesFromClipboard } from 'remix-pwa/client';
+
+readFilesFromClipboard().then((files) => {
+  console.log(files);
+});
+```
+
+### `clipboardSupported`
+
+The `clipboardSupported` function allows you to check if the clipboard API is supported in the browser.
+
+```ts
+import { clipboardSupported } from 'remix-pwa/client';
+
+if (clipboardSupported()) {
+  // do something
+}
+```
+
+## Network Connectivity
+
+### `isOnline`
+
+The `isOnline` function allows you to check if the device is online.
+
+```ts
+import { isOnline } from 'remix-pwa/client';
+
+if (isOnline()) {
+  // do something
+}
+```
+
+### `isOffline`
+
+The `isOffline` function allows you to check if the device is offline.
+
+```ts
+import { isOffline } from 'remix-pwa/client';
+
+if (isOffline()) {
+  // do something
+}
+```
+
+### `handleNetworkChange`
+
+The `handleNetworkChange` function allows you to listen for network changes and perform an action when the network status changes.
+
+```ts
+import { handleNetworkChange } from 'remix-pwa/client';
+
+handleNetworkChange((isOnline) => {
+  console.log(isOnline);
+});
+```
+
+> Note: The `handleNetworkChange` function doesn't "unlisten" (dismount) the listener when the component is unmounted. You should handle this yourself.
+>
+> Alternatively, you can use the `useNetworkConnectivity` hook which handles this for you.
+
+## Contacts API
+
+### `openContactPicker`
+
+The `openContactPicker` function allows you to open the contact picker. It takes in two arguments argument as follows:
+
+- `contactInfo`: An array of strings representing the contact information you want to retrieve. This could be one or all of: `name`, `email`, `tel`, `address`, `icon`.
+- `multiple` (optional): A boolean indicating whether to allow the selection of multiple contacts. Default is `true`.
+
+```ts
+import { openContactPicker } from 'remix-pwa/client';
+
+openContactPicker(['name', 'email']).then((contact) => {
+  console.log(contact);
+});
+```
+
+## Display APIs
+
+### `displayMode`
+
+The `displayMode` function allows you to get the current display mode of your PWA, can be used to provide alternate styling and themeing.
+
+```ts
+import { displayMode } from 'remix-pwa/client';
+
+console.log(displayMode());
+```
+
+### `toggleFullScreen`
+
+The `toggleFullScreen` function allows you to toggle the fullscreen mode of your PWA.
+
+```ts
+import { toggleFullScreen } from 'remix-pwa/client';
+
+toggleFullScreen();
+```
+
+## Web Share API
+
+### `shareData`
+
+The `shareData` function allows you to share data from your PWA to other apps on the device. It takes in an argument object of type [`ShareData`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share#parameters)
+
+```ts
+import { shareData } from 'remix-pwa/client';
+
+shareData({
+  title: 'Hello, world!',
+  text: 'This is a test message',
+  url: 'https://example.com',
+});
+```
+
+### `shareSupported`
+
+The `shareSupported` function allows you to check if the Web Share API is supported in the browser.
+
+```ts
+import { shareSupported } from 'remix-pwa/client';
+
+if (shareSupported()) {
+  // do something
+}
+```
+
+### `shareFilesSupported`
+
+The `shareFilesSupported` function allows you to check if the Web Share API supports sharing files.
+
+```ts
+import { shareFilesSupported } from 'remix-pwa/client';
+
+if (shareFilesSupported()) {
+  // do something
+}
+```
+
+## Device Usage
+
+### `checkVisibility`
+
+The `checkVisibility` function allows you to check if the device is currently visible to the user. Wether the user is on another tab or the device is locked, for example.
+
+```ts
+import { checkVisibility } from 'remix-pwa/client';
+
+if (checkVisibility()) {
+  // do something
+}
+```
+
+### `wakeLock`
+
+The `wakeLock` function allows you to prevent the device from going to sleep. It returns a [`WakeLockSentinel`](https://developer.mozilla.org/en-US/docs/Web/API/WakeLockSentinel) object. Which allows you to release the lock when you're done.
+
+```ts
+import { wakeLock } from 'remix-pwa/client';
+
+const sentinel = wakeLock();
+```
+
+### `wakeLockSupported`
+
+The `wakeLockSupported` function allows you to check if the Wake Lock API is supported in the browser.
+
+```ts
+import { wakeLockSupported } from 'remix-pwa/client';
+
+if (wakeLockSupported()) {
+  // do something
+}
+```
+
+## UserAgent Utilities + Extras
+
+### `isWindowAvailable`
+
+The `isWindowAvailable` function allows you to check if the `window` object is available. This is useful for ensuring you do not render in the server.
+
+```ts
+import { isWindowAvailable } from 'remix-pwa/client';
+
+if (isWindowAvailable()) {
+  // do something
+}
+```
+
+### `isIOS`
+
+The `isIOS` function allows you to check if the user agent is an iOS device.
+
+### `isAndroid`
+
+The `isAndroid` function allows you to check if the user agent is an Android device.
+
+### `isMacOS`
+
+The `isMacOS` function allows you to check if the user agent is a macOS device.
+
+### `isWindows`
+
+The `isWindows` function allows you to check if the user agent is a Windows device.
+
+### `getBrowser`
+
+The `getBrowser` function allows you to get the browser name. Could be one of:
+`chrome` | `firefox` | `edge` | `safari` | `opera` | `android` | `iphone` | `unknown`. In that order.
+
+### `getPlatform`
+
+The `getPlatform` function allows you to get the platform name. Could be one of:
+`ios` | `android` | `macos` | `windows` | `unknown`. In that order.
+
+### `isTouchScreen`
+
+The `isTouchScreen` function allows you to check if the device has a touch screen (is sensitive to touch).
+
+### `isTouchAvailable`
+
+An alias for the `isTouchScreen` method.
+
+### Further utilities
+
+We have more utilities for you to use, these include:
+
+- `isChrome`
+- `isFirefox`
+- `isEdge`
+- `isSafari`
+- `isOpera`
+- `isIOSSafari`
+- `isAndroidChrome`
+- `isMacOSChrome`
+- `isIOSChrome`
+- `isWindowsChrome`
+- `isAndroidFirefox`
+- `isIOSFirefox`
+- `isIOSEdge`
+- `isAndroidEdge`
+- `isWindowsEdge`
+- `isMacOSEdge`
+- `isIOSOpera`
+- `isAndroidOpera`
+
+All doing exactly what you'd expect.

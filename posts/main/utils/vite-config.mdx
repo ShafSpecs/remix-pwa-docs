@@ -1,6 +1,88 @@
 ---
 title: vite.config.ts
-description: ""
+description: "Remix PWA Vite plugin configurations"
 alternateTitle: vite.config.ts
 ---
 
+import Warn from './warn.tsx'
+
+Remix PWA uses Vite to compile and bundle your service workers. The process isn't linear, so you are able to customize the
+process bu utilising the configuration options exposed by the `remixPWA` plugin.
+
+## Remix PWA Vite Plugin Config
+
+```ts {{filename:'vite.config.ts'}}
+import { vitePlugin as remix } from "@remix-run/dev";
+import { remixPWA } from "@remix-pwa/dev";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [
+    remix(), // remix plugin is important!
+    remixPWA({
+      workerBuildDirectory: "out",
+      scope: '/pwa',
+      // rest of your configurations here
+    }),
+  ],
+});
+```
+
+> The configuration is an object of type `PWAViteOptions`.
+
+### `registerSW`
+
+The `registerSW` option of type: `"script" | null` is used to set wether to automatically register the service worker or not via plugin injection. **Recommended**.
+
+By default, the service worker is registered automatically.
+
+### `workerBuildDirectory`
+
+The `workerBuildDirectory` option of type: `string` is used to set the directory where the service worker is built to. **Default**: `public`. Note the lack of leading or trailing slashes.
+
+### `scope`
+
+The scope of the service worker within your application, this is used by the internal registration injection to set the scope of the service worker. **Default**: `/`.
+
+### `entryWorkerFile`
+
+The user entry worker file, relative to the app directory. **Default**: `entry.worker.ts`.
+
+> Be keeping note of the lack of slashes in many.
+
+### `workerMinify`
+
+The `workerMinify` option of type: `boolean` is used to set wether to minify the service worker post-bundling or not. **Default**: `false`.
+
+### `workerName`
+
+The `workerName` option of type: `string` is used to set the name of the service worker file, without extensions. No extensions should be passed in (`js`, `mjs`, etc.). **Default**: `entry.worker`.
+
+### `ignoredSWRouteFiles`
+
+An array of route string patterns to ignore when generating the service worker. Note, this would mean that any worker route modules in those routes would not be included in the final build output. **Default**: `[]`.
+
+The `ignoredSWRouteFiles` now understands string globs/patterns. For example, to ignore all routes that start with `/admin`, you can use `['admin/**']`. This ignores routes starting with `admin` and all its children. You can also ignore routes based on middle patterns or routes ending with a pattern.
+
+```ts
+[
+  'admin/**', // ignore all routes starting with admin
+  '*/admin', // ignore all routes ending with admin
+  '**/admin/**', // ignore all routes containing admin within (not at the start or end)
+  '*', // ignore all routes 
+  'admin/dashboard/**', // can also ignore based on two or more patterns
+  ''
+]
+```
+
+> One asterik (*) or two, it doesn't matter. Both work.
+
+### `workerSourceMap`
+
+The `workerSourceMap` option of type: `boolean` is used to set wether to generate source maps for the service worker or not. **Default**: `false`.
+
+### `workerEntryPoint`
+
+This is used to set the entry point of the service worker (also known as runtime in Remix PWA). <b>Default</b>: `@remix-pwa/worker-runtime`.
+
+To create your own runtime, check out the runtime guide.

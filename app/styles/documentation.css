@@ -25,3 +25,9 @@
     @apply text-xl font-bold !important;
   }
 }
+
+#article-main:has(h3) {
+  & :is(h2:not(:has(+ h3))) {
+    @apply flex whitespace-pre-wrap text-2xl font-bold mb-4 text-[#10172A] dark:text-[#e2e8f0] !important;
+  }
+}
