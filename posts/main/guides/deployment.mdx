@@ -1,6 +1,19 @@
 ---
 title: Deployment
-description: ""
+description: "A guide on how to safely and successfully deploy your PWAs"
 alternateTitle: Deployment
+toc: false
 ---
 
+Deploying a PWA successfully means ensuring that your service worker and web manifest gets deployed correctly with your application.
+
+## Service Worker
+
+To build your service worker, simply build your Remix application like you would any normal application. The service worker will be compiled and bundled for production mode within your output directory (default: `public`). If `registerSW` is set to `script`, the loader script to register the service worker will also be included in your built files.
+
+## Web Manifest
+
+Web Manifests can be served from two main locations in Remix:
+
+- via the `public` directory. In which case it is can be accessed at the root of your application (e.g. `https://example.com/manifest.webmanifest`).
+- via a resource route. This is a route that contains a loader that returns a json object of `Content-Type`: `application/manifest+json`. This is useful if you want to generate the manifest dynamically. Also the method utilised by Remix PWA CLI.

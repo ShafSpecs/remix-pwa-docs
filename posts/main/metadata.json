@@ -228,7 +228,7 @@
     "browser-support": {
       "title": "Browser Support",
       "alternateTitle": "Browser Support",
-      "description": "",
+      "description": "Not all browsers are created equal. A few things to keep in mind when developing for the web.",
       "section": "Guides",
       "slug": "browser-support"
     },
@@ -240,16 +240,16 @@
       "slug": "cli"
     },
     "contributing": {
-      "title": "Contributing",
+      "title": "Contributing to Remix PWA",
       "alternateTitle": "Contributing",
-      "description": "",
+      "description": "Contributions are welcome. But with all things in life, there are things to take note about. This guide details how to contribute to Remix PWA.",
       "section": "Guides",
       "slug": "contributing"
     },
     "deployment": {
       "title": "Deployment",
       "alternateTitle": "Deployment",
-      "description": "",
+      "description": "A guide on how to safely and successfully deploy your PWAs",
       "section": "Guides",
       "slug": "deployment"
     },
@@ -263,14 +263,14 @@
     "env": {
       "title": "Environment Variables",
       "alternateTitle": "Environment Variables",
-      "description": "",
+      "description": "Environment variables are a way to store app state and config data outside of your codebase. A guide to access them safely within Remix PWA",
       "section": "Guides",
       "slug": "env"
     },
     "gotchas": {
       "title": "Gotchas",
       "alternateTitle": "Gotchas",
-      "description": "",
+      "description": "A list of waht-not-to-do's and gotchas in Remix PWA. Safety first 😜!",
       "section": "Guides",
       "slug": "gotchas"
     },
@@ -298,7 +298,7 @@
     "web-manifest": {
       "title": "Web Manifest",
       "alternateTitle": "Web Manifest",
-      "description": "",
+      "description": "Web Manifests are the heart of PWAs. Explore how to create a Web Manifest for your Remix PWA in this guide.",
       "section": "Guides",
       "slug": "web-manifest"
     }

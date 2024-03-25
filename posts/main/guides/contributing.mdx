@@ -1,6 +1,56 @@
 ---
-title: Contributing
-description: ""
+title: Contributing to Remix PWA
+description: "Contributions are welcome. But with all things in life, there are things to take note about. This guide details how to contribute to Remix PWA."
 alternateTitle: Contributing
 ---
 
+import Details from './details.tsx'
+
+My goal for Remix PWA is to be an open platform that provides tools for developers to build Progressive Web Apps with Remix. Remix PWA after all, is a community project (thanks to y'all 🥰)!
+
+## How to contribute
+
+The main process for contributing to Remix PWA, wether the docs, a typo fix, hotfix, or a new feature, is as follows:
+
+1. Fork the repository
+2. Create a new branch
+3. Make your changes
+4. Push your changes to your fork
+5. Create a pull request
+
+Depending on the nature of your contribution, your PR destination might differ a bit. Here are the main respositories and how the inter-connect:
+
+- **[`remix-pwa`](https://github.com/remix-pwa/remix-pwa)**: This repository is currently the front-face of Remix PWA. It houses the main `remix-pwa` executable and was previously the main repository for the project.
+- **[`remix-pwa-docs`](https://github.com/ShafSpecs/remix-pwa-docs)**: This repository houses the documentation for Remix PWA. It is a separate repository from the main Remix PWA repository to allow for easier management of the documentation. The documentation is based on the [Journal Stack](https://github.com/ShafSpecs/journal-stack) 😄.
+- **[`monorepo`](https://github.com/remix-pwa/monorepo)**: Weird name, I know. This repository is a monorepo that houses the main powerhouse of Remix PWA. From the main CLI engine to core packages like `@remix-pwa/dev`, `@remix-pwa/sw`, etc. They are all stored under the `packages` directory. It also contains a sandbox (`playground`) for free-styling and breaking stuffs locally without worryong about breaking the main project.
+
+Currently, these are the main repositories for Remix PWA. If any new ones pop up, would update the list here.
+
+### Bug fixes
+
+If you find a bug in Remix PWA, please open an issue on the repository. If you can fix the bug, please follow the steps above to create a pull request.
+
+### New features
+
+If you have a new idea/feature you very much would love to see in Remix PWA, please **do not** just go ahead and start coding. Create a new RFC (Request for Change/Comments) discussion under the main Remix PWA [discussions tab](https://github.com/orgs/remix-pwa/discussions) to discuss the feature. This is to ensure that the feature aligns with the goals of Remix PWA and to get feedback from the community.
+
+### Documentation
+
+If you find a typo, error, or something that needs to be updated in the documentation, please follow the steps above to create a pull request. You can create a PR right away and make a PR to the `remix-pwa-docs` repository (*`main` branch, please*).
+
+## Branches
+
+This section is imperative when dealing with the `monorepo` repository. Quite a workflow has been setup to automate the development and release process (thanks [Sarabadu](https://github.com/Sarabadu) and [Luciano](https://github.com/lfantone) 💖), and due to that. Random PRs can't be popping off to any branch.
+
+There are two main branches in the `monorepo` repository at any given momoent:
+
+- `main`: This is the main branch of the repository. It is the branch that is used to create new releases (under the `latest`). This branch is never meant to be touched by contributors, as activites on this branch are automated via workflows.
+- `dev`: The `dev` branch is the branch PRs should be made to. It is the main branch where all prep work is done before a new release is made (a PR to `main` from here). This repo also uses [`semantic-release`](https://semantic-release.gitbook.io) to handle the release process, so based on the commit type and scope, a pre-release might be made.
+
+<Details title="What are pre-releases?">
+  Pre-releases are releases that we also like to call nightly release. They are released under the `dev` tag on npm. And their version numbers appear in this fashion: `x.x.x-dev.x`. Multiple pre-releases might be happen (based on feedbacks) before a final release is made.
+</Details>
+
+## Code of Conduct
+
+Check out our [Code of Conduct]([/guides/code-of-conduct](https://github.com/remix-pwa/monorepo/blob/main/CODE_OF_CONDUCT.md)) for more information on how to behave in the Remix PWA community.
