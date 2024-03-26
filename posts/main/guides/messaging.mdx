@@ -1,6 +1,160 @@
 ---
 title: Service Worker Messaging
-description: ""
+description: "Build an comprehensive communication system between your service worker and client."
 alternateTitle: Messaging
 ---
 
+One of the most important thing in a relationship is communication. The same goes for service workers and web clients. When you have two different entities running within the same context but in different threads, you need a way to communicate between them. A method to keep them in sync and share information. This is where messaging comes in. And Remix PWA has just the right tools to help with that.
+
+Messaging in Remix PWA is simple. Nothing too abstract, you have a `message` listener in the service worker and a utility (which you provide yourself) in the client that sends messages over. The communication isn't uni-directional though, you can send messages from the service worker to the client and vice versa.
+
+A very good example of this in Remix PWA is the `useSWEffect` hook. A hook created to send messages over to the service worker when the window's location changes. The service worker then acts on this information and updates the cache accordingly. This is a very good example of how messaging can be used in Remix PWA. Let's discuss how you can implement this in your own project and extend it further.
+
+## `MessageHandler`
+
+Here at Remix PWA, we seem to have a thing for OOP. Keeps things organized and simple to extend on base functionalities. In this case, the base functionality is `MessageHandler`. A class that provides a common interface for handling messages in the service worker.
+
+### Synopsis
+
+Before, we go further, let's discuss how exactly the process works. A message handler is set up to listen to specific messages, we call these identifier `type`. All messages coming from the client have a `type` property to help distinguish them, when a message is received, the handler checks the `type` and calls the appropriate method to handle the message. If you have more than one type, you have multiple listeners:
+
+```ts {{filename:'entry.worker.ts'}}
+const messageHandlerForUser = new MessageHandlerSubClass1();
+const messageHandlerForPost = new MessageHandlerSubClass2();
+
+self.addEventListener('message', (event) => {
+  await messageHandlerForUser.handleMessage(event);
+  await messageHandlerForPost.handleMessage(event);  
+});
+```
+
+In this example, we have two message handlers that listen to specific messages for 'user' and 'post' respectively. When a message is received, all handlers would react to it. The message handler for that particular message type would get called whilst the others would be ignored.
+
+This might look confusing at first but it's quite simple. Let's break it down by building a simple message handler.
+
+### Interface
+
+The `MessageHandler` has the following signature:
+
+```ts
+export class MessageHandler {
+  protected eventName: string;
+  private static messageHandlers: MessageHandlerMap = {};
+
+  constructor(eventName: string)
+
+  protected bind(handler: (event: any) => Promise<void>): Promise<void>
+
+  async handleMessage(event: ExtendableMessageEvent): Promise<void>
+}
+```
+
+where the fields can be explained as follows:
+
+- `eventName`: The event name to listen for. This is the `type` property of the message.
+- `messageHandlers`: A static property that holds all message handlers. This is used to determine which handler to call when a message is received.
+- `bind`: A method to bind the message handler to the event listener. This is called in the constructor of sub-classes, ensuring that the instance of the subclass is bound the `this` object.
+- `handleMessage`: The method that gets called when a message is received. This method checks the `type` of the message and calls the appropriate handler. Not to be overriden (except if you would prvide your own checks).
+
+### Custom Message Handler
+
+To create a custom message handler, you need to extend the `MessageHandler` class.
+
+```ts {{filename:'entry.worker.ts'}}
+import { MessageHandler } from '@remix-pwa/sw';
+
+class CustomMessageHandler extends MessageHandler {
+  constructor(eventname: string) {
+    super('USER_EVENT');
+  }
+}
+```
+
+In this basic template, we simply extended the `MessageHandler` class and defined our own event name (the event `type` property we would be handling with this class). Next up we create the actual message handler.
+
+```diff-ts {{filename:'entry.worker.ts'}}
++ import { MessageHandler, logger } from '@remix-pwa/sw';
+
+class CustomMessageHandler extends MessageHandler {
+  constructor(eventname: string) {
+    super('USER_EVENT');
+  }
++
++ private async messageHandler(event: ExtendableMessageEvent) {
++   const { data } = event;
++   const { userEventType, location } = payload
++
++   logger.log(`User triggered event: ${userEventType} at route: ${location}`)
++  }
+}
+```
+
+We now have a basic message handler that whenever an event type: `USER_EVENT` is triggered, it logs the user event type and the user location in the console. But if we call, `handleMessage` on this, nothing (good) happens. That's because we haven't bound the `messageHandler` method to the `handleMessage` yet. We can easily do that in our constructor:
+
+```diff-ts {{filename:'entry.worker.ts'}}
+import { MessageHandler, logger } from '@remix-pwa/sw';
+
+class CustomMessageHandler extends MessageHandler {
+  constructor(eventname: string) {
+    super('USER_EVENT');
++
++   this.bind(this.messageHandler.bind(this))
+  }
+
+  private async messageHandler(event: ExtendableMessageEvent) {
+    const { data } = event;
+    const { userEventType, location } = payload
+ 
+    logger.log(`User triggered event: ${userEventType} at route: ${location}`)
+  }
+}
+```
+
+Notice the syntacx we used (`this.method.bind(this)`)? What we are doing is to add our message handler to `messageHandler` static property and we are binding it to our `CustomMessageHandler`, not `MessageHandler`. This ensures we can still use `this` within our message handlers and access sub-class properties correctly. Now we can add that to our message handler and be assured it would work when triggered.
+
+## `NavigationHandler`
+
+The `NavigationHandler` is a subclass of `MessageHandler` that listens for navigation events. It is a handler that ships with the `sw` package and is used to update the cache whenever the client navigates to a new page. It listens for the `REMIX_NAVIGATION` and updates the cache accordingly. It also exhibits a Just-in-Time caching behaviour (cache as you go, instead of caching all at once [precaching]).
+
+### Type Signature
+
+The `NavigationHandler` has the following public signature:
+
+```ts
+export type NavigationHandlerOptions = {
+  allowList?: string[] | RegExp[];
+  denyList?: string[] | RegExp[];
+  cache: EnhancedCache;
+};
+
+class NavigationHandler extends MessageHandler {
+  constructor(options: NavigationHandlerOptions): void
+}
+```
+
+where the constructor options are as follows:
+
+- `allowList`: A list of regular expressions or strings to match against the current document URL. If the current document URL does not match any of the patterns, the handler will not handle the message. When no routes are provided, all routes would be cached. Defaults to: [].
+- `denyList`: A list of regular expressions or strings to match against the current document URL. If the current document URL matches any of the patterns, the handler will not handle the message. If both `allowList` and `denyList` are provided, the `denyList` would take precedence. Defaults to: [].
+- `cache`: The `EnhancedCache` to use for handling the navigation event - caching the HTML responses.
+
+It also has a `handleMessage` method (like all message handlers) that can be used to handle responses automatically.
+
+## Recommended Tips
+
+When building out your message handlers, I would advise the following:
+
+- **Use a common interface**: This would help you keep your code organized and easy to extend. You can easily add new message handlers without having to worry about how they would interact with the service worker. For example, in Remix PWA, all messages
+sent by the client look like this:
+
+```ts
+{
+  type: 'event_name',
+  payload: {
+    // extra data to pass along
+  },
+}
+```
+
+- **Use a logger to debug**: This would help you debug your service worker much better and see what's happening in the background. You can use the `logger` utility provided by Remix PWA to log messages to the console. Plus, they don't show up in production builds :).
+- **Provide universal typings**: Could be a separate file within your app directory, but keep a type file for service worker stuffs like messages, global context and more

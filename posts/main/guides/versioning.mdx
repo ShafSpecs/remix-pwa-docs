@@ -1,6 +1,47 @@
 ---
 title: Versioning
-description: ""
+description: "Ensuring Seamless Updates and Efficient Caching with Versioned Service Workers"
 alternateTitle: Versioning
 ---
 
+Service workers are powerful tools that enable advanced caching strategies and offline functionality for web applications. However, as your application evolves and new versions are released, it's crucial to handle service worker updates gracefully to ensure a seamless user experience and efficient caching. 
+
+Versioning service workers is a critical practice that allows you to control the lifecycle of your service worker and manage the transition from one version to another. By versioning your service worker, you can ensure that users always have access to the latest version of your application, while also preventing conflicts or stale caches from previous versions. In this guide, we'll explore how to version your service workers to manage updates effectively and avoid common pitfalls.
+
+## Versioning in Remix PWA
+
+In Remix PWA, versioning isn't much different from versioning a regular service worker. Whenever you deploy a new service worker build, Remix PWA provides a few utilities to alert you to the process, based on that you can then choose to provide versioning on critical assets (like documents, loader data, etc.).
+
+### `clearUpOldCaches`
+
+Remix PWA provides utilities for handling versioning for the Cache API, via the `EnhancedCache`. When initializing the `EnhancedCache`, you can provide a version parameters within it's options. Which then allows you to track the current cache and any stale (old) versions of that very cache. The very approach you want to take is hardcoding the version between major service worker updates, that then force the service worker to update and clear the cache.
+
+```ts
+import { EnhancedCache } from "@remix-pwa/sw";
+
+const CURRENT_VERSION = "v1";
+
+const cache = new EnhancedCache('cache-1', {
+  version: CURRENT_VERSION,
+  // rest of your options
+});
+```
+
+Later down the line, when deploying a new version, just update the `CURRENT_VERSION` constant to a new value, and the `EnhancedCache` would instantiate with a new cache (`${cacheName}-${version}`) and the old cache can now be marked as stale.
+
+The `sw` package also exports a new utility: `clearUpOldCaches`. This utility allows you to automatically and easily clear up old caches when a new service worker is installed. This utility is useful when you want to ensure that old caches are removed when a new service worker is installed, preventing stale caches from accumulating and taking up unnecessary space.
+
+```ts
+import { clearUpOldCaches } from "@remix-pwa/sw";
+
+self.addEventListener("activate", event => {
+  event.waitUntil(Promise.all([
+    clearUpOldCaches(['cache-1'], CURRENT_VERSION).then(() => {
+      console.log('Old caches cleared');
+      self.clients.claim();
+    })
+  ]));
+});
+```
+
+The `clearUpOldCaches` utility takes two arguments: an array of cache names to clear (that are being tracked/versioned) and the current version of the service worker. When the service worker is activated, the utility will check for any stale caches with the specified cache names and clear them, ensuring that only the latest version of the cache is retained.

@@ -1,6 +1,68 @@
 ---
 title: Remix PWA CLI
-description: ""
+description: "Streamlining PWA Development with a Powerful Command-Line Interface"
 alternateTitle: CLI
 ---
 
+import Info from './info.tsx'
+
+Remix PWA CLI also got a big upgrade in this update. Much smaller, faster and more concise, the CLI (an ever-evolving tool) is more powerful than ever when it comes to supporting your PWA development workflow.
+
+Remix PWA v4 did away with esbuild, and so did our approach to the CLI. No more `remix-pwa init` or the likes, everything related to build and development has been transferred to the Vite plugin. The CLI now focuses on providing a quick and easy way to scaffold bits and pieces of your PWA, like a new service worker and a new manifest.
+
+Currently, there are only two main supported commands:
+
+- `manifest`: Scaffold a new web manifest resource route for you. With full typings included ;)
+- `sw`: Scaffold a very basic service worker for you. Doesn't add more boilerplate than needed 👍.
+
+## `manifest`
+
+Generate a web manifest file.
+
+Accepts one of two arguments (one of two, not both!):
+
+- `--js`: Generate a JavaScript file with the manifest object.
+- `--ts`: Generate a TypeScript file with the manifest object (default).
+- `--dest`: Alias: `-d`. The destination directory for the manifest file (defaults to: `./app/routes/manifest[.webmanifest].ts`)
+
+```sh
+remix-pwa manifest # defaults to `--ts` behvaiour
+
+remix-pwa manifest --js # generate a JavaScript file
+
+remix-pwa manifest --dest app/pwa/manifest.ts # writes the manifest to `./app/pwa/manifest.ts` directory
+```
+
+> Note, it resolves the destination path relative to `process.cwd()`.
+
+<Info>
+  Scaffolding a manifest is different from registering a manifest. Ensure to still provide a relevant `link` in your
+  `head` tag. Or use the `<ManifestLink />` component 😉
+</Info>
+
+## `sw`
+
+Generate a service worker file. Alias: `service-worker`.
+
+Accepts one of the following arguments:
+
+- `--js`: Generate a JavaScript file with the service worker.
+- `--dest`: Alias: `-d`. The destination directory for the service worker file (defaults to: `./app/entry.worker.ts`)
+
+```sh
+remix-pwa sw # generates a basic TypeScript service worker
+
+remix-pwa sw --js # generates a basic JavaScript service worker
+
+remix-pwa sw --dest app/pwa/service-worker.ts # writes the service worker to `./app/pwa/service-worker.ts` directory
+```
+
+> Note, Service Workers are Typescript by default in Remix PWA.
+
+<Info>
+  If changing the destination for service workers, ensure to update the Vite plugin accordingly.
+</Info>
+
+---
+
+I hope to bump up the available commands in the future. If you have any task that you feel is repetitive when setting up, or just a new command/feature for the CLI. Feel free to create a discussion or open an issue.

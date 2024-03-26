@@ -220,7 +220,7 @@
     "background-sync": {
       "title": "Background Sync API",
       "alternateTitle": "Background Sync",
-      "description": "",
+      "description": "Background Sync allows you to defer actions until the user has stable connectivity. This is useful for ensuring that whatever the user wants to send, is actually sent.",
       "section": "Guides",
       "slug": "background-sync",
       "spacer": true
@@ -235,7 +235,7 @@
     "cli": {
       "title": "Remix PWA CLI",
       "alternateTitle": "CLI",
-      "description": "",
+      "description": "Streamlining PWA Development with a Powerful Command-Line Interface",
       "section": "Guides",
       "slug": "cli"
     },
@@ -277,21 +277,21 @@
     "messaging": {
       "title": "Service Worker Messaging",
       "alternateTitle": "Messaging",
-      "description": "",
+      "description": "Build an comprehensive communication system between your service worker and client.",
       "section": "Guides",
       "slug": "messaging"
     },
     "runtimes": {
       "title": "Worker Runtimes",
       "alternateTitle": "Runtimes",
-      "description": "",
+      "description": "Runtimes are the foundations of Remix PWA service workers. Come explore how they work and the magic behind 'em 🧙‍♂️",
       "section": "Guides",
       "slug": "runtimes"
     },
     "versioning": {
       "title": "Versioning",
       "alternateTitle": "Versioning",
-      "description": "",
+      "description": "Ensuring Seamless Updates and Efficient Caching with Versioned Service Workers",
       "section": "Guides",
       "slug": "versioning"
     },

@@ -1,6 +1,246 @@
 ---
 title: Worker Runtimes
-description: ""
+description: "Runtimes are the foundations of Remix PWA service workers. Come explore how they work and the magic behind 'em 🧙‍♂️"
 alternateTitle: Runtimes
 ---
 
+import Info from './info.tsx'
+
+Runtimes are the secret sauce behind Remix's service workers. Mysterious agents that bunch up all your rouet worker apis, entry worker and some extra functionalities to be bundled into an output file. We would be discussing and exploring runtimes by building our own, so buckle up! This would also give you better insight into just how crazy Remix PWA is, and how much you can extend.
+
+## What are Runtimes?
+
+Simply put, a runtime is a service worker. Yep, that's right. A runtime is simply another service worker that runs all other code on top of. In Remix PWA, we have just one runtime: `@remix-pwa/worker-runtime` that is basically a "vanilla" service worker. Nothing too quirky, handles all your affairs as you normally would and nothing too out of the ordinary.
+
+Why do we need runtimes? Why not just use our entry worker for everything? And what makes a runtime so special that it is the only worker that can handle the `fetch` event? Too many questions at once, but let's dive in.
+
+## Custom Runtime
+
+### Setting up a Runtime
+
+A runtime is simply a JavaScript file that is passed into your vite config. You can use typescript, but you have to transpile it to JavaScript before passing it to vite. Create a `runtime.js` file in your project root, and add that to your Remix PWA Vite plugin `workerEntryPoint` config:
+
+```ts {{filename:'vite.config.ts'}}
+import { defineConfig } from "vite";
+import type { PWAViteOptions } from "@remix-pwa/dev";
+import { remixPWA } from '@remix-pwa/dev';
+
+export default defineConfig({
+  plugins: [
+    // other plugins,
+    remixPWA(<Partial<PWAViteOptions>>{
+      workerEntryPoint: './runtime.js'
+    }),
+  ],
+});
+```
+
+This automatically sets up your runtime to be used in your Remix PWA project. We can now move on to the next step: more explaining.
+
+### Building blocks of a Runtime
+
+A runtime is made up of the following:
+
+- **A `fetch` event handler**: This is the main event handler that listens for all fetch events in the service worker. It is the main thing that should be listened to in a runtime. This is where your default fetch handler, worker route apis and error handlers come to get handled.
+- **A default fetch handler**: This is function is provided as a fallback for fetches that do not match worker routes (`workerLoader`/`workerAction`)
+- **A default error handler**: This function acts a catch for un-handled errors in worker route apis
+- **A context creator**: This is a function that creates a context object that is passed to all worker route apis. It is used to store and pass data around the service worker.
+
+This might seem a bit weird considering we provide some of these in our entry worker, but we would see how it handles that in a bit.
+
+### Implementing the Runtime
+
+First of all, Remix PWA exposes a virtual module (a file/module that doesn't exist on the file system, but is generated at runtime by the plugin) called `virtual:entry-sw`. This module exposes the entry worker code as well as route worker api information.
+
+It contains the following:
+
+- `entry`: This is an object containing one property: `module`, which is your entry worker code. Every thing exported from your entry worker is available via this object.
+- `routes`: A manifest (styled like Remix server manifest) that contains all routes and the worker codes associated with them
+
+Where routes basically looks like:
+
+```js
+const routes = {
+  "root": {
+    id: "root",
+    parentId: void 0,
+    path: "",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route0
+  },
+  "routes/first-route": {
+    id: "routes/first-route",
+    parentId: "root",
+    path: "first-route",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route1
+  },
+  // more routes
+}
+```
+
+And the `route0`, `route1` objects resemble the following:
+
+- `{}`: An empty object (export) if there are no worker route apis
+- `{workerLoader: theActualWorkerLoaderFunction}`: A non-empty object if there is a worker route function (`workerLoader`/`workerAction`)
+
+We import this module (you might need to shut eslint and whatever checking you have in your project) at the top of our runtime file:
+
+```ts
+import * as entrySW from 'virtual:entry-sw';
+```
+
+This gives us access to the entry worker code and the worker route apis. We can now proceed to implement our runtime.
+
+Firstly, let's handle default fetch handler. After all, we need a fallback for fetches that don't match any worker route. We can do this by adding the following code to our runtime:
+
+```diff-js {{filename:'runtime.js'}}
+import * as entrySW from 'virtual:entry-sw';
++
++ const defaultHandler =
++   (entrySW.entry.module.defaultFetchHandler) ||
++   (event => fetch(event.request.clone()));
+```
+
+Pretty neat, right? We are simply checking if the entry worker has a default fetch handler, and if it doesn't, we use a fallback that simply fetches the request. Note that you can choose to customise the name of your entry worker exports here, but for the sake of this guide, we would stick to the default names.
+
+Next up, we create a context creator. This is a function that creates a context object that is passed to all worker route apis. It is used to store and pass data around the service worker. We can do this via:
+
+```js {{filename:'runtime.js'}}
+function createContext(event) {
+  const context = entrySW.entry.module.getLoadContext?.(event) || {};
+  return {
+    event,
+    fetchFromServer: () => fetch(event.request.clone()),
+    ...context,
+  };
+}
+```
+
+In this function, we are creating a context object that contains the event, a function to fetch from the server (this is useful for worker route apis that need to fetch data from the server), and any other context data that might be needed. We also check if the entry worker has a `getLoadContext` function, and if it does, we call it to get the context data. Also note the spread operator, this is to ensure that whatever you set as default (which could be extended :)) can be overriden too by the `getLoadContext` function.
+
+<Info>
+  So far, our code so far is very similar to `@remix-pwa/worker-runtime` (minus error handlers). Told you, there's no magic in here 😄!
+</Info>
+
+Finally, we can start work on the `fetch` event handler:
+
+```js {{filename:'runtime.js'}}
+self.addEventListener('fetch', async event => {});
+```
+
+Our code so far looks like this:
+
+```js {{filename:'runtime.js'}}
+import * as entrySW from 'virtual:entry-sw';
+
+const defaultHandler =
+  (entrySW.entry.module.defaultFetchHandler) ||
+  (event => fetch(event.request.clone()));
+
+function createContext(event) {
+  const context = entrySW.entry.module.getLoadContext?.(event) || {};
+  return {
+    event,
+    fetchFromServer: () => fetch(event.request.clone()),
+    ...context,
+  };
+}
+
+self.addEventListener('fetch', async event => {});
+```
+
+Fantastic! 🚀
+
+### Implementing `fetch`
+
+We can now implement the `fetch` event handler. This is where the magic happens. We check if the request matches any worker route, and if it does, we call the route handler. If it doesn't, we call the default fetch handler. We can do this via the following:
+
+```js {{filename:'runtime.js'}}
+// at the top of file
+import { isLoaderRequest, isActionRequest, json } from '@remix-pwa/sw';
+
+self.addEventListener('fetch', async event => {
+  const url = new URL(event.request.url);
+  const routeDataParam = url.searchParams.get('_data');
+
+  const route = routeDataParam
+    ? entrySW.routes[routeDataParam]
+    : undefined
+
+  const args = {
+    request: event.request,
+    params: '',
+    context: createContext(event),
+  }
+
+  try {
+    if (isLoaderRequest(event.request) && route?.module.workerLoader) {
+      console.log(`Handling loader request for ${routeDataParam}`);
+    }
+
+    if (isActionRequest(event.request) && route?.module.workerAction) {
+      console.log(`Handling action request for ${routeDataParam}`);
+    }
+  } catch (error) {
+    console.error(`An error occurred: ${error}`);
+  }
+
+  event.respondWith(defaultHandler(args));
+});
+```
+
+We now have a partially working runtime. Very basic but I hope you see the building blocks coming together. Let's go over it step-by-step before we fill out the details.
+
+Firstly, we import the `isLoaderRequest` and `isActionRequest` functions from `@remix-pwa/sw`. These utility functions are used to check if a request is a loader or action request.
+
+Next, within our fetch handler, we first transformed got the request url and attempted to get the `_data` query parameter. This is a parameter added by remix to loader and action requests (a way to differentiate them from other requests).
+We then attempted to get the route object from our 'manifest' via the route id gotten from the `_data` query parameter. If it turns up undefined, that means it wasn't indexed and it is either an ignored route or a non-existent one.
+
+Next, we build up our argument. Yep, this is what we ship to our worker route apis. It contains the request, the params (which we would be leaving as an empty string to avoid complicating this guide), and the context object we created earlier.
+
+Finally, our try/catch. We check if the request is a loader request and if the route has a worker loader. If it does, we log that we are handling a loader request for the route. We do the same for action requests. If an error occurs, we log it to the console. Note that we didn't do any grand error handling here or even check for an `errorHandler` export from the entry worker. This is just a basic runtime (feel free to do more).
+
+Finally, we respond with the default handler. This is the fallback for requests that don't match any worker route. We pass in our args object to the default handler (which is the same argument the ones in our service worker recieve).
+
+### Making ROute Worker APIs work
+
+We can't be logging our route worker apis, they need to actually do something. Let's make them do something. We do this by calling the worker loader or worker action functions. We can achieve this by adding the following code to our runtime:
+
+```js {{filename:'runtime.js'}}
+// within our fetch handler
+try {
+  if (isLoaderRequest(event.request) && route?.module.workerLoader) {
+    const response = route.module.workerLoader(args);
+    event.respondWith(response.then(res => isResponse(res) ? res : json(res)));
+    return;
+  }
+
+  if (isActionRequest(event.request) && route?.module.workerAction) {
+    const response = route.module.workerAction(args);
+    event.respondWith(response.then(res => isResponse(res) ? res : json(res)));
+    return;
+  }
+} catch (error) {
+  console.error(`An error occurred: ${error}`);
+}
+
+// outside the fetch handler
+function isResponse(value) {
+  return value != null &&
+    typeof value.status === "number" &&
+    typeof value.statusText === "string" &&
+    typeof value.headers === "object" &&
+    typeof value.body !== "undefined";
+}
+```
+
+We now have working runtime 😁. Sure it doesn't handle cases like defer or graceful redirects, nor is its error handling the most spectacular, but we've seen together what's capable of being built with Remix PWA. Changing underlying behaviours of service workers, is now as easy as swapping out your runtimes. If you would like to study `worker-runtime` more though, check out the [code here](https://github.com/remix-pwa/monorepo/blob/main/packages/worker-runtime/src/service-worker.internal.ts).
+
+> Which reminds me, if anyone figures out a workbox runtime. I'm all ears 👂
+
+---
+
+That pretty much wraps up runtimes. We've seen how they work, how to build one and how to make them work with Remix PWA. If you have any questions, feel free to ask in the Remix Discord server or Github Discussions. We would be glad to help you out. Happy coding! 🚀
