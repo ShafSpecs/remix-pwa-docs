@@ -7,7 +7,7 @@ import {
   useNavigate,
   useRouteLoaderData,
 } from '@remix-run/react'
-import { ChevronDownIcon, RatioIcon, SearchIcon, XIcon } from 'lucide-react'
+import { ChevronDownIcon, HeartIcon, SearchIcon, XIcon } from 'lucide-react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { useTransition, animated } from 'react-spring'
 
@@ -149,7 +149,11 @@ function MobileSidebar({
         >
           <div className="flex items-center justify-between">
             <Link to={'/'}>
-              <RatioIcon className="h-7 w-7 dark:text-white" />
+              <img
+                src="/images/RemixPWA.png"
+                alt="Remix PWA"
+                className="h-10 w-10"
+              />
             </Link>
             <Disclosure.Button
               className="relative focus:outline-none focus:ring-0"
@@ -170,7 +174,7 @@ function MobileSidebar({
                   index: number
                 ) => {
                   return (
-                    <li className="mt-12 lg:mt-8" key={index}>
+                    <li className="mt-6 lg:mt-8" key={index}>
                       <h3 className="mb-8 font-semibold text-slate-900 dark:text-slate-200 lg:mb-3">
                         {section.section}
                       </h3>
@@ -310,12 +314,21 @@ export default function Header({
                   reloadDocument
                   className="md:flex"
                 >
-                  <RatioIcon className="mr-2 h-7 w-7 self-center text-center md:hidden" />
-                  <span className="sr-only">Journal Stack home page</span>
-                  <p className="relative hidden font-space text-4xl text-slate-700 dark:text-sky-100 md:flex">
-                    <span className="mr-2">Journal</span>
+                  <img
+                    src="/images/RemixPWA.png"
+                    alt="Remix PWA"
+                    className="mr-1 h-8 w-8 self-center text-center md:hidden"
+                  />
+                  <span className="sr-only">Remix PWA home page</span>
+                  <p className="relative hidden font-benzin text-4xl font-bold text-slate-700 dark:text-sky-100 md:flex">
+                    <img
+                      src="/images/RemixPWA.png"
+                      alt="Remix PWA"
+                      className="mr-2.5 h-9 w-9 self-center text-center"
+                    />
+                    <span className="mr-2">Remix</span>
                     <span className="h-full bg-gradient-to-tr from-indigo-500 to-sky-300 bg-clip-text pr-1 text-transparent dark:from-indigo-400 dark:to-sky-200">
-                      Stack
+                      PWA
                     </span>
                   </p>
                 </Link>
@@ -391,10 +404,21 @@ export default function Header({
                 ) : null}
                 <div className="relative flex flex-grow basis-0 justify-end gap-6 sm:gap-8">
                   <div className="relative flex basis-0 content-center justify-end gap-6 sm:gap-6 md:flex-grow">
-                    <button type="button" className="flex h-6 w-6 lg:hidden">
+                    {/* <button type="button" className="flex h-6 w-6 lg:hidden">
                       <SearchIcon className="h-6 w-6 flex-none text-slate-400 group-hover:fill-slate-500 dark:text-slate-500 md:group-hover:text-slate-400" />
                       <span className="sr-only select-none">Search docs</span>
-                    </button>
+                    </button> */}
+                    <div className="relative z-10">
+                      <button
+                        className="flex h-6 w-6 items-center justify-center rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5 hover:dark:bg-slate-600"
+                        onClick={() => {
+                          window.location.href =
+                            'https://github.com/sponsors/ShafSpecs'
+                        }}
+                      >
+                        <HeartIcon className="h-4 w-4 text-pink-500" />
+                      </button>
+                    </div>
                     <div className="relative z-10">
                       <ThemeSwitcher />
                     </div>
