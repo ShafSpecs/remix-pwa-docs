@@ -149,7 +149,7 @@ export function Documentation({
       </div>
       {/* eslint-disable-next-line multiline-ternary */}
       {frontmatter.toc ? (
-        <div className="fixed bottom-0 right-[max(0px,calc(50%-45rem))] top-[3.8125rem] z-20 hidden w-[19.5rem] overflow-y-auto py-10 xl:block">
+        <div className="fixed bottom-0 right-[max(0px,calc(50%-45rem))] top-[72px] z-20 hidden w-[19.5rem] overflow-y-auto py-10 xl:block">
           <nav aria-labelledby="on-this-page-title" className="px-8">
             {/* eslint-disable-next-line multiline-ternary */}
             {tableOfContents.length > 0 ? (

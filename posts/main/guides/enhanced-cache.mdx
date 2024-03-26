@@ -1,6 +1,239 @@
 ---
 title: EnhancedCache
-description: ""
+description: "Meet EnhancedCache, a cache wrapper that provides utilities to manage, visualize, and monitor caches."
 alternateTitle: EnhancedCache
 ---
 
+`EnahncedCache` was built around the idea of providing a cache wrapper that exhibited behaviour (strategy) but could also do a lot more. Without further ado, let's dive into the features of `EnhancedCache`.
+
+## Features
+
+`EnhancedCache` is a class that wraps itself around a [strategy](/docs/main/cache-api#strategies). Let's go ahead and create an enhanced cache instance.
+
+```ts {{filename:'entry.worker.ts'}}
+import { EnhancedCache } from '@remix-pwa/sw';
+
+const cache = new EnhancedCache('my-cache', {
+  strategy: 'CacheFirst',
+  strategyOptions: {}
+});
+```
+
+Let's explore the constructor signature:
+
+```ts
+export type StrategyName = 'CacheFirst' | 'CacheOnly' | 'NetworkFirst' | 'StaleWhileRevalidate';
+
+export type StrategySelection<T> = T extends 'NetworkFirst'
+  ? NetworkFriendlyOptions
+  : T extends 'StaleWhileRevalidate'
+    ? SWROptions
+    : CacheFriendlyOptions;
+
+type StrategyWithOptions<T extends StrategyName> = {
+  strategy: T;
+  strategyOptions: StrategySelection<T>;
+};
+
+export type EnhancedCacheOptions = {
+  version?: string;
+} & (
+  | {
+      strategy?: never;
+      strategyOptions?: never;
+    }
+  | StrategyWithOptions<'CacheFirst'>
+  | StrategyWithOptions<'CacheOnly'>
+  | StrategyWithOptions<'NetworkFirst'>
+  | StrategyWithOptions<'StaleWhileRevalidate'>
+);
+
+new EnhancedCache(cacheName: string, options: EnhancedCacheOptions)
+```
+
+It takes in two parameters:
+
+1. `cacheName`: A string that represents the name of the cache.
+2. `options`: An object that contains the following properties:
+   - `version`: A string that represents the version of the cache. This allows for versioning of the cache.
+   - `strategy`: A string that represents the strategy to be used. The available strategies are `CacheFirst`, `CacheOnly`, `NetworkFirst`, and `StaleWhileRevalidate` (the available strategies from `sw` package).
+   - `strategyOptions`: An object that contains the options for the strategy. The options are different for each strategy. Check out the strategy [page](/docs/main/cache-api#strategies) for more info.
+
+> Currently, `EnhancedCache` only supports the strategies provided by the `sw` package. Extending it to custom `BaseStrategy` sub-classes is underway.
+
+## Methods
+
+`EnhancedCache` provides a list of public, protected and static methods. Let's explore them in this section.
+
+### `handleRequest`
+
+`EnhancedCache` provides a method `handleRequest` that can be used to handle requests. It is a wrapper around the strategy's own `handleRequest` method. And takes in a `Request` or `URL` or `string` as its lone parameter.
+
+```ts
+const response = await cache.handleRequest('https://my-url.com/something');
+```
+
+### `addToCache`
+
+This method allows you to add a response to the cache. It takes in a `Request` or `URL` or `string` and a `Response` as its parameters. Like all cache mutation processes in Remix PWA, this one ensures the headers for validation and cleanup are in order before commiting it to the cache.
+
+```ts
+const response = await fetch('https://example.com/1');
+
+await cache.addToCache('https://example.com/1', response);
+```
+
+### `removeFromCache`
+
+The opposite of `addToCache`, this method allows you to remove a response from the cache. It takes in a `Request` or `URL` or `string` as its lone parameter.
+
+```ts
+await cache.removeFromCache('https://example.com/1');
+```
+
+### `match`
+
+This method allows you to match a request against the cache. It takes in a `Request` or `URL` or `string` as its lone parameter. And returns the response from the cache, or `undefined` if it doesn't exist.
+
+```ts
+const response = await cache.match('https://example.com/1');
+```
+
+### `clearCache`
+
+This method allows you to clear the cache. It takes in no parameters and returns a `Promise` that resolves when the cache is cleared.
+
+```ts
+await cache.clearCache();
+```
+
+### `getCacheEntries`
+
+This method allows you to get all the cache entries. It takes in no parameters and returns a `Promise` that resolves with an array of cache entries (the request and response).
+
+```ts
+const entries = await cache.getCacheEntries();
+
+// The response has this format:
+// [
+//   {
+//     request: Request,
+//     response: Response
+//   },
+//   ...
+// ]
+```
+
+### `getCacheStats`
+
+This method allows you to get some helpful information about your cache. It takes in no parameters and returns a `Promise` that resolves with an object containing the following properties of the following signature:
+
+```ts
+type CacheStats = {
+  length: number;
+  totalSize: number;
+  cacheDistribution: Record<string, number>;
+  cacheHitRatio: number;
+  cacheEfficiency: number;
+  averageCacheAge: number;
+  cacheCompressionRatio: number;
+};
+```
+
+where:
+
+- `length`: The total number of items in the cache.
+- `totalSize`: The total size of items in the cache (in kilobytes).
+- `cacheDistribution`: The distribution of cache items by content type (in percentages).
+- `cacheHitRatio`: The hit ratio of the cache. The ratio of cache hits to total requests.
+- `cacheEfficiency`: The efficiency of the cache. The ratio of cache hits to the total size of the cache (in percentage).
+- `averageCacheAge`: The average age of items in the cache (in seconds).
+- `cacheCompressionRatio`: The ratio of the total size of compressed cached resources to the total size of uncompressed cached resources (in percentage).
+
+```ts
+const stats = await cache.getCacheStats();
+```
+
+### `preCacheUrls`
+
+This method allows you to pre-cache a list of URLs (cache more than one request at once). It takes in an array of `Request` or `URL` or `string` as its lone parameter.
+
+```ts
+await cache.preCacheUrls([
+  'https://example.com/1',
+  'https://example.com/2',
+  'https://example.com/3'
+]);
+```
+
+## Static Methods
+
+### `purgeCache`
+
+This is like the `clearCache`, but with selective cache removal. It takes in the cache object and a callback function that returns a boolean. The callback function is used to determine which cache entries to remove.
+
+```ts
+type CacheEntry = { request: Request; response: Response | undefined }
+
+purgeCache(cache: EnhancedCache, callback: (entry: CacheEntry) => boolean): Promise<void>
+```
+
+```ts
+await EnhancedCache.purgeCache(cache, (entry) => {
+  return entry.request.url.includes('old_asset');
+});
+```
+
+This method can be combined with a few other static and non-static methods to provide a powerful cache filtering and removal mechanism.
+
+### `visualizeCache`
+
+This method allows you to visualize the cache. It takes in the cache object as its sole parameter and returns a `Promise` that resolves with a object (of type `unknown`) containing the visualization of the cache in a tree-like format.
+
+```ts
+const visualization = await EnhancedCache.visualizeCache(cache);
+```
+
+### `compressResponse`
+
+This method allows you to compress a response. It takes in a `Response` as its lone parameter and returns a `Promise` that resolves with a `Response` that is compressed.
+
+The response returned by this method is a `Response` with the `Content-Encoding` header set to `gzip` and the body compressed.
+
+```ts
+const response = await fetch('https://example.com/1');
+
+const compressedResponse = await EnhancedCache.compressResponse(response);
+```
+
+### `decompressResponse`
+
+This method allows you to decompress a response. It takes in a `Response` as its lone parameter and returns a `Promise` that resolves with a `Response` that is decompressed.
+
+### `persistCache`
+
+This allows you to persist a cache at any given moment to IndexedDB. It takes in the cache object and the store name as its parameters.
+
+```ts
+await EnhancedCache.persistCache(cache, 'my-cache-store');
+```
+
+> Think of it like a snapshot (of the cache at that moment in time) mechanism.
+
+### `restoreCache`
+
+This allows you to restore a cache from IndexedDB. It takes in the cache object and the store name and an optional `restoreTtl` (default: false) as its parameters.
+
+The `restoreTtl` method allows you to restore the cache with the original TTL (time-to-live) header values. If set to `false`, the cache will be restored with the TTL set to the current time (as if you just cached it).
+
+```ts
+await EnhancedCache.restoreCache(cache, 'my-cache-store', restoreTtl: true);
+```
+
+## Forbidden Methods
+
+This section contains methods that seem exposed but should not be used except you know what you are doing.
+
+### `__putInCache`
+
+This method is used internally by the `EnhancedCache` class to put a response in the cache. It takes in a `Request` and a `Response` as its parameters. The difference between this and `addToCache` is that this method does not ensure the headers for validation and cleanup are in place. So, utilising this would tend to mess up cache cleanup operations.

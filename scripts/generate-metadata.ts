@@ -77,6 +77,7 @@ tags.forEach(async tag => {
     .map(filePath => {
       return readdirSync(filePath)
         .filter(file => file !== INDEX_FILE)
+        .filter(file => file.endsWith('.mdx'))
         .map(file => resolve(filePath, file))
     })
     .flat()

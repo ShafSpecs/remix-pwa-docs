@@ -3,8 +3,6 @@
     "quick-start": "started/quick-start",
     "v4": "started/v4",
     "community": "started/community",
-    "technical-explanation": "started/technical-explanation",
-    "changelog": "started/changelog",
     "default-fetch-handler": "apis/default-fetch-handler",
     "error-handler": "apis/error-handler",
     "get-load-context": "apis/get-load-context",
@@ -66,20 +64,6 @@
       "description": "At the core of Remix PWA lies a passionate community of developers dedicated to open-source collaboration, knowledge-sharing, and driving the evolution of PWA technologies.",
       "section": "Getting Started",
       "slug": "community"
-    },
-    "technical-explanation": {
-      "title": "Technical Explanation",
-      "alternateTitle": "Technical Explanation",
-      "description": "Uncover the technical details and rationale behind Remix PWA's implementation, empowering you to leverage its full potential.",
-      "section": "Getting Started",
-      "slug": "technical-explanation"
-    },
-    "changelog": {
-      "title": "Changelog",
-      "alternateTitle": "Changelog",
-      "description": "Stay up-to-date with the latest changes, enhancements, bug fixes and the behind-the-scenes progress and improvements in Remix PWA with the changelog.",
-      "section": "Getting Started",
-      "slug": "changelog"
     },
     "default-fetch-handler": {
       "title": "defaultFetchHander",
@@ -256,7 +240,7 @@
     "enhanced-cache": {
       "title": "EnhancedCache",
       "alternateTitle": "EnhancedCache",
-      "description": "",
+      "description": "Meet EnhancedCache, a cache wrapper that provides utilities to manage, visualize, and monitor caches.",
       "section": "Guides",
       "slug": "enhanced-cache"
     },
