@@ -7,22 +7,29 @@ export const ThemeSwitcher = () => {
   const fetcher = useFetcher()
   const theme = useTheme()
 
+  const themeSwitcher = () => {
+    if (theme === 'light') {
+      fetcher.submit(
+        { theme: 'dark' },
+        { method: 'post', action: '/updateTheme' }
+      )
+    } else if (theme === 'dark') {
+      fetcher.submit(
+        { theme: 'light' },
+        { method: 'post', action: '/updateTheme' }
+      )
+    }
+  }
+
+  const toggleTheme = () => {
+    if (!document.startViewTransition) themeSwitcher()
+
+    document.startViewTransition(themeSwitcher)
+  }
   return (
     <button
       className="flex h-6 w-6 items-center justify-center rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5"
-      onClick={() => {
-        if (theme === 'light') {
-          fetcher.submit(
-            { theme: 'dark' },
-            { method: 'post', action: '/updateTheme' }
-          )
-        } else if (theme === 'dark') {
-          fetcher.submit(
-            { theme: 'light' },
-            { method: 'post', action: '/updateTheme' }
-          )
-        }
-      }}
+      onClick={toggleTheme}
     >
       {theme === 'light' && (
         <SunIcon className="h-4 w-4 fill-sky-400 text-sky-400" />

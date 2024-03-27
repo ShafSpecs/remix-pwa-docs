@@ -1,6 +1,6 @@
 import type { MetaFunction } from '@remix-run/node'
 import clsx from 'clsx'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from '@remix-run/react'
 import { HeartIcon } from 'lucide-react'
 import { Disclosure } from '@headlessui/react'
