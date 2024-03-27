@@ -282,6 +282,13 @@ function Sponsors() {
   )
 }
 
+const sponsors = [
+  {
+    image: 'https://avatars.githubusercontent.com/u/69679506?v=4',
+    link: 'https://github.com/ShafSpecs',
+  },
+]
+
 // Have a loader, load this in dynamically ig
 function Sponsor({ image, link }: any) {
   return (
@@ -300,10 +307,9 @@ function Contributors() {
         Made by the community
       </h3>
       <div className="grid">
-        <Sponsor
-          image="https://avatars.githubusercontent.com/u/69679506?v=4"
-          link="https://vercel.com"
-        />
+        {sponsors.map((_k, _i) => {
+          return <Sponsor key={_i} {..._k} />
+        })}
       </div>
     </div>
   )
