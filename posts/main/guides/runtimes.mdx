@@ -205,7 +205,7 @@ Finally, our try/catch. We check if the request is a loader request and if the r
 
 Finally, we respond with the default handler. This is the fallback for requests that don't match any worker route. We pass in our args object to the default handler (which is the same argument the ones in our service worker recieve).
 
-### Making ROute Worker APIs work
+### Making Route Worker APIs work
 
 We can't be logging our route worker apis, they need to actually do something. Let's make them do something. We do this by calling the worker loader or worker action functions. We can achieve this by adding the following code to our runtime:
 
