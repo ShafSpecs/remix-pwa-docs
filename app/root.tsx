@@ -6,7 +6,7 @@ import {
   ScrollRestoration,
 } from '@remix-run/react'
 import { json } from '@remix-run/node'
-import type { LoaderFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 
 import { ClientHints, getHints } from './components/ClientHint'
 import { useTheme } from './hooks/useTheme'
@@ -28,6 +28,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
     versions,
   })
+}
+
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: 'Remix PWA',
+    },
+    {
+      name: 'description',
+      content:
+        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+    },
+  ]
 }
 
 // If you want to wrap your app further or include some shared UI

@@ -117,7 +117,7 @@ function Header() {
                   <a
                     className="group"
                     aria-label="GitHub"
-                    href="https://github.com/ShafSpecs/journal-stack"
+                    href="https://github.com/remix-pwa"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -167,7 +167,7 @@ function Hero() {
             </Link>
             <a
               aria-label="GitHub"
-              href="https://github.com/ShafSpecs/journal-stack"
+              href="https://github.com/remix-pwa/monorepo"
               target="_blank"
               rel="noreferrer"
               className="flex w-full items-center justify-center rounded-md bg-slate-700 px-4 py-3 font-medium text-white hover:bg-slate-800"
@@ -188,9 +188,43 @@ function Hero() {
   )
 }
 
+function LandingCard({ description, icon, title }: any) {
+  return (
+    <div className="background-gradient group relative isolate flex flex-1 flex-col rounded-xl shadow ring-1 ring-gray-200 before:absolute before:-inset-[2px] before:z-[-1] before:hidden before:h-[calc(100%+4px)] before:w-[calc(100%+4px)] before:rounded-[13px] dark:ring-gray-800 before:lg:block">
+      <div className="flex flex-1 flex-col divide-y divide-gray-200 overflow-hidden rounded-xl bg-white transition-[background-opacity] hover:bg-opacity-90 dark:divide-gray-800 dark:bg-gray-900 dark:hover:bg-opacity-90">
+        <div className="flex flex-1 flex-col gap-x-8 gap-y-4 rounded-xl px-4 py-5 sm:p-6">
+          <div className="">
+            <div className="pointer-events-none mb-2">
+              <span
+                className="icon flex-shrink-0 !text-2xl text-gray-900 dark:text-white"
+                style={{
+                  fontSize: '1em',
+                  lineHeight: '1em',
+                  width: '1em',
+                  height: '1em',
+                }}
+              >
+                {icon}
+              </span>
+            </div>
+            <p className="truncate text-base font-bold text-gray-900 dark:text-white">
+              {title}
+            </p>
+            <p className="mt-1 text-[15px] text-gray-500 dark:text-gray-400">
+              <p className="max-w-[65ch]">
+                <p className="m-0">{description}</p>
+              </p>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function Features() {
   return (
-    <div className="py-16 sm:py-24">
+    <div className="py-12 sm:py-20">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-center font-nasa text-3xl text-gray-900 dark:text-white sm:text-4xl lg:text-5xl">
           One PWA Framework to rule them all
@@ -200,72 +234,91 @@ function Features() {
           imagination knows no bounds.
         </p>
       </div>
-      <div className="grid max-w-7xl grid-cols-1 gap-8 px-4 sm:grid-cols-2 sm:px-6 lg:px-8 xl:grid-cols-3">
-        <div className="background-gradient group relative isolate flex flex-1 flex-col rounded-xl shadow ring-1 ring-gray-200 before:absolute before:-inset-[2px] before:z-[-1] before:hidden before:h-[calc(100%+4px)] before:w-[calc(100%+4px)] before:rounded-[13px] dark:ring-gray-800 before:lg:block">
-          <div className="flex flex-1 flex-col divide-y divide-gray-200 overflow-hidden rounded-xl bg-white transition-[background-opacity] hover:bg-opacity-90 dark:divide-gray-800 dark:bg-gray-900 dark:hover:bg-opacity-90">
-            <div className="flex flex-1 flex-col gap-x-8 gap-y-4 rounded-xl px-4 py-5 sm:p-6">
-              <div className="">
-                <div className="pointer-events-none mb-2">
-                  <span
-                    className="icon flex-shrink-0 !text-2xl text-gray-900 dark:text-white"
-                    // style="font-size:1em;line-height:1em;width:1em;height:1em;"
+      <div className="mt-8 grid max-w-7xl grid-cols-1 gap-8 px-4 sm:mt-10 sm:grid-cols-2 sm:px-6 lg:px-8 xl:grid-cols-3">
+        <LandingCard
+          title="Vite"
+          icon="⚡"
+          description="Faster bundling, faster loading, faster everything. Vite is a next-generation front-end tooling that's blazing fast."
+        />
+        <LandingCard
+          title="Compact"
+          icon="💼"
+          description="Compact and lightweight, Remix PWA is now much lighter than before."
+        />
+        <LandingCard
+          title="Worker Route APIs"
+          icon="🪧"
+          description="Bringing the power of Service Workers into your routes."
+        />
+        <LandingCard
+          title="TypeScript"
+          icon="🦺"
+          description="TypeScript support out-of-the-box."
+        />
+        <LandingCard
+          title="Runtimes"
+          icon="⚙️"
+          description="Swappable runtimes to customise the flow and behaviour of your entire application."
+        />
+        <LandingCard
+          title="Cache API"
+          icon="💰"
+          description="Powerful and extensible caching capabilities to supercharge your PWA's performance."
+        />
+        <LandingCard
+          title="Background Sync"
+          icon="🔁"
+          description="Reliably synchronise data with your server. Even when offline."
+        />
+        <LandingCard
+          title="PWA Hooks"
+          icon="🪝"
+          description="Take your PWA even farther with utility hooks that makes life easier."
+        />
+        <LandingCard
+          title="Web Manifest"
+          icon="📜"
+          description="Scaffold Web App Manifests for your PWA with typings and ease"
+        />
+      </div>
+    </div>
+  )
+}
 
-                    data-v-4847b53f=""
-                  >
-                    🐇
-                  </span>
-                </div>
-                <p className="truncate text-base font-bold text-gray-900 dark:text-white">
-                  Rapid Development
-                </p>
-                <p
-                  className="mt-1 text-[15px] text-gray-500 dark:text-gray-400"
-                  data-v-e3430399=""
-                >
-                  <p className="prose-primary prose dark:prose-invert">
-                    <p>
-                      Zero config setup with hot module replacement for server
-                      code in development.
-                    </p>
-                  </p>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Stfu */}
-        <div className="background-gradient group relative isolate flex flex-1 flex-col rounded-xl shadow ring-1 ring-gray-200 before:absolute before:-inset-[2px] before:z-[-1] before:hidden before:h-[calc(100%+4px)] before:w-[calc(100%+4px)] before:rounded-[13px] dark:ring-gray-800 before:lg:block">
-          <div className="flex flex-1 flex-col divide-y divide-gray-200 overflow-hidden rounded-xl bg-white transition-[background-opacity] hover:bg-opacity-90 dark:divide-gray-800 dark:bg-gray-900 dark:hover:bg-opacity-90">
-            <div className="flex flex-1 flex-col gap-x-8 gap-y-4 rounded-xl px-4 py-5 sm:p-6">
-              <div className="">
-                <div className="pointer-events-none mb-2">
-                  <span
-                    className="icon flex-shrink-0 !text-2xl text-gray-900 dark:text-white"
-                    // style="font-size:1em;line-height:1em;width:1em;height:1em;"
+const sponsors = [
+  {
+    image:
+      'https://images.opencollective.com/anirudh-ravichandran/f6363f4/avatar/256.png?height=256',
+  },
+  {
+    image:
+      'https://images.opencollective.com/rphlmr/34235d1/avatar/256.png?height=256',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/18480956?v=4',
+  },
+  {
+    image:
+      'https://pbs.twimg.com/profile_images/1178585409271582720/I7FgUqMz_400x400.jpg',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/1288694?v=4',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/2639639?s=52&v=4',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/82425492?v=4',
+  },
+]
 
-                    data-v-4847b53f=""
-                  >
-                    🐇
-                  </span>
-                </div>
-                <p className="truncate text-base font-bold text-gray-900 dark:text-white">
-                  Rapid Development
-                </p>
-                <p
-                  className="mt-1 text-[15px] text-gray-500 dark:text-gray-400"
-                  data-v-e3430399=""
-                >
-                  <p className="prose-primary prose dark:prose-invert">
-                    <p>
-                      Zero config setup with hot module replacement for server
-                      code in development.
-                    </p>
-                  </p>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+// Have a loader, load this in dynamically ig
+function Sponsor({ image, link }: any) {
+  return (
+    <div className="h-12 w-12 rounded-full sm:h-16 sm:w-16">
+      {/* <a href={link} target="_blank" rel="noreferrer"> */}
+      <div>
+        <img src={image} alt="Sponsor" className="rounded-full" />
       </div>
     </div>
   )
@@ -273,44 +326,92 @@ function Features() {
 
 function Sponsors() {
   return (
-    <div className="py-16 sm:py-24">
-      <h3 className="mx-auto text-center font-nasa text-2xl sm:text-3xl lg:text-4xl">
+    <div className="py-12 sm:py-20">
+      <h3 className="mx-auto mb-10 text-center font-nasa text-2xl sm:mb-12 sm:text-3xl lg:text-4xl">
         💖 Sponsors
       </h3>
-      <div className="grid"></div>
-    </div>
-  )
-}
-
-const sponsors = [
-  {
-    image: 'https://avatars.githubusercontent.com/u/69679506?v=4',
-    link: 'https://github.com/ShafSpecs',
-  },
-]
-
-// Have a loader, load this in dynamically ig
-function Sponsor({ image, link }: any) {
-  return (
-    <div className="h-16 w-16 rounded-full">
-      <a href={link} target="_blank" rel="noreferrer">
-        <img src={image} alt="Sponsor" className="rounded-full" />
+      <div className="mx-auto grid max-w-lg grid-cols-7 content-center items-center justify-center px-8 align-middle">
+        {sponsors.map((sponsor, index) => (
+          <Sponsor key={index} {...sponsor} />
+        ))}
+      </div>
+      <a
+        aria-label="GitHub Sponsor"
+        href="https://github.com/sponsors/ShafSpecs"
+        target="_blank"
+        rel="noreferrer"
+        className="mx-auto mt-6 flex max-w-64 items-center justify-center rounded-md bg-slate-700 px-4 py-2 text-white hover:bg-slate-800 sm:mt-8"
+      >
+        <HeartIcon className="mr-2 h-6 w-6 text-pink-500" />
+        <span>Become a Sponsor</span>
       </a>
     </div>
   )
 }
 
+const contributors = [
+  {
+    image: 'https://avatars.githubusercontent.com/u/69679506?v=4',
+    link: 'https://github.com/ShafSpecs',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/850110?s=64&v=4',
+    link: 'https://github.com/lfantone',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/1770453?s=64&v=4',
+    link: 'https://github.com/Sarabadu',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/20722140?s=64&v=4',
+    link: 'https://github.com/rphlmr',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/1288694?s=64&v=4',
+    link: 'https://github.com/wKovacs64',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/89535738?s=64&v=4',
+    link: 'https://github.com/dev-afzalansari',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/71537341?s=60&v=4',
+    link: 'https://github.com/Brocktho',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/104901333?s=60&v=4',
+    link: 'https://github.com/gemmomoh',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/19698171?s=64&v=4',
+    link: 'https://github.com/theeomm',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/104366355?s=64&v=4',
+    link: 'https://github.com/rahuljha4171',
+  },
+  {
+    image: 'https://avatars.githubusercontent.com/u/44510263?s=64&v=4',
+    link: 'https://github.com/maxxborer',
+  },
+]
+
 function Contributors() {
   return (
-    <div className="py-16 sm:py-24">
-      <h3 className="mx-auto text-center font-nasa text-2xl sm:text-3xl lg:text-4xl">
+    <div className="px-4 py-12 sm:py-20">
+      <h3 className="mx-auto mb-10 text-center font-nasa text-2xl sm:mb-12 sm:text-3xl lg:text-4xl">
         Made by the community
       </h3>
-      <div className="grid">
-        {sponsors.map((_k, _i) => {
-          return <Sponsor key={_i} {..._k} />
-        })}
-      </div>
+      <a
+        href="https://github.com/remix-pwa/monorepo/graphs/contributors"
+        className=""
+      >
+        <img
+          src="https://contrib.rocks/image?repo=remix-pwa/monorepo"
+          className="mx-auto"
+          alt="Contributors"
+        />
+      </a>
     </div>
   )
 }
@@ -324,6 +425,22 @@ export default function Index() {
         <Features />
         <Sponsors />
         <Contributors />
+
+        <footer>
+          <div className="mx-auto max-w-5xl pb-8 pt-12">
+            <div className="text-center text-slate-900 dark:text-white">
+              <p className="text-sm font-light">
+                Made with ❤️ by the&nbsp;
+                <a
+                  href="https://github.com/orgs/remix-pwa/people"
+                  className="hover:underline"
+                >
+                  Remix PWA team
+                </a>
+              </p>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   )

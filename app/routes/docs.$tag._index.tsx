@@ -1,5 +1,5 @@
 import { json, redirect } from '@remix-run/node'
-import type { LoaderFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 
 import { Documentation } from '~/components/layout/Documentation'
 import {
@@ -30,6 +30,18 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     prev: null,
     tag,
   })
+}
+
+export const meta: MetaFunction = ({ data }: { data: any }) => {
+  return [
+    {
+      title: `${data.frontmatter.title} | Remix PWA`,
+    },
+    {
+      name: 'description',
+      content: data.frontmatter.description,
+    },
+  ]
 }
 
 export default function TagRoute() {

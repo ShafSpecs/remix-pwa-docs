@@ -409,15 +409,14 @@ export default function Header({
                       <span className="sr-only select-none">Search docs</span>
                     </button> */}
                     <div className="relative z-10">
-                      <button
+                      <a
                         className="flex h-6 w-6 items-center justify-center rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5 hover:dark:bg-slate-600"
-                        onClick={() => {
-                          window.location.href =
-                            'https://github.com/sponsors/ShafSpecs'
-                        }}
+                        href="https://github.com/sponsors/ShafSpecs"
+                        rel="noreferrer"
+                        target="_blank"
                       >
                         <HeartIcon className="h-4 w-4 text-pink-500" />
-                      </button>
+                      </a>
                     </div>
                     <div className="relative z-10">
                       <ThemeSwitcher />
@@ -425,7 +424,7 @@ export default function Header({
                     <a
                       className="group"
                       aria-label="GitHub"
-                      href="https://github.com/ShafSpecs/journal-stack"
+                      href="https://github.com/remix-pwa/monorepo"
                       target="_blank"
                       rel="noreferrer"
                     >
