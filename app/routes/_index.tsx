@@ -13,8 +13,55 @@ export const loader = () => {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Remix PWA' },
-    { name: 'description', content: 'Welcome to Remix!' },
+    {
+      title: 'Remix PWA',
+    },
+    {
+      name: 'description',
+      content:
+        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+    },
+    { property: 'twitter:card', content: 'summary_large_image' },
+    { property: 'twitter:creator', content: '@ShafSpecs' },
+    { property: 'twitter:title', content: 'Remix PWA Docs' },
+    {
+      property: 'twitter:image',
+      content:
+        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/RemixPWA_v3_Poster.png',
+    },
+    { property: 'og:title', content: 'Remix PWA Docs' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: 'https://remix-pwa.run' },
+    {
+      property: 'twitter:description',
+      content:
+        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+    },
+    { property: 'og:locale', content: 'en_US' },
+    {
+      property: 'og:image',
+      content:
+        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/RemixPWA_v3_Poster.png',
+    },
+    {
+      property: 'og:image:url',
+      content:
+        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/RemixPWA_v3_Poster.png',
+    },
+    {
+      property: 'og:image:secure_url',
+      content:
+        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/RemixPWA_v3_Poster.png',
+    },
+    { property: 'og:image:alt', content: 'Remix PWA Documentation' },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:image:type', content: 'image/png' },
+    {
+      property: 'og:description',
+      content:
+        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+    },
   ]
 }
 
@@ -210,11 +257,11 @@ function LandingCard({ description, icon, title }: any) {
             <p className="truncate text-base font-bold text-gray-900 dark:text-white">
               {title}
             </p>
-            <p className="mt-1 text-[15px] text-gray-500 dark:text-gray-400">
-              <p className="max-w-[65ch]">
+            <div className="mt-1 text-[15px] text-gray-500 dark:text-gray-400">
+              <div className="max-w-[65ch]">
                 <p className="m-0">{description}</p>
-              </p>
-            </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
