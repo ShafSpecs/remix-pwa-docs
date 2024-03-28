@@ -47,7 +47,7 @@ export const meta: MetaFunction = ({ data }: { data: any }) => {
     {
       property: 'twitter:image',
       content:
-        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/RemixPWA_v3_Poster.png',
+        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/-/preview/1200x630/-/quality/smart_retina/-/format/auto/',
     },
     { property: 'og:title', content: 'Remix PWA Docs' },
     { property: 'og:type', content: 'website' },
@@ -61,17 +61,17 @@ export const meta: MetaFunction = ({ data }: { data: any }) => {
     {
       property: 'og:image',
       content:
-        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/RemixPWA_v3_Poster.png',
+        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/-/preview/1200x630/-/quality/smart_retina/-/format/auto/',
     },
     {
       property: 'og:image:url',
       content:
-        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/RemixPWA_v3_Poster.png',
+        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/-/preview/1200x630/-/quality/smart_retina/-/format/auto/',
     },
     {
       property: 'og:image:secure_url',
       content:
-        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/RemixPWA_v3_Poster.png',
+        'https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/-/preview/1200x630/-/quality/smart_retina/-/format/auto/',
     },
     { property: 'og:image:alt', content: 'Remix PWA Documentation' },
     { property: 'og:image:width', content: '1200' },
