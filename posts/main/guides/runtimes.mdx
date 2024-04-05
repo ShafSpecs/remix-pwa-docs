@@ -56,6 +56,7 @@ It contains the following:
 
 - `entry`: This is an object containing one property: `module`, which is your entry worker code. Every thing exported from your entry worker is available via this object.
 - `routes`: A manifest (styled like Remix server manifest) that contains all routes and the worker codes associated with them
+- `assets`: A list of the assets the Remix app utilizes. In `development`, this is just the contents of the `public` folder. In `production` mode, it is the assets contained in the `buildDirectory`.
 
 Where routes basically looks like:
 
@@ -67,6 +68,10 @@ const routes = {
     path: "",
     index: void 0,
     caseSensitive: void 0,
+    hasLoader: false,
+    hasAction: false,
+    hasWorkerLoader: false,
+    hasWorkerAction: false,
     module: route0
   },
   "routes/first-route": {
@@ -75,11 +80,19 @@ const routes = {
     path: "first-route",
     index: void 0,
     caseSensitive: void 0,
+    hasLoader: false,
+    hasAction: false,
+    hasWorkerLoader: false,
+    hasWorkerAction: false,
     module: route1
   },
   // more routes
 }
 ```
+
+<Info>
+The `routes` and `assets` are available in the service worker globally via the `self.__workerManifest` object
+</Info>
 
 And the `route0`, `route1` objects resemble the following:
 
@@ -110,46 +123,47 @@ Next up, we create a context creator. This is a function that creates a context 
 
 ```js {{filename:'runtime.js'}}
 function createContext(event) {
-  const context = entrySW.entry.module.getLoadContext?.(event) || {};
+  const context = entrySW.entry.module.getLoadContext?.(event) || {}
   return {
     event,
     fetchFromServer: () => fetch(event.request.clone()),
     ...context,
-  };
+  }
 }
 ```
 
 In this function, we are creating a context object that contains the event, a function to fetch from the server (this is useful for worker route apis that need to fetch data from the server), and any other context data that might be needed. We also check if the entry worker has a `getLoadContext` function, and if it does, we call it to get the context data. Also note the spread operator, this is to ensure that whatever you set as default (which could be extended :)) can be overriden too by the `getLoadContext` function.
 
 <Info>
-  So far, our code so far is very similar to `@remix-pwa/worker-runtime` (minus error handlers). Told you, there's no magic in here 😄!
+  So far, our code so far is very similar to `@remix-pwa/worker-runtime` (minus
+  error handlers). Told you, there's no magic in here 😄!
 </Info>
 
 Finally, we can start work on the `fetch` event handler:
 
 ```js {{filename:'runtime.js'}}
-self.addEventListener('fetch', async event => {});
+self.addEventListener('fetch', async event => {})
 ```
 
 Our code so far looks like this:
 
 ```js {{filename:'runtime.js'}}
-import * as entrySW from 'virtual:entry-sw';
+import * as entrySW from 'virtual:entry-sw'
 
 const defaultHandler =
-  (entrySW.entry.module.defaultFetchHandler) ||
-  (event => fetch(event.request.clone()));
+  entrySW.entry.module.defaultFetchHandler ||
+  (event => fetch(event.request.clone()))
 
 function createContext(event) {
-  const context = entrySW.entry.module.getLoadContext?.(event) || {};
+  const context = entrySW.entry.module.getLoadContext?.(event) || {}
   return {
     event,
     fetchFromServer: () => fetch(event.request.clone()),
     ...context,
-  };
+  }
 }
 
-self.addEventListener('fetch', async event => {});
+self.addEventListener('fetch', async event => {})
 ```
 
 Fantastic! 🚀
@@ -160,15 +174,13 @@ We can now implement the `fetch` event handler. This is where the magic happens.
 
 ```js {{filename:'runtime.js'}}
 // at the top of file
-import { isLoaderRequest, isActionRequest, json } from '@remix-pwa/sw';
+import { isLoaderRequest, isActionRequest, json } from '@remix-pwa/sw'
 
 self.addEventListener('fetch', async event => {
-  const url = new URL(event.request.url);
-  const routeDataParam = url.searchParams.get('_data');
+  const url = new URL(event.request.url)
+  const routeDataParam = url.searchParams.get('_data')
 
-  const route = routeDataParam
-    ? entrySW.routes[routeDataParam]
-    : undefined
+  const route = routeDataParam ? entrySW.routes[routeDataParam] : undefined
 
   const args = {
     request: event.request,
@@ -178,18 +190,18 @@ self.addEventListener('fetch', async event => {
 
   try {
     if (isLoaderRequest(event.request) && route?.module.workerLoader) {
-      console.log(`Handling loader request for ${routeDataParam}`);
+      console.log(`Handling loader request for ${routeDataParam}`)
     }
 
     if (isActionRequest(event.request) && route?.module.workerAction) {
-      console.log(`Handling action request for ${routeDataParam}`);
+      console.log(`Handling action request for ${routeDataParam}`)
     }
   } catch (error) {
-    console.error(`An error occurred: ${error}`);
+    console.error(`An error occurred: ${error}`)
   }
 
-  event.respondWith(defaultHandler(args));
-});
+  event.respondWith(defaultHandler(args))
+})
 ```
 
 We now have a partially working runtime. Very basic but I hope you see the building blocks coming together. Let's go over it step-by-step before we fill out the details.
@@ -213,29 +225,34 @@ We can't be logging our route worker apis, they need to actually do something. L
 // within our fetch handler
 try {
   if (isLoaderRequest(event.request) && route?.module.workerLoader) {
-    const response = route.module.workerLoader(args);
-    event.respondWith(response.then(res => isResponse(res) ? res : json(res)));
-    return;
+    const response = route.module.workerLoader(args)
+    event.respondWith(response.then(res => (isResponse(res) ? res : json(res))))
+    return
   }
 
   if (isActionRequest(event.request) && route?.module.workerAction) {
-    const response = route.module.workerAction(args);
-    event.respondWith(response.then(res => isResponse(res) ? res : json(res)));
-    return;
+    const response = route.module.workerAction(args)
+    event.respondWith(response.then(res => (isResponse(res) ? res : json(res))))
+    return
   }
 } catch (error) {
-  console.error(`An error occurred: ${error}`);
+  console.error(`An error occurred: ${error}`)
 }
 
 // outside the fetch handler
 function isResponse(value) {
-  return value != null &&
-    typeof value.status === "number" &&
-    typeof value.statusText === "string" &&
-    typeof value.headers === "object" &&
-    typeof value.body !== "undefined";
+  return (
+    value != null &&
+    typeof value.status === 'number' &&
+    typeof value.statusText === 'string' &&
+    typeof value.headers === 'object' &&
+    typeof value.body !== 'undefined'
+  )
 }
 ```
+
+> In retrospect, we can handle the fetch in a cleaner manner by wrapping the `if`s in a function and returning
+> a promise instead
 
 We now have working runtime 😁. Sure it doesn't handle cases like defer or graceful redirects, nor is its error handling the most spectacular, but we've seen together what's capable of being built with Remix PWA. Changing underlying behaviours of service workers, is now as easy as swapping out your runtimes. If you would like to study `worker-runtime` more though, check out the [code here](https://github.com/remix-pwa/monorepo/blob/main/packages/worker-runtime/src/service-worker.internal.ts).
 

@@ -5,6 +5,8 @@ alternateTitle: useSWEffect
 order: 2
 ---
 
+import Info from './info.tsx'
+
 The only hook from `@remix-pwa/sw`, the `useSWEffect` hook is used to send messages to the service worker on navigation events.
 
 Remix PWA uses it by default to handle document caching. When a client-side navigation occurs in Remix, a fetch is made to the loader directly
@@ -44,6 +46,12 @@ in one go, at the start.
 The hook takes in an object as an argument that allows you to customise the caching strategy you want to use. 
 
 ```ts
+type SWMessagePayload = {
+  location: Location<any>;
+  isSsr: boolean;
+  [key: string]: any;
+}
+
 type UseSWEffectOptions =
   | { cacheType?: 'jit' }
   | { cacheType?: 'precache' }
@@ -53,13 +61,20 @@ type UseSWEffectOptions =
 By default, the `cacheType` is set to `jit`. Which is intercepted by the appropriate message handler in the service worker. `precache` is
 still a work-in-progress, so currently, except you handle it yourself, there's no way to precache.
 
+Taking a closer look at the `payload`, it contains the following properties by default:
+
+- `location`: The current location object (passed from Remix `useLocation` hook)
+- `isSsr`: A boolean indicating if the current navigation is server-side rendered (document request)
+
+It can be extended to pass more data to the service Worker.
+
 ## Extending `useSWEffect`
 
 It's also possible that you want to send your own location-based message to the worker, `useSWEffct` is now extended to
 facilitate that too. Setting the `cacheType` to `'custom'`, you can provide your own event name and a payload for passing
 extra information alongside the location to the service worker.
 
-> For more info on exactly how to handle this Service Worker-side, check out the Messaging page.
+> For more info on exactly how to handle this Service Worker-side, check out the Messaging guide.
 
 As long as you pass in different `eventName`s, you can have multiple `useSWEffect` across your application. To further build on that,
 they don't have to be in your app root, you can scope them.
@@ -87,3 +102,16 @@ export default function LayoutRoute() {
   // my route...
 }
 ```
+<Info>
+The custom payload passed to the hook is always merged with the default payload properties (`location` & `isSsr`) except when overriden.
+
+Using the example above, the resulting payload would look like this:
+
+```ts
+{
+  location: Location<any>,
+  isSsr: boolean,
+  loveMom: true
+}
+```
+</Info>

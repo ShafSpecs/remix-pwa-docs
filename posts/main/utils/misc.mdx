@@ -14,6 +14,11 @@ The `isLoaderRequest` function allows you to check if a request is a loader requ
 
 The `isActionRequest` function allows you to check if a request is an action request. It takes in the request as it's sole argument.
 
+## `isDocumentRequest` 🆕
+
+The `isDocumentRequest` function allows you to check if a request is a document request. Note, this only detects client-side navigation requests.
+To detect document requests as well, check out the `useSWEffect` hook
+
 ## `timeout`
 
 A simple sleep function that resolves after a given time.

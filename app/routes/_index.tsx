@@ -281,7 +281,7 @@ function Features() {
           imagination knows no bounds.
         </p>
       </div>
-      <div className="mt-8 grid max-w-7xl grid-cols-1 gap-8 px-4 sm:mt-10 sm:grid-cols-2 sm:px-6 lg:px-8 xl:grid-cols-3">
+      <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-8 px-4 sm:mt-10 sm:grid-cols-2 sm:px-6 lg:px-8 xl:grid-cols-3">
         <LandingCard
           title="Vite"
           icon="⚡"
