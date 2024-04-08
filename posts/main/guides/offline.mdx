@@ -1,0 +1,128 @@
+---
+title: Offline Guide
+description: "Add offline capabilities to your applications with Remix PWA"
+alternateTitle: Offline
+---
+
+import Info from './info.tsx'
+import Snippet from './snippet.tsx'
+
+One of the many perks of Service Workers is the ability to provide offline capabilities to a web app, giving your users access to your application even in their downtime. In this guide, we would be building just that, a basic offline app.
+
+This is a practical guide, you can choose to code along or take notes. Let's be looking at the app we would be building.
+
+## Getting Started
+
+### Noter App
+
+Noter App (what I am naming this app - pronounced `ˈnəʊtə`) is a basic note & checklist app that stores notes in a database, notes can vary too. You could have plain text ones (normal notes), or checklists that you can cross off tasks. That's the main premise of Noter App.
+
+It is inspired by [Notein](https://play.google.com/store/apps/details?id=notes.notepad.checklist.calendar.todolist.notebook), a simple, yet effective note taking app I use myself for jotting. The layout would be inspired by [this Dribble design](https://dribbble.com/shots/21350531-Notes-Mobile-App) made by [Fatemeh Siraj](https://dribbble.com/seraj-uix).
+
+### Initializing Noter
+
+Let's kick things off, Something to keep in mind as we begin:
+
+> This guide would gloss over details like styling, layouts, etc. Focusing mainly on the Service Worker part
+
+Like every other Remix project out there, we start by actually creating a Remix application
+
+```sh {{filename:'Terminal'}}
+npx create-remix@latest
+```
+
+I would also go ahead to install `tailwindcss` (personal preference). Take this as your cue to add whatever usual dependencies/components you love to build with.
+
+### Database
+
+In order to not make this complicated in the slightest, we would make use of [`quick.db`](https://github.com/plexidev/quick.db), a Node.js database designed for beginners in mind. In our case, that means less terminologies and more doing 🙌.
+
+```sh {{filename:'Terminal'}}
+npm i quick.db better-sqlite3
+```
+
+In case you are wondering why we are also installing `better-sqlite3`, `quick.db` provides a driver interface that allows you to use multiple drivers including: pure JSON, Mongo and MySQL. We are using SQLite because it's the best. If you don't agree with me, you can install another driver.
+
+<Info>
+  In case you are having trouble installing, check out the troubleshooting guide on the [`quick.db` github page](https://github.com/plexidev/quick.db)
+</Info>
+
+### Service Worker
+
+Ah, the most important part. Getting a Service Worker up and ready. Firstly, install the required `remix-pwa` packages:
+
+```sh {{filename:'Terminal'}}
+npm i @remix-pwa/sw @remix-pwa/worker-runtime
+npm i -D @remix-pwa/dev
+```
+
+And we run the `remix-pwa` executable to scaffold a simple Service Worker:
+
+```sh
+npx remix-pwa sw
+```
+
+This creates a basic Service Worker in `app/entry.worker.ts`. If you want to change directories, provide the `--dest`/`-d` flag to use a separate destination file.
+
+Finally, set up your vite config file to reflect remix pwa too, check out [this doc](/docs/main/quick-start) for more info.
+
+<Info>
+  If you want to cheat and reach this point instantly, you can get the code right up till this point [here](https://github.com/ShafSpecs/Noter/tree/initial-app)
+</Info>
+
+## Building Noter
+
+Before we focus on adding offline capabilities. Let's actually build the application. I would be having the following routes:
+
+- `/`: Index route. Contains list of all todos
+- `/create`: This allows you to create a new todo list (yes, you have multiple todo lists)
+- `/delete`: Delete a todo
+- `/$todoId`: View a todo
+- `update`: Update a todo
+
+Before we go into all that, let's handle the database. This part might need some breakdown
+
+### Setting up the Database
+
+`quick.db` provides a simple, yet efficient method to easily own and use a database. Let's go ahead and create a `db.server.ts` file in our app directory, we would be creating our mini-ORM in here.
+
+Let's fill it with the following boilerplate:
+
+```ts {{filename:'db.server.ts'}}
+import { QuickDB } from 'quick.db';
+
+const db = new QuickDB({
+  filePath: `${process.cwd()}/file.db`,
+})
+
+await db.init();
+
+export const getAllEntries = async () => {}
+
+export const getEntry = async () => {}
+
+export const createEntry = async () => {}
+
+export const updateEntry = async () => {}
+
+export const deleteEntry = async () => {}
+
+export const deleteManyEntries = async () => {}
+```
+
+We are creating the basic outlook of the app. We can:
+
+- Get multiple entries (note or todo checklist). Would be useful on the index route
+- Get a entry
+- Create an entry and persist it to our database
+- Update an entry within our database
+- Delete one entry
+- Delete multiple entries Wat once.
+
+We would be filling out the details soon enough. In the meantime, the application!
+
+#### Building the Layout
+
+This section would be an overview of what I did. First of all, I created themeing. Meaning light/dark/system modes now exist, a nice way to bump up your user comfort points. Next up, was the hardest part, building the UI 🙄. My approach was something not fully styled (would have time to style later), but with a concrete layout. Thanks to [this design](https://github.com/ShafSpecs/Noter/tree/initial-app), it was easy to have an idea of what to do/expect.
+
+Though, the design is mobile-only and my approach is mobile-first, I can modify this to fit large screens as well. Hold please...
