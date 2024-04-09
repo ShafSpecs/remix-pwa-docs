@@ -23,8 +23,10 @@ const messageHandlerForUser = new MessageHandlerSubClass1();
 const messageHandlerForPost = new MessageHandlerSubClass2();
 
 self.addEventListener('message', (event) => {
-  await messageHandlerForUser.handleMessage(event);
-  await messageHandlerForPost.handleMessage(event);  
+  event.waitUntil(Promise.all([
+    messageHandlerForUser.handleMessage(event),
+    messageHandlerForPost.handleMessage(event)
+  ]));  
 });
 ```
 

@@ -7,122 +7,355 @@ alternateTitle: Offline
 import Info from './info.tsx'
 import Snippet from './snippet.tsx'
 
-One of the many perks of Service Workers is the ability to provide offline capabilities to a web app, giving your users access to your application even in their downtime. In this guide, we would be building just that, a basic offline app.
-
-This is a practical guide, you can choose to code along or take notes. Let's be looking at the app we would be building.
+One of the many perks of Service Workers is the ability to provide offline capabilities to a web app, giving your users access to your application even in their downtime. In this guide, we would be building just that, an offline-first application using Remix PWA.
 
 ## Getting Started
 
-### Noter App
+For this guide, we would be utilizing the [Epic Stack](https://github.com/epicweb-dev/epic-stack) by Kent C. Dodds. The Epic Stack is a production-ready template for building full-stack applications with Remix, Fly and many more tools. The perfect victim for our offline-first application.
 
-Noter App (what I am naming this app - pronounced `ˈnəʊtə`) is a basic note & checklist app that stores notes in a database, notes can vary too. You could have plain text ones (normal notes), or checklists that you can cross off tasks. That's the main premise of Noter App.
-
-It is inspired by [Notein](https://play.google.com/store/apps/details?id=notes.notepad.checklist.calendar.todolist.notebook), a simple, yet effective note taking app I use myself for jotting. The layout would be inspired by [this Dribble design](https://dribbble.com/shots/21350531-Notes-Mobile-App) made by [Fatemeh Siraj](https://dribbble.com/seraj-uix).
-
-### Initializing Noter
-
-Let's kick things off, Something to keep in mind as we begin:
-
-> This guide would gloss over details like styling, layouts, etc. Focusing mainly on the Service Worker part
-
-Like every other Remix project out there, we start by actually creating a Remix application
+To get started, clone the Epic Stack repository, install dependencies and set up the project:
 
 ```sh {{filename:'Terminal'}}
-npx create-remix@latest
+git clone https://github.com/epicweb-dev/epic-stack.git
+
+cd epic-stack
+
+npm install
+
+npm run setup
 ```
-
-I would also go ahead to install `tailwindcss` (personal preference). Take this as your cue to add whatever usual dependencies/components you love to build with.
-
-### Database
-
-In order to not make this complicated in the slightest, we would make use of [`quick.db`](https://github.com/plexidev/quick.db), a Node.js database designed for beginners in mind. In our case, that means less terminologies and more doing 🙌.
-
-```sh {{filename:'Terminal'}}
-npm i quick.db better-sqlite3
-```
-
-In case you are wondering why we are also installing `better-sqlite3`, `quick.db` provides a driver interface that allows you to use multiple drivers including: pure JSON, Mongo and MySQL. We are using SQLite because it's the best. If you don't agree with me, you can install another driver.
 
 <Info>
-  In case you are having trouble installing, check out the troubleshooting guide on the [`quick.db` github page](https://github.com/plexidev/quick.db)
+  Don't forget to set up envs as well
 </Info>
 
-### Service Worker
+Once you've set up and verified the app works, we can now proceed to adding `remix-pwa` to our project.
 
-Ah, the most important part. Getting a Service Worker up and ready. Firstly, install the required `remix-pwa` packages:
+### Service Workers
 
-```sh {{filename:'Terminal'}}
-npm i @remix-pwa/sw @remix-pwa/worker-runtime
-npm i -D @remix-pwa/dev
+In this section we would be setting up `remix-pwa` in our project:
+
+```sh
+npm install @remix-pwa/sw @remix-pwa/worker-runtime
+
+npm install --save-dev @remix-pwa/dev
 ```
 
-And we run the `remix-pwa` executable to scaffold a simple Service Worker:
+This installs the necessary packages for `remix-pwa` to work in our project. Next, we would need to add `remix-pwa` vite plugin to our app too. Within the `vite.config.ts` file, go ahead and add the following:
+
+```diff-ts {{filename:'vite.config.ts'}}
+// other imports
++import { remixPWA } from '@remix-pwa/dev'
+
+export default defineConfig({
+  plugins: [
+    // other plugins
++   remixPWA()
+  ]
+})
+```
+
+Finally, we scaffold our Service Worker with the following command:
 
 ```sh
 npx remix-pwa sw
 ```
 
-This creates a basic Service Worker in `app/entry.worker.ts`. If you want to change directories, provide the `--dest`/`-d` flag to use a separate destination file.
+This creates a service worker in `app/entry.worker.ts` which would be our custom entry point for the service worker. If you want to change the location of the service worker, do so via the `--dest/-d` flag. Make sure to update the plugin in your vite config to reflect the changes!
 
-Finally, set up your vite config file to reflect remix pwa too, check out [this doc](/docs/main/quick-start) for more info.
+If we run our app now, we should see the service worker message being logged to the console 🚀.
 
-<Info>
-  If you want to cheat and reach this point instantly, you can get the code right up till this point [here](https://github.com/ShafSpecs/Noter/tree/initial-app)
-</Info>
+## Setting Up
 
-## Building Noter
+### Custom Logger
 
-Before we focus on adding offline capabilities. Let's actually build the application. I would be having the following routes:
+Now that we have our service worker set up, we can go ahead and provide some basic setup. The first of which would be to replace our console statement with `@remix-pwa/sw` `Logger`. This step is skippable but it's a good way to ensure you can log in developments without worrying about anything leaking to production.
 
-- `/`: Index route. Contains list of all todos
-- `/create`: This allows you to create a new todo list (yes, you have multiple todo lists)
-- `/delete`: Delete a todo
-- `/$todoId`: View a todo
-- `update`: Update a todo
+First of all, we create our own `Logger` instance. Creating our logging instance allows us to customise the logger to our taste.
 
-Before we go into all that, let's handle the database. This part might need some breakdown
+```ts
+import { Logger } from '@remix-pwa/sw'
 
-### Setting up the Database
-
-`quick.db` provides a simple, yet efficient method to easily own and use a database. Let's go ahead and create a `db.server.ts` file in our app directory, we would be creating our mini-ORM in here.
-
-Let's fill it with the following boilerplate:
-
-```ts {{filename:'db.server.ts'}}
-import { QuickDB } from 'quick.db';
-
-const db = new QuickDB({
-  filePath: `${process.cwd()}/file.db`,
+const logger = new Logger({
+  prefix: '[Epic Stack]',
 })
-
-await db.init();
-
-export const getAllEntries = async () => {}
-
-export const getEntry = async () => {}
-
-export const createEntry = async () => {}
-
-export const updateEntry = async () => {}
-
-export const deleteEntry = async () => {}
-
-export const deleteManyEntries = async () => {}
 ```
 
-We are creating the basic outlook of the app. We can:
+The only thing we want to change is the prefix, the styles are pretty good and well-rounded. We can now replace our console statement with our new logger instance:
 
-- Get multiple entries (note or todo checklist). Would be useful on the index route
-- Get a entry
-- Create an entry and persist it to our database
-- Update an entry within our database
-- Delete one entry
-- Delete multiple entries Wat once.
+```diff-ts {{filename:'entry.worker.ts'}}
+self.addEventListener('install', event => {
+-  console.log('Service worker installed');
++  logger.log('Service worker installed');
 
-We would be filling out the details soon enough. In the meantime, the application!
+  event.waitUntil(self.skipWaiting());
+});
 
-#### Building the Layout
+self.addEventListener('activate', event => {
+-  console.log('Service worker activated');
++  logger.log('Service worker activated');
 
-This section would be an overview of what I did. First of all, I created themeing. Meaning light/dark/system modes now exist, a nice way to bump up your user comfort points. Next up, was the hardest part, building the UI 🙄. My approach was something not fully styled (would have time to style later), but with a concrete layout. Thanks to [this design](https://github.com/ShafSpecs/Noter/tree/initial-app), it was easy to have an idea of what to do/expect.
+  event.waitUntil(self.clients.claim());
+});
+```
 
-Though, the design is mobile-only and my approach is mobile-first, I can modify this to fit large screens as well. Hold please...
+After saving, nothing happens. When you reload though, our new, shiny logger pops up. But that doesn't seem efficient, we want it to detect the changes immediately. We would handle it soon enough :)
+
+### Cache
+
+The big thing. For anything to be offline, we need to have an alternative location to serve from. In this case, the browser cache. Let's set up our caches:
+
+```ts {{filename:'entry.worker.ts'}}
+const version = 'v1'
+
+const DOCUMENT_CACHE_NAME = `document-cache`;
+const ASSET_CACHE_NAME = `asset-cache`;
+const DATA_CACHE_NAME = `data-cache`;
+
+const documentCache = new EnhancedCache(DOCUMENT_CACHE_NAME, {
+  version,
+  strategy: 'CacheFirst',
+  strategyOptions: {
+    maxEntries: 64,
+  }
+})
+
+const assetCache = new EnhancedCache(ASSET_CACHE_NAME, {
+  version,
+  strategy: 'CacheFirst',
+  strategyOptions: {
+    maxAgeSeconds: 60 * 60 * 24 * 90, // 90 days
+    maxEntries: 100,
+  }
+})
+
+const dataCache = new EnhancedCache(DATA_CACHE_NAME, {
+  version,
+  strategy: 'NetworkFirst',
+  strategyOptions: {
+    networkTimeoutInSeconds: 10,
+    maxEntries: 72,
+  }
+})
+```
+
+We create the base three caches: the pages (HTML), assets (CSS & JS) and finally data (whatever data we fetch). We also provided some basic options for each cache. You can tweak as you see fit, we would be probably updating our caches soon enough.
+
+We also created a version constant. This is to ensure cache cleanup, and to enforce it as we see fit (for example, when we have a major update that requires just cleaning our caches).
+
+<Info>
+  Read more about the `EnhancedCache` class [here](/docs/main/enhanced-cache)
+</Info>
+
+### Fetching
+
+As we know, Service Workers intercepts requests from the browser. Remix PWA runtimes provides a way to hanle these, but that doesn't mean we don't get to define basic fetch behaviour. Let's go ahead and define the default fetch handler within our service worker:
+
+```ts {{filename:'entry.worker.ts'}}
+import {
+ EnhancedCache,
+ isDocumentRequest,
+ isLoaderRequest,
+ Logger,
+ type DefaultFetchHandler,
+} from '@remix-pwa/sw'
+
+// rest of our service worker
+
+export const defaultFetchHandler: DefaultFetchHandler = async ({ context }) => {
+ const request = context.event.request
+ const url = new URL(request.url)
+
+ if (isDocumentRequest(request)) {
+  return documentCache.handleRequest(request)
+ }
+
+ if (isLoaderRequest(request)) {
+  return dataCache.handleRequest(request)
+ }
+
+ if (self.__workerManifest.assets.includes(url.pathname)) {
+  return assetCache.handleRequest(request)
+ }
+
+ return fetch(request)
+}
+```
+
+We set some groundwork here. First of all, we check if the requests coming through fit any of our defined criterias (document/data/asset), if not we just return the request as is.
+
+You might have noticed that even though `defaultFetchHandler` takes in a `request` object as a property of its lone parameter, we still went ahead to use `event.request` from the context. This is because the `request` object available via `context` is the raw request, without any modification, whereas the one available directly is a cleaned up version - the same as the one passed to loaders and actions. If we wanted to have access to the request as it was made, we would use the one from the `context`.
+
+Another thing is that we utilise the `__workerManifest` object to access our assets. The reason for that is simply that Remix PWA plugin under the hood gathers all assets after scouring the entire Remix App, and then via `@remix-pwa/worker-runtime`, inject it into the service worker scope. You can see a breakdown on the worker manifest [here](/docs/main/runtimes#implementing-the-runtime).
+
+<Info>
+  Fun fact, if you disable network right now and reload, you get an unstyled page, not an error. That's because some assets are missing (stylesheets, some logos located at resource routes, etc.) but the basics (documents, loader data, etc.) are still served.
+
+  And even more interesting fact is that if we were to build and then reload the page (after clearing assets), go offline and then reload, we get the landing page served as is (depending on the order you took, you might need to refresh twice before going offline or head to another route and come back before going offline).
+
+  The reason for this behaviour can be simply explained as: in dev, the service worker access to assets are limited. So for example, a fully offline app would only be testable in preview/production mode. Whilst the full thing gets pre-built in prod, so Remix PWA can access them easily.
+</Info>
+
+### Hooking Up
+
+The last part of setting up, and that's adding the `useSWEffect` hook to the root and intercepting messages in the worker. The hook is used to alert the Service Worker to client-side navigation so it can cache documents accordingly.
+
+<Snippet>
+
+```ts {{filename:'root.tsx'}}
+import { useSWEffect } from '@remix-pwa/sw'
+
+// within the `App` component - could also be the root component
+useSWEffect()
+```
+
+```ts {{filename:'entry.worker.ts'}}
+import { NavigationHandler } from '@remix-pwa/sw'
+
+// rest of the service worker
+
+const messageHandler = new NavigationHandler({
+  cache: documentCache
+})
+
+self.addEventListener('message', (event: ExtendableMessageEvent) => {
+  event.waitUntil(messageHandler.handleMessage(event))
+})
+```
+
+</Snippet>
+
+The first thing we did was to simply add the `useSWEffect` hook to our root. We don't need to tamper with it as the defaults are setup perfectly for our needs. The second thing we did was to create a `NavigationHandler` instance and then listen for messages. You can check out exactly what it does and more [here](/docs/main/messaging#navigation-handler). In short, it fetches the document on each client navigation and caches that document if it isn't found.
+
+## Going Off The Grid
+
+Funny, we've more or less accomplished that already. If you build, then preview your application, as long as you've previously navigated to a route, you can go offline and still access that route. In other words, if you deploy at this point, you have an app with full offline-support capabilities.
+
+But we can do more.
+
+## Bonuses
+
+### Cache Versioning
+
+Cache versioning allows us to keep some order within our caching system. It gives us the ability to clear out large chunks of stale data and avoid messing up newer data with old ones. I am re-deploying my app with some fancy, shiny features, but they are incompatible with the previous caching system I set up. I could either force the new system on the existing one and hope for the best, or I remove the existing one (in a controlled manner, of course) and bring my new one in its place. Say hello to cache versioning.
+
+In service workers, versioning is unsurprisingly simple. When I install a new service worker into an existing application, I check if the existing version is different from the new one, and perform some actions based on the result. This is only possible *if* we actually kept track of the versions, which we easily did.
+
+To introduce versioning into our existing service worker, I would recommend using the app a bit. Maybe navigate between authentication pages, this is to build up cache content, so you can actually see how easy it is to version despite data size.
+
+Now we've done a few moving back and forth, let's go ahead and actually implement versioning. I would recommend not saving till the very end, that way you incorporate all the important bits and pieces whilst still learning the *why*. Firstly, update the version constant. Let's do `v2`, we have a new change we would like to introduce and that also means wiping out stale stuffs.
+  
+```diff-ts {{filename:'entry.worker.ts'}}
+- const version = 'v1'
++ const version = 'v2'
+```
+
+Next up is to actually clean out the old caches on activation (`activate` event). The reason why we do this on activate, instead of install can be summarised as follows:
+
+- **Avoid Breaking Current Pages**: The `install` event is fired when the service worker is first installed and hasn't been activated yet. If you clear the cache during the `install` event, you really risk breaking any currently open pages that are still using resources from the old cache (something we don't want).
+- **Waiting for the Right Time**: The activat`e event is fired after the service worker has been installed and is just about to activate. At this point, all of the currently open pages that were using the old service worker have been unloaded, and it's safe to clear out the old cache.
+- **Clean Up After the New Cache is Ready**: During the `install` event, you should be caching the new resources that your application needs. Once this is complete and the new cache is ready, the `activate` event is triggered, allowing you to safely remove the old cache entries.
+
+Replacing our `activate` listener with the following:
+
+```ts {{filename:'entry.worker.ts'}}
+import { clearUpOldCaches } from '@remix-pwa/sw'
+
+self.addEventListener('activate', event => {
+  logger.log('Service worker activated')
+
+  event.waitUntil(Promise.all([
+    clearUpOldCaches([DOCUMENT_CACHE_NAME,DATA_CACHE_NAME,ASSET_CACHE_NAME], version),
+    self.clients.claim(),
+  ]))
+})
+```
+
+We can finally go ahead and save our service worker. We are done! If we go ahead and refresh the page, you should see every cache not ending with `v2` suffix get deleted. Depending on your browser, it might not outright get deleted from the cache list, but if you check the content, the cache is totally empty. Mission successful!
+
+### UI Feedback
+
+If you were looking at the logs in preview mode (`npm run start`), you would notice that there were no logs. If you were on a mobile device, it would even be impossible to check! This is because [`Logger`](/docs/main/logger) only outputs in development mode. And we also can't be telling our users to keep an eye out for any new/interesting log coming in. We need to actually let them know when something goes wrong, an update comes in, connection goes off or on, etc. That's what we would be attempting in this section.
+
+The amount of UI feedback possible is plenty. Gives your users better interaction with your app as well as reduce the chance of sudden "mishaps", we would be limiting ours to just two:
+
+- Network Connectivity
+- Service Worker Update
+
+#### Network Connectivity
+
+The premise for this one is simple: If the users goes offline, let them know. When they come back online, also let them know. This would come in form of a simple pop up. For this part, we would require `@remix-pwa/client` package. Go ahead and install it via: `npm install --save @remix-pwa/client`
+
+Within our root (we want to show the popup everywhere), preferably in the `App` component, we add the following:
+
+```tsx {{filename:'root.tsx'}}
+import { useNetworkConnectivity } from '@remix-pwa/client'
+import { toast } from 'sonner'
+
+// within our `App` component
+useNetworkConnectivity({
+  onOnline: () => {
+    const id = 'network-connectivity'
+    const title = 'You are back online'
+    const description = 'Seemed your network went for a nap, glad to have you back!'
+    const type = 'message'
+
+    toast[type](title, { id, description })
+  },
+
+  onOffline: () => {
+    const id = 'network-connectivity'
+    const title = 'You are offline'
+    const description = 'Seems like you are offline, check your network connection'
+    const type = 'warning'
+
+    toast[type](title, { id, description })
+  }
+})
+```
+
+Now, if we were to head back to the browser and open our network tab, using the thottle option to switch connectivity, we see the message pop up. If you are on a mobile device, you would see a toast message pop up. This is a simple way to let your users know when they are offline or online.s
+
+{/* ### Background Sync
+
+Background Sync enables you to retry requests (usually non-`GET`) whenever you come online. Meaning it allows you to retry failed requests even when your app isn't active. In an authentication scenario, this might not be a smart idea. If your user goes offline midway through the auth process and the app keeps attempting even after the user has quit, that does pose some risk. Apart from those kind of few scenarios, background sync has its uses (plenty). In our case, we would be attempting it on the note taking process.
+
+Not the most fascinating scenario but a simple one. When we log in successfully and want to create a note, we've written out the quick notes but you move to a terrible network location just before hitting send. You get a beatiful message: "Failed to fetch". What if it was more graceful and we were able to recover? Without even losing the note too!
+
+<Info>
+  This section requires `@remix-pwa/sync`. Install it via:
+
+  ```sh
+  npm i --save @remix-pwa/sync
+  ```
+
+</Info> */}
+
+### Precaching
+
+Now we technically don't want to do this in an app that has two distinct sides for authorised and not-authorised users. Precaching could be catastrophic if note dont right.
+
+Precaching is the act of caching resources before they are requested. This is a great way to ensure that your users have the resources they need before they even ask for them. This can be especially useful for resources that are used on multiple pages, or for resources that are critical to the user experience. Or heavy assets that you would like out of the way before the user even gets to them.
+
+Fortunately for us, we do have *a lot of assets* that can use some precaching. Let's go ahead and precache every non-JS asset present in epic stack. As you might have guessed, the magic takes place in the `install` event handler as this is before the service worker even gains control of pages. Allowing it to do its bidding behind the scenes before being handed the clients.
+
+For this, you might want to make things a touch more sophisticated. Perhaps a precache-dedicated cache. Or even spread out the assets cache, one for images, another for stylesheets and fonts, etc. But for the sake of simplicity, we would just add them to the existing asset cache.
+
+```ts {{filename:'entry.worker.ts'}}
+self.addEventListener('install', event => {
+  logger.log('Service worker installed')
+
+  event.waitUntil(Promise.all([
+    assetCache.preCacheUrls(
+      self.__workerManifest.assets.filter(url => !url.endsWith('.map') && !url.endsWith('.js'))
+    ),
+    self.skipWaiting(),
+  ]))
+})
+```
+
+And that also wraps it up for this section. We can go ahead and clear our browser storage, reload the page and voila! Our asset cache becomes populated real quick. Couple that with the fact that our asset strategy is `CacheFirst`, meaning we attempt to fetch from cache first before falling back to the server, this means less round trip for assets. Oh, and by the way, cache validation still works. Meaning in 90 days, they become stale.
+
+---
+
+That's about it for this guide. Hopefully you picked up a thing or two. Service Workers are real fun, and as a side effect, powerful too. See you in the next guide 👋.

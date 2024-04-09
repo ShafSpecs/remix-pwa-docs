@@ -31,6 +31,7 @@
     "env": "guides/env",
     "gotchas": "guides/gotchas",
     "messaging": "guides/messaging",
+    "offline": "guides/offline",
     "runtimes": "guides/runtimes",
     "versioning": "guides/versioning",
     "web-manifest": "guides/web-manifest"
@@ -264,6 +265,13 @@
       "description": "Build an comprehensive communication system between your service worker and client.",
       "section": "Guides",
       "slug": "messaging"
+    },
+    "offline": {
+      "title": "Offline Guide",
+      "alternateTitle": "Offline",
+      "description": "Add offline capabilities to your applications with Remix PWA",
+      "section": "Guides",
+      "slug": "offline"
     },
     "runtimes": {
       "title": "Worker Runtimes",
