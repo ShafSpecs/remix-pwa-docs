@@ -277,10 +277,7 @@ We can finally go ahead and save our service worker. We are done! If we go ahead
 
 If you were looking at the logs in preview mode (`npm run start`), you would notice that there were no logs. If you were on a mobile device, it would even be impossible to check! This is because [`Logger`](/docs/main/logger) only outputs in development mode. And we also can't be telling our users to keep an eye out for any new/interesting log coming in. We need to actually let them know when something goes wrong, an update comes in, connection goes off or on, etc. That's what we would be attempting in this section.
 
-The amount of UI feedback possible is plenty. Gives your users better interaction with your app as well as reduce the chance of sudden "mishaps", we would be limiting ours to just two:
-
-- Network Connectivity
-- Service Worker Update
+The amount of UI feedback possible is plenty. Gives your users better interaction with your app as well as reduce the chance of sudden "mishaps", we would be limiting ours to just network connectivity
 
 #### Network Connectivity
 
@@ -315,6 +312,18 @@ useNetworkConnectivity({
 ```
 
 Now, if we were to head back to the browser and open our network tab, using the thottle option to switch connectivity, we see the message pop up. If you are on a mobile device, you would see a toast message pop up. This is a simple way to let your users know when they are offline or online.s
+
+{/* #### Service Worker Update
+
+This one is also another simple one that alerts the user to updates within your app. If you push an update midway through usage, there are a few possible scenarios:
+
+- Force the new update to take over. This also includes Service Worker changes. This is not advisable at all as it can lead to disruptive situations (if I am in the middle of filling a form and then cache gets wiped because of an update, I would get pissed)
+- Not do anything. Till the user re-opens my site, nothing happens. They keep using the old version, even if that means for weeks.
+- Alert them about an update, prompting them to update or not.
+
+> "Update" in this context refers to new Service Workers being deployed. Since a Service Worker is integral to your app flow, you can term it update.
+
+In our case, we would be doing a simple mini-prompt.  */}
 
 {/* ### Background Sync
 
