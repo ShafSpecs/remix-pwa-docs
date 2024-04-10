@@ -149,7 +149,7 @@ We also created a version constant. This is to ensure cache cleanup, and to enfo
 
 ### Fetching
 
-As we know, Service Workers intercepts requests from the browser. Remix PWA runtimes provides a way to hanle these, but that doesn't mean we don't get to define basic fetch behaviour. Let's go ahead and define the default fetch handler within our service worker:
+As we know, Service Workers intercepts requests from the browser. Remix PWA runtimes provides a way to handle these, but that doesn't mean we don't get to define basic fetch behaviour. Let's go ahead and define the default fetch handler within our service worker:
 
 ```ts {{filename:'entry.worker.ts'}}
 import {
@@ -253,7 +253,7 @@ Now we've done a few moving back and forth, let's go ahead and actually implemen
 Next up is to actually clean out the old caches on activation (`activate` event). The reason why we do this on activate, instead of install can be summarised as follows:
 
 - **Avoid Breaking Current Pages**: The `install` event is fired when the service worker is first installed and hasn't been activated yet. If you clear the cache during the `install` event, you really risk breaking any currently open pages that are still using resources from the old cache (something we don't want).
-- **Waiting for the Right Time**: The activat`e event is fired after the service worker has been installed and is just about to activate. At this point, all of the currently open pages that were using the old service worker have been unloaded, and it's safe to clear out the old cache.
+- **Waiting for the Right Time**: The `activate` event is fired after the service worker has been installed and is just about to activate. At this point, all of the currently open pages that were using the old service worker have been unloaded, and it's safe to clear out the old cache.
 - **Clean Up After the New Cache is Ready**: During the `install` event, you should be caching the new resources that your application needs. Once this is complete and the new cache is ready, the `activate` event is triggered, allowing you to safely remove the old cache entries.
 
 Replacing our `activate` listener with the following:
