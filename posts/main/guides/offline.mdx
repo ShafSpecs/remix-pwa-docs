@@ -277,7 +277,10 @@ We can finally go ahead and save our service worker. We are done! If we go ahead
 
 If you were looking at the logs in preview mode (`npm run start`), you would notice that there were no logs. If you were on a mobile device, it would even be impossible to check! This is because [`Logger`](/docs/main/logger) only outputs in development mode. And we also can't be telling our users to keep an eye out for any new/interesting log coming in. We need to actually let them know when something goes wrong, an update comes in, connection goes off or on, etc. That's what we would be attempting in this section.
 
-The amount of UI feedback possible is plenty. Gives your users better interaction with your app as well as reduce the chance of sudden "mishaps", we would be limiting ours to just network connectivity
+The amount of UI feedback possible is plenty. Gives your users better interaction with your app as well as reduce the chance of sudden "mishaps", we would be limiting ours to just two:
+
+- Network Connectivity
+- Service Worker Update
 
 #### Network Connectivity
 
@@ -313,17 +316,98 @@ useNetworkConnectivity({
 
 Now, if we were to head back to the browser and open our network tab, using the thottle option to switch connectivity, we see the message pop up. If you are on a mobile device, you would see a toast message pop up. This is a simple way to let your users know when they are offline or online.s
 
-{/* #### Service Worker Update
+<Info>
+  One thing to note, the service worker has a `offline` and an `online` event. Combine that with the main client thread `useNetworkConnectivity` hook, you can easily set up a more sophisticated offline/online detection + action system.
+</Info>
+
+#### Service Worker Update
 
 This one is also another simple one that alerts the user to updates within your app. If you push an update midway through usage, there are a few possible scenarios:
 
-- Force the new update to take over. This also includes Service Worker changes. This is not advisable at all as it can lead to disruptive situations (if I am in the middle of filling a form and then cache gets wiped because of an update, I would get pissed)
+- Force the new update to take over immediately. This also includes Service Worker changes. This might not be advisable (based on requirements) as it can lead to disruptive situations (if I am in the middle of filling a form and then cache gets wiped because of an update, I would get pissed)
 - Not do anything. Till the user re-opens my site, nothing happens. They keep using the old version, even if that means for weeks.
 - Alert them about an update, prompting them to update or not.
 
-> "Update" in this context refers to new Service Workers being deployed. Since a Service Worker is integral to your app flow, you can term it update.
+> 'Update' in this context refers to new Service Workers being deployed. Since a Service Worker is integral to your app flow, you can term it update.
 
-In our case, we would be doing a simple mini-prompt.  */}
+In our case, we would be doing a simple mini-prompt.
+
+First, we need to head to our service worker and remove the `skipWaiting` method in the `install` event. The reason we yeet it out is that the `skipWaiting` method forces the new service worker to take over immediately as soon as it gets detected. We still leave the `clients.claim` method in the `activate` event as that allows the new service worker to take control of the clients as soon as possible.
+
+```diff-ts {{filename:'entry.worker.ts'}}
+self.addEventListener('install', event => {
+   logger.log('Service worker installed')
+
+-  event.waitUntil(Promise.all([
+-   assetCache.preCacheUrls(
+-     self.__workerManifest.assets.filter(url => !url.endsWith('.map') && !url.endsWith('.js'))
+-   ),
+-   self.skipWaiting(),
+-  ]))
++  event.waitUntil(assetCache.preCacheUrls(
++    self.__workerManifest.assets.filter(url => !url.endsWith('.map') && !url.endsWith('.js'))
++   ))
+})
+```
+
+Now, if we make a change to our service worker, reload - we need to reload for the browser to fetch the new service worker and detect the change - and then check the 'Service Worker' tab in the 'Application' tab of the browser dev tools, we would see a new service worker waiting to take over. You can skip waiting and activate it manually, but that's not the point of this section.
+
+Going back to our root, using the `usePWAManager` hook, we can create a mini-prompt that alerts the user to a new update. This hook is part of the `@remix-pwa/client` package. Go ahead and install it via: `npm install --save @remix-pwa/client` if not present. Within our `App` component, we add the following:
+
+```tsx {{filename:'root.tsx'}}
+import { usePWAManager } from '@remix-pwa/client'
+import { sendSkipWaitingMessage } from '@remix-pwa/sw'
+
+// within `App`
+const { swUpdate } = usePWAManager()
+
+// below `EpicProgress` component
+{swUpdate.isUpdateAvailable && (
+  <div className='bg-background text-foreground fixed bottom-6 right-6'>
+    <p>Update available</p>
+    <button onClick={() => {
+      sendSkipWaitingMessage(swUpdate.newWorker!)
+      window.location.reload()
+    }}>
+      Reload
+    </button>
+  </div>
+)}
+```
+
+A very simple prompt that serves our purpose within the root so it is available on all pages. Breaking this down, the `swUpdate` object contains two properties:
+
+- `isUpdateAvailable`: A boolean that tells us if there is a new service worker waiting to take over.
+- `newWorker`: The new service worker that is waiting to take over or `null`, if `isUpdateAvailable` is `false`.
+
+If `isUpdateAvailable` is true, we display a prompt that tells the user an update is available. When the user clicks the 'Reload' button, we send a message to the service worker to skip waiting and then reload the page. Note, the [`sendSkipWaitingMessage`](/docs/main/misc#send-skip-waiting-message) function took in the new service worker as its lone argument instead of the current registration, that's because it is the new worker that is doing the skipping.
+
+<Info>
+  In case you are wondering why we are going through the hassle of sending a message instead of skipping directly, it's because there's no way to directly skip waiting from the client thread. The service worker has to do it itself. So we send a message to the service worker to skip waiting and then reload the page.
+</Info>
+
+The reason we reload after skipping, is because when the service worker activates and the `clients.claim()` method gets invoked, all other windows/tabs get claimed automatically except the current one (that detected the new worker), which needs to be reloaded to be claimed by the new worker.
+
+No need to try this out yet, it doesn't work. If you noticed, nowhere have we actually implemented the skipping in the worker. Let's go ahead and do that now.
+
+```ts {{filename:'entry.worker.ts'}}
+import { SkipWaitHandler } from '@remix-pwa/sw'
+
+// rest of the service worker
+
+const skipHandler = new SkipWaitHandler()
+
+self.addEventListener('message', (event: ExtendableMessageEvent) => {
+  event.waitUntil(Promise.all([
+    messageHandler.handleMessage(event),
+    skipHandler.handleMessage(event),
+  ]))
+})
+```
+
+The `SkipWaitHandler` is a utility paired alongside the `sendSkipWaitingMessage` function. It listens for messages with the `SKIP_WAITING` message and then skips waiting. Now that's about it, if we go ahead and make a change (to the `version`, for example) and reload (we need to reload for the new service worker to be detected), we would see the prompt. Clicking the 'Reload' button would skip waiting and reload the page, bringing in the new service worker. You can keep updating versions and testing this out.
+
+We now have a simple system for detcting updates and alerting the user. This can be expanded to include more features like a more sophisticated prompt, a notification system 🫣, etc. But for now, this is a good start.
 
 {/* ### Background Sync
 
