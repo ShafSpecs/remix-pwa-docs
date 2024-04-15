@@ -1,0 +1,58 @@
+---
+title: usePermission
+description: "A hook on the Permission API; allowing you to check various permissions on the client."
+alternateTitle: 'usePermission 🆕'
+order: 6
+toc: false
+---
+
+import Info from './info.tsx'
+
+The `usePermission` hook is a new utility hook that allows you to check various permissions on the client.
+
+It takes in a single argument, the permission you want to check. The permission can be any of the following:
+
+- `geolocation`
+- `notifications`
+- `persistent-storage`
+- `push`
+- `screen-wake-lock`
+- `xr-spatial-tracking`
+
+Note that these are the official, universal ones. Some browsers might have additional permissions that aren't listed here (like Chrome and `camera` and Safari with `microphone`).
+
+It returns an object of just one property:
+
+- `permissionStatus`: An object with the just one property:
+  - `state`: The state of the permission. This can be one of the following:
+    - `granted`: The permission is granted.
+    - `denied`: The permission is denied.
+    - `prompt`: The permission is yet to be granted or denied.
+
+This hook currently doesn't provide a way to request permissions exclusively due to the API still being in very early beta - once it's stable, we'd add that feature.
+
+<Info>
+  For Push API enthusiasts, when checking permission for push, put in mind that the `notifications` and `push` permissions have been merged and it's better to check for `notifications` anyways, as it's more universal and access to the notification permission automatically means access to the push permission.
+</Info>
+
+## Type Signature
+
+The `usePermission` hook has the following type signature:
+
+```ts
+type PermissionName =
+  | 'geolocation'
+  | 'notifications'
+  | 'persistent-storage'
+  | 'push'
+  | 'screen-wake-lock'
+  | 'xr-spatial-tracking';
+
+type PermissionState = 'granted' | 'denied' | 'prompt';
+
+interface PermissionStatus {
+  state: PermissionState;
+}
+
+usePermission(permission: PermissionName): { PermissionStatus };
+```
