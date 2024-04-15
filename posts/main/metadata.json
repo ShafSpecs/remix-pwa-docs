@@ -13,6 +13,7 @@
     "use-badge-api": "hooks/use-badge-api",
     "use-battery-manager": "hooks/use-battery-manager",
     "use-network-connectivity": "hooks/use-network-connectivity",
+    "use-permission": "hooks/use-permission",
     "use-pwa-manager": "hooks/use-pwa-manager",
     "cache-api": "utils/cache-api",
     "defer": "utils/defer",
@@ -137,6 +138,13 @@
       "description": "A utility hook for interacting with device network connectivity state.",
       "section": "Hooks & Components",
       "slug": "use-network-connectivity"
+    },
+    "use-permission": {
+      "title": "usePermission",
+      "alternateTitle": "usePermission 🆕",
+      "description": "A hook on the Permission API; allowing you to check various permissions on the client.",
+      "section": "Hooks & Components",
+      "slug": "use-permission"
     },
     "use-pwa-manager": {
       "title": "usePWAManager",
