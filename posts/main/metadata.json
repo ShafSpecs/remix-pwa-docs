@@ -279,7 +279,7 @@
     "messaging": {
       "title": "Service Worker Messaging",
       "alternateTitle": "Messaging",
-      "description": "Build an comprehensive communication system between your service worker and client.",
+      "description": "Build a comprehensive communication system between your service worker and client.",
       "section": "Guides",
       "slug": "messaging"
     },
@@ -292,7 +292,7 @@
     },
     "push-api": {
       "title": "Push API",
-      "alternateTitle": "Push API",
+      "alternateTitle": "Push API 🆕",
       "description": "Push API enables web applications to receive push messages from servers for re-engaging users, delivering timely updates, and fostering a persistent connection with the app.",
       "section": "Guides",
       "slug": "push-api"
