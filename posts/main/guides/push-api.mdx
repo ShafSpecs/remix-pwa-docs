@@ -1,0 +1,366 @@
+---
+title: "Push API"
+description: "Push API enables web applications to receive push messages from servers for re-engaging users, delivering timely updates, and fostering a persistent connection with the app."
+alternateTitle: "Push API 🆕"
+---
+
+import Info from './info.tsx'
+
+Imagine having a personal butler who can whisper reminders, share exciting news, or nudge you with friendly updates, all while you're busy with your daily activities. That's the magic of Push Notifications! With this feature, your web app can tap you on the shoulder, even when it's not the active tab or window on your screen.
+
+Push Notifications are like having a direct line to your users, allowing you to send them bite-sized messages that demand their attention (in a good way, of course!). Whether it's a new message from a friend, a sale alert from your favorite online store, or a reminder for that important meeting, these little pop-ups can keep your users in the loop without them having to actively check your app.
+
+But wait, there's more! Push Notifications aren't just about delivering messages; they're also a powerful tool for re-engaging users who may have wandered off. With a well-timed and enticing notification, you can lure them back to your app, like a siren's call beckoning sailors to shore.
+
+So, get ready to unlock the power of Push Notifications and create a truly immersive and engaging experience for your users. Who knows, they might even start looking forward to your friendly reminders and updates ✨!
+
+## Synopsis
+
+The Push API enables web apps to receive push messages from servers, fostering a persistent connection even when the app isn't running. It's a two-way process: the client (your web app) subscribes to receive push notifications, generating a unique endpoint URL, while the server (your backend) crafts and dispatches messages to that URL.
+
+On the client-side, the web app uses the Push API to subscribe to a push service, securing an endpoint URL – a special address for receiving push messages. This URL is like a special delivery address that your server can use to send push messages. But don't worry; this process is secure and follows the [principle of least privilege](https://delinea.com/blog/principle-of-least-privilege-examples).
+
+Behind the scenes, the server sends push messages containing data payloads (like titles, bodies, or even custom data for your app to process) to the client's endpoint URL. When a push message arrives at the client's doorstep (the endpoint URL), the browser handles it discreetly, displaying a friendly notification to the user. If the user interacts with the notification, your web app's service worker can take over and handle the event, potentially waking up the web app or performing background tasks.
+
+But don't worry; the Push API isn't a one-trick pony. It's designed to work seamlessly with other modern web technologies, like service workers and the Notifications API, creating a powerful symphony of features for building engaging and responsive web applications.
+
+So, whether you want to send timely updates, re-engage users, or simply amaze your friends with your web app's superpowers, the Push API is a tool worth mastering. Just remember to use it responsibly and not abuse the privilege of interrupting your users' day with too many notifications (unless they're really, really important... or hilarious).
+
+## `@remix-pwa/push`
+
+The good news is that you don't have to reinvent the wheel or go on a wild goose chase to implement the Push API in your Remix web app. `@remix-pwa/push` provides multiple utilities and functions to help streamline the entire process, making it a breeze to set up and manage push notifications for your application.
+
+```sh {{filename:'Terminal'}}
+npm install @remix-pwa/push
+```
+
+You would also need generate to [VAPID](https://datatracker.ietf.org/doc/html/rfc8292) (which means "**Voluntary Application Server Identification**") keys, a pair of public and private keys used to authenticate your server when sending push messages. You can generate these keys using the `web-push` package:
+
+```sh {{filename:'Terminal'}}
+npx web-push generate-vapid-keys
+```
+
+Store the resulting keys in a secure location, as you'll need them to authenticate your server when sending push messages. The public key can be exposed to the client, you would need it client-side to subscribe to push notifications.
+
+### Importing awesomeness
+
+Before we dive into the awesomeness of push, let's clarify a few things about how imports work in the push package. A full push workflow involves both the server and client, meaning that exporting from one place would mean overlap of client and server-only apis 💥. To avoid this, `@remix-pwa/push` provides clear distinction between client and server imports. There are four main export routes in `@remix-pwa/push`:
+
+- `.` (`@remix-pwa/push`): This is the default import route and is used for server-side imports. It includes all the server-side APIs and utilities for building push on the server.
+- `@remix-pwa/push/server`: This is the same as above, but more verbose. Imports all server-side APIs and utilities.
+- `@remix-pwa/push/client`: This is for importing client-side APIs and utilities. It includes all the client-side APIs and utilities for building in your PWA client.
+- `@remix-pwa/push/hook`: This is the hook import route for importing [`usePush`](/docs/main/use-push) hook, a React hook for everything push in your PWA client.
+
+Now that we've made sense of the import routes, let's keep exploring the exciting world of push notifications in web apps!
+
+## Client-side Capers
+
+We would be splitting the docs for `push` into two parts: client and server. Let's start with the client side.
+
+### `usePush` to hook you in
+
+At the heart of the client-side experience lies the `usePush` hook – a true Swiss Army knife for all your push notification needs. This bad boy packs a punch, giving you access to everything from subscription management to permission handling, and even a few utility methods thrown in for good measure.
+
+```jsx {{filename:'src/components/NotificationButton.tsx'}}
+import { usePush } from '@remix-pwa/push/client';
+
+export function NotificationButton() {
+  const { subscribeToPush, unsubscribeFromPush, isSubscribed } = usePush();
+
+  return (
+    <button onClick={() => {
+      if (isSubscribed) {
+        unsubscribeFromPush()
+      } else {
+        subscribeToPush()
+      }}}>
+      {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+    </button>
+  );
+}
+```
+
+When you call this hook, you'll receive a `PushObject` that's bursting with features. It's like getting a brand-new smartphone, but instead of cat videos and memes, you get a whole suite of push notification superpowers. With this object in hand, you can subscribe to push notifications, unsubscribe from them, and even check if you're already subscribed – all with just a few lines of code.
+
+Check out the [`usePush` doc page](/docs/main/use-push) for more information on how to use this hook and unlock the full potential of push notifications in your web app 🪝.
+
+### `PushManager` to the Rescue
+
+What good is a push notification if your web app can't handle the incoming events? Fear not, as `@remix-pwa/push` also provides a `PushManager` class – a true Push API event-handling maestro.
+
+The `PushManager` is a class instantiated in the service worker that listens for incoming push events and dispatches them to the appropriate event handlers, allowing you full control over the process. When the manager is instantiated, it takes in four callbacks to handle the major push events:
+
+- `handlePushEvent`: This callback is called when your web app receives a push message from the server.
+- `handleNotificationClick`: When a user interacts with a push notification, this callback is triggered. It's your chance to take action, like opening a specific page or performing some background task.
+- `handleNotificationClose`: Sometimes, users need to dismiss a notification. This callback lets you know when that happens, so you can clean up any related resources or data.
+- `handleNotificationError`: Errors happen, but with this callback, you can gracefully handle any issues that may arise during the push notification lifecycle.
+
+```jsx {{filename:'entry.worker.ts'}}
+import { PushManager } from '@remix-pwa/push/client';
+
+const pushManager = new PushManager({
+  handlePushEvent: (event) => {
+    // Handle incoming push event
+  },
+  handleNotificationClick: (event) => {
+    // Handle notification click event
+  },
+  handleNotificationClose: (event) => {
+    // Handle notification close event
+  },
+  handleNotificationError: (event) => {
+    // Handle notification error event
+  },
+});
+```
+
+The push manager class also provides two in-built utilities:
+
+- `isClientFocused`: This utility method checks if the client (your web app) is currently focused or active.
+- `postMessageToClient`: This method allows you to send messages from the service worker to the client, enabling seamless communication between the two. It takes in two parameters: the message to send and an optional boolean indicating wether to send to all client windows or just the first one.
+
+To use these two utilities within your callbacks, you can easily access the `PushManager` instance using the `this` keyword.
+
+```jsx {{filename:'entry.worker.ts'}}
+import { PushManager } from '@remix-pwa/push/client';
+
+const pushManager = new PushManager({
+  handlePushEvent: function(event) {
+    const _this = this as PushManager;
+
+    // Use _this as if it were the PushManager instance
+  },
+  // Other event handlers
+});
+```
+
+We re-assigned `this` to `_this` to ensure that TypeScript recognizes the `PushManager` instance and provides type support for the utility methods. By default, `this` would have referred to the service worker's global scope.
+
+With the `PushManager` in your corner, you'll be able to handle push notification events with ease, ensuring that your web app remains responsive and engaged, no matter what happens.
+
+## Server-side Shenanigans
+
+Now that we've covered the client-side part, it's time to dive into the server-side. The server is where the magic happens, where you craft and dispatch push messages to your web app, keeping your users informed and engaged.
+
+### `sendNotifications` sends the message
+
+The `sendNotifications` function is your trusty sidekick for crafting and dispatching push messages to your web app. This utility is like a seasoned sorcerer, capable of crafting and dispatching push notifications to your users with pinpoint accuracy.
+
+The funtion has the following type signature:
+
+```ts
+interface PushSubscription {
+  endpoint: string;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
+}
+
+type VapidDetails = {
+  publicKey: string;
+  privateKey: string;
+  subject?: string;
+}
+
+type SendNotificationParams = {
+  subscriptions: PushSubscription[];
+  vapidDetails: VapidDetails;
+  notification: NotificationObject;
+  options: Omit<webpush.RequestOptions, 'vapidDetails'>;
+}
+
+sendNotifications(params: SendNotificationParams): Promise<void>;
+```
+
+To send a notification, you need to provide the following parameters:
+
+- `subscriptions`: An array of `PushSubscription` objects, each containing the endpoint URL and encryption keys for a user's subscription.
+- `vapidDetails`: An object containing the VAPID public and private keys, which are used to authenticate your server when sending push messages.
+- `notification`: A `NotificationObject` containing the title, body, and other details of the push notification.
+- `options`: Additional options for the push message, such as TTL, urgency, and other parameters supported by the Web Push protocol to customise the delivery of the push message.
+
+<Info>
+The `options` parameter is optional and allows you to customize the behavior of the push message. But it could be a powerful addition.
+
+For example, the TTL property defines how long the push service should attempt to deliver a message (defaults to 4 weeks). Another property is urgency, which indicates the urgency of the message, useful in case the push service is preserving the client's battery life by only delivering high-priority messages. The topic of a message, which replaces any pending messages of the same topic with the latest message.
+</Info>
+
+```ts {{filename:'server.ts'}}
+import { sendNotifications } from '@remix-pwa/push/server';
+
+const subscriptions = [
+  {
+    endpoint: 'https://push.example.com/subscription',
+    keys: {
+      p256dh: 'p256dh-key',
+      auth
+    }
+  }
+];
+
+const vapidDetails = {
+  publicKey: 'public-key-here',
+  privateKey: 'private-key-here',
+};
+
+const notification = {
+  title: 'Hello, World!',
+  body: 'This is a test notification from the server.',
+};
+
+sendNotifications({
+  subscriptions,
+  vapidDetails,
+  notification,
+});
+```
+
+### Utility Functions for the Win
+
+`@remix-pwa/push` ships with two extra server utilities to make building a much easier process:
+
+- `generateSubscriptionId`
+- `compareSubscriptionId`
+
+#### `generateSubscriptionId`
+
+This utility function generates a unique subscription ID for a given `PushSubscription` object on the fly, making it a breeze to store and manage subscriptions, even for unauthenticated users. The subscription ID is a hash of the subscription's endpoint URL and encryption keys, ensuring that each subscription has a unique identifier.
+
+It takes in the subscription consisting of the endpoint and subscription keys or a `JSON.stringify`ed version of it and returns a unique subscription ID hash.
+
+```ts
+import { generateSubscriptionId } from '@remix-pwa/push/server';
+
+const subscription = {
+  endpoint: 'https://push.example.com/subscription',
+  keys: {
+    p256dh: 'p256dh-key',
+    auth: 'auth-key',
+  },
+};
+
+const subscriptionId = generateSubscriptionId(subscription);
+// or
+const subscriptionId = generateSubscriptionId(JSON.stringify(subscription));
+```
+
+#### `compareSubscriptionId`
+
+This utility function compares a subscription and a subscription hash to determine if they match.
+
+```ts
+import { compareSubscriptionId } from '@remix-pwa/push/server';
+
+const subscription = {
+  endpoint: 'https://push.example.com/subscription',
+  keys: {
+    p256dh: 'p256dh-key',
+    auth: 'auth-key',
+  },
+};
+
+const subscriptionId = generateSubscriptionId(subscription);
+
+const isMatch = compareSubscriptionId(subscription, subscriptionId);
+```
+
+### Interfaces for structure
+
+`SubscriptionStorageProvider` is an interface that defines the methods for storing and retrieving push subscriptions. It provides a guideline for implementing your own storage provider, allowing you to store subscriptions in a database, cache, or any other storage medium of your choice.
+
+The interface is defined as follows:
+
+```ts
+interface SubscriptionStorageProvider {
+  storeSubscription(subscription: PushSubscription, id: string): Promise<void>;
+  deleteSubscription(subscription: PushSubscription, id: string): Promise<void>;
+  getSubscriptions(filters: unknown): Promise<PushSubscription[]>;
+  getSubscription(id: string): Promise<PushSubscription>;
+  hasSubscription(subscription: PushSubscription, id: string): Promise<boolean>;
+}
+```
+
+To implement your own storage provider, you need to create a class that implements the `SubscriptionStorageProvider` interface and provides the necessary methods for storing, retrieving, and managing push subscriptions.
+
+```ts
+import { SubscriptionStorageProvider, PushSubscription } from '@remix-pwa/push/server';
+
+class MySubscriptionStorageProvider implements SubscriptionStorageProvider {
+  async storeSubscription(subscription: PushSubscription, id: string) {
+    // Store the subscription in your database or cache
+  }
+
+  async deleteSubscription(subscription: PushSubscription, id: string) {
+    // Delete the subscription from your database or cache
+  }
+
+  async getSubscriptions(filters: unknown) {
+    // Retrieve subscriptions from your database or cache
+    return [];
+  }
+
+  async getSubscription(id: string) {
+    // Retrieve a subscription by ID from your database or cache
+    return null;
+  }
+
+  async hasSubscription(subscription: PushSubscription, id: string) {
+    // Check if a subscription exists in your database or cache
+    return false;
+  }
+}
+```
+
+By implementing the `SubscriptionStorageProvider` interface, you can create a custom storage provider that meets the specific needs of your application, allowing you to store and manage push subscriptions with ease.
+
+## Bonuses
+
+This section covers additional utilities and features that can enhance your push notification experience.
+
+### Open a window
+
+That's right! You can open a window or navigate to a specific URL when a user interacts with a push notification. This feature is like having a teleportation device in your web app, allowing you to whisk users away to exciting new destinations with just a click.
+
+To open a window when a user interacts with a push notification, you can use the [`clients.openWindow()`](https://developer.mozilla.org/docs/Web/API/Clients/openWindow) API.
+
+```ts
+const examplePage = '/example';
+
+new PushManager({
+  handleNotificationClick: (event) => {
+    event.waitUntil(clients.openWindow(examplePage));
+  },
+});
+```
+
+By calling `clients.openWindow()` in the `handleNotificationClick` callback, you can open a new window or navigate to a specific URL when a user clicks on a push notification, creating a seamless and engaging user experience.
+
+### Message a page from push event
+
+When your user is currently active on your site, you might want to skip sending a notification. But how do you let them know about the event that occured when a notification is too much? You can use the `postMessageToClient` utility method in the `PushManager` to send a message from the service worker to the client, allowing you to communicate with the active page without interrupting the user.
+
+Let's say we've received a push, checked that our web app is currently focused, then we can "post a message" to each open page, like so:
+
+```ts
+new PushManager({
+  handlePushEvent: (event) => {
+    const _this = this as PushManager;
+    const windowClients = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+
+    if (_this.isClientFocused()) {
+      postMessageToClient({
+        message: 'New message received!',
+      });
+    }
+  },
+});
+```
+
+By using the `postMessageToClient` method, you can send messages from the service worker to the client, allowing you to communicate with the active page and provide real-time updates without the need for push notifications.
+
+---
+
+That's it for the Push API! With the power of push notifications at your fingertips, you can create engaging and responsive web apps that keep your users informed and connected. Whether it's sending timely updates, re-engaging users, or simply delighting them with friendly reminders, push notifications are a powerful tool for building immersive, rich and interactive web experiences.
+
+So, go forth and conquer the world of push notifications, and remember to use this power responsibly. Your users will thank you for it! 🚀

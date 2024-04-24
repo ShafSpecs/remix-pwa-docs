@@ -14,6 +14,7 @@
     "use-battery-manager": "hooks/use-battery-manager",
     "use-network-connectivity": "hooks/use-network-connectivity",
     "use-permission": "hooks/use-permission",
+    "use-push": "hooks/use-push",
     "use-pwa-manager": "hooks/use-pwa-manager",
     "cache-api": "utils/cache-api",
     "defer": "utils/defer",
@@ -33,6 +34,7 @@
     "gotchas": "guides/gotchas",
     "messaging": "guides/messaging",
     "offline": "guides/offline",
+    "push-api": "guides/push-api",
     "runtimes": "guides/runtimes",
     "versioning": "guides/versioning",
     "web-manifest": "guides/web-manifest"
@@ -141,10 +143,17 @@
     },
     "use-permission": {
       "title": "usePermission",
-      "alternateTitle": "usePermission 🆕",
+      "alternateTitle": "usePermission",
       "description": "A hook on the Permission API; allowing you to check various permissions on the client.",
       "section": "Hooks & Components",
       "slug": "use-permission"
+    },
+    "use-push": {
+      "title": "usePush",
+      "alternateTitle": "usePush 🆕",
+      "description": "A one-in-all utility hook for handling everything push notifications in your PWA application!",
+      "section": "Hooks & Components",
+      "slug": "use-push"
     },
     "use-pwa-manager": {
       "title": "usePWAManager",
@@ -280,6 +289,13 @@
       "description": "Add offline capabilities to your applications with Remix PWA",
       "section": "Guides",
       "slug": "offline"
+    },
+    "push-api": {
+      "title": "Push API",
+      "alternateTitle": "Push API",
+      "description": "Push API enables web applications to receive push messages from servers for re-engaging users, delivering timely updates, and fostering a persistent connection with the app.",
+      "section": "Guides",
+      "slug": "push-api"
     },
     "runtimes": {
       "title": "Worker Runtimes",

@@ -1,0 +1,113 @@
+---
+title: usePush
+description: "A one-in-all utility hook for handling everything push notifications in your PWA application!"
+alternateTitle: 'usePush 🆕'
+order: 7
+---
+
+import Info from './info.tsx'
+
+The `usePush` hook is built on the browser's Push API to provide the necessary utilities for handling push notifications in your PWA client.
+Present in the `@remix-pwa/push` package, the hook has the following type signature:
+
+```ts
+usePush: () => {
+  isSubscribed: boolean;
+  pushSubscription: PushSubscription | null;
+  requestPermission: () => NotificationPermission;
+  subscribeToPush: (
+    publicKey: string,
+    callback?: (subscription: PushSubscription) => void,
+    errorCallback?: (error: any) => void
+  ) => void;
+  unsubscribeFromPush: (callback?: () => void, errorCallback?: (error: any) => void) => void;
+  canSendPush: boolean;
+}
+```
+
+<Info>
+The hook can be imported via `@remix-pwa/push` or `@remix-pwa/push/hook` (for better tree-shaking)
+</Info>
+
+## `isSubscribed`
+
+The `isSubscribed` property is a boolean to indicate wether the user is subscribed to push notifications or not.
+
+## `pushSubscription`
+
+The `pushSubscription` property is a `PushSubscription` object that holds the subscription details of the user. It could be `null` if
+the user isn't subscribed to push notifications.
+
+## `canSendPush`
+
+The `canSendPush` property is a boolean to indicate if the browser supports push notifications, and wether the user has allowed for notifications to be sent.
+
+The difference between this and `isSubscribed` is that `isSubscribed` only checks if the user is subscribed to push notifications, while `canSendPush` checks if you are even allowed to send notifications in the first place.
+
+## `requestPermission`
+
+The `requestPermission` function is used to request permission from the user to send push notifications. It returns a `NotificationPermission` string value. Could be one of the following:
+
+- `granted`: The user has explicitly granted permission for the current origin to display system notifications.
+- `denied`: The user has explicitly denied permission for the current origin to display system notifications.
+- `default`: The user decision is unknown; in this case the application will act as if permission was denied.
+
+Works in tandem with `canSendPush`, the values would be updated as the user interacts with the PWA.
+
+## `subscribeToPush`
+
+The `subscribeToPush` function is used to subscribe the user to push notifications. It takes in the `publicKey` of the VAPID key pair, and an optional `callback` and `errorCallback` function.
+
+The callback passed in here is invoked when the user is successfully subscribed to push notifications, and the `errorCallback` is called when there's an error subscribing the user. You can use it to perform further checks, logging, updates or ping the server.
+
+```tsx
+import { usePush } from '@remix-pwa/push'
+
+// in the component
+
+const { subscribeToPush } = usePush()
+
+const publicKey = 'your-public-key'
+
+subscribeToPush(publicKey, (subscription) => {
+  logger.log('User subscribed to push notifications!', subscription)
+  fetch('/api/subscribe', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(subscription)
+  })
+}, (error) => {
+  logger.error('Error subscribing user to push notifications!', error)
+})
+```
+
+## `unsubscribeFromPush`
+
+The `unsubscribeFromPush` function is used to unsubscribe the user from push notifications. It takes in an optional `callback` and `errorCallback` function.
+
+The callback is invoked when the user is successfully unsubscribed from push notifications, and the `errorCallback` is called when there's an error unsubscribing the user.
+
+```ts
+import { usePush } from '@remix-pwa/push'
+
+// in the component
+
+const { unsubscribeFromPush } = usePush()
+
+unsubscribeFromPush(() => {
+  logger.log('User unsubscribed from push notifications!')
+  fetch('/api/unsubscribe', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ subscription: pushSubscription })
+  })
+}, (error) => {
+  logger.error('Error unsubscribing user from push notifications!', error)
+})
+```
+
+The `usePush` (client) hook is just one side of the coin. The flipside, server, is a more sophisticated topic covered, alongside others, in the [Push API doc](/docs/main/push-api)
