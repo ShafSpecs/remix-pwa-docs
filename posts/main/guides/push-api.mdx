@@ -44,12 +44,11 @@ Store the resulting keys in a secure location, as you'll need them to authentica
 
 ### Importing awesomeness
 
-Before we dive into the awesomeness of push, let's clarify a few things about how imports work in the push package. A full push workflow involves both the server and client, meaning that exporting from one place would mean overlap of client and server-only apis 💥. To avoid this, `@remix-pwa/push` provides clear distinction between client and server imports. There are four main export routes in `@remix-pwa/push`:
+Before we dive into the awesomeness of push, let's clarify a few things about how imports work in the push package. A full push workflow involves both the server and client, meaning that exporting from one place would mean overlap of client and server-only apis 💥. To avoid this, `@remix-pwa/push` provides clear distinction between client and server imports. There are three export routes in `@remix-pwa/push`:
 
 - `.` (`@remix-pwa/push`): This is the default import route and is used for server-side imports. It includes all the server-side APIs and utilities for building push on the server.
-- `@remix-pwa/push/server`: This is the same as above, but more verbose. Imports all server-side APIs and utilities.
 - `@remix-pwa/push/client`: This is for importing client-side APIs and utilities. It includes all the client-side APIs and utilities for building in your PWA client.
-- `@remix-pwa/push/hook`: This is the hook import route for importing [`usePush`](/docs/main/use-push) hook, a React hook for everything push in your PWA client.
+- `@remix-pwa/push/use-push`: This is the import route for the [`usePush`](/docs/main/use-push) hook, a React hook for everything push in your PWA client.
 
 Now that we've made sense of the import routes, let's keep exploring the exciting world of push notifications in web apps!
 
