@@ -19,9 +19,13 @@ The `isActionRequest` function allows you to check if a request is an action req
 The `isDocumentRequest` function allows you to check if a request is a document request. Note, this only detects client-side navigation requests.
 To detect document requests as well, check out the `useSWEffect` hook
 
+## `messageSW` 🆕
+
+A utility to send a message to a Service Worker. Takes in two arguments: the service worker and the message to send.
+
 ## `sendSkipWaitingMessage`
 
-A utility to send a `SKIP_WAITING` message to a Worker. Takes in one argument, the `ServiceWorker` to send the message to.
+A short-hand utility to send a `SKIP_WAITING` message to a Worker. Takes in one argument, the `ServiceWorker` to send the message to.
 
 ## `timeout`
 
