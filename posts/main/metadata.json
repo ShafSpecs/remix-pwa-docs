@@ -70,8 +70,8 @@
       "slug": "community"
     },
     "default-fetch-handler": {
-      "title": "defaultFetchHander",
-      "alternateTitle": "defaultFetchHander",
+      "title": "defaultFetchHandler",
+      "alternateTitle": "defaultFetchHandler",
       "description": "Your default handler for fetching requests in your Service Worker.",
       "section": "Route & Worker APIs",
       "slug": "default-fetch-handler",
