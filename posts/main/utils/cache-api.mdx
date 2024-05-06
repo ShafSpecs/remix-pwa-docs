@@ -76,6 +76,7 @@ where:
 - `options` is an optional object that can contain the following properties:
   - `maxAgeSeconds`: The maximum age (in seconds) of an item in the cache. If an item is older than this, it will be removed during cleanup.
   - `maxEntries`: The maximum number of items in the cache. If the cache has more items than this, the oldest items will be removed during cleanup.
+  - `ignoreRoutes`: An array of routes to ignore when caching. This is useful for unique routes that should not be cached and handled specially instead.
 
 ### `CacheFirst`
 
