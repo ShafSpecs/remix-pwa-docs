@@ -126,6 +126,7 @@ The `NavigationHandler` has the following public signature:
 export type NavigationHandlerOptions = {
   allowList?: string[] | RegExp[];
   denyList?: string[] | RegExp[];
+  logger?: Logger;
   cache: EnhancedCache;
 };
 
@@ -139,6 +140,7 @@ where the constructor options are as follows:
 - `allowList`: A list of regular expressions or strings to match against the current document URL. If the current document URL does not match any of the patterns, the handler will not handle the message. When no routes are provided, all routes would be cached. Defaults to: [].
 - `denyList`: A list of regular expressions or strings to match against the current document URL. If the current document URL matches any of the patterns, the handler will not handle the message. If both `allowList` and `denyList` are provided, the `denyList` would take precedence. Defaults to: [].
 - `cache`: The `EnhancedCache` to use for handling the navigation event - caching the HTML responses.
+- `logger`: A logger to use for logging messages. Defaults to Remix PWA default `logger`.
 
 It also has a `handleMessage` method (like all message handlers) that can be used to handle responses automatically.
 
