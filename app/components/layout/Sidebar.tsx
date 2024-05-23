@@ -7,8 +7,8 @@ import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicLayoutEffect'
 import { useActionKey } from '~/hooks/useActionKey'
 import { nearestScrollableContainer } from '~/utils/client/nearest-scrollable-container'
 import { useMediaQuery } from '~/hooks/useMediaQuery'
-import type { MetadataMetaType, MetadataType } from '~/utils/server/doc.server'
 import { DEFAULT_TAG } from '~/utils/defatult'
+import type { MetadataMetaType, MetadataType } from '~/utils/server/doc.server'
 
 import Header from './Header'
 
@@ -95,6 +95,7 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
         <div className="hidden h-10 bg-white dark:bg-slate-900 lg:block" />
         <div className="pointer-events-auto relative hidden bg-white dark:bg-slate-900 lg:block">
           <button
+            // onClick={() => query.toggle()}
             type="button"
             className="dark:highlight-white/5 hidden w-full items-center rounded-md py-1.5 pl-2 pr-3 text-sm leading-6 text-slate-400 shadow-sm outline-none ring-slate-900/10 hover:ring-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 lg:flex"
           >
@@ -218,7 +219,12 @@ export function Sidebar({
     <Fragment>
       <Header section={currentSection} title={currentTitle} />
       <Wrapper allowOverflow={allowOverflow}>
-        <div className="mx-auto max-w-8xl px-4 sm:px-6 md:px-8">
+        <div
+          className={clsx(
+            'mx-auto max-w-8xl px-4 sm:px-6 md:px-8'
+            // visible !== VisualState.hidden ? '' : 'overflow-hidden'
+          )}
+        >
           <div className="sidebar-content fixed inset-0 left-[max(0px,calc(50%-45rem))] right-auto top-[72px] z-20 hidden w-[19rem] overflow-y-auto pb-10 pl-8 pr-6 lg:block">
             <DocList meta={metadata.meta} tag={currentTag} />
           </div>

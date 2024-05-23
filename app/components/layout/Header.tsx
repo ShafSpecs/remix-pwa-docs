@@ -7,8 +7,8 @@ import {
   useNavigate,
   useRouteLoaderData,
 } from '@remix-run/react'
-import { ChevronDownIcon, HeartIcon, SearchIcon, XIcon } from 'lucide-react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon, HeartIcon, XIcon } from 'lucide-react'
 import { useTransition, animated } from 'react-spring'
 
 import { ThemeSwitcher } from '~/components/ThemeSwitcher'
@@ -139,7 +139,7 @@ function MobileSidebar({
       <animated.div
         style={style}
         className={clsx(
-          'fixed inset-0 left-0 top-0 z-[9999] h-screen w-screen items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur lg:hidden',
+          'fixed inset-0 left-0 top-0 z-[999] h-screen w-screen items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur lg:hidden',
           navIsOpen ? 'flex' : 'hidden'
         )}
       >
@@ -404,7 +404,11 @@ export default function Header({
                 ) : null}
                 <div className="relative flex flex-grow basis-0 justify-end gap-6 sm:gap-8">
                   <div className="relative flex basis-0 content-center justify-end gap-6 sm:gap-6 md:flex-grow">
-                    {/* <button type="button" className="flex h-6 w-6 lg:hidden">
+                    {/* <button
+                      type="button"
+                      className="flex h-6 w-6 lg:hidden"
+                      onClick={() => query.toggle()}
+                    >
                       <SearchIcon className="h-6 w-6 flex-none text-slate-400 group-hover:fill-slate-500 dark:text-slate-500 md:group-hover:text-slate-400" />
                       <span className="sr-only select-none">Search docs</span>
                     </button> */}

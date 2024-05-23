@@ -66,7 +66,7 @@ export default function Heading({
       )}
       id={id}
       style={{ ...(hidden ? { marginBottom: 0 } : {}), ...style }}
-      // data-docsearch-ignore={ignore ? '' : undefined} // uncomment
+      data-docsearch-ignore={ignore ? '' : undefined}
       {...props}
     >
       <a
