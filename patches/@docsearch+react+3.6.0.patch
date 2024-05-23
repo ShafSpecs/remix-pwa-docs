@@ -1,0 +1,281 @@
+diff --git a/node_modules/@docsearch/react/dist/esm/DocSearch.js b/node_modules/@docsearch/react/dist/esm/DocSearch.js
+index 5a859f3..7c2de5e 100644
+--- a/node_modules/@docsearch/react/dist/esm/DocSearch.js
++++ b/node_modules/@docsearch/react/dist/esm/DocSearch.js
+@@ -14,9 +14,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+ 
+ import React from 'react';
+ import { createPortal } from 'react-dom';
+-import { DocSearchButton } from './DocSearchButton';
+-import { DocSearchModal } from './DocSearchModal';
+-import { useDocSearchKeyboardEvents } from './useDocSearchKeyboardEvents';
++import { DocSearchButton } from './DocSearchButton.js';
++import { DocSearchModal } from './DocSearchModal.js';
++import { useDocSearchKeyboardEvents } from './useDocSearchKeyboardEvents.js';
+ export function DocSearch(props) {
+   var _props$translations, _props$translations2;
+ 
+diff --git a/node_modules/@docsearch/react/dist/esm/DocSearchButton.js b/node_modules/@docsearch/react/dist/esm/DocSearchButton.js
+index 9b0f250..082f23a 100644
+--- a/node_modules/@docsearch/react/dist/esm/DocSearchButton.js
++++ b/node_modules/@docsearch/react/dist/esm/DocSearchButton.js
+@@ -19,8 +19,8 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
+ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+ 
+ import React, { useEffect, useState } from 'react';
+-import { ControlKeyIcon } from './icons/ControlKeyIcon';
+-import { SearchIcon } from './icons/SearchIcon';
++import { ControlKeyIcon } from './icons/ControlKeyIcon.js';
++import { SearchIcon } from './icons/SearchIcon.js';
+ var ACTION_KEY_DEFAULT = 'Ctrl';
+ var ACTION_KEY_APPLE = '⌘';
+ 
+diff --git a/node_modules/@docsearch/react/dist/esm/DocSearchModal.js b/node_modules/@docsearch/react/dist/esm/DocSearchModal.js
+index 345bacd..758cf95 100644
+--- a/node_modules/@docsearch/react/dist/esm/DocSearchModal.js
++++ b/node_modules/@docsearch/react/dist/esm/DocSearchModal.js
+@@ -24,18 +24,23 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
+ 
+ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+ 
+-import { createAutocomplete } from '@algolia/autocomplete-core';
+ import React from 'react';
+-import { MAX_QUERY_SIZE } from './constants';
+-import { Footer } from './Footer';
+-import { Hit } from './Hit';
+-import { ScreenState } from './ScreenState';
+-import { SearchBox } from './SearchBox';
+-import { createStoredSearches } from './stored-searches';
+-import { useSearchClient } from './useSearchClient';
+-import { useTouchEvents } from './useTouchEvents';
+-import { useTrapFocus } from './useTrapFocus';
+-import { groupBy, identity, noop, removeHighlightTags, isModifierEvent } from './utils';
++import { MAX_QUERY_SIZE } from './constants.js';
++import { Footer } from './Footer.js';
++import { Hit } from './Hit.js';
++import { ScreenState } from './ScreenState.js';
++import { SearchBox } from './SearchBox.js';
++import { createStoredSearches } from './stored-searches.js';
++import { useSearchClient } from './useSearchClient.js';
++import * as pkg from '@algolia/autocomplete-core';
++const { createAutocomplete } = pkg;
++import { useTouchEvents } from './useTouchEvents.js';
++import { useTrapFocus } from './useTrapFocus.js';
++import { groupBy } from './utils/groupBy.js';
++import { identity } from './utils/identity.js';
++import { noop } from './utils/noop.js';
++import { removeHighlightTags } from './utils/removeHighlightTags.js';
++import { isModifierEvent } from './utils/isModifierEvent.js';
+ export function DocSearchModal(_ref) {
+   var appId = _ref.appId,
+       apiKey = _ref.apiKey,
+diff --git a/node_modules/@docsearch/react/dist/esm/ErrorScreen.js b/node_modules/@docsearch/react/dist/esm/ErrorScreen.js
+index b8b0920..5fc182f 100644
+--- a/node_modules/@docsearch/react/dist/esm/ErrorScreen.js
++++ b/node_modules/@docsearch/react/dist/esm/ErrorScreen.js
+@@ -1,5 +1,5 @@
+ import React from 'react';
+-import { ErrorIcon } from './icons';
++import { ErrorIcon } from './icons/ErrorIcon.js';
+ export function ErrorScreen(_ref) {
+   var _ref$translations = _ref.translations,
+       translations = _ref$translations === void 0 ? {} : _ref$translations;
+diff --git a/node_modules/@docsearch/react/dist/esm/Footer.js b/node_modules/@docsearch/react/dist/esm/Footer.js
+index fee0167..a59d844 100644
+--- a/node_modules/@docsearch/react/dist/esm/Footer.js
++++ b/node_modules/@docsearch/react/dist/esm/Footer.js
+@@ -1,5 +1,5 @@
+ import React from 'react';
+-import { AlgoliaLogo } from './AlgoliaLogo';
++import { AlgoliaLogo } from './AlgoliaLogo.js';
+ 
+ function CommandIcon(props) {
+   return /*#__PURE__*/React.createElement("svg", {
+diff --git a/node_modules/@docsearch/react/dist/esm/NoResultsScreen.js b/node_modules/@docsearch/react/dist/esm/NoResultsScreen.js
+index 1ad1e98..d4cb64d 100644
+--- a/node_modules/@docsearch/react/dist/esm/NoResultsScreen.js
++++ b/node_modules/@docsearch/react/dist/esm/NoResultsScreen.js
+@@ -17,7 +17,7 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
+ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+ 
+ import React from 'react';
+-import { NoResultsIcon } from './icons';
++import { NoResultsIcon } from './icons/NoResultsIcon.js';
+ export function NoResultsScreen(_ref) {
+   var _ref$translations = _ref.translations,
+       translations = _ref$translations === void 0 ? {} : _ref$translations,
+diff --git a/node_modules/@docsearch/react/dist/esm/Results.js b/node_modules/@docsearch/react/dist/esm/Results.js
+index cd15629..4943851 100644
+--- a/node_modules/@docsearch/react/dist/esm/Results.js
++++ b/node_modules/@docsearch/react/dist/esm/Results.js
+@@ -13,7 +13,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+ function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+ 
+ import React from 'react';
+-import { Snippet } from './Snippet';
++import { Snippet } from './Snippet.js';
+ export function Results(props) {
+   if (!props.collection || props.collection.items.length === 0) {
+     return null;
+diff --git a/node_modules/@docsearch/react/dist/esm/ResultsScreen.js b/node_modules/@docsearch/react/dist/esm/ResultsScreen.js
+index 27c2bf5..2f871ae 100644
+--- a/node_modules/@docsearch/react/dist/esm/ResultsScreen.js
++++ b/node_modules/@docsearch/react/dist/esm/ResultsScreen.js
+@@ -1,9 +1,10 @@
+ function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+ 
+ import React from 'react';
+-import { SelectIcon, SourceIcon } from './icons';
+-import { Results } from './Results';
+-import { removeHighlightTags } from './utils';
++import { SourceIcon } from './icons/SourceIcon.js';
++import { SelectIcon } from './icons/SelectIcon.js';
++import { Results } from './Results.js';
++import { removeHighlightTags } from './utils/removeHighlightTags.js';
+ export function ResultsScreen(props) {
+   return /*#__PURE__*/React.createElement("div", {
+     className: "DocSearch-Dropdown-Container"
+diff --git a/node_modules/@docsearch/react/dist/esm/ScreenState.js b/node_modules/@docsearch/react/dist/esm/ScreenState.js
+index 1dbf1a4..e62171a 100644
+--- a/node_modules/@docsearch/react/dist/esm/ScreenState.js
++++ b/node_modules/@docsearch/react/dist/esm/ScreenState.js
+@@ -7,10 +7,10 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
+ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+ 
+ import React from 'react';
+-import { ErrorScreen } from './ErrorScreen';
+-import { NoResultsScreen } from './NoResultsScreen';
+-import { ResultsScreen } from './ResultsScreen';
+-import { StartScreen } from './StartScreen';
++import { ErrorScreen } from './ErrorScreen.js';
++import { NoResultsScreen } from './NoResultsScreen.js';
++import { ResultsScreen } from './ResultsScreen.js';
++import { StartScreen } from './StartScreen.js';
+ export var ScreenState = React.memo(function (_ref) {
+   var _ref$translations = _ref.translations,
+       translations = _ref$translations === void 0 ? {} : _ref$translations,
+diff --git a/node_modules/@docsearch/react/dist/esm/SearchBox.js b/node_modules/@docsearch/react/dist/esm/SearchBox.js
+index da59185..7fcfa76 100644
+--- a/node_modules/@docsearch/react/dist/esm/SearchBox.js
++++ b/node_modules/@docsearch/react/dist/esm/SearchBox.js
+@@ -7,10 +7,10 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
+ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+ 
+ import React from 'react';
+-import { MAX_QUERY_SIZE } from './constants';
+-import { LoadingIcon } from './icons/LoadingIcon';
+-import { ResetIcon } from './icons/ResetIcon';
+-import { SearchIcon } from './icons/SearchIcon';
++import { MAX_QUERY_SIZE } from './constants.js';
++import { LoadingIcon } from './icons/LoadingIcon.js';
++import { ResetIcon } from './icons/ResetIcon.js';
++import { SearchIcon } from './icons/SearchIcon.js';
+ export function SearchBox(_ref) {
+   var _ref$translations = _ref.translations,
+       translations = _ref$translations === void 0 ? {} : _ref$translations,
+diff --git a/node_modules/@docsearch/react/dist/esm/StartScreen.js b/node_modules/@docsearch/react/dist/esm/StartScreen.js
+index 595ccb5..f93de6d 100644
+--- a/node_modules/@docsearch/react/dist/esm/StartScreen.js
++++ b/node_modules/@docsearch/react/dist/esm/StartScreen.js
+@@ -7,8 +7,10 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
+ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+ 
+ import React from 'react';
+-import { RecentIcon, ResetIcon, StarIcon } from './icons';
+-import { Results } from './Results';
++import { StarIcon } from './icons/StarIcon.js';
++import { ResetIcon } from './icons/ResetIcon.js';
++import { RecentIcon } from './icons/RecentIcon.js';
++import { Results } from './Results.js';
+ export function StartScreen(_ref) {
+   var _ref$translations = _ref.translations,
+       translations = _ref$translations === void 0 ? {} : _ref$translations,
+diff --git a/node_modules/@docsearch/react/dist/esm/icons/index.js b/node_modules/@docsearch/react/dist/esm/icons/index.js
+index 969d380..44ea1b6 100644
+--- a/node_modules/@docsearch/react/dist/esm/icons/index.js
++++ b/node_modules/@docsearch/react/dist/esm/icons/index.js
+@@ -1,10 +1,10 @@
+-export * from './GoToExternalIcon';
+-export * from './LoadingIcon';
+-export * from './RecentIcon';
+-export * from './ResetIcon';
+-export * from './SearchIcon';
+-export * from './SelectIcon';
+-export * from './SourceIcon';
+-export * from './StarIcon';
+-export * from './ErrorIcon';
+-export * from './NoResultsIcon';
+\ No newline at end of file
++export * from './GoToExternalIcon.js';
++export * from './LoadingIcon.js';
++export * from './RecentIcon.js';
++export * from './ResetIcon.js';
++export * from './SearchIcon.js';
++export * from './SelectIcon.js';
++export * from './SourceIcon.js';
++export * from './StarIcon.js';
++export * from './ErrorIcon.js';
++export * from './NoResultsIcon.js';
+\ No newline at end of file
+diff --git a/node_modules/@docsearch/react/dist/esm/index.js b/node_modules/@docsearch/react/dist/esm/index.js
+index 9791a57..35fe917 100644
+--- a/node_modules/@docsearch/react/dist/esm/index.js
++++ b/node_modules/@docsearch/react/dist/esm/index.js
+@@ -1,5 +1,5 @@
+-export * from './DocSearch';
+-export * from './DocSearchButton';
+-export * from './DocSearchModal';
+-export * from './useDocSearchKeyboardEvents';
+-export * from './version';
+\ No newline at end of file
++export * from './DocSearch.js';
++export * from './DocSearchButton.js';
++export * from './DocSearchModal.js';
++export * from './useDocSearchKeyboardEvents.js';
++export * from './version.js';
+\ No newline at end of file
+diff --git a/node_modules/@docsearch/react/dist/esm/types/index.js b/node_modules/@docsearch/react/dist/esm/types/index.js
+index aed269f..9e0d5e4 100644
+--- a/node_modules/@docsearch/react/dist/esm/types/index.js
++++ b/node_modules/@docsearch/react/dist/esm/types/index.js
+@@ -1,4 +1,4 @@
+-export * from './DocSearchHit';
+-export * from './DocSearchState';
+-export * from './InternalDocSearchHit';
+-export * from './StoredDocSearchHit';
+\ No newline at end of file
++export * from './DocSearchHit.js';
++export * from './DocSearchState.js';
++export * from './InternalDocSearchHit.js';
++export * from './StoredDocSearchHit.js';
+\ No newline at end of file
+diff --git a/node_modules/@docsearch/react/dist/esm/useSearchClient.js b/node_modules/@docsearch/react/dist/esm/useSearchClient.js
+index 16ead8c..4b8f711 100644
+--- a/node_modules/@docsearch/react/dist/esm/useSearchClient.js
++++ b/node_modules/@docsearch/react/dist/esm/useSearchClient.js
+@@ -1,6 +1,6 @@
+-import algoliasearch from 'algoliasearch/dist/algoliasearch-lite.esm.browser';
++import algoliasearch from 'algoliasearch/dist/algoliasearch-lite.esm.browser.mjs';
+ import React from 'react';
+-import { version } from './version';
++import { version } from './version.js';
+ export function useSearchClient(appId, apiKey, transformSearchClient) {
+   var searchClient = React.useMemo(function () {
+     var client = algoliasearch(appId, apiKey);
+diff --git a/node_modules/@docsearch/react/dist/esm/utils/index.js b/node_modules/@docsearch/react/dist/esm/utils/index.js
+index 3fc41af..9146749 100644
+--- a/node_modules/@docsearch/react/dist/esm/utils/index.js
++++ b/node_modules/@docsearch/react/dist/esm/utils/index.js
+@@ -1,5 +1,5 @@
+-export * from './groupBy';
+-export * from './identity';
+-export * from './isModifierEvent';
+-export * from './noop';
+-export * from './removeHighlightTags';
+\ No newline at end of file
++export * from './groupBy.js';
++export * from './identity.js';
++export * from './isModifierEvent.js';
++export * from './noop.js';
++export * from './removeHighlightTags.js';
+\ No newline at end of file

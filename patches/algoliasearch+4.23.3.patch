@@ -1,0 +1,4 @@
+diff --git a/node_modules/algoliasearch/dist/algoliasearch-lite.esm.browser.js b/node_modules/algoliasearch/dist/algoliasearch-lite.esm.browser.mjs
+similarity index 100%
+rename from node_modules/algoliasearch/dist/algoliasearch-lite.esm.browser.js
+rename to node_modules/algoliasearch/dist/algoliasearch-lite.esm.browser.mjs
