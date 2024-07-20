@@ -34,10 +34,7 @@ export default function Heading({
     }
   }, [id])
 
-  const scrollIntoView = (
-    e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>,
-    id: string
-  ) => {
+  const scrollIntoView = (e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>, id: string) => {
     if (e.currentTarget.parentNode?.nodeName.toUpperCase().includes('H')) {
       e.preventDefault()
 
@@ -58,9 +55,7 @@ export default function Heading({
       className={classNames(
         'not-prose flex whitespace-pre-wrap',
         className,
-        level === 2 &&
-          nextElement?.type === 'heading' &&
-          nextElement?.depth === 3
+        level === 2 && nextElement?.type === 'heading' && nextElement?.depth === 3
           ? 'mb-2 text-sm font-semibold leading-6 tracking-normal text-sky-500 dark:text-sky-400'
           : ''
       )}
@@ -70,10 +65,7 @@ export default function Heading({
       {...props}
     >
       <a
-        className={classNames(
-          'group relative border-none',
-          hidden ? 'sr-only' : 'lg:-ml-2 lg:pl-2'
-        )}
+        className={classNames('group relative border-none', hidden ? 'sr-only' : 'lg:-ml-2 lg:pl-2')}
         href={`#${id}`}
         onClick={e => {
           scrollIntoView(e, id)

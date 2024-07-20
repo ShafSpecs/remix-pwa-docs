@@ -8,7 +8,7 @@
       "alternateTitle: $1",
       "order: $3",
       "---",
-      "\n$0",
+      "\n$0"
     ],
     "description": "A new documentation post",
     "scope": "markdown,md,mdx"
@@ -18,7 +18,7 @@
     "body": [
       "$BLOCK_COMMENT_START Do not remove these lines! $BLOCK_COMMENT_END",
       "",
-      "\n$0",
+      "\n$0"
     ],
     "description": "Add necessary doc imports",
     "scope": "markdown,md,mdx"

@@ -1,9 +1,9 @@
+import type { Node } from 'acorn'
+import { parse } from 'acorn'
 /* eslint-disable indent */
 import Prism from 'prismjs'
 import loadLanguages from 'prismjs/components/index.js'
 import redent from 'redent'
-import type { Node } from 'acorn'
-import { parse } from 'acorn'
 
 loadLanguages()
 
@@ -125,9 +125,7 @@ function hasLineHighlights(code: string) {
   if (!/^>/m.test(code)) {
     return false
   }
-  return code
-    .split('\n')
-    .every((line: string) => line === '' || line === '>' || /^[> ] /.test(line))
+  return code.split('\n').every((line: string) => line === '' || line === '>' || /^[> ] /.test(line))
 }
 
 export function highlightCode(code: string, prismLanguage: string) {
@@ -142,18 +140,15 @@ export function highlightCode(code: string, prismLanguage: string) {
   const addedLines: number[] = []
   const removedLines: number[] = []
   if (isDiff) {
-    code = code.replace(
-      /(?:^[+\- ] |^[+-]$)/gm,
-      (match: string, offset: any) => {
-        const line = code.substr(0, offset).split('\n').length - 1
-        if (match.startsWith('+')) {
-          addedLines.push(line)
-        } else if (match.startsWith('-')) {
-          removedLines.push(line)
-        }
-        return ''
+    code = code.replace(/(?:^[+\- ] |^[+-]$)/gm, (match: string, offset: any) => {
+      const line = code.substr(0, offset).split('\n').length - 1
+      if (match.startsWith('+')) {
+        addedLines.push(line)
+      } else if (match.startsWith('-')) {
+        removedLines.push(line)
       }
-    )
+      return ''
+    })
   }
 
   const highlightedLines: number[] = []
@@ -188,15 +183,11 @@ export function highlightCode(code: string, prismLanguage: string) {
     if (commonTypes.length) {
       for (let i = 0; i < line.length; i++) {
         const token = line[i]
-        token.types = token.types.filter(
-          (type: any) => !commonTypes.includes(type)
-        )
+        token.types = token.types.filter((type: any) => !commonTypes.includes(type))
       }
     }
 
-    const lineClassName = ['token', ...commonTypes, className]
-      .filter(Boolean)
-      .join(' ')
+    const lineClassName = ['token', ...commonTypes, className].filter(Boolean).join(' ')
 
     if (empty) {
       return `<span class="${lineClassName}">\n</span>`
@@ -204,17 +195,13 @@ export function highlightCode(code: string, prismLanguage: string) {
 
     return `<span class="${lineClassName}">${line
       .map((token: { types: any[]; content: any }) =>
-        token.types.length
-          ? `<span class="token ${token.types.join(' ')}">${token.content}</span>`
-          : token.content
+        token.types.length ? `<span class="token ${token.types.join(' ')}">${token.content}</span>` : token.content
       )
       .join('')}\n</span>`
   }
 
   if (isDiff || highlightedLines.length) {
-    const lines = normalizeTokens(
-      Prism.util.encode(Prism.tokenize(code, grammar))
-    )
+    const lines = normalizeTokens(Prism.util.encode(Prism.tokenize(code, grammar)))
 
     if (isDiff) {
       code = lines
@@ -222,11 +209,7 @@ export function highlightCode(code: string, prismLanguage: string) {
           stringify(
             line,
             `language-${language} ${
-              addedLines.includes(index)
-                ? 'inserted'
-                : removedLines.includes(index)
-                  ? 'deleted'
-                  : 'unchanged'
+              addedLines.includes(index) ? 'inserted' : removedLines.includes(index) ? 'deleted' : 'unchanged'
             }`
           )
         )
@@ -237,9 +220,7 @@ export function highlightCode(code: string, prismLanguage: string) {
           stringify(
             line,
             `block${
-              highlightedLines.includes(index)
-                ? ' -mx-5 pl-4 pr-5 border-l-4 border-sky-400 bg-sky-300/[0.15]'
-                : ''
+              highlightedLines.includes(index) ? ' -mx-5 pl-4 pr-5 border-l-4 border-sky-400 bg-sky-300/[0.15]' : ''
             }`
           )
         )
@@ -252,8 +233,7 @@ export function highlightCode(code: string, prismLanguage: string) {
   return language === 'html'
     ? code.replace(
         /\*\*(.*?)\*\*/g,
-        (_: any, text: any) =>
-          `<span class="code-highlight bg-code-highlight">${text}</span>`
+        (_: any, text: any) => `<span class="code-highlight bg-code-highlight">${text}</span>`
       )
     : code
 }
@@ -303,9 +283,7 @@ function normalizeTokens(tokens: any) {
   const acc = [currentLine]
 
   while (stackIndex > -1) {
-    while (
-      (i = tokenArrIndexStack[stackIndex]++) < tokenArrSizeStack[stackIndex]
-    ) {
+    while ((i = tokenArrIndexStack[stackIndex]++) < tokenArrSizeStack[stackIndex]) {
       let content
       let types = typeArrStack[stackIndex]
 

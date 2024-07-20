@@ -29,11 +29,9 @@ export function CopyButton({ code }: { code: string }) {
           state === 'copied' ? 'text-emerald-400' : ''
         )}
         onClick={() => {
-          navigator.clipboard
-            .writeText(redent(code.replace(/^[+>-]/gm, ' ')))
-            .then(() => {
-              setState({ state: 'copied', i: i + 1 })
-            })
+          navigator.clipboard.writeText(redent(code.replace(/^[+>-]/gm, ' '))).then(() => {
+            setState({ state: 'copied', i: i + 1 })
+          })
         }}
       >
         {/* eslint-disable-next-line multiline-ternary */}
@@ -59,11 +57,7 @@ export function CopyButton({ code }: { code: string }) {
             stroke="currentColor"
             className="mr-2 h-5 w-5"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M4.5 12.75l6 6 9-13.5"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         )}
       </button>
@@ -92,16 +86,8 @@ function TabBar({
         {primary.name}
         {/* eslint-disable-next-line multiline-ternary */}
         {showTabMarkers && primary.saved ? (
-          <svg
-            viewBox="0 0 4 4"
-            className="ml-2.5 h-1 w-1 flex-none overflow-visible text-slate-500"
-          >
-            <path
-              d="M-1 -1L5 5M5 -1L-1 5"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-            />
+          <svg viewBox="0 0 4 4" className="ml-2.5 h-1 w-1 flex-none overflow-visible text-slate-500">
+            <path d="M-1 -1L5 5M5 -1L-1 5" fill="none" stroke="currentColor" strokeLinecap="round" />
           </svg>
         ) : (
           <div className="ml-2.5 h-1 w-1 flex-none rounded-full bg-current" />
@@ -117,20 +103,12 @@ function TabBar({
         {secondary.map(({ className, name, open = true }) => (
           <div
             key={name}
-            className={classNames(
-              'border-r border-slate-200/5 px-4 py-1',
-              className || '',
-              !open ? 'italic' : ''
-            )}
+            className={classNames('border-r border-slate-200/5 px-4 py-1', className || '', !open ? 'italic' : '')}
           >
             {name}
           </div>
         ))}
-        {children && (
-          <div className="flex flex-auto items-center justify-end space-x-4 px-4">
-            {children}
-          </div>
-        )}
+        {children && <div className="flex flex-auto items-center justify-end space-x-4 px-4">{children}</div>}
       </div>
     </div>
   )

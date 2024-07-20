@@ -1,12 +1,12 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
 import { NavLink, useLocation } from '@remix-run/react'
 import clsx from 'clsx'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicLayoutEffect'
 import { useActionKey } from '~/hooks/useActionKey'
-import { nearestScrollableContainer } from '~/utils/client/nearest-scrollable-container'
+import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicLayoutEffect'
 import { useMediaQuery } from '~/hooks/useMediaQuery'
+import { nearestScrollableContainer } from '~/utils/client/nearest-scrollable-container'
 import { DEFAULT_TAG } from '~/utils/defatult'
 import type { MetadataMetaType, MetadataType } from '~/utils/server/doc.server'
 
@@ -19,11 +19,7 @@ function Wrapper({
   allowOverflow?: boolean
   children?: ReactNode
 }) {
-  return (
-    <div className={allowOverflow ? undefined : 'overflow-hidden'}>
-      {children}
-    </div>
-  )
+  return <div className={allowOverflow ? undefined : 'overflow-hidden'}>{children}</div>
 }
 
 function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
@@ -32,9 +28,7 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
 
   const mobile = useMediaQuery('(max-width: 1024px)')
 
-  const [docList, setDocList] = useState<
-    { section: string; children: any[] }[]
-  >([])
+  const [docList, setDocList] = useState<{ section: string; children: any[] }[]>([])
 
   const activeItemRef = useRef<HTMLElement>()
   const previousActiveItemRef = useRef<HTMLElement>()
@@ -62,8 +56,7 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
       const bottom = top - scrollRect.height + activeItemRect.height
 
       if (scrollable.scrollTop > top || scrollable.scrollTop < bottom) {
-        scrollable.scrollTop =
-          top - scrollRect.height / 2 + activeItemRect.height / 2
+        scrollable.scrollTop = top - scrollRect.height / 2 + activeItemRect.height / 2
       }
     }
   }, [location.pathname])
@@ -100,13 +93,7 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
             className="dark:highlight-white/5 hidden w-full items-center rounded-md py-1.5 pl-2 pr-3 text-sm leading-6 text-slate-400 shadow-sm outline-none ring-slate-900/10 hover:ring-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 lg:flex"
           >
             <>
-              <svg
-                width="24"
-                height="24"
-                fill="none"
-                aria-hidden="true"
-                className="mr-3 flex-none"
-              >
+              <svg width="24" height="24" fill="none" aria-hidden="true" className="mr-3 flex-none">
                 <path
                   d="m19 19-3.5-3.5"
                   stroke="currentColor"
@@ -126,62 +113,48 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
               </svg>
               Quick search...
               {/* eslint-disable-next-line multiline-ternary */}
-              {actionKey ? (
-                <span className="ml-auto flex-none pl-3 text-xs font-semibold">
-                  {actionKey[0]}K
-                </span>
-              ) : null}
+              {actionKey ? <span className="ml-auto flex-none pl-3 text-xs font-semibold">{actionKey[0]}K</span> : null}
             </>
           </button>
         </div>
         <div className="hidden h-8 bg-gradient-to-b from-white dark:from-slate-900 lg:block" />
       </div>
       <ul className="lg:-mt-6">
-        {docList.map(
-          (section: { section: string; children: any[] }, index: number) => {
-            return (
-              <li className="mt-12 lg:mt-8" key={index}>
-                <h3 className="mb-8 font-semibold text-slate-900 dark:text-slate-200 lg:mb-3">
-                  {section.section}
-                </h3>
-                <ul
-                  className={clsx(
-                    'space-y-6 border-l border-slate-100 lg:space-y-2',
-                    mobile ? 'dark:border-slate-700' : 'dark:border-slate-800'
-                  )}
-                >
-                  {section.children.map(sub => {
-                    return (
-                      <li className="" key={sub.alternateTitle ?? sub.title}>
-                        <NavLink
-                          prefetch="intent"
-                          to={`/docs/${tag ?? DEFAULT_TAG ?? 'main'}/${sub.slug}`}
-                          end={true}
-                        >
-                          {({ isActive }) => (
-                            <span
-                              className={clsx('-ml-px block border-l pl-4', {
-                                'border-current font-semibold text-sky-500 dark:text-sky-400':
-                                  isActive,
-                                'border-transparent hover:border-slate-400 dark:hover:border-slate-500':
-                                  !isActive,
-                                'text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300':
-                                  !isActive,
-                                'text-slate-400': !isActive,
-                              })}
-                            >
-                              {sub.alternateTitle ?? sub.title}
-                            </span>
-                          )}
-                        </NavLink>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </li>
-            )
-          }
-        )}
+        {docList.map((section: { section: string; children: any[] }, index: number) => {
+          return (
+            <li className="mt-12 lg:mt-8" key={index}>
+              <h3 className="mb-8 font-semibold text-slate-900 dark:text-slate-200 lg:mb-3">{section.section}</h3>
+              <ul
+                className={clsx(
+                  'space-y-6 border-l border-slate-100 lg:space-y-2',
+                  mobile ? 'dark:border-slate-700' : 'dark:border-slate-800'
+                )}
+              >
+                {section.children.map(sub => {
+                  return (
+                    <li className="" key={sub.alternateTitle ?? sub.title}>
+                      <NavLink prefetch="intent" to={`/docs/${tag ?? DEFAULT_TAG ?? 'main'}/${sub.slug}`} end={true}>
+                        {({ isActive }) => (
+                          <span
+                            className={clsx('-ml-px block border-l pl-4', {
+                              'border-current font-semibold text-sky-500 dark:text-sky-400': isActive,
+                              'border-transparent hover:border-slate-400 dark:hover:border-slate-500': !isActive,
+                              'text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300':
+                                !isActive,
+                              'text-slate-400': !isActive,
+                            })}
+                          >
+                            {sub.alternateTitle ?? sub.title}
+                          </span>
+                        )}
+                      </NavLink>
+                    </li>
+                  )
+                })}
+              </ul>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )
@@ -193,11 +166,7 @@ type SidebarProps = {
   layoutProps?: { allowOverflow?: boolean }
 }
 
-export function Sidebar({
-  children,
-  layoutProps: { allowOverflow = true } = {},
-  metadata,
-}: SidebarProps) {
+export function Sidebar({ children, layoutProps: { allowOverflow = true } = {}, metadata }: SidebarProps) {
   const location = useLocation()
 
   const [currentTag, setTag] = useState<string>(location.pathname.split('/')[2])

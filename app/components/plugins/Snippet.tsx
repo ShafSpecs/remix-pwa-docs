@@ -1,9 +1,9 @@
-import type { ReactNode, JSX } from 'react'
-import { useState } from 'react'
 import { Tab } from '@headlessui/react'
+import type { JSX, ReactNode } from 'react'
+import { useState } from 'react'
 
 // @ts-ignore
-import { Frame, CopyButton } from './Editor.tsx'
+import { CopyButton, Frame } from './Editor.tsx'
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -20,14 +20,7 @@ export function classNames(...classes: string[]) {
  * @param {import('clsx').ClassValue} props.className
  */
 function TabAdornment({ className }: { className?: any }) {
-  return (
-    <div
-      className={classNames(
-        'pointer-events-none absolute inset-0 outline-none ring-0',
-        className
-      )}
-    />
-  )
+  return <div className={classNames('pointer-events-none absolute inset-0 outline-none ring-0', className)} />
 }
 
 /**
@@ -77,22 +70,12 @@ function TabItem({
       <span className="z-10">{children}</span>
 
       {marker === 'close' && (
-        <svg
-          viewBox="0 0 4 4"
-          className="ml-2.5 h-1 w-1 flex-none overflow-visible text-slate-500"
-        >
-          <path
-            d="M-1 -1L5 5M5 -1L-1 5"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-          />
+        <svg viewBox="0 0 4 4" className="ml-2.5 h-1 w-1 flex-none overflow-visible text-slate-500">
+          <path d="M-1 -1L5 5M5 -1L-1 5" fill="none" stroke="currentColor" strokeLinecap="round" />
         </svg>
       )}
 
-      {marker === 'modified' && (
-        <div className="ml-2.5 h-1 w-1 flex-none rounded-full bg-current" />
-      )}
+      {marker === 'modified' && <div className="ml-2.5 h-1 w-1 flex-none rounded-full bg-current" />}
 
       {/* Inactive tabs with optional edge caps */}
       {!isSelected && (
@@ -106,9 +89,7 @@ function TabItem({
       )}
 
       {/* Divider between inactive tabs */}
-      {edges.trailing === 'normal' && (
-        <TabAdornment className="inset-y-px z-20 border-r border-slate-200/5" />
-      )}
+      {edges.trailing === 'normal' && <TabAdornment className="inset-y-px z-20 border-r border-slate-200/5" />}
 
       {/* Active tab highlight bar */}
       {isSelected && <TabAdornment className="border-b border-b-sky-300" />}
@@ -118,18 +99,12 @@ function TabItem({
 
 const snippetGroupWrappers = {
   plain({ children }: { children: ReactNode }) {
-    return (
-      <div className="not-prose rounded-xl bg-slate-800 shadow-md">
-        {children}
-      </div>
-    )
+    return <div className="not-prose rounded-xl bg-slate-800 shadow-md">{children}</div>
   },
   framed({ children, ...props }: { children: ReactNode }) {
     return (
       <Frame {...props}>
-        <div className="not-prose rounded-tl-xl bg-slate-800 shadow-md">
-          {children}
-        </div>
+        <div className="not-prose rounded-tl-xl bg-slate-800 shadow-md">{children}</div>
       </Frame>
     )
   },
@@ -141,12 +116,7 @@ const snippetGroupWrappers = {
  * @param {object} props
  * @param {CodeBlock[]} props.children
  */
-export default function SnippetGroup({
-  actions,
-  children,
-  style = 'plain',
-  ...props
-}: any) {
+export default function SnippetGroup({ actions, children, style = 'plain', ...props }: any) {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   // @ts-ignore
@@ -158,11 +128,7 @@ export default function SnippetGroup({
         <div className="relative flex overflow-x-auto overflow-y-hidden">
           <Tab.List className="flex rounded-tl-xl pt-2 text-xs leading-6 text-slate-400">
             {children?.map((child: any, tabIndex: number) => (
-              <TabItem
-                key={child.props.filename}
-                myIndex={tabIndex}
-                selectedIndex={selectedIndex}
-              >
+              <TabItem key={child.props.filename} myIndex={tabIndex} selectedIndex={selectedIndex}>
                 {child.props.filename}
               </TabItem>
             ))}
@@ -171,20 +137,13 @@ export default function SnippetGroup({
             <div
               className={classNames(
                 'flex flex-auto justify-end border-y border-slate-500/30 bg-slate-700/50 pr-4',
-                selectedIndex === children.length - 1
-                  ? 'rounded-tl border-l'
-                  : ''
+                selectedIndex === children.length - 1 ? 'rounded-tl border-l' : ''
               )}
             />
           </div>
           {/* {actions ? ( */}
           <div className="absolute right-4 top-2 z-20 flex h-8">
-            <CopyButton
-              code={
-                children[selectedIndex].props.code?.replace(/<[^>]+>/g, '') ||
-                ''
-              }
-            />
+            <CopyButton code={children[selectedIndex].props.code?.replace(/<[^>]+>/g, '') || ''} />
             {/* {actions({ selectedIndex })} */}
           </div>
           {/* ) : null} */}

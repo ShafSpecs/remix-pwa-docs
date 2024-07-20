@@ -26,8 +26,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   })
 }
 
-export const clientLoader = async (args: ClientLoaderFunctionArgs) =>
-  cacheClientLoader(args)
+export const clientLoader = async (args: ClientLoaderFunctionArgs) => cacheClientLoader(args)
 
 clientLoader.hydrate = true
 

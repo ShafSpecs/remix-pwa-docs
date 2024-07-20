@@ -1,20 +1,14 @@
-import clsx from 'clsx'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import {
-  Link,
-  NavLink,
-  useLocation,
-  useNavigate,
-  useRouteLoaderData,
-} from '@remix-run/react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Link, NavLink, useLocation, useNavigate, useRouteLoaderData } from '@remix-run/react'
+import clsx from 'clsx'
 import { ChevronDownIcon, HeartIcon, XIcon } from 'lucide-react'
-import { useTransition, animated } from 'react-spring'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import { animated, useTransition } from 'react-spring'
 
 import { ThemeSwitcher } from '~/components/ThemeSwitcher'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
-import type { MetadataType } from '~/utils/server/doc.server'
 import { DEFAULT_TAG } from '~/utils/defatult'
+import type { MetadataType } from '~/utils/server/doc.server'
 
 function Breadcrumb({
   section,
@@ -36,13 +30,7 @@ function Breadcrumb({
         >
           <span className="sr-only">Open side menu</span>
           <svg width="24" height="24">
-            <path
-              d="M5 6h14M5 12h14M5 18h14"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
+            <path d="M5 6h14M5 12h14M5 18h14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </Disclosure.Button>
         {/* eslint-disable-next-line multiline-ternary */}
@@ -51,31 +39,16 @@ function Breadcrumb({
             {section && (
               <li className="flex items-center text-sm text-slate-500 dark:text-slate-400">
                 {section}
-                <svg
-                  width="3"
-                  height="6"
-                  aria-hidden="true"
-                  className="mx-3 overflow-visible text-slate-400"
-                >
-                  <path
-                    d="M0 0L3 3L0 6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
+                <svg width="3" height="6" aria-hidden="true" className="mx-3 overflow-visible text-slate-400">
+                  <path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               </li>
             )}
-            <li className="truncate font-semibold text-slate-900 dark:text-slate-200">
-              {title}
-            </li>
+            <li className="truncate font-semibold text-slate-900 dark:text-slate-200">{title}</li>
           </ol>
         ) : (
           <ol className="ml-4 flex min-w-0 whitespace-nowrap text-sm leading-6">
-            <li className="flex items-center text-sm text-slate-500 dark:text-slate-400">
-              Journal Stack Home
-            </li>
+            <li className="flex items-center text-sm text-slate-500 dark:text-slate-400">Journal Stack Home</li>
           </ol>
         )}
       </div>
@@ -102,9 +75,7 @@ function MobileSidebar({
     leave: { opacity: 0, transform: 'translateX(-100%)' },
   })
 
-  const [docList, setDocList] = useState<
-    { section: string; children: any[] }[]
-  >([])
+  const [docList, setDocList] = useState<{ section: string; children: any[] }[]>([])
 
   const sidebarRef = useRef<HTMLDivElement>(null)
 
@@ -149,16 +120,9 @@ function MobileSidebar({
         >
           <div className="flex items-center justify-between">
             <Link to={'/'}>
-              <img
-                src="/images/RemixPWA.png"
-                alt="Remix PWA"
-                className="h-10 w-10"
-              />
+              <img src="/images/RemixPWA.png" alt="Remix PWA" className="h-10 w-10" />
             </Link>
-            <Disclosure.Button
-              className="relative focus:outline-none focus:ring-0"
-              onClick={() => setNavIsOpen(false)}
-            >
+            <Disclosure.Button className="relative focus:outline-none focus:ring-0" onClick={() => setNavIsOpen(false)}>
               <XIcon
                 className="block h-6 w-6 stroke-2 text-slate-700 dark:text-sky-100"
                 stroke="currentColor"
@@ -168,59 +132,44 @@ function MobileSidebar({
           </div>
           <nav className="mt-5 px-1 text-base lg:text-sm">
             <ul className="space-y-8">
-              {docList.map(
-                (
-                  section: { section: string; children: any[] },
-                  index: number
-                ) => {
-                  return (
-                    <li className="mt-6 lg:mt-8" key={index}>
-                      <h3 className="mb-8 font-semibold text-slate-900 dark:text-slate-200 lg:mb-3">
-                        {section.section}
-                      </h3>
-                      <ul
-                        className={
-                          'space-y-6 border-l border-slate-100 dark:border-slate-700 lg:space-y-2 lg:dark:border-slate-800'
-                        }
-                      >
-                        {section.children.map(sub => {
-                          return (
-                            <li
-                              className=""
-                              key={sub.alternateTitle ?? sub.title}
+              {docList.map((section: { section: string; children: any[] }, index: number) => {
+                return (
+                  <li className="mt-6 lg:mt-8" key={index}>
+                    <h3 className="mb-8 font-semibold text-slate-900 dark:text-slate-200 lg:mb-3">{section.section}</h3>
+                    <ul
+                      className={
+                        'space-y-6 border-l border-slate-100 dark:border-slate-700 lg:space-y-2 lg:dark:border-slate-800'
+                      }
+                    >
+                      {section.children.map(sub => {
+                        return (
+                          <li className="" key={sub.alternateTitle ?? sub.title}>
+                            <NavLink
+                              prefetch="intent"
+                              to={`/docs/${tag ?? DEFAULT_TAG ?? 'main'}/${sub.slug}`}
+                              end={true}
                             >
-                              <NavLink
-                                prefetch="intent"
-                                to={`/docs/${tag ?? DEFAULT_TAG ?? 'main'}/${sub.slug}`}
-                                end={true}
-                              >
-                                {({ isActive }) => (
-                                  <span
-                                    className={clsx(
-                                      '-ml-px block border-l pl-4',
-                                      {
-                                        'border-current font-semibold text-sky-500 dark:text-sky-400':
-                                          isActive,
-                                        'border-transparent hover:border-slate-400 dark:hover:border-slate-500':
-                                          !isActive,
-                                        'text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300':
-                                          !isActive,
-                                        'text-slate-400': !isActive,
-                                      }
-                                    )}
-                                  >
-                                    {sub.alternateTitle ?? sub.title}
-                                  </span>
-                                )}
-                              </NavLink>
-                            </li>
-                          )
-                        })}
-                      </ul>
-                    </li>
-                  )
-                }
-              )}
+                              {({ isActive }) => (
+                                <span
+                                  className={clsx('-ml-px block border-l pl-4', {
+                                    'border-current font-semibold text-sky-500 dark:text-sky-400': isActive,
+                                    'border-transparent hover:border-slate-400 dark:hover:border-slate-500': !isActive,
+                                    'text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300':
+                                      !isActive,
+                                    'text-slate-400': !isActive,
+                                  })}
+                                >
+                                  {sub.alternateTitle ?? sub.title}
+                                </span>
+                              )}
+                            </NavLink>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </li>
+                )
+              })}
             </ul>
           </nav>
         </div>
@@ -308,12 +257,7 @@ export default function Header({
               }
             >
               <div className="relative flex content-center items-center">
-                <Link
-                  aria-label="Home page"
-                  to="/"
-                  reloadDocument
-                  className="md:flex"
-                >
+                <Link aria-label="Home page" to="/" reloadDocument className="md:flex">
                   <img
                     src="/images/RemixPWA.png"
                     alt="Remix PWA"
@@ -339,10 +283,7 @@ export default function Header({
                       <div>
                         <Menu.Button className="dark:highlight-white/5 flex items-center space-x-2 rounded-full bg-slate-400/10 px-3 py-1 text-sm font-medium leading-5 text-slate-400 hover:bg-slate-400/20">
                           {currentTag}
-                          <ChevronDownIcon
-                            className="ml-2 h-3 w-3 stroke-slate-400 stroke-2"
-                            aria-hidden="true"
-                          />
+                          <ChevronDownIcon className="ml-2 h-3 w-3 stroke-slate-400 stroke-2" aria-hidden="true" />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -356,10 +297,7 @@ export default function Header({
                       >
                         <Menu.Items className="dark:highlight-white/5 absolute left-0 top-full mt-1 w-40 origin-top-left rounded-lg bg-white py-2 text-sm font-medium leading-6 text-slate-700 shadow ring-1 ring-slate-900/5 dark:bg-slate-800 dark:text-slate-300">
                           {versions.map((version: string) => (
-                            <Menu.Item
-                              key={version}
-                              disabled={currentTag === version}
-                            >
+                            <Menu.Item key={version} disabled={currentTag === version}>
                               {({ active }) => (
                                 // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                                 <span
@@ -378,12 +316,7 @@ export default function Header({
                                   {version}
                                   {/* eslint-disable-next-line multiline-ternary */}
                                   {currentTag === version ? (
-                                    <svg
-                                      width="24"
-                                      height="24"
-                                      fill="none"
-                                      aria-hidden="true"
-                                    >
+                                    <svg width="24" height="24" fill="none" aria-hidden="true">
                                       <path
                                         d="m7.75 12.75 2.25 2.5 6.25-6.5"
                                         stroke="currentColor"
@@ -445,11 +378,7 @@ export default function Header({
               </div>
             </div>
           </div>
-          <Breadcrumb
-            section={section}
-            title={title}
-            setIsNavOpen={setNavIsOpen}
-          />
+          <Breadcrumb section={section} title={title} setIsNavOpen={setNavIsOpen} />
         </>
       )}
     </Disclosure>

@@ -1,9 +1,9 @@
-import { readFile } from 'fs/promises'
 import { existsSync } from 'fs'
-import { resolve, dirname } from 'path'
+import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
-import { z } from 'zod'
 import { S3 } from '@aws-sdk/client-s3'
+import { readFile } from 'fs/promises'
+import { z } from 'zod'
 
 // A nice todo would be implementing a cache for fetching from S3, if you can help with that, please do! :)
 // Thx
@@ -18,10 +18,7 @@ const s3 = new S3({
   maxAttempts: 3,
 })
 
-const _dirname =
-  typeof __dirname !== 'undefined'
-    ? __dirname
-    : dirname(fileURLToPath(import.meta.url))
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
 
 const FrontMatterTypeSchema = z.object({
   title: z.string(),
@@ -53,10 +50,7 @@ const stripTrailingSlashes = (str: string): string => {
 
 export const getParsedMetadata = async (tag: string) => {
   if (process.env.NODE_ENV === 'development') {
-    const content = await readFile(
-      resolve(_dirname, '../../../', `posts/${tag}/metadata.json`),
-      'utf-8'
-    )
+    const content = await readFile(resolve(_dirname, '../../../', `posts/${tag}/metadata.json`), 'utf-8')
 
     if (!content) {
       return null
@@ -71,8 +65,7 @@ export const getParsedMetadata = async (tag: string) => {
   })
 
   const content =
-    (await promise.Body?.transformToString()) ||
-    '{\npaths: {},\nhasIndex: false,\nsections: [],\nmeta: {},\n}'
+    (await promise.Body?.transformToString()) || '{\npaths: {},\nhasIndex: false,\nsections: [],\nmeta: {},\n}'
 
   return MetadataSchema.parse(JSON.parse(content))
 }
@@ -100,9 +93,7 @@ export const getPostContent = async (tag: string, slug: string) => {
 
   // If no metadata, something is inherently wrong!
   if (!metadata) {
-    throw new Error(
-      'No docs metadata found! Make sure to generate a metadata for your doc posts!'
-    )
+    throw new Error('No docs metadata found! Make sure to generate a metadata for your doc posts!')
   }
 
   /**
@@ -113,11 +104,7 @@ export const getPostContent = async (tag: string, slug: string) => {
       resolve(
         _dirname,
         '../../../',
-        `posts/${tag}/${
-          slug === '/'
-            ? '_index'
-            : `${metadata.paths[stripTrailingSlashes(slug)]}`
-        }.mdx`
+        `posts/${tag}/${slug === '/' ? '_index' : `${metadata.paths[stripTrailingSlashes(slug)]}`}.mdx`
       ),
       'utf-8'
     )
@@ -131,9 +118,7 @@ export const getPostContent = async (tag: string, slug: string) => {
 
   const promise = await s3.getObject({
     Bucket: process.env.AWS_S3_BUCKET || '',
-    Key: `posts/${tag}/${
-      slug === '/' ? '_index' : `${metadata.paths[stripTrailingSlashes(slug)]}`
-    }.mdx`,
+    Key: `posts/${tag}/${slug === '/' ? '_index' : `${metadata.paths[stripTrailingSlashes(slug)]}`}.mdx`,
   })
 
   const content = await promise.Body?.transformToString()
@@ -162,18 +147,13 @@ export const getFirstPost = async (tag: string) => {
 
 export const getVersions = async () => {
   if (process.env.NODE_ENV === 'development') {
-    const content = await readFile(
-      resolve(_dirname, '../../../', 'posts/versions.json'),
-      'utf-8'
-    )
+    const content = await readFile(resolve(_dirname, '../../../', 'posts/versions.json'), 'utf-8')
 
     if (!content) {
       return null
     }
 
-    return (JSON.parse(content) as Array<{ tag: string }>).map(
-      version => version.tag
-    )
+    return (JSON.parse(content) as Array<{ tag: string }>).map(version => version.tag)
   }
 
   const promise = await s3.getObject({
@@ -187,29 +167,21 @@ export const getVersions = async () => {
     return null
   }
 
-  return (JSON.parse(content) as Array<{ tag: string }>).map(
-    version => version.tag
-  )
+  return (JSON.parse(content) as Array<{ tag: string }>).map(version => version.tag)
 }
 
 // A better idea would be incorporating this into the metadata, but for now, this will do.
 export const getPreviousAndNextRoutes = async (
   tag: string,
   slug: string
-): Promise<
-  [
-    z.infer<typeof FrontMatterTypeSchema> | null,
-    z.infer<typeof FrontMatterTypeSchema> | null,
-  ]
-> => {
+): Promise<[z.infer<typeof FrontMatterTypeSchema> | null, z.infer<typeof FrontMatterTypeSchema> | null]> => {
   const metadata = await getParsedMetadata(tag)
   const paths = metadata?.paths ?? {}
   const keys = Object.keys(paths)
   const index = keys.indexOf(stripTrailingSlashes(slug))
 
   const prev = index === 0 ? null : metadata?.meta[keys[index - 1]] ?? null
-  const next =
-    index === keys.length - 1 ? null : metadata?.meta[keys[index + 1]] ?? null
+  const next = index === keys.length - 1 ? null : metadata?.meta[keys[index + 1]] ?? null
 
   return [prev, next]
 }

@@ -1,4 +1,4 @@
-import { json, type ActionFunctionArgs, redirect } from '@remix-run/node'
+import { type ActionFunctionArgs, json, redirect } from '@remix-run/node'
 
 import { ThemeFormSchema } from '~/hooks/useTheme'
 import { setTheme } from '~/utils/server/theme.server'

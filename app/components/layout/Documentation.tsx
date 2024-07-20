@@ -1,15 +1,15 @@
 import { Link, useRouteLoaderData } from '@remix-run/react'
-import { Fragment, useMemo, useRef } from 'react'
-import { getMDXComponent, getMDXExport } from 'mdx-bundler/client'
 import clsx from 'clsx'
-import redent from 'redent'
+import { getMDXComponent, getMDXExport } from 'mdx-bundler/client'
+import { Fragment, useMemo, useRef } from 'react'
 import type { MouseEvent } from 'react'
+import redent from 'redent'
 
-import Info from '~/components/plugins/Info'
-import Warn from '~/components/plugins/Warn'
-import SnippetGroup from '~/components/plugins/Snippet'
 import Editor from '~/components/plugins/Editor'
 import Heading from '~/components/plugins/Heading'
+import Info from '~/components/plugins/Info'
+import SnippetGroup from '~/components/plugins/Snippet'
+import Warn from '~/components/plugins/Warn'
 import { useTableOfContents } from '~/hooks/useTableOfContents'
 
 export function Documentation({
@@ -38,10 +38,7 @@ export function Documentation({
 
   const documentationRef = useRef<HTMLDivElement>(null)
 
-  function scrollIntoView(
-    e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>,
-    id: string
-  ) {
+  function scrollIntoView(e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>, id: string) {
     if (e.currentTarget.classList.contains('toc-anchor')) {
       e.preventDefault()
 
@@ -71,9 +68,7 @@ export function Documentation({
     return section.children.findIndex(isActive) > -1
   }
 
-  const pageHasSubsections = tableOfContents.some(
-    (section: any) => section.children.length > 0
-  )
+  const pageHasSubsections = tableOfContents.some((section: any) => section.children.length > 0)
 
   return (
     <div
@@ -95,9 +90,7 @@ export function Documentation({
                 </h1>
               </div>
             </div>
-            <p className="mt-2 text-lg text-slate-700 dark:text-slate-400">
-              {frontmatter.description}
-            </p>
+            <p className="mt-2 text-lg text-slate-700 dark:text-slate-400">{frontmatter.description}</p>
           </header>
 
           <main
@@ -111,9 +104,7 @@ export function Documentation({
         <dl className="mt-12 flex border-t border-slate-200 pt-6 dark:border-slate-800">
           {prev && (
             <div>
-              <dt className="font-display text-sm font-medium text-slate-900 dark:text-white">
-                Previous
-              </dt>
+              <dt className="font-display text-sm font-medium text-slate-900 dark:text-white">Previous</dt>
               <dd className="mt-1">
                 <Link
                   className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
@@ -128,9 +119,7 @@ export function Documentation({
           )}
           {next && (
             <div className="ml-auto text-right">
-              <dt className="font-display text-sm font-medium text-slate-900 dark:text-white">
-                Next
-              </dt>
+              <dt className="font-display text-sm font-medium text-slate-900 dark:text-white">Next</dt>
               <dd className="mt-1">
                 <Link
                   className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"

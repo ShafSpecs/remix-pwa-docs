@@ -1,9 +1,9 @@
-import type { MetaFunction } from '@remix-run/node'
-import clsx from 'clsx'
-import { useEffect, useState } from 'react'
-import { Link } from '@remix-run/react'
-import { HeartIcon } from 'lucide-react'
 import { Disclosure } from '@headlessui/react'
+import type { MetaFunction } from '@remix-run/node'
+import { Link } from '@remix-run/react'
+import clsx from 'clsx'
+import { HeartIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 import { ThemeSwitcher } from '~/components/ThemeSwitcher'
 import { useWindowSize } from '~/hooks/useWindowSize'
@@ -18,8 +18,7 @@ export const meta: MetaFunction = () => {
     },
     {
       name: 'description',
-      content:
-        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+      content: 'The home of Remix PWA. A PWA Framework that redefines web experiences.',
     },
     { property: 'twitter:card', content: 'summary_large_image' },
     { property: 'twitter:creator', content: '@ShafSpecs' },
@@ -34,8 +33,7 @@ export const meta: MetaFunction = () => {
     { property: 'og:url', content: 'https://remix-pwa.run' },
     {
       property: 'twitter:description',
-      content:
-        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+      content: 'The home of Remix PWA. A PWA Framework that redefines web experiences.',
     },
     { property: 'og:locale', content: 'en_US' },
     {
@@ -59,8 +57,7 @@ export const meta: MetaFunction = () => {
     { property: 'og:image:type', content: 'image/png' },
     {
       property: 'og:description',
-      content:
-        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+      content: 'The home of Remix PWA. A PWA Framework that redefines web experiences.',
     },
   ]
 }
@@ -107,12 +104,7 @@ function Header() {
             }
           >
             <div className="relative flex content-center items-center">
-              <Link
-                aria-label="Home page"
-                to="/"
-                reloadDocument
-                className="md:flex"
-              >
+              <Link aria-label="Home page" to="/" reloadDocument className="md:flex">
                 <img
                   src="/images/RemixPWA.png"
                   alt="Remix PWA"
@@ -120,11 +112,7 @@ function Header() {
                 />
                 <span className="sr-only">Remix PWA home page</span>
                 <p className="relative hidden font-benzin text-3xl font-bold text-slate-700 dark:text-sky-100 md:flex">
-                  <img
-                    src="/images/RemixPWA.png"
-                    alt="Remix PWA"
-                    className="mr-2.5 h-8 w-8 self-center text-center"
-                  />
+                  <img src="/images/RemixPWA.png" alt="Remix PWA" className="mr-2.5 h-8 w-8 self-center text-center" />
                   <span className="mr-2">Remix</span>
                   <span className="h-full bg-gradient-to-tr from-indigo-500 to-sky-300 bg-clip-text pr-1 text-transparent dark:from-indigo-400 dark:to-sky-200">
                     PWA
@@ -192,16 +180,13 @@ function Hero() {
       {/* Bg */}
       <div className="mx-auto flex max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
         <div className="text-center text-slate-900 dark:text-white">
-          <h1 className="font-benzin text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            Remix PWA
-          </h1>
+          <h1 className="font-benzin text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">Remix PWA</h1>
           <h3 className="mb-2.5 mt-4 text-xl font-medium md:text-3xl lg:text-4xl">
             A PWA Framework that redefines web experiences.
           </h3>
           <span className="text-slate-500 dark:text-slate-400 sm:text-lg md:text-xl">
-            Unlock the future of web artistry with Remix PWA 🔑. Powered by Vite
-            ⚡, craft Progressive Web Apps that redefine the boundaries of
-            creativity and performance 🚀. Your digital canvas awaits! 👩‍🎨
+            Unlock the future of web artistry with Remix PWA 🔑. Powered by Vite ⚡, craft Progressive Web Apps that
+            redefine the boundaries of creativity and performance 🚀. Your digital canvas awaits! 👩‍🎨
           </span>
         </div>
         <div className="mx-auto mt-10 w-full max-w-sm sm:flex sm:w-fit sm:max-w-none sm:justify-center">
@@ -254,9 +239,7 @@ function LandingCard({ description, icon, title }: any) {
                 {icon}
               </span>
             </div>
-            <p className="truncate text-base font-bold text-gray-900 dark:text-white">
-              {title}
-            </p>
+            <p className="truncate text-base font-bold text-gray-900 dark:text-white">{title}</p>
             <div className="mt-1 text-[15px] text-gray-500 dark:text-gray-400">
               <div className="max-w-[65ch]">
                 <p className="m-0">{description}</p>
@@ -277,8 +260,7 @@ function Features() {
           One PWA Framework to rule them all
         </h2>
         <p className="mx-auto mt-4 max-w-3xl text-center font-nunito font-light text-slate-900 dark:text-white sm:mt-5 sm:text-lg md:text-xl">
-          Create captivating native experiences with each line of code, where
-          imagination knows no bounds.
+          Create captivating native experiences with each line of code, where imagination knows no bounds.
         </p>
       </div>
       <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-8 px-4 sm:mt-10 sm:grid-cols-2 sm:px-6 lg:px-8 xl:grid-cols-3">
@@ -297,11 +279,7 @@ function Features() {
           icon="🪧"
           description="Bringing the power of Service Workers into your routes."
         />
-        <LandingCard
-          title="TypeScript"
-          icon="🦺"
-          description="TypeScript support out-of-the-box."
-        />
+        <LandingCard title="TypeScript" icon="🦺" description="TypeScript support out-of-the-box." />
         <LandingCard
           title="Runtimes"
           icon="⚙️"
@@ -334,19 +312,16 @@ function Features() {
 
 const sponsors = [
   {
-    image:
-      'https://images.opencollective.com/anirudh-ravichandran/f6363f4/avatar/256.png?height=256',
+    image: 'https://images.opencollective.com/anirudh-ravichandran/f6363f4/avatar/256.png?height=256',
   },
   {
-    image:
-      'https://images.opencollective.com/rphlmr/34235d1/avatar/256.png?height=256',
+    image: 'https://images.opencollective.com/rphlmr/34235d1/avatar/256.png?height=256',
   },
   {
     image: 'https://avatars.githubusercontent.com/u/18480956?v=4',
   },
   {
-    image:
-      'https://pbs.twimg.com/profile_images/1178585409271582720/I7FgUqMz_400x400.jpg',
+    image: 'https://pbs.twimg.com/profile_images/1178585409271582720/I7FgUqMz_400x400.jpg',
   },
   {
     image: 'https://avatars.githubusercontent.com/u/1288694?v=4',
@@ -374,9 +349,7 @@ function Sponsor({ image, link }: any) {
 function Sponsors() {
   return (
     <div className="py-12 sm:py-20">
-      <h3 className="mx-auto mb-10 text-center font-nasa text-2xl sm:mb-12 sm:text-3xl lg:text-4xl">
-        💖 Sponsors
-      </h3>
+      <h3 className="mx-auto mb-10 text-center font-nasa text-2xl sm:mb-12 sm:text-3xl lg:text-4xl">💖 Sponsors</h3>
       <div className="mx-auto grid max-w-lg grid-cols-7 content-center items-center justify-center px-8 align-middle">
         {sponsors.map((sponsor, index) => (
           <Sponsor key={index} {...sponsor} />
@@ -449,15 +422,8 @@ function Contributors() {
       <h3 className="mx-auto mb-10 text-center font-nasa text-2xl sm:mb-12 sm:text-3xl lg:text-4xl">
         Made by the community
       </h3>
-      <a
-        href="https://github.com/remix-pwa/monorepo/graphs/contributors"
-        className=""
-      >
-        <img
-          src="https://contrib.rocks/image?repo=remix-pwa/monorepo"
-          className="mx-auto"
-          alt="Contributors"
-        />
+      <a href="https://github.com/remix-pwa/monorepo/graphs/contributors" className="">
+        <img src="https://contrib.rocks/image?repo=remix-pwa/monorepo" className="mx-auto" alt="Contributors" />
       </a>
     </div>
   )
@@ -478,10 +444,7 @@ export default function Index() {
             <div className="text-center text-slate-900 dark:text-white">
               <p className="text-sm font-light">
                 Made with ❤️ by the&nbsp;
-                <a
-                  href="https://github.com/orgs/remix-pwa/people"
-                  className="hover:underline"
-                >
+                <a href="https://github.com/orgs/remix-pwa/people" className="hover:underline">
                   Remix PWA team
                 </a>
               </p>

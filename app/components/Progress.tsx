@@ -1,7 +1,7 @@
 import { useNavigation } from '@remix-run/react'
+import clsx from 'clsx'
 import { useEffect, useRef, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
-import clsx from 'clsx'
 
 export function Progress() {
   const transition = useNavigation()
@@ -17,9 +17,7 @@ export function Progress() {
     if (!ref.current) return
     if (delayedPending) setAnimationComplete(false)
 
-    const animationPromises = ref.current
-      .getAnimations()
-      .map(({ finished }) => finished)
+    const animationPromises = ref.current.getAnimations().map(({ finished }) => finished)
 
     Promise.allSettled(animationPromises).then(() => {
       if (!delayedPending) setAnimationComplete(true)
@@ -37,10 +35,7 @@ export function Progress() {
         ref={ref}
         className={clsx(
           'h-full w-0 bg-gradient-to-r from-blue-500 to-purple-500 duration-500 ease-in-out',
-          transition.state === 'idle' &&
-            (animationComplete
-              ? 'transition-none'
-              : 'w-full opacity-0 transition-all'),
+          transition.state === 'idle' && (animationComplete ? 'transition-none' : 'w-full opacity-0 transition-all'),
           delayedPending && transition.state === 'submitting' && 'w-5/12',
           delayedPending && transition.state === 'loading' && 'w-9/12'
         )}

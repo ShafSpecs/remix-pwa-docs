@@ -16,10 +16,8 @@ export function nearestScrollableContainer(el: Element) {
     const canScrollY = el.clientHeight < el.scrollHeight
     const canScrollX = el.clientWidth < el.scrollWidth
 
-    const isScrollableY =
-      canScrollY && (overflowY === 'auto' || overflowY === 'scroll')
-    const isScrollableX =
-      canScrollX && (overflowX === 'auto' || overflowX === 'scroll')
+    const isScrollableY = canScrollY && (overflowY === 'auto' || overflowY === 'scroll')
+    const isScrollableX = canScrollX && (overflowX === 'auto' || overflowX === 'scroll')
 
     return isScrollableY || isScrollableX
   }

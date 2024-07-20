@@ -4,8 +4,7 @@ import { useEffect } from 'react'
 export const clientHints = {
   theme: {
     cookieName: 'CH-prefers-color-scheme',
-    getValueCode:
-      "window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'",
+    getValueCode: "window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'",
     fallback: 'light',
     transform(value: string) {
       return value === 'dark' ? 'dark' : 'light'
@@ -25,10 +24,7 @@ type ClientHintsNames = keyof typeof clientHints
 /**
  * Returns the value of a Client Hint from the provided Cookie string.
  */
-function getClientHintCookieValue(
-  cookieString: string,
-  name: ClientHintsNames
-) {
+function getClientHintCookieValue(cookieString: string, name: ClientHintsNames) {
   const hint = clientHints[name]
 
   if (!hint) {
@@ -59,13 +55,10 @@ export function getHints(request?: Request) {
       const hintName = name as ClientHintsNames
 
       if ('transform' in hint) {
-        acc[hintName] = hint.transform(
-          getClientHintCookieValue(cookieString, hintName) ?? hint.fallback
-        )
+        acc[hintName] = hint.transform(getClientHintCookieValue(cookieString, hintName) ?? hint.fallback)
       } else {
         // @ts-expect-error - No error on here, requires Epic Stack PR fix.
-        acc[hintName] =
-          getClientHintCookieValue(cookieString, hintName) ?? hint.fallback
+        acc[hintName] = getClientHintCookieValue(cookieString, hintName) ?? hint.fallback
       }
 
       return acc

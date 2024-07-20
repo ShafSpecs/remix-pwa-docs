@@ -1,20 +1,13 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData,
-} from '@remix-run/react'
 // import { DocSearch } from '@docsearch/react'
 import { json } from '@remix-run/node'
 import type { LoaderFunctionArgs } from '@remix-run/node'
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react'
 
 import { ClientHints, getHints } from './components/ClientHint'
-import { useTheme } from './hooks/useTheme'
-import { getTheme } from './utils/server/theme.server'
-import { getVersions } from './utils/server/doc.server'
 import { Progress } from './components/Progress'
+import { useTheme } from './hooks/useTheme'
+import { getVersions } from './utils/server/doc.server'
+import { getTheme } from './utils/server/theme.server'
 
 import '@docsearch/css'
 import './styles/code.css'
@@ -51,21 +44,13 @@ export default function Document() {
   const theme = useTheme()
 
   return (
-    <html
-      lang="en"
-      className={`h-full overflow-x-hidden ${theme} antialiased`}
-      data-theme={theme}
-    >
+    <html lang="en" className={`h-full overflow-x-hidden ${theme} antialiased`} data-theme={theme}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <ClientHints />
-        <link
-          rel="preconnect"
-          href="https://S80GZZAO4K-dsn.algolia.net"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://S80GZZAO4K-dsn.algolia.net" crossOrigin="anonymous" />
         <Links />
       </head>
       <body className="bg-background-color">

@@ -1,17 +1,17 @@
 import { readFileSync } from 'fs'
-import { bundleMDX } from 'mdx-bundler'
 import { join } from 'path'
+import { bundleMDX } from 'mdx-bundler'
 import { cwd } from 'process'
+import slug from 'rehype-slug'
 import emoji from 'remark-emoji'
 import gfm from 'remark-gfm'
-import slug from 'rehype-slug'
 
 import type { FrontMatterType } from '~/types/mdx'
 
-import role from '../../rehype/role'
 import checkbox from '../../rehype/checkbox'
-import toc from '../../remark/toc'
+import role from '../../rehype/role'
 import highlight from '../../remark/highlight'
+import toc from '../../remark/toc'
 
 export async function mdxToHtml(source: string) {
   // inject Heading into the doc just below the frontmatter
@@ -26,35 +26,16 @@ export async function mdxToHtml(source: string) {
     const { code, frontmatter } = await bundleMDX<FrontMatterType>({
       source: injectHeading(source),
       files: {
-        './info.tsx': readFileSync(
-          join(cwd(), 'app', 'components/plugins/Info.tsx')
-        ).toString(),
-        './warn.tsx': readFileSync(
-          join(cwd(), 'app', 'components/plugins/Warn.tsx')
-        ).toString(),
-        './heading.tsx': readFileSync(
-          join(cwd(), 'app', 'components/plugins/Heading.tsx')
-        ).toString(),
-        './details.tsx': readFileSync(
-          join(cwd(), 'app', 'components/plugins/Details.tsx')
-        ).toString(),
-        './Editor.tsx': readFileSync(
-          join(cwd(), 'app', 'components/plugins/Editor.tsx')
-        ).toString(),
-        './snippet.tsx': readFileSync(
-          join(cwd(), 'app', 'components/plugins/Snippet.tsx')
-        ).toString(),
+        './info.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Info.tsx')).toString(),
+        './warn.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Warn.tsx')).toString(),
+        './heading.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Heading.tsx')).toString(),
+        './details.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Details.tsx')).toString(),
+        './Editor.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Editor.tsx')).toString(),
+        './snippet.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Snippet.tsx')).toString(),
       },
       mdxOptions(options) {
         options.rehypePlugins = [...(options.rehypePlugins || []), role, slug]
-        options.remarkPlugins = [
-          ...(options.remarkPlugins || []),
-          checkbox,
-          highlight,
-          toc,
-          gfm,
-          emoji,
-        ]
+        options.remarkPlugins = [...(options.remarkPlugins || []), checkbox, highlight, toc, gfm, emoji]
 
         return options
       },

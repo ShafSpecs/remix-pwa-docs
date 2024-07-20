@@ -1,4 +1,4 @@
-import { serialize, parse } from 'cookie'
+import { parse, serialize } from 'cookie'
 
 const cookieName = 'en_theme'
 export type Theme = 'light' | 'dark'

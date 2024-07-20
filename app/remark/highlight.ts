@@ -1,5 +1,5 @@
-import JSON5 from 'json5'
 import { parse } from 'acorn'
+import JSON5 from 'json5'
 import { visit } from 'unist-util-visit'
 
 import { highlightCode } from './utils'
@@ -13,27 +13,17 @@ export default () => {
 
       const lightCode = node.value.replace(
         re,
-        (_match: any, before: any, _key: any, _value: any, after: any) =>
-          `${before}${after}`
+        (_match: any, before: any, _key: any, _value: any, after: any) => `${before}${after}`
       )
-      const darkCode = node.value.replace(
-        re,
-        (_match: any, before: any, key: any, value: any, after: any) =>
-          `${before}${after}`.replace(
-            new RegExp(`(\\s${key})="[^"]+"`),
-            `$1="${value}"`
-          )
+      const darkCode = node.value.replace(re, (_match: any, before: any, key: any, value: any, after: any) =>
+        `${before}${after}`.replace(new RegExp(`(\\s${key})="[^"]+"`), `$1="${value}"`)
       )
 
       node.type = 'mdxJsxFlowElement'
       let code
 
       if (lightCode === darkCode) {
-        code = [
-          `<code class="language-${node.lang}">`,
-          highlightCode(lightCode, node.lang),
-          '</code>',
-        ]
+        code = [`<code class="language-${node.lang}">`, highlightCode(lightCode, node.lang), '</code>']
           .filter(Boolean)
           .join('')
       } else {

@@ -1,11 +1,8 @@
 import { json } from '@remix-run/node'
-import type { MetaFunction, LoaderFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 
 import { Documentation } from '~/components/layout/Documentation'
-import {
-  getPostContent,
-  getPreviousAndNextRoutes,
-} from '~/utils/server/doc.server'
+import { getPostContent, getPreviousAndNextRoutes } from '~/utils/server/doc.server'
 import { mdxToHtml } from '~/utils/server/mdx.server'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -47,8 +44,7 @@ export const meta: MetaFunction = ({ data }: { data: any }) => {
     { property: 'og:url', content: 'https://remix-pwa.run' },
     {
       property: 'twitter:description',
-      content:
-        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+      content: 'The home of Remix PWA. A PWA Framework that redefines web experiences.',
     },
     { property: 'og:locale', content: 'en_US' },
     {
@@ -72,8 +68,7 @@ export const meta: MetaFunction = ({ data }: { data: any }) => {
     { property: 'og:image:type', content: 'image/png' },
     {
       property: 'og:description',
-      content:
-        'The home of Remix PWA. A PWA Framework that redefines web experiences.',
+      content: 'The home of Remix PWA. A PWA Framework that redefines web experiences.',
     },
   ]
 }

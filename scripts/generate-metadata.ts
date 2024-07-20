@@ -1,17 +1,14 @@
+import { existsSync, readFileSync, readdirSync, statSync } from 'fs'
 import { resolve } from 'path'
+import { request } from '@octokit/request'
 import { readFile, readdir, writeFile } from 'fs/promises'
-import { existsSync, statSync, readdirSync, readFileSync } from 'fs'
 import matter from 'gray-matter'
 import { normalizePath } from 'vite'
-import { request } from '@octokit/request'
 import 'dotenv/config'
 
 console.log('Generating metadata...')
 
-const __dirname =
-  process.env.NODE_ENV === 'development'
-    ? resolve()
-    : process.env.GITHUB_WORKSPACE ?? ''
+const __dirname = process.env.NODE_ENV === 'development' ? resolve() : process.env.GITHUB_WORKSPACE ?? ''
 
 /**
  * The reserved name for the index file of every doc section
@@ -21,10 +18,7 @@ const __dirname =
 const INDEX_FILE = 'index.md'
 
 const postDirectory = resolve(__dirname, 'posts')
-const versions = await readFile(
-  resolve(postDirectory, 'versions.json'),
-  'utf-8'
-)
+const versions = await readFile(resolve(postDirectory, 'versions.json'), 'utf-8')
 const tags = JSON.parse(versions).map((v: any) => v.tag) as Array<string>
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -85,9 +79,7 @@ tags.forEach(async tag => {
       const fileContent = readFileSync(`${file}`, 'utf-8')
       const f = matter(fileContent)
       f.data.slug = file.replace('.mdx', '')
-      f.data.section = normalizePath(file.replace('.mdx', ''))
-        .split('/')
-        .slice(-2, -1)[0]
+      f.data.section = normalizePath(file.replace('.mdx', '')).split('/').slice(-2, -1)[0]
       return f
     })
     .filter(f => f.data.hidden !== true)
@@ -141,21 +133,14 @@ tags.forEach(async tag => {
   metadataObject.meta = _f
 
   if (process.env.NODE_ENV === 'development') {
-    await writeFile(
-      resolve(currentDirectory, 'metadata.json'),
-      JSON.stringify(metadataObject, null, 2),
-      'utf-8'
-    )
+    await writeFile(resolve(currentDirectory, 'metadata.json'), JSON.stringify(metadataObject, null, 2), 'utf-8')
   } else {
-    const { data } = await request(
-      'GET /repos/{owner}/{repo}/contents/{path}',
-      {
-        owner: process.env.GITHUB_OWNER ?? '',
-        repo: process.env.GITHUB_REPO ?? '',
-        path: `posts/${tag}/metadata.json`,
-        ref: 'main',
-      }
-    )
+    const { data } = await request('GET /repos/{owner}/{repo}/contents/{path}', {
+      owner: process.env.GITHUB_OWNER ?? '',
+      repo: process.env.GITHUB_REPO ?? '',
+      path: `posts/${tag}/metadata.json`,
+      ref: 'main',
+    })
 
     // @ts-ignore
     const content = Buffer.from(data.content, 'base64').toString('utf-8')
@@ -175,9 +160,7 @@ tags.forEach(async tag => {
       path: `posts/${tag}/metadata.json`,
       message: '📃 Update metadata.json',
       ref: 'main',
-      content: Buffer.from(JSON.stringify(metadataObject, null, 2)).toString(
-        'base64'
-      ),
+      content: Buffer.from(JSON.stringify(metadataObject, null, 2)).toString('base64'),
       sha,
       headers: {
         authorization: `token ${process.env.GITHUB_TOKEN}`,

@@ -1,6 +1,6 @@
 import slugify from '@sindresorhus/slugify'
-import { toString } from 'mdast-util-to-string'
 import { parseExpressionAt } from 'acorn'
+import { toString } from 'mdast-util-to-string'
 import { filter } from 'unist-util-filter'
 
 import { addExport } from './utils'
@@ -41,28 +41,20 @@ export default () => {
         }
 
         if (tree.children[nodeIndex + 1]) {
-          const { children, position, value, ...element } =
-            tree.children[nodeIndex + 1]
+          const { children, position, value, ...element } = tree.children[nodeIndex + 1]
           if (element.type === 'heading') {
             // @ts-ignore
             props.nextElement = element
           }
         }
 
-        if (
-          node.children[0].type === 'mdxJsxTextElement' &&
-          node.children[0].name === 'Heading'
-        ) {
-          const override = node.children[0].attributes.find(
-            (attr: any) => attr.name === 'toc'
-          )?.value
+        if (node.children[0].type === 'mdxJsxTextElement' && node.children[0].name === 'Heading') {
+          const override = node.children[0].attributes.find((attr: any) => attr.name === 'toc')?.value
           if (override) {
             title = override
             slug = slugify(title)
             props.id = slug
-            node.children[0].attributes = node.children[0].attributes.filter(
-              (attr: any) => attr.name !== 'toc'
-            )
+            node.children[0].attributes = node.children[0].attributes.filter((attr: any) => attr.name !== 'toc')
           }
 
           for (const prop in props) {

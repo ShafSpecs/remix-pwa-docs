@@ -10,10 +10,7 @@ export function useTableOfContents(tableOfContents: any) {
   const [headings, setHeadings] = useState<{ id: string; top: number }[]>([])
 
   const registerHeading = useCallback((id: string) => {
-    setHeadings(headings => [
-      ...headings.filter(h => id !== h.id),
-      { id, top: getTop(id) },
-    ])
+    setHeadings(headings => [...headings.filter(h => id !== h.id), { id, top: getTop(id) }])
   }, [])
 
   const unregisterHeading = useCallback((id: string) => {
@@ -25,9 +22,7 @@ export function useTableOfContents(tableOfContents: any) {
 
     function onScroll() {
       const style = window.getComputedStyle(document.documentElement)
-      let scrollMt = parseFloat(
-        style.getPropertyValue('--scroll-mt').match(/[\d.]+/)?.[0] ?? '0'
-      )
+      let scrollMt = parseFloat(style.getPropertyValue('--scroll-mt').match(/[\d.]+/)?.[0] ?? '0')
       const fontSize = parseFloat(style.fontSize.match(/[\d.]+/)?.[0] ?? '16')
       scrollMt = scrollMt * fontSize
 

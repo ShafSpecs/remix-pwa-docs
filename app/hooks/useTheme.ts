@@ -34,9 +34,7 @@ export function useTheme() {
  */
 export function useOptimisticThemeMode() {
   const fetchers = useFetchers()
-  const themeFetcher = fetchers.find(
-    f => f.formAction?.startsWith('/updateTheme')
-  )
+  const themeFetcher = fetchers.find(f => f.formAction?.startsWith('/updateTheme'))
 
   if (themeFetcher && themeFetcher.formData) {
     const formData = Object.fromEntries(themeFetcher.formData)
