@@ -6,7 +6,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
-import { DocSearch } from '@docsearch/react'
+// import { DocSearch } from '@docsearch/react'
 import { json } from '@remix-run/node'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 
@@ -70,12 +70,12 @@ export default function Document() {
       </head>
       <body className="bg-background-color">
         <App />
-        <DocSearch
+        {/* <DocSearch
           apiKey={loaderData.env.algoliaApiKey}
           indexName="remix-pwa"
           appId={loaderData.env.algoliaAppId}
           insights
-        />
+        /> */}
         <Progress />
         <ScrollRestoration />
         <Scripts />
