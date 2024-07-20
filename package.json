@@ -4,7 +4,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "apply": "npx @biomejs/biome check --apply .",
+    "apply": "npx @biomejs/biome check --write .",
     "build": "remix vite:build",
     "clean": "rimraf build",
     "deploy": "fly deploy --remote-only",
@@ -13,7 +13,7 @@
     "format": "npx @biomejs/biome format .",
     "format:write": "npx @biomejs/biome format --write .",
     "lint": "npx @biomejs/biome lint .",
-    "lint:fix": "npx @biomejs/biome lint --apply .",
+    "lint:fix": "npx @biomejs/biome lint --write .",
     "nuke": "echo \"☢️ Running nuke command...\n\";npm run clean && rimraf node_modules package-lock.json && npm i && patch-package",
     "postclone": "npm run nuke",
     "postinstall": "patch-package",
