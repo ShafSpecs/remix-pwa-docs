@@ -9,7 +9,7 @@ import { useTheme } from './hooks/useTheme'
 import { getVersions } from './utils/server/doc.server'
 import { getTheme } from './utils/server/theme.server'
 
-import '@docsearch/css'
+// import '@docsearch/css'
 import './styles/code.css'
 import './styles/documentation.css'
 import './styles/fonts.css'
