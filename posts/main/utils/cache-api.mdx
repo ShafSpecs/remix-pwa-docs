@@ -37,7 +37,7 @@ Why did we say main strategies? Because you can also create your own custom stra
 The methods provided are:
 
 - `async openCache(): Promise<Cache>`: This method is used to open the cache that the strategy will use (which is provided during instantiation). It returns a promise that resolves to the cache (of `this` object).
-- `ensureRequest(request: Request | string | URL): Request`: This utility method is used to ensure that the request is a `Request` object. If it's a string or URL, it converts it to a `Request` object.
+- `ensureRequest(request: RequestInfo | URL): Request`: This utility method is used to ensure that the request is a `Request` object. If it's a string or URL, it converts it to a `Request` object.
 - `async cleanupCache(): Promise<void>`: This method is used to clean up the cache based on pre-defined parameters. It returns a promise that resolves when the cleanup is done.
 - `addTimestampHeader(response: Response): Response`: This utility method is used to add a timestamp header to a response. This is used by the `cleanupCache` method to determine the age of an item in the cache.
 - `handleRequest(request: Request): Promise<Response>`: The abstract method of `BaseStrategy`. This method is used to handle the request and return a response. It must be implemented by all strategies.
@@ -77,6 +77,7 @@ where:
   - `maxAgeSeconds`: The maximum age (in seconds) of an item in the cache. If an item is older than this, it will be removed during cleanup.
   - `maxEntries`: The maximum number of items in the cache. If the cache has more items than this, the oldest items will be removed during cleanup.
   - `ignoreRoutes`: An array of routes to ignore when caching. This is useful for unique routes that should not be cached and handled specially instead.
+  - `matchOptions` 🆕: An object that defines the match options for the cache. This can be used to specify how the cache should match requests.
 
 ### `CacheFirst`
 

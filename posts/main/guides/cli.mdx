@@ -65,7 +65,7 @@ remix-pwa sw --dest app/pwa/service-worker.ts # writes the service worker to `./
   If changing the destination for service workers, ensure to update the Vite plugin accordingly.
 </Info>
 
-## `update` 🆕
+## `update`
 
 *Alias: `upgrade`*
 
@@ -75,6 +75,7 @@ It takes in the following arguments:
 
 - `--packages` (`-p`): The packages you want to update, without the `@remix-pwa/` prefix. Defaults to all packages
 - `--root` (`-r`): The root of the Remix project. Defaults to `process.cwd()` (current working directory)
+- `--dev` (`-D`) 🆕: Update the packages to their latest dev versions. Defaults to `false`
 
 ```sh
 # updates all packages
@@ -82,6 +83,10 @@ npx remix-pwa update
 
 # updates just @remix-pwa/dev & @remix-pwa/sw
 npx remix-pwa update -p dev sw
+
+# updates all packages to the latest `dev` versions
+# (package@dev)
+npx remix-pwa update -D
 
 # updates all packages in the app/remix-app folder
 npx remix-pwa update -r ./apps/remix-app

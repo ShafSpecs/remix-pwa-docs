@@ -40,6 +40,28 @@ By default, the service worker is registered automatically.
 
 The `workerBuildDirectory` option of type: `string` is used to set the directory where the service worker is built to. **Default**: `public` in dev and `build/client` in production. Note the lack of leading or trailing slashes.
 
+### `buildVariables` 🆕
+
+The `buildVariables` option of type: `Record<string, string>` is used to inject build variables into the service worker. Do note that these variables are visible in the browser, so don't inject private keys!
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  plugins: [
+    remixPWA({
+      buildVariables: {
+        'process.env.API_URL': 'https://api.example.com',
+        'myVar': 'myValue',
+      },
+    }),
+  ],
+});
+
+// entry.worker.ts
+console.log(process.env.API_URL); // https://api.example.com
+console.log(myVar); // myValue
+```
+
 ### `scope`
 
 The scope of the service worker within your application, this is used by the internal registration injection to set the scope of the service worker. **Default**: `/`.
@@ -82,6 +104,6 @@ The `workerSourceMap` option of type: `boolean` is used to set wether to generat
 
 ### `workerEntryPoint`
 
-This is used to set the entry point of the service worker (also known as runtime in Remix PWA). <b>Default</b>: `@remix-pwa/worker-runtime`.
+This is used to set the entry point of the service worker (also known as runtime in Remix PWA). **Default**: `@remix-pwa/worker-runtime`.
 
 To create your own runtime, check out the runtime guide.
