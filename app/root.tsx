@@ -40,7 +40,6 @@ function App() {
 }
 
 export default function Document() {
-  const loaderData = useLoaderData<typeof loader>()
   const theme = useTheme()
 
   return (
