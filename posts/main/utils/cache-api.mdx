@@ -65,6 +65,8 @@ It's important to note that the `BaseStrategy` class is an abstract class and ca
 export interface CacheOptions {
   maxAgeSeconds?: number;
   maxEntries?: number;
+  ignoreRoutes?: string[] | RegExp[];
+  matchOptions?: CacheQueryOptions;
 }
 
 new BaseStrategy(cacheName: string, options?: CacheOptions)
