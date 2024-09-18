@@ -218,12 +218,9 @@ export default {
         // },
       },
       fontFamily: {
+        sans: ['Geist', ...defaultTheme.fontFamily.sans],
         nunito: ['Nunito', ...defaultTheme.fontFamily.sans],
-        inter: ['Inter var', ...defaultTheme.fontFamily.sans],
-        styrene: ['Styrene', ...defaultTheme.fontFamily.sans],
         mono: ['JetBrains Mono', ...defaultTheme.fontFamily.mono],
-        fira: ['Fira Code', ...defaultTheme.fontFamily.mono],
-        space: ['Space', ...defaultTheme.fontFamily.sans],
         nasa: ['Nasa', ...defaultTheme.fontFamily.sans],
         benzin: ['Benzin', ...defaultTheme.fontFamily.sans],
       },

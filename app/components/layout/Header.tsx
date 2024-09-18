@@ -35,19 +35,19 @@ function Breadcrumb({
         </Disclosure.Button>
         {/* eslint-disable-next-line multiline-ternary */}
         {section.length > 0 ? (
-          <ol className="ml-4 flex min-w-0 whitespace-nowrap text-sm leading-6">
+          <ol className="flex ml-4 min-w-0 text-sm leading-6 whitespace-nowrap">
             {section && (
               <li className="flex items-center text-sm text-slate-500 dark:text-slate-400">
                 {section}
-                <svg width="3" height="6" aria-hidden="true" className="mx-3 overflow-visible text-slate-400">
+                <svg width="3" height="6" aria-hidden="true" className="overflow-visible mx-3 text-slate-400">
                   <path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               </li>
             )}
-            <li className="truncate font-semibold text-slate-900 dark:text-slate-200">{title}</li>
+            <li className="font-semibold truncate text-slate-900 dark:text-slate-200">{title}</li>
           </ol>
         ) : (
-          <ol className="ml-4 flex min-w-0 whitespace-nowrap text-sm leading-6">
+          <ol className="flex ml-4 min-w-0 text-sm leading-6 whitespace-nowrap">
             <li className="flex items-center text-sm text-slate-500 dark:text-slate-400">Journal Stack Home</li>
           </ol>
         )}
@@ -110,27 +110,27 @@ function MobileSidebar({
       <animated.div
         style={style}
         className={clsx(
-          'fixed inset-0 left-0 top-0 z-[999] h-screen w-screen items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur lg:hidden',
+          'overflow-y-auto fixed inset-0 top-0 left-0 items-start pr-10 w-screen h-screen backdrop-blur z-[999] bg-slate-900/50 lg:hidden',
           navIsOpen ? 'flex' : 'hidden'
         )}
       >
         <div
           ref={sidebarRef}
-          className="z-50 min-h-full w-80 max-w-xs bg-white px-4 pb-12 pt-5 dark:bg-slate-900 sm:px-6"
+          className="z-50 px-4 pt-5 pb-12 w-80 max-w-xs min-h-full bg-white dark:bg-slate-900 sm:px-6"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex justify-between items-center">
             <Link to={'/'}>
-              <img src="/images/RemixPWA.png" alt="Remix PWA" className="h-10 w-10" />
+              <img src="/images/RemixPWA.png" alt="Remix PWA" className="w-10 h-10" />
             </Link>
             <Disclosure.Button className="relative focus:outline-none focus:ring-0" onClick={() => setNavIsOpen(false)}>
               <XIcon
-                className="block h-6 w-6 stroke-2 text-slate-700 dark:text-sky-100"
+                className="block w-6 h-6 stroke-2 text-slate-700 dark:text-sky-100"
                 stroke="currentColor"
                 aria-hidden="true"
               />
             </Disclosure.Button>
           </div>
-          <nav className="mt-5 px-1 text-base lg:text-sm">
+          <nav className="px-1 mt-5 text-base lg:text-sm">
             <ul className="space-y-8">
               {docList.map((section: { section: string; children: any[] }, index: number) => {
                 return (
@@ -151,8 +151,8 @@ function MobileSidebar({
                             >
                               {({ isActive }) => (
                                 <span
-                                  className={clsx('-ml-px block border-l pl-4', {
-                                    'border-current font-semibold text-sky-500 dark:text-sky-400': isActive,
+                                  className={clsx('block pl-4 -ml-px border-l', {
+                                    'font-semibold text-sky-500 border-current dark:text-sky-400': isActive,
                                     'border-transparent hover:border-slate-400 dark:hover:border-slate-500': !isActive,
                                     'text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300':
                                       !isActive,
@@ -253,37 +253,37 @@ export default function Header({
           <div className="mx-auto max-w-8xl">
             <div
               className={
-                'mx-4 border-b border-slate-900/10 py-2 dark:border-slate-300/10 md:py-3 lg:mx-0 lg:border-0 lg:px-8 lg:py-4'
+                'py-2 mx-4 border-b border-slate-900/10 dark:border-slate-300/10 md:py-3 lg:mx-0 lg:border-0 lg:px-8 lg:py-4'
               }
             >
-              <div className="relative flex content-center items-center">
+              <div className="flex relative content-center items-center">
                 <Link aria-label="Home page" to="/" reloadDocument className="md:flex">
                   <img
                     src="/images/RemixPWA.png"
                     alt="Remix PWA"
-                    className="mr-1 h-8 w-8 self-center text-center md:hidden"
+                    className="self-center mr-1 text-center size-8 md:size-9"
                   />
                   <span className="sr-only">Remix PWA home page</span>
-                  <p className="relative hidden font-benzin text-4xl font-bold text-slate-700 dark:text-sky-100 md:flex">
+                  {/* <p className="hidden relative text-4xl font-bold font-benzin text-slate-700 dark:text-sky-100 md:flex">
                     <img
                       src="/images/RemixPWA.png"
                       alt="Remix PWA"
                       className="mr-2.5 h-9 w-9 self-center text-center"
                     />
                     <span className="mr-2">Remix</span>
-                    <span className="h-full bg-gradient-to-tr from-indigo-500 to-sky-300 bg-clip-text pr-1 text-transparent dark:from-indigo-400 dark:to-sky-200">
+                    <span className="pr-1 h-full text-transparent bg-clip-text bg-gradient-to-tr from-indigo-500 to-sky-300 dark:from-indigo-400 dark:to-sky-200">
                       PWA
                     </span>
-                  </p>
+                  </p> */}
                 </Link>
                 {/* eslint-disable-next-line multiline-ternary */}
                 {versions.length > 1 ? (
-                  <div className="relative ml-3 pt-1.5">
-                    <Menu as="div" className="relative inline-block text-left">
+                  <div className="relative ml-4 pt-1.5">
+                    <Menu as="div" className="inline-block relative text-left">
                       <div>
-                        <Menu.Button className="dark:highlight-white/5 flex items-center space-x-2 rounded-full bg-slate-400/10 px-3 py-1 text-sm font-medium leading-5 text-slate-400 hover:bg-slate-400/20">
+                        <Menu.Button className="flex items-center px-3 py-1 space-x-2 text-sm font-medium leading-5 text-gray-500 rounded-full dark:text-gray-400 dark:highlight-white/5 bg-slate-400/10 hover:bg-slate-400/20">
                           {currentTag}
-                          <ChevronDownIcon className="ml-2 h-3 w-3 stroke-slate-400 stroke-2" aria-hidden="true" />
+                          <ChevronDownIcon className="ml-2 w-3 h-3 stroke-2 stroke-gray-500 dark:stroke-gray-400" aria-hidden="true" />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -295,7 +295,7 @@ export default function Header({
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="dark:highlight-white/5 absolute left-0 top-full mt-1 w-40 origin-top-left rounded-lg bg-white py-2 text-sm font-medium leading-6 text-slate-700 shadow ring-1 ring-slate-900/5 dark:bg-slate-800 dark:text-slate-300">
+                        <Menu.Items className="absolute left-0 top-full py-2 mt-1 w-40 text-sm font-medium leading-6 bg-white rounded-lg ring-1 shadow origin-top-left dark:highlight-white/5 text-slate-700 ring-slate-900/5 dark:bg-slate-800 dark:text-slate-300">
                           {versions.map((version: string) => (
                             <Menu.Item key={version} disabled={currentTag === version}>
                               {({ active }) => (
@@ -306,8 +306,8 @@ export default function Header({
                                       ? 'flex items-center justify-between px-3 py-1 text-sky-500 dark:text-sky-400'
                                       : 'block px-3 py-1',
                                     active &&
-                                      currentTag !== version &&
-                                      'cursor-pointer bg-slate-50 text-slate-900 dark:bg-slate-600/30 dark:text-white'
+                                    currentTag !== version &&
+                                    'cursor-pointer bg-slate-50 text-slate-900 dark:bg-slate-600/30 dark:text-white'
                                   )}
                                   onClick={() => navigate(`/docs/${version}`)}
                                   role="button"
@@ -335,44 +335,132 @@ export default function Header({
                     </Menu>
                   </div>
                 ) : null}
-                <div className="relative flex flex-grow basis-0 justify-end gap-6 sm:gap-8">
-                  <div className="relative flex basis-0 content-center justify-end gap-6 sm:gap-6 md:flex-grow">
-                    {/* <button
-                      type="button"
-                      className="flex h-6 w-6 lg:hidden"
-                      onClick={() => query.toggle()}
-                    >
-                      <SearchIcon className="h-6 w-6 flex-none text-slate-400 group-hover:fill-slate-500 dark:text-slate-500 md:group-hover:text-slate-400" />
-                      <span className="sr-only select-none">Search docs</span>
-                    </button> */}
-                    <div className="relative z-10">
-                      <a
-                        className="flex h-6 w-6 items-center justify-center rounded-lg shadow-md shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5 hover:dark:bg-slate-600"
-                        href="https://github.com/sponsors/ShafSpecs"
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        <HeartIcon className="h-4 w-4 text-pink-500" />
-                      </a>
-                    </div>
+                <div className="flex relative flex-grow gap-6 justify-end basis-0 sm:gap-8">
+                  <div className="flex relative gap-6 justify-end content-center basis-0 sm:gap-6 md:flex-grow">
+                    {/* Stat keeper */}
+                    <nav className="text-sm">
+                      <ul className="flex items-center space-x-6">
+                        <li className="block cursor-pointer lg:hidden">
+                          <a
+                            href="https://github.com/remix-pwa/monorepo"
+                            aria-label="GitHub"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <div className="flex items-center space-x-3 group">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1024"
+                                height="1024"
+                                viewBox="0 0 1024 1024"
+                                fill="currentColor"
+                                className="w-5 h-5"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"
+                                  transform="scale(64)"
+                                ></path>
+                              </svg>
+                              <div className="font-normal">
+                                <div className="text-sm font-medium text-gray-700 group-hover:text-gray-900 dark:text-gray-300 dark:group-hover:text-gray-200">
+                                  remix-pwa{/* */}/{/* */}monorepo
+                                </div>
+                                <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                                  <span className="flex items-center space-x-1">
+                                    <svg
+                                      className="w-3 h-3 bg-gray-600 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
+                                      style={{
+                                        // maskImage: "url(&quot",
+                                        // https: "//mintlify.b-cdn.net/v6.6.0/regular/star.svg&quot",
+                                        maskRepeat: "no-repeat",
+                                        maskPosition: "center center",
+                                      }}
+                                    ></svg>
+                                    <span>329</span>
+                                  </span>
+                                  <span className="flex items-center space-x-1">
+                                    <svg
+                                      className="w-3 h-3 bg-gray-600 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
+                                      style={{
+                                        maskImage: "url(&quot",
+                                        // https:
+                                        //   "//mintlify.b-cdn.net/v6.6.0/regular/code-fork.svg&quot",
+                                        maskRepeat: "no-repeat",
+                                        maskPosition: "center center",
+                                      }}
+                                    ></svg>
+                                    <span>6</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </li>
+                        <li className="hidden cursor-pointer lg:flex">
+                          <a
+                            href="https://github.com/medama-io/medama"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <div className="flex items-center space-x-3 group">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1024"
+                                height="1024"
+                                viewBox="0 0 1024 1024"
+                                fill="currentColor"
+                                className="w-5 h-5"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"
+                                  transform="scale(64)"
+                                ></path>
+                              </svg>
+                              <div className="font-normal">
+                                <div className="text-sm font-medium text-gray-700 group-hover:text-gray-900 dark:text-gray-300 dark:group-hover:text-gray-200">
+                                  medama-io{/* */}/{/* */}medama
+                                </div>
+                                <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                                  <span className="flex items-center space-x-1">
+                                    <svg
+                                      className="w-3 h-3 bg-gray-600 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
+                                      style={{
+                                        // maskImage: "url(&quot",
+                                        // https: "//mintlify.b-cdn.net/v6.6.0/regular/star.svg&quot",
+                                        maskRepeat: "no-repeat",
+                                        maskPosition: "center center",
+                                      }}
+                                    ></svg>
+                                    <span>329</span>
+                                  </span>
+                                  <span className="flex items-center space-x-1">
+                                    <svg
+                                      className="w-3 h-3 bg-gray-600 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
+                                      style={{
+                                        // maskImage: "url(&quot",
+                                        // https:
+                                        //   "//mintlify.b-cdn.net/v6.6.0/regular/code-fork.svg&quot",
+                                        maskRepeat: "no-repeat",
+                                        maskPosition: "center center",
+                                      }}
+                                    ></svg>
+                                    <span>6</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </nav>
+                    {/* Theme Switcher */}
                     <div className="relative z-10">
                       <ThemeSwitcher />
                     </div>
-                    <a
-                      className="group"
-                      aria-label="GitHub"
-                      href="https://github.com/remix-pwa/monorepo"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 16 16"
-                        className="h-6 w-6 fill-slate-400 group-hover:fill-slate-500 dark:group-hover:fill-slate-300"
-                      >
-                        <path d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"></path>
-                      </svg>
-                    </a>
                   </div>
                 </div>
               </div>

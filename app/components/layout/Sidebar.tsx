@@ -84,41 +84,7 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
 
   return (
     <nav ref={scrollRef} id="nav" className="relative lg:text-sm lg:leading-6">
-      <div className="pointer-events-none sticky top-0 -ml-0.5">
-        <div className="hidden h-10 bg-white dark:bg-slate-900 lg:block" />
-        <div className="pointer-events-auto relative hidden bg-white dark:bg-slate-900 lg:block">
-          <button
-            // onClick={() => query.toggle()}
-            type="button"
-            className="dark:highlight-white/5 hidden w-full items-center rounded-md py-1.5 pl-2 pr-3 text-sm leading-6 text-slate-400 shadow-sm outline-none ring-slate-900/10 hover:ring-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 lg:flex"
-          >
-            <>
-              <svg width="24" height="24" fill="none" aria-hidden="true" className="mr-3 flex-none">
-                <path
-                  d="m19 19-3.5-3.5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle
-                  cx="11"
-                  cy="11"
-                  r="6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Quick search...
-              {/* eslint-disable-next-line multiline-ternary */}
-              {actionKey ? <span className="ml-auto flex-none pl-3 text-xs font-semibold">{actionKey[0]}K</span> : null}
-            </>
-          </button>
-        </div>
-        <div className="hidden h-8 bg-gradient-to-b from-white dark:from-slate-900 lg:block" />
-      </div>
+      <div className="sticky top-0 h-8"></div>
       <ul className="lg:-mt-6">
         {docList.map((section: { section: string; children: any[] }, index: number) => {
           return (
@@ -136,8 +102,8 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
                       <NavLink prefetch="intent" to={`/docs/${tag ?? DEFAULT_TAG ?? 'main'}/${sub.slug}`} end={true}>
                         {({ isActive }) => (
                           <span
-                            className={clsx('-ml-px block border-l pl-4', {
-                              'border-current font-semibold text-sky-500 dark:text-sky-400': isActive,
+                            className={clsx('block py-0.5 pl-4 -ml-px border-l', {
+                              'font-semibold text-sky-500 border-current dark:text-sky-400': isActive,
                               'border-transparent hover:border-slate-400 dark:hover:border-slate-500': !isActive,
                               'text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300':
                                 !isActive,
