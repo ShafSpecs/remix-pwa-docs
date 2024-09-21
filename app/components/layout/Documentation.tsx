@@ -73,14 +73,16 @@ export function Documentation({
   return (
     <div
       className={clsx(
-        'mx-auto max-w-3xl pt-10 xl:max-w-none',
-        frontmatter.toc ? 'xl:ml-0 xl:mr-[15.5rem] xl:pr-16' : ''
+        // 'mx-auto max-w-3xl pt-10 xl:max-w-none',
+        // frontmatter.toc ? 'xl:ml-0 xl:mr-[15.5rem] xl:pr-16' : ''
+        'mx-auto max-w-3xl pt-10 xl:ml-0 xl:mr-[15.5rem] xl:pr-16',
       )}
     >
-      <div className="mb-8 flex-auto scroll-smooth">
+      <div className="flex-auto mb-8 scroll-smooth">
         <article>
           <header id="header" className="relative z-20">
             <div>
+              {/* <div className="h-5 text-sm font-semibold eyebrow text-primary dark:text-primary-light">{frontmatter.se}</div> */}
               <h5 className="mb-2 text-sm font-semibold leading-6 text-sky-500 dark:text-sky-400">
                 {frontmatter.section}
               </h5>
@@ -101,10 +103,10 @@ export function Documentation({
             <Component />
           </main>
         </article>
-        <dl className="mt-12 flex border-t border-slate-200 pt-6 dark:border-slate-800">
+        <dl className="flex pt-6 mt-12 border-t border-slate-200 dark:border-slate-800">
           {prev && (
             <div>
-              <dt className="font-display text-sm font-medium text-slate-900 dark:text-white">Previous</dt>
+              <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Previous</dt>
               <dd className="mt-1">
                 <Link
                   className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
@@ -119,7 +121,7 @@ export function Documentation({
           )}
           {next && (
             <div className="ml-auto text-right">
-              <dt className="font-display text-sm font-medium text-slate-900 dark:text-white">Next</dt>
+              <dt className="text-sm font-medium font-display text-slate-900 dark:text-white">Next</dt>
               <dd className="mt-1">
                 <Link
                   className="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
@@ -134,7 +136,7 @@ export function Documentation({
           )}
         </dl>
         {/* Hack to get some space at the bottom of the page */}
-        <div className="h-12 w-full bg-transparent" />
+        <div className="w-full h-12 bg-transparent" />
       </div>
       {/* eslint-disable-next-line multiline-ternary */}
       {frontmatter.toc ? (
@@ -160,7 +162,7 @@ export function Documentation({
                       href={`#${section.slug}`}
                       // onClick={closeNav}
                       className={clsx(
-                        'toc-anchor block py-1',
+                        'block py-1 toc-anchor',
                         pageHasSubsections ? 'font-medium' : '',
                         isActive(section)
                           ? 'font-medium text-sky-500 dark:text-sky-400'
@@ -179,7 +181,7 @@ export function Documentation({
                         href={`#${subsection.slug}`}
                         // onClick={closeNav}
                         className={clsx(
-                          'toc-anchor group flex items-start py-1',
+                          'flex items-start py-1 toc-anchor group',
                           isActive(subsection)
                             ? 'text-sky-500 dark:text-sky-400'
                             : 'hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300'
@@ -192,7 +194,7 @@ export function Documentation({
                           width="3"
                           height="24"
                           viewBox="0 -9 3 24"
-                          className="mr-2 overflow-visible text-slate-400 group-hover:text-slate-600 dark:text-slate-600 dark:group-hover:text-slate-500"
+                          className="overflow-visible mr-2 text-slate-400 group-hover:text-slate-600 dark:text-slate-600 dark:group-hover:text-slate-500"
                         >
                           <path
                             d="M0 0L3 3L0 6"
