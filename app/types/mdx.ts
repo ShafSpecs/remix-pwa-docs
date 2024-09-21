@@ -6,4 +6,5 @@ export type FrontMatterType = {
   toc?: boolean
   hidden?: boolean
   spacer?: boolean
+  section: string
 }

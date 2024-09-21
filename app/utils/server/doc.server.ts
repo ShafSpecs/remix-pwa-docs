@@ -145,6 +145,19 @@ export const getFirstPost = async (tag: string) => {
   return meta.meta[Object.keys(paths)[0]]
 }
 
+export const getPostSection = async (tag: string, slug: string) => {
+  const metadata = await getParsedMetadata(tag)
+
+  // If no metadata, something is inherently wrong!
+  if (!metadata) {
+    throw new Error('No docs metadata found! Make sure to generate a metadata for your doc posts!')
+  }
+
+  return {
+    section: metadata.meta[slug].section ?? null
+  }
+}
+
 export const getVersions = async () => {
   if (process.env.NODE_ENV === 'development') {
     const content = await readFile(resolve(_dirname, '../../../', 'posts/versions.json'), 'utf-8')
