@@ -13,11 +13,21 @@ import role from '../../rehype/role'
 import highlight from '../../remark/highlight'
 import toc from '../../remark/toc'
 
+const IMPORT_STATEMENT = `
+import Heading from './heading.tsx'
+import Editor from './Editor.tsx'
+import Warn from './warn.tsx'
+import Snippet from './snippet.tsx'
+import Info from './info.tsx'
+import Details from './details.tsx'
+import Tooltip from './tooltip.tsx'
+`
+
 export async function mdxToHtml(source: string) {
   // inject Heading into the doc just below the frontmatter
   const injectHeading = (source: string) => {
     const frontMatterEnd = source.indexOf('---', 10) + 3
-    return `${source.slice(0, frontMatterEnd)}\n\nimport Heading from './heading.tsx'\nimport Editor from './Editor.tsx'${source.slice(
+    return `${source.slice(0, frontMatterEnd)}\n\n${IMPORT_STATEMENT}${source.slice(
       frontMatterEnd
     )}`
   }
@@ -32,6 +42,7 @@ export async function mdxToHtml(source: string) {
         './details.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Details.tsx')).toString(),
         './Editor.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Editor.tsx')).toString(),
         './snippet.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Snippet.tsx')).toString(),
+        './tooltip.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Tooltip.tsx')).toString(),
       },
       mdxOptions(options) {
         options.rehypePlugins = [...(options.rehypePlugins || []), role, slug]

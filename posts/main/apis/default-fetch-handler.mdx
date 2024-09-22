@@ -3,11 +3,6 @@ title: defaultFetchHandler
 description: "Your default handler for fetching requests in your Service Worker."
 alternateTitle: defaultFetchHandler
 ---
-
-import Info from './info.tsx'
-import Warn from './warn.tsx'
-import Details from './details.tsx'
-
 In a normal client-server architecture, the client makes a request to the server, and the server responds with the requested data. When a Service Worker is introduced, there is a middleman between the client and the server. That intercepts requests and responses coming from both ends and forward it to the other end.
 
 That interception in the Service Worker is done by the `fetch` event. The `fetch` event is triggered whenever a request is made from the client. The Service Worker can intercept this request and respond with the data from a data source (could be the server, a cache storage, or any other source).

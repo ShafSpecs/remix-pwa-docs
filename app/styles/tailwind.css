@@ -25,7 +25,7 @@
 }
 
 html {
-  font-family: 'Styrene', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue;
+  font-family: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue;
   font-feature-settings: "liga", 0;
   /* font-feature-settings: "cv02","cv03","cv04","cv11"; */
   font-size: 16px;
@@ -37,7 +37,7 @@ body {
 }
 
 ::view-transition-group(root) {
-  animation-duration: 1.25s;
+  animation-duration: .75s;
 }
 ::view-transition-new(root),
 ::view-transition-old(root) {
