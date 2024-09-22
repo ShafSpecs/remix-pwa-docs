@@ -1,7 +1,7 @@
 // import { DocSearch } from '@docsearch/react'
 import { json } from '@remix-run/node'
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react'
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react'
 
 import { ClientHints, getHints } from './components/ClientHint'
 import { Progress } from './components/Progress'
@@ -43,7 +43,7 @@ export default function Document() {
   const theme = useTheme()
 
   return (
-    <html lang="en" className={`h-full overflow-x-hidden ${theme} antialiased`} data-theme={theme}>
+    <html lang="en" className={`overflow-x-hidden h-full antialiased ${theme}`} data-theme={theme}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
