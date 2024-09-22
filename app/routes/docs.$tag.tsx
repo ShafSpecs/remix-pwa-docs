@@ -1,4 +1,4 @@
-import { json } from '@remix-run/node'
+import { json as serverJson } from '@remix-run/node'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import type { ClientLoaderFunctionArgs } from '@remix-run/react'
 import { Outlet } from '@remix-run/react'
@@ -20,9 +20,21 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     metadata = (await getParsedMetadata(params.tag)) ?? metadata
   }
 
-  return json({
+  const DOMAIN = process.env.NODE_ENV === 'production' ? 'https://remix-pwa.run' : 'http://localhost:3000'
+
+  const data = await fetch(DOMAIN + '/github_stats')
+    .then(res => res.json())
+    .catch((_) => ({
+      stars: 0,
+      forks: 0,
+      fullName: 'remix-pwa/monorepo',
+      url: 'https://github.com/remix-pwa/monorepo',
+    }))
+
+  return serverJson({
     metadata,
     tag: params.tag,
+    ...data,
   })
 }
 

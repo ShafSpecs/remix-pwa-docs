@@ -16,6 +16,11 @@ import toc from '../../remark/toc'
 const IMPORT_STATEMENT = `
 import Heading from './heading.tsx'
 import Editor from './Editor.tsx'
+import Warn from './warn.tsx'
+import Snippet from './snippet.tsx'
+import Info from './info.tsx'
+import Details from './details.tsx'
+import Tooltip from './tooltip.tsx'
 `
 
 export async function mdxToHtml(source: string) {
@@ -37,6 +42,7 @@ export async function mdxToHtml(source: string) {
         './details.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Details.tsx')).toString(),
         './Editor.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Editor.tsx')).toString(),
         './snippet.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Snippet.tsx')).toString(),
+        './tooltip.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Tooltip.tsx')).toString(),
       },
       mdxOptions(options) {
         options.rehypePlugins = [...(options.rehypePlugins || []), role, slug]

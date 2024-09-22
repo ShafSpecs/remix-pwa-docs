@@ -144,12 +144,36 @@ export function Documentation({
           <nav aria-labelledby="on-this-page-title" className="px-8">
             {/* eslint-disable-next-line multiline-ternary */}
             {tableOfContents.length > 0 ? (
-              <h2
+              <div
                 id="on-this-page-title"
-                className="mb-4 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100"
+                className="flex items-center mb-2.5 space-x-2 text-sm font-medium text-slate-900 dark:text-slate-100"
               >
-                On this page
-              </h2>
+                <svg
+                  width={16}
+                  height={16}
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="size-3"
+                >
+                  <path
+                    d="M2.44434 12.6665H13.5554"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M2.44434 3.3335H13.5554"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path d="M2.44434 8H7.33323" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>
+                  On this page
+                </span>
+              </div>
             ) : (
               <p></p>
             )}

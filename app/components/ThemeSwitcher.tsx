@@ -1,5 +1,4 @@
 import { useFetcher } from '@remix-run/react'
-import { MoonIcon, SunIcon } from 'lucide-react'
 
 import { useTheme } from '~/hooks/useTheme'
 

@@ -1,7 +1,7 @@
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Link, NavLink, useLocation, useNavigate, useRouteLoaderData } from '@remix-run/react'
+import { Link, NavLink, useFetcher, useLocation, useNavigate, useRouteLoaderData } from '@remix-run/react'
 import clsx from 'clsx'
-import { ChevronDownIcon, HeartIcon, XIcon } from 'lucide-react'
+import { ChevronDownIcon, XIcon } from 'lucide-react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { animated, useTransition } from 'react-spring'
 
@@ -188,6 +188,11 @@ export default function Header({
   const navigate = useNavigate()
   const location = useLocation()
   const { versions } = useRouteLoaderData('root') as { versions: string[] }
+  const { stars, forks, fullName, url } = useRouteLoaderData<any>('routes/docs.$tag')
+  // const stars = 100;
+  // const forks = 10;
+  // const fullName = 'remix-pwa/monoepo';
+  // const url = 'https://github.com'
 
   const [navIsOpen, setNavIsOpen] = useState(false)
   const [isOpaque, setIsOpaque] = useState(false)
@@ -303,7 +308,7 @@ export default function Header({
                                 <span
                                   className={clsx(
                                     currentTag === version
-                                      ? 'flex items-center justify-between px-3 py-1 text-sky-500 dark:text-sky-400'
+                                      ? 'flex items-center justify-between px-3 py-1 text-sky-500 dark:text-sky-400 cursor-pointer'
                                       : 'block px-3 py-1',
                                     active &&
                                     currentTag !== version &&
@@ -340,115 +345,48 @@ export default function Header({
                     {/* Stat keeper */}
                     <nav className="text-sm">
                       <ul className="flex items-center space-x-6">
-                        <li className="block cursor-pointer lg:hidden">
-                          <a
-                            href="https://github.com/remix-pwa/monorepo"
-                            aria-label="GitHub"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <div className="flex items-center space-x-3 group">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="1024"
-                                height="1024"
-                                viewBox="0 0 1024 1024"
-                                fill="currentColor"
-                                className="w-5 h-5"
-                              >
-                                <path
-                                  fill-rule="evenodd"
-                                  clip-rule="evenodd"
-                                  d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"
-                                  transform="scale(64)"
-                                ></path>
-                              </svg>
-                              <div className="font-normal">
-                                <div className="text-sm font-medium text-gray-700 group-hover:text-gray-900 dark:text-gray-300 dark:group-hover:text-gray-200">
-                                  remix-pwa{/* */}/{/* */}monorepo
-                                </div>
-                                <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">
-                                  <span className="flex items-center space-x-1">
-                                    <svg
-                                      className="w-3 h-3 bg-gray-600 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
-                                      style={{
-                                        // maskImage: "url(&quot",
-                                        // https: "//mintlify.b-cdn.net/v6.6.0/regular/star.svg&quot",
-                                        maskRepeat: "no-repeat",
-                                        maskPosition: "center center",
-                                      }}
-                                    ></svg>
-                                    <span>329</span>
-                                  </span>
-                                  <span className="flex items-center space-x-1">
-                                    <svg
-                                      className="w-3 h-3 bg-gray-600 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
-                                      style={{
-                                        maskImage: "url(&quot",
-                                        // https:
-                                        //   "//mintlify.b-cdn.net/v6.6.0/regular/code-fork.svg&quot",
-                                        maskRepeat: "no-repeat",
-                                        maskPosition: "center center",
-                                      }}
-                                    ></svg>
-                                    <span>6</span>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                        </li>
                         <li className="hidden cursor-pointer lg:flex">
                           <a
-                            href="https://github.com/medama-io/medama"
+                            href={url}
                             target="_blank"
                             rel="noreferrer"
                           >
                             <div className="flex items-center space-x-3 group">
                               <svg
+                                role="img"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
-                                width="1024"
-                                height="1024"
-                                viewBox="0 0 1024 1024"
-                                fill="currentColor"
-                                className="w-5 h-5"
+                                className='size-5 fill-gray-700 group-hover:fill-gray-900 dark:fill-gray-300 dark:group-hover:fill-gray-200'
                               >
-                                <path
-                                  fill-rule="evenodd"
-                                  clip-rule="evenodd"
-                                  d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"
-                                  transform="scale(64)"
-                                ></path>
+                                <title>{"GitHub"}</title>
+                                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
                               </svg>
                               <div className="font-normal">
                                 <div className="text-sm font-medium text-gray-700 group-hover:text-gray-900 dark:text-gray-300 dark:group-hover:text-gray-200">
-                                  medama-io{/* */}/{/* */}medama
+                                  {fullName}
                                 </div>
                                 <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">
                                   <span className="flex items-center space-x-1">
                                     <svg
-                                      className="w-3 h-3 bg-gray-600 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
+                                      className="bg-gray-600 size-3 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
                                       style={{
-                                        // maskImage: "url(&quot",
-                                        // https: "//mintlify.b-cdn.net/v6.6.0/regular/star.svg&quot",
+                                        maskImage: "url('/star.svg')",
                                         maskRepeat: "no-repeat",
                                         maskPosition: "center center",
                                       }}
-                                    ></svg>
-                                    <span>329</span>
+                                    />
+                                    <span>{stars}</span>
                                   </span>
                                   <span className="flex items-center space-x-1">
                                     <svg
-                                      className="w-3 h-3 bg-gray-600 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
+                                      className="bg-gray-600 size-3 dark:bg-gray-400 group-hover:bg-gray-700 dark:group-hover:bg-gray-300"
                                       style={{
-                                        // maskImage: "url(&quot",
-                                        // https:
-                                        //   "//mintlify.b-cdn.net/v6.6.0/regular/code-fork.svg&quot",
+                                        maskImage: "url('/fork.svg')",
                                         maskRepeat: "no-repeat",
                                         maskPosition: "center center",
                                       }}
-                                    ></svg>
-                                    <span>6</span>
+                                    />
+                                    <span>{forks}</span>
                                   </span>
                                 </div>
                               </div>
