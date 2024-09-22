@@ -3,11 +3,6 @@ title: Cache API
 description: "This page takes you on a tour of caching in the browser with Remix PWA and the utilities provided"
 alternateTitle: Cache API
 ---
-
-import Info from './info.tsx'
-import Details from './details.tsx'
-import Snippet from './snippet.tsx'
-
 Caching is a crucial part of a good Progressive Web App. It allows you to store assets and data in the browser for later use, reducing the need to fetch them from the network. This can lead to faster load times, reduced data usage, and a better user experience.
 
 In the browser, there are several key-value stores you can use for caching. There is the [Session Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) which is cleared when the browser is closed, [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) which persists even after the browser is closed, [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) which is a more powerful database-like storage, and the [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache) which is specifically designed for caching requests/responses.

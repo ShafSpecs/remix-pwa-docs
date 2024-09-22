@@ -5,9 +5,6 @@ alternateTitle: getLoadContext
 toc: false
 ---
 
-import Warn from './warn.tsx'
-import Info from './info.tsx'
-
 The `getLoadContext` function is another handler within the entry service worker that allows you to create a global context object for the worker thread.
 
 The output of this function is what determines what your `context` object would look anywhere within the various worker APIs that utilizes it. It takes in the fetch event object as its lone argument and should return an object.
