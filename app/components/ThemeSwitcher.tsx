@@ -56,7 +56,7 @@ export const ThemeSwitcher = () => {
           height="16"
           fill="none"
           stroke="currentColor"
-          className="hidden text-gray-500 size-4 dark:block dark:group-hover:text-gray-300"
+          className="hidden text-gray-400 size-4 dark:block dark:group-hover:text-gray-300"
           viewBox="0 0 16 16"
         >
           <g clipPath="url(#clip0_2880_7355)">
