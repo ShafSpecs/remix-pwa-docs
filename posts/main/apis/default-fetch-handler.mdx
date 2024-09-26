@@ -22,7 +22,7 @@ In Remix PWA, the fetch event is handled implicitly (behind-the-scenes) by runti
 `defaultFetchHandler` should be defined in your service worker file, as mentioned earlier, they are the first fallback handler for all fetch requests.
 
 ```tsx {{ filename: 'entry.worker.ts' }}
-import type { WorkerDataFunctionArgs } from '@remix-pwa/dev';
+import type { WorkerDataFunctionArgs } from '@remix-pwa/sw';
 
 export const defaultFetchHandler = async ({
   request
