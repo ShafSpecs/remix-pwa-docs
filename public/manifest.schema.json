@@ -16,14 +16,17 @@
     },
     "icons": {
       "type": "array",
+      "description": "The `icons` manifest member is used to specify one or more image files that define the icons to represent your web application.",
       "items": {
         "type": "object",
         "properties": {
           "src": {
-            "type": "string"
+            "type": "string",
+            "description": "A string that specifies the path to the icon image file. If `src` is relative, the path is resolved relative to the manifest file's URL."
           },
           "sizes": {
-            "type": "string"
+            "type": "string",
+            "description": "A string that specifies one or more sizes at which the icon file can be used. Each size is specified as `<width in pixels>`x`<height in pixels>`."
           },
           "type": {
             "type": "string"
@@ -107,7 +110,8 @@
       }
     },
     "scope": {
-      "type": "string"
+      "type": "string",
+      "description": "The `scope` member is a string that defines the navigation scope of this web application's application context. It restricts what web pages can be viewed while the manifest is applied."
     },
     "screenshots": {
       "type": "array",
@@ -139,6 +143,7 @@
     },
     "shortcuts": {
       "type": "array",
+      "description": "The `shortcuts` member defines an array of shortcuts or links to key tasks or pages within a web app.",
       "items": {
         "type": "object",
         "properties": {
@@ -231,10 +236,12 @@
       "type": "string"
     },
     "background_color": {
-      "type": "string"
+      "type": "string",
+      "description": "The background_color member defines a placeholder background color for the application page to display before its stylesheet is loaded."
     },
     "theme_color": {
-      "type": "string"
+      "type": "string",
+      "description": "The theme_color member is a string that defines the default theme color for the application."
     },
     "categories": {
       "type": "array",
@@ -249,5 +256,11 @@
       }
     }
   },
-  "additionalProperties": false
+  "required": [
+    "name",
+    "start_url",
+    "scope",
+    "icons"
+  ],
+  "additionalProperties": true
 }
