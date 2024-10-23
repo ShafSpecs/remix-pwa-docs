@@ -1,21 +1,27 @@
 {
   "paths": {
-    "quick-start": "started/quick-start",
-    "v4": "started/v4",
-    "community": "started/community",
+    "quick-start": "getting-started/quick-start",
+    "technical-explanation": "discussion/technical-explanation",
+    "tutorial": "getting-started/tutorial",
+    "runtimes": "discussion/runtimes",
+    "v5": "getting-started/v5",
+    "pwa-vs-sw": "discussion/pwa-vs-sw",
+    "community": "getting-started/community",
+    "changelog": "getting-started/changelog",
     "default-fetch-handler": "apis/default-fetch-handler",
     "error-handler": "apis/error-handler",
     "get-load-context": "apis/get-load-context",
     "worker-action": "apis/worker-action",
     "worker-loader": "apis/worker-loader",
-    "manifest-link": "hooks/manifest-link",
-    "use-sw-effect": "hooks/use-sw-effect",
-    "use-badge-api": "hooks/use-badge-api",
-    "use-battery-manager": "hooks/use-battery-manager",
-    "use-network-connectivity": "hooks/use-network-connectivity",
-    "use-permission": "hooks/use-permission",
-    "use-push": "hooks/use-push",
-    "use-pwa-manager": "hooks/use-pwa-manager",
+    "install-pwa-globals": "hooks-components/install-pwa-globals",
+    "manifest-link": "hooks-components/manifest-link",
+    "pwa-scripts": "hooks-components/pwa-scripts",
+    "use-badge-api": "hooks-components/use-badge-api",
+    "use-battery-manager": "hooks-components/use-battery-manager",
+    "use-network-connectivity": "hooks-components/use-network-connectivity",
+    "use-permission": "hooks-components/use-permission",
+    "use-push": "hooks-components/use-push",
+    "use-pwa-manager": "hooks-components/use-pwa-manager",
     "cache-api": "utils/cache-api",
     "defer": "utils/defer",
     "json": "utils/json",
@@ -24,6 +30,7 @@
     "pwa-utils": "utils/pwa-utils",
     "redirect": "utils/redirect",
     "vite-config": "utils/vite-config",
+    "background-sync": "guides/background-sync",
     "browser-support": "guides/browser-support",
     "cli": "guides/cli",
     "contributing": "guides/contributing",
@@ -32,14 +39,15 @@
     "env": "guides/env",
     "gotchas": "guides/gotchas",
     "messaging": "guides/messaging",
-    "offline": "guides/offline",
     "push-api": "guides/push-api",
-    "runtimes": "guides/runtimes",
+    "single-fetch": "guides/single-fetch",
+    "spa": "guides/spa",
     "versioning": "guides/versioning",
     "web-manifest": "guides/web-manifest"
   },
   "sections": [
     "Getting Started",
+    "Discussion Topics",
     "Route & Worker APIs",
     "Hooks & Components",
     "Utilities",
@@ -50,32 +58,78 @@
       "title": "Quick Start",
       "alternateTitle": "Quick Start",
       "description": "Discover how to get started with Remix PWA in a Remix project",
-      "stub": false,
+      "stub": true,
       "section": "Getting Started",
       "slug": "quick-start",
       "spacer": true
     },
-    "v4": {
-      "title": "Ugrading to v4",
-      "alternateTitle": "Ugrading to v4",
-      "description": "This documentation covers the process of upgrading to v4 from older versions of Remix PWA.",
-      "stub": false,
+    "technical-explanation": {
+      "title": "Introduction & Technical Explanation",
+      "alternateTitle": "Technical Explanation",
+      "description": "How does Remix PWA work? What's under the hood 🥷? What makes it tick 🕒?",
+      "stub": true,
+      "section": "Discussion Topics",
+      "slug": "technical-explanation",
+      "spacer": true
+    },
+    "tutorial": {
+      "title": "Tutorial",
+      "alternateTitle": "Tutorial",
+      "description": "Build a small Progressive Web App with Remix",
+      "stub": true,
       "section": "Getting Started",
-      "slug": "v4"
+      "slug": "tutorial",
+      "spacer": true
+    },
+    "runtimes": {
+      "title": "Runtimes",
+      "alternateTitle": "Runtimes",
+      "description": "Runtimes are the foundations of Remix PWA service workers. Come explore how they work and the magic behind 'em 🧙‍♂️",
+      "stub": true,
+      "section": "Discussion Topics",
+      "slug": "runtimes",
+      "spacer": true
+    },
+    "v5": {
+      "title": "Upgrading to v5",
+      "alternateTitle": "Upgrading to v5",
+      "description": "Migrate your Remix PWA Application to v5",
+      "stub": true,
+      "section": "Getting Started",
+      "slug": "v5",
+      "spacer": true
+    },
+    "pwa-vs-sw": {
+      "title": "PWA vs Service Workers",
+      "alternateTitle": "PWA vs Service Workers",
+      "description": "What's the difference between PWA and Service Workers 🤔? What makes each special?",
+      "stub": true,
+      "section": "Discussion Topics",
+      "slug": "pwa-vs-sw",
+      "spacer": true
     },
     "community": {
       "title": "Community",
       "alternateTitle": "Community",
-      "description": "At the core of Remix PWA lies a passionate community of developers dedicated to open-source collaboration, knowledge-sharing, and driving the evolution of PWA technologies.",
-      "stub": false,
+      "description": "Getting help from friends in the community",
+      "stub": true,
       "section": "Getting Started",
-      "slug": "community"
+      "slug": "community",
+      "spacer": true
+    },
+    "changelog": {
+      "title": "Changelog",
+      "alternateTitle": "Changelog",
+      "description": "What's new in Remix PWA v5?",
+      "stub": true,
+      "section": "Getting Started",
+      "slug": "changelog"
     },
     "default-fetch-handler": {
       "title": "defaultFetchHandler",
       "alternateTitle": "defaultFetchHandler",
       "description": "Your default handler for fetching requests in your Service Worker.",
-      "stub": false,
+      "stub": true,
       "section": "Route & Worker APIs",
       "slug": "default-fetch-handler",
       "spacer": true
@@ -84,7 +138,7 @@
       "title": "errorHandler",
       "alternateTitle": "errorHandler",
       "description": "Your last defence against unhandled errors in your worker routes. Gracefully handle errors without breaking your Remix app.",
-      "stub": false,
+      "stub": true,
       "section": "Route & Worker APIs",
       "slug": "error-handler"
     },
@@ -92,7 +146,7 @@
       "title": "getLoadContext",
       "alternateTitle": "getLoadContext",
       "description": "Global context object for the worker thread. Share data globally between your workers in your routes and the entry service worker.",
-      "stub": false,
+      "stub": true,
       "section": "Route & Worker APIs",
       "slug": "get-load-context"
     },
@@ -100,7 +154,7 @@
       "title": "workerAction",
       "alternateTitle": "workerAction",
       "description": "Route Worker API for intercepting and handling non-GET request within a route.",
-      "stub": false,
+      "stub": true,
       "section": "Route & Worker APIs",
       "slug": "worker-action"
     },
@@ -108,32 +162,40 @@
       "title": "workerLoader",
       "alternateTitle": "workerLoader",
       "description": "Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes.",
-      "stub": false,
+      "stub": true,
       "section": "Route & Worker APIs",
       "slug": "worker-loader"
+    },
+    "install-pwa-globals": {
+      "title": "installPWAGlobals",
+      "alternateTitle": "installPWAGlobals",
+      "description": "A hook to handle service worker-required utilities on the client-side 💻",
+      "stub": true,
+      "section": "Hooks & Components",
+      "slug": "install-pwa-globals",
+      "spacer": true
     },
     "manifest-link": {
       "title": "ManifestLink",
       "alternateTitle": "ManifestLink",
-      "description": "A quick component to link to a manifest file.",
-      "stub": false,
+      "description": "A hook to handle linking to the web manifest file",
+      "stub": true,
       "section": "Hooks & Components",
-      "slug": "manifest-link",
-      "spacer": true
+      "slug": "manifest-link"
     },
-    "use-sw-effect": {
-      "title": "useSWEffect",
-      "alternateTitle": "useSWEffect",
-      "description": "React hook to facilitate worker messaging and notify Service Worker about location-based changes",
-      "stub": false,
+    "pwa-scripts": {
+      "title": "PWAScripts",
+      "alternateTitle": "PWAScripts",
+      "description": "A component to handle the installation & registration of Service Worker scripts",
+      "stub": true,
       "section": "Hooks & Components",
-      "slug": "use-sw-effect"
+      "slug": "pwa-scripts"
     },
     "use-badge-api": {
       "title": "useBadgeApi",
       "alternateTitle": "useBadgeApi",
       "description": "A utility hook to interact with the Web Badging API, allowing you to set notification badges on your app.",
-      "stub": false,
+      "stub": true,
       "section": "Hooks & Components",
       "slug": "use-badge-api"
     },
@@ -141,7 +203,7 @@
       "title": "useBatteryManager",
       "alternateTitle": "useBatteryManager",
       "description": "The useBatteryManager hook to interact with the BatteryManager API.",
-      "stub": false,
+      "stub": true,
       "section": "Hooks & Components",
       "slug": "use-battery-manager"
     },
@@ -149,7 +211,7 @@
       "title": "useNetworkConnectivity",
       "alternateTitle": "useNetworkConnectivity",
       "description": "A utility hook for interacting with device network connectivity state.",
-      "stub": false,
+      "stub": true,
       "section": "Hooks & Components",
       "slug": "use-network-connectivity"
     },
@@ -157,7 +219,7 @@
       "title": "usePermission",
       "alternateTitle": "usePermission",
       "description": "A hook on the Permission API; allowing you to check various permissions on the client.",
-      "stub": false,
+      "stub": true,
       "section": "Hooks & Components",
       "slug": "use-permission"
     },
@@ -165,7 +227,7 @@
       "title": "usePush",
       "alternateTitle": "usePush",
       "description": "A one-in-all utility hook for handling everything push notifications in your PWA application!",
-      "stub": false,
+      "stub": true,
       "section": "Hooks & Components",
       "slug": "use-push"
     },
@@ -173,7 +235,7 @@
       "title": "usePWAManager",
       "alternateTitle": "usePWAManager",
       "description": "A utility hook to manage your PWA application as a whole.",
-      "stub": false,
+      "stub": true,
       "section": "Hooks & Components",
       "slug": "use-pwa-manager"
     },
@@ -181,7 +243,7 @@
       "title": "Cache API",
       "alternateTitle": "Cache API",
       "description": "This page takes you on a tour of caching in the browser with Remix PWA and the utilities provided",
-      "stub": false,
+      "stub": true,
       "section": "Utilities",
       "slug": "cache-api",
       "spacer": true
@@ -206,7 +268,7 @@
       "title": "Logger",
       "alternateTitle": "Logger",
       "description": "Logger is a logging utility build for better looking logs in the console.",
-      "stub": false,
+      "stub": true,
       "section": "Utilities",
       "slug": "logger"
     },
@@ -214,7 +276,7 @@
       "title": "Miscellaneous",
       "alternateTitle": "Miscellaneous",
       "description": "A list of Service Worker utilities not worthy to have pages of their own.",
-      "stub": false,
+      "stub": true,
       "section": "Utilities",
       "slug": "misc"
     },
@@ -222,7 +284,7 @@
       "title": "PWA Utilities",
       "alternateTitle": "PWA Utilities",
       "description": "A list of the numerous utilities Remix PWA ships with to help you build and fine-tune your PWA experience",
-      "stub": false,
+      "stub": true,
       "section": "Utilities",
       "slug": "pwa-utils"
     },
@@ -238,9 +300,18 @@
       "title": "vite.config.ts",
       "alternateTitle": "vite.config.ts",
       "description": "Remix PWA Vite plugin configurations",
-      "stub": false,
+      "stub": true,
       "section": "Utilities",
       "slug": "vite-config"
+    },
+    "background-sync": {
+      "title": "Background Sync API",
+      "alternateTitle": "Background Sync",
+      "description": "Background Sync allows you to defer actions until the user has stable connectivity. This is useful for ensuring that whatever the user wants to send, is actually sent.",
+      "stub": true,
+      "section": "Guides",
+      "slug": "background-sync",
+      "spacer": true
     },
     "browser-support": {
       "title": "Browser Support",
@@ -248,14 +319,13 @@
       "description": "Not all browsers are created equal. A few things to keep in mind when developing for the web.",
       "stub": false,
       "section": "Guides",
-      "slug": "browser-support",
-      "spacer": true
+      "slug": "browser-support"
     },
     "cli": {
       "title": "Remix PWA CLI",
       "alternateTitle": "CLI",
       "description": "Streamlining PWA Development with a Powerful Command-Line Interface",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "cli"
     },
@@ -263,7 +333,7 @@
       "title": "Contributing to Remix PWA",
       "alternateTitle": "Contributing",
       "description": "Contributions are welcome. But with all things in life, there are things to take note about. This guide details how to contribute to Remix PWA.",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "contributing"
     },
@@ -271,7 +341,7 @@
       "title": "Deployment",
       "alternateTitle": "Deployment",
       "description": "A guide on how to safely and successfully deploy your PWAs",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "deployment"
     },
@@ -279,7 +349,7 @@
       "title": "EnhancedCache",
       "alternateTitle": "EnhancedCache",
       "description": "Meet EnhancedCache, a cache wrapper that provides utilities to manage, visualize, and monitor caches.",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "enhanced-cache"
     },
@@ -287,7 +357,7 @@
       "title": "Environment Variables",
       "alternateTitle": "Environment Variables",
       "description": "Environment variables are a way to store app state and config data outside of your codebase. A guide to access them safely within Remix PWA",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "env"
     },
@@ -295,7 +365,7 @@
       "title": "Gotchas",
       "alternateTitle": "Gotchas",
       "description": "A list of waht-not-to-do's and gotchas in Remix PWA. Safety first 😜!",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "gotchas"
     },
@@ -303,39 +373,39 @@
       "title": "Service Worker Messaging",
       "alternateTitle": "Messaging",
       "description": "Build a comprehensive communication system between your service worker and client.",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "messaging"
-    },
-    "offline": {
-      "title": "Offline Guide",
-      "alternateTitle": "Offline",
-      "description": "Add offline capabilities to your applications with Remix PWA",
-      "stub": false,
-      "section": "Guides",
-      "slug": "offline"
     },
     "push-api": {
       "title": "Push API",
       "alternateTitle": "Push API",
       "description": "Push API enables web applications to receive push messages from servers for re-engaging users, delivering timely updates, and fostering a persistent connection with the app.",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "push-api"
     },
-    "runtimes": {
-      "title": "Worker Runtimes",
-      "alternateTitle": "Runtimes",
-      "description": "Runtimes are the foundations of Remix PWA service workers. Come explore how they work and the magic behind 'em 🧙‍♂️",
-      "stub": false,
+    "single-fetch": {
+      "title": "Single Fetch Mode",
+      "alternateTitle": "Single Fetch",
+      "description": "Remix PWA and Remix's new single fetch mode",
+      "stub": true,
       "section": "Guides",
-      "slug": "runtimes"
+      "slug": "single-fetch"
+    },
+    "spa": {
+      "title": "SPA Mode",
+      "alternateTitle": "SPA Mode",
+      "description": "Remix PWA and SPA Mode",
+      "stub": true,
+      "section": "Guides",
+      "slug": "spa"
     },
     "versioning": {
       "title": "Versioning",
       "alternateTitle": "Versioning",
       "description": "Ensuring Seamless Updates and Efficient Caching with Versioned Service Workers",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "versioning"
     },
@@ -343,7 +413,7 @@
       "title": "Web Manifest",
       "alternateTitle": "Web Manifest",
       "description": "Web Manifests are the heart of PWAs. Explore how to create a Web Manifest for your Remix PWA in this guide.",
-      "stub": false,
+      "stub": true,
       "section": "Guides",
       "slug": "web-manifest"
     }

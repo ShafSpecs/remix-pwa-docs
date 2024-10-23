@@ -103,6 +103,7 @@ tags.forEach(async tag => {
         title: curr.data.title,
         alternateTitle: curr.data.alternateTitle,
         description: curr.data.description,
+        stub: curr.data.stub ?? false,
         section: sortedSections.find(s => s[1].slug === curr.data.section)[0],
         slug,
       }

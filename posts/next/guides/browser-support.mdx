@@ -1,0 +1,14 @@
+---
+title: Browser Support
+description: "Not all browsers are created equal. A few things to keep in mind when developing for the web."
+alternateTitle: Browser Support
+toc: false
+---
+
+When planning and building Progressive Web Apps, it's important to consider the browsers your users are using/target browsers. Thankfully, most of the major features are supported by all modern browsers (like `Cache API`, `Service Workers`, etc.), but when starting to head into the niche section, you need to start considering your approach.
+
+## Feature-by-feature approach
+
+What this means is that although Remix PWA ships with a lot of features and utilities, not all of them are available on all browsers. When adding more specific features (like WakeLock), ensure you've got compatibility on lock.
+
+You can use [caniuse.com](https://caniuse.com) to check for browser support. For example, if you want to use the WakeLock API, you can search for it on [caniuse.com](https://caniuse.com) and see that it is only supported on browsers, except Firefox, which is still in nightly development.
