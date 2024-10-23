@@ -11,6 +11,7 @@ import { DEFAULT_TAG } from '~/utils/defatult'
 import type { MetadataMetaType, MetadataType } from '~/utils/server/doc.server'
 
 import Header from './Header'
+import Stub from '../Stub'
 
 function Wrapper({
   allowOverflow,
@@ -111,6 +112,8 @@ function DocList({ meta, tag }: { meta: MetadataMetaType; tag: string }) {
                             })}
                           >
                             {sub.alternateTitle ?? sub.title}
+                            {' '}
+                            {sub.stub ? <Stub /> : null}
                           </span>
                         )}
                       </NavLink>

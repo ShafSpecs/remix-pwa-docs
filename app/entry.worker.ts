@@ -6,7 +6,7 @@ const GLOBAL_CACHE = new EnhancedCache('global-cache', {
   version: 'v1',
   strategy: 'CacheFirst',
   strategyOptions: {
-    maxAgeSeconds: 3_600 * 12,
+    maxAgeSeconds: 3_600 * 24,
     maxEntries: 16
   },
 });

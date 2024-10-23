@@ -1,5 +1,5 @@
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Link, NavLink, useFetcher, useLocation, useNavigate, useRouteLoaderData } from '@remix-run/react'
+import { Link, NavLink, useLocation, useNavigate, useRouteLoaderData } from '@remix-run/react'
 import clsx from 'clsx'
 import { ChevronDownIcon, XIcon } from 'lucide-react'
 import { Fragment, useEffect, useRef, useState } from 'react'
@@ -9,6 +9,7 @@ import { ThemeSwitcher } from '~/components/ThemeSwitcher'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 import { DEFAULT_TAG } from '~/utils/defatult'
 import type { MetadataType } from '~/utils/server/doc.server'
+import Stub from '../Stub'
 
 function Breadcrumb({
   section,
@@ -160,6 +161,8 @@ function MobileSidebar({
                                   })}
                                 >
                                   {sub.alternateTitle ?? sub.title}
+                                  {' '}
+                                  {sub.stub ? <Stub /> : null}
                                 </span>
                               )}
                             </NavLink>
