@@ -8,6 +8,11 @@ import { z } from "zod";
 // A nice todo would be implementing a cache for fetching from S3, if you can help with that, please do! :)
 // Thx
 
+const envSchema = z.object({
+  APP_ROOT_PATH: z.string().default(process.cwd()),
+})
+const { APP_ROOT_PATH: appRootPath } = envSchema.parse(process.env)
+
 // const s3 = new S3({
 //   apiVersion: '2012-10-17',
 //   region: 'eu-north-1',
@@ -53,54 +58,25 @@ const stripTrailingSlashes = (str: string): string => {
 };
 
 export const getParsedMetadata = async (tag: string) => {
-  if (process.env.NODE_ENV === "development") {
-    const content = await readFile(
-      resolve(_dirname, "../../../", `posts/${tag}/metadata.json`),
-      "utf-8"
-    );
-
-    if (!content) {
-      return null;
-    }
-
-    return MetadataSchema.parse(JSON.parse(content));
-  }
-
   const content = await readFile(
-    resolve(_dirname, "../../", `posts/${tag}/metadata.json`),
-    "utf-8"
-  );
+    resolve(appRootPath, `posts/${tag}/metadata.json`),
+    'utf-8'
+  )
 
   if (!content) {
-    return null;
+    return null
   }
 
-  return MetadataSchema.parse(JSON.parse(content));
-
-  // const promise = await s3.getObject({
-  //   Bucket: process.env.AWS_S3_BUCKET || '',
-  //   Key: `posts/${tag}/metadata.json`,
-  // })
-
-  // const content =
-  //   (await promise.Body?.transformToString()) || '{\npaths: {},\nhasIndex: false,\nsections: [],\nmeta: {},\n}'
-
-  // return MetadataSchema.parse(JSON.parse(content))
-};
+  return MetadataSchema.parse(JSON.parse(content))
+}
 
 export const tagHasIndex = async (tag: string) => {
-  if (process.env.NODE_ENV === "development") {
-    // use metadata to handle the cross-checking
-    // const metadata = await getParsedMetadata(tag)
-    // return metadata?.hasIndex
-    // or
-    return existsSync(
-      resolve(_dirname, "../../../", `posts/${tag}/_index.mdx`)
-    );
-  }
-
-  return ((await getParsedMetadata(tag)) ?? {}).hasIndex;
-};
+  // use metadata to handle the cross-checking
+  // const metadata = await getParsedMetadata(tag)
+  // return metadata?.hasIndex
+  // or
+  return existsSync(resolve(appRootPath, `posts/${tag}/_index.mdx`))
+}
 
 /**
  *
@@ -109,63 +85,32 @@ export const tagHasIndex = async (tag: string) => {
  * @returns
  */
 export const getPostContent = async (tag: string, slug: string) => {
-  const metadata = await getParsedMetadata(tag);
+  const metadata = await getParsedMetadata(tag)
 
   // If no metadata, something is inherently wrong!
   if (!metadata) {
     throw new Error(
-      "No docs metadata found! Make sure to generate a metadata for your doc posts!"
-    );
+      'No docs metadata found! Make sure to generate a metadata for your doc posts!'
+    )
   }
-
-  /**
-   * If we are in development mode, we can just read the file from the file system.
-   */
-  if (process.env.NODE_ENV === "development") {
-    const content = await readFile(
-      resolve(
-        _dirname,
-        "../../../",
-        `posts/${tag}/${slug === "/" ? "_index" : `${metadata.paths[stripTrailingSlashes(slug)]}`}.mdx`
-      ),
-      "utf-8"
-    );
-
-    if (!content) {
-      return null;
-    }
-
-    return content;
-  }
-
   const content = await readFile(
     resolve(
-      _dirname,
-      "../../",
-      `posts/${tag}/${slug === "/" ? "_index" : `${metadata.paths[stripTrailingSlashes(slug)]}`}.mdx`
+      appRootPath,
+      `posts/${tag}/${
+        slug === '/'
+          ? '_index'
+          : `${metadata.paths[stripTrailingSlashes(slug)]}`
+      }.mdx`
     ),
-    "utf-8"
-  );
+    'utf-8'
+  )
 
   if (!content) {
-    return null;
+    return null
   }
 
-  return content;
-
-  // const promise = await s3.getObject({
-  //   Bucket: process.env.AWS_S3_BUCKET || '',
-  //   Key: `posts/${tag}/${slug === '/' ? '_index' : `${metadata.paths[stripTrailingSlashes(slug)]}`}.mdx`,
-  // })
-
-  // const content = await promise.Body?.transformToString()
-
-  // if (!content) {
-  //   return null
-  // }
-
-  // return content
-};
+  return content
+}
 
 export const redirectToFirstPost = async (tag: string) => {
   const paths = (await getParsedMetadata(tag))?.paths ?? {};
@@ -198,47 +143,17 @@ export const getPostSection = async (tag: string, slug: string) => {
 };
 
 export const getVersions = async () => {
-  if (process.env.NODE_ENV === "development") {
-    const content = await readFile(
-      resolve(_dirname, "../../../", "posts/versions.json"),
-      "utf-8"
-    );
-
-    if (!content) {
-      return null;
-    }
-
-    return (JSON.parse(content) as Array<{ tag: string }>).map(
-      (version) => version.tag
-    );
-  }
-
-  const content = await readFile(
-    resolve(_dirname, "../../", "posts/versions.json"),
-    "utf-8"
-  );
+  const path = resolve(appRootPath, 'posts/versions.json')
+  const content = await readFile(path, 'utf-8')
 
   if (!content) {
-    return null;
+    return null
   }
 
   return (JSON.parse(content) as Array<{ tag: string }>).map(
-    (version) => version.tag
-  );
-
-  // const promise = await s3.getObject({
-  //   Bucket: process.env.AWS_S3_BUCKET || '',
-  //   Key: 'posts/versions.json',
-  // })
-
-  // const content = await promise.Body?.transformToString()
-
-  // if (!content) {
-  //   return null
-  // }
-
-  // return (JSON.parse(content) as Array<{ tag: string }>).map(version => version.tag)
-};
+    version => version.tag
+  )
+}
 
 // A better idea would be incorporating this into the metadata, but for now, this will do.
 export const getPreviousAndNextRoutes = async (

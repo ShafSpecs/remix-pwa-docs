@@ -3,7 +3,7 @@
 import { EnhancedCache, logger } from "@remix-pwa/sw";
 
 const GLOBAL_CACHE = new EnhancedCache('global-cache', {
-  version: 'v1',
+  version: 'v2',
   strategy: 'CacheFirst',
   strategyOptions: {
     maxAgeSeconds: 3_600 * 24,

@@ -7,12 +7,9 @@ node_modules
 .DS_Store
 
 /build
-/public/entry.worker.js
 
 ./test-results
 ./coverage
 ./playwright-report/**
 ./tests
 ./scripts
-
-/posts
