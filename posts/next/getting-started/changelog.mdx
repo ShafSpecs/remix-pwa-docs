@@ -3,6 +3,25 @@ title: Changelog
 description: "What's new in Remix PWA v5?"
 alternateTitle: Changelog
 order: 5
-stub: true
 ---
 
+A lot has changed in Remix PWA v5. New Remix features, React Router v7, faster builds, a new package and more.
+
+In this log, we would be exploring these changes part by part, allowing you to see the bigger picture of what exactly has changed.
+
+## `@remix-pwa/dev`
+
+The most important package within Remix PWA, responsible for building the service worker and making it easier to integrate with your Remix app.
+
+<Heading level={4}>Addition of `injectSWRegister` option</Heading>
+
+The `injectSWRegister` option is used to automatically inject the service worker registration code into your app. By default this is enabled, you can disable to handle the registration
+by yourself.
+
+<Heading level={4}>Deprecation of `registerSW` option</Heading>
+
+The `registerSW` option has been deprecated and would be removed in a future version. It has been replaced by the `injectSWRegister` option.
+
+<Heading level={4}>Removal of the `WebAppManifest` export</Heading>
+
+This has been moved to the `@remix-pwa/manifest` package.
