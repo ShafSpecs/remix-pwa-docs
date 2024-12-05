@@ -21,7 +21,7 @@ export function CopyButton({ code }: { code: string }) {
   }, [state, i])
 
   return (
-    <div className="relative -mr-2 hidden lg:flex">
+    <div className="hidden relative -mr-2 lg:flex">
       <button
         type="button"
         className={classNames(
@@ -43,7 +43,7 @@ export function CopyButton({ code }: { code: string }) {
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
-            className="h-8 w-8"
+            className="w-8 h-8"
           >
             <path d="M13 10.75h-1.25a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h8.5a2 2 0 0 0 2-2v-8.5a2 2 0 0 0-2-2H19" />
             <path d="M18 12.25h-4a1 1 0 0 1-1-1v-1.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1ZM13.75 16.25h4.5M13.75 19.25h4.5" />
@@ -55,7 +55,7 @@ export function CopyButton({ code }: { code: string }) {
             viewBox="0 0 24 24"
             strokeWidth={2.5}
             stroke="currentColor"
-            className="mr-2 h-5 w-5"
+            className="mr-2 w-5 h-5"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
@@ -82,7 +82,7 @@ function TabBar({
 }) {
   return (
     <div className="flex text-xs leading-6 text-slate-400">
-      <div className="flex flex-none items-center border-b border-t border-b-sky-300 border-t-transparent px-4 py-1 text-sky-300">
+      <div className="flex flex-none items-center px-4 py-1 text-sky-300 border-t border-b border-b-sky-300 border-t-transparent">
         {primary.name}
         {/* eslint-disable-next-line multiline-ternary */}
         {showTabMarkers && primary.saved ? (
@@ -108,7 +108,7 @@ function TabBar({
             {name}
           </div>
         ))}
-        {children && <div className="flex flex-auto items-center justify-end space-x-4 px-4">{children}</div>}
+        {children && <div className="flex flex-auto justify-end items-center px-4 space-x-4">{children}</div>}
       </div>
     </div>
   )
@@ -163,7 +163,7 @@ export function EditorPane({
   children?: any
 }) {
   return (
-    <div className="group bg-slate-800 pt-2 shadow-lg">
+    <div className="pt-2 shadow-lg group bg-slate-800">
       <TabBar
         primary={{
           name: filename,
@@ -177,23 +177,23 @@ export function EditorPane({
         className={classNames(
           'children:my-0 children:bg-transparent children:!shadow-none',
           scroll
-            ? 'scrollbar:transparent max-h-96 overflow-y-auto scrollbar:h-4 scrollbar:w-4 scrollbar-track:rounded scrollbar-thumb:rounded-full scrollbar-thumb:border-4 scrollbar-thumb:border-solid scrollbar-thumb:border-slate-800 scrollbar-thumb:bg-slate-500/50 group-hover:scrollbar-thumb:bg-slate-500/60'
+            ? 'overflow-y-auto max-h-96 scrollbar:transparent scrollbar:h-4 scrollbar:w-4 scrollbar-track:rounded scrollbar-thumb:rounded-full scrollbar-thumb:border-4 scrollbar-thumb:border-solid scrollbar-thumb:border-slate-800 scrollbar-thumb:bg-slate-500/50 group-hover:scrollbar-thumb:bg-slate-500/60'
             : ''
         )}
         {...(code
           ? {
-              dangerouslySetInnerHTML: {
-                __html: code,
-                // .split('\n')
-                // .map((line) => {
-                //   if (filename.toLowerCase() === 'terminal') {
-                //     line = `<span class="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" class="flex-none overflow-visible text-pink-400 w-auto h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="flex-auto">${line}</span></span>`
-                //   }
-                //   return line
-                // })
-                // .join(filename.toLowerCase() === 'terminal' ? '' : '\n'),
-              },
-            }
+            dangerouslySetInnerHTML: {
+              __html: code,
+              // .split('\n')
+              // .map((line) => {
+              //   if (filename.toLowerCase() === 'terminal') {
+              //     line = `<span class="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" class="overflow-visible flex-none mr-3 w-auto h-6 text-pink-400"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="flex-auto">${line}</span></span>`
+              //   }
+              //   return line
+              // })
+              // .join(filename.toLowerCase() === 'terminal' ? '' : '\n'),
+            },
+          }
           : { children })}
       />
     </div>
@@ -219,7 +219,7 @@ export default function Editor({
 
   if (style === 'framed') {
     return (
-      <Frame className="mb-8 mt-5 first:mt-0 last:mb-0" color={color}>
+      <Frame className="mt-5 mb-8 first:mt-0 last:mb-0" color={color}>
         <EditorPane {...passthrough} filename={filename} code={code}>
           {children}
         </EditorPane>
@@ -228,12 +228,12 @@ export default function Editor({
   }
 
   return (
-    <div className="relative mb-8 mt-5 overflow-hidden rounded-2xl first:mt-0 last:mb-0">
+    <div className="overflow-hidden relative mt-5 mb-8 rounded-2xl first:mt-0 last:mb-0">
       <EditorPane {...passthrough} filename={filename} code={code}>
         {children}
       </EditorPane>
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl dark:ring-1 dark:ring-inset dark:ring-white/10"
+        className="absolute inset-0 rounded-2xl pointer-events-none dark:ring-1 dark:ring-inset dark:ring-white/10"
         aria-hidden="true"
       />
     </div>

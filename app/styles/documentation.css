@@ -14,6 +14,10 @@
   & :is(:where(h3):has(code)) > code {
     @apply text-xl font-semibold !important;
   }
+
+  & :is(h4) {
+    @apply flex whitespace-pre-wrap text-lg font-medium mb-4 text-[#10172A] dark:text-[#e2e8f0] !important;
+  }
 }
 
 #article-main:not(:has(h3)) {
@@ -29,5 +33,9 @@
 #article-main:has(h3) {
   & :is(h2:not(:has(+ h3))) {
     @apply flex whitespace-pre-wrap text-2xl font-bold mb-4 text-[#10172A] dark:text-[#e2e8f0] !important;
+  }
+
+  & :is(h3) {
+    @apply flex whitespace-pre-wrap text-xl font-semibold mb-4 text-[#10172A] dark:text-[#e2e8f0] !important;
   }
 }
