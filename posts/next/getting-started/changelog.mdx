@@ -13,15 +13,22 @@ In this log, we would be exploring these changes part by part, allowing you to s
 
 The most important package within Remix PWA, responsible for building the service worker and making it easier to integrate with your Remix app.
 
-<Heading level={4}>Addition of `injectSWRegister` option</Heading>
+### Addition of `injectSWRegister` option
 
 The `injectSWRegister` option is used to automatically inject the service worker registration code into your app. By default this is enabled, you can disable to handle the registration
 by yourself.
 
-<Heading level={4}>Deprecation of `registerSW` option</Heading>
+### Deprecation of `registerSW` option
 
 The `registerSW` option has been deprecated and would be removed in a future version. It has been replaced by the `injectSWRegister` option.
 
-<Heading level={4}>Removal of the `WebAppManifest` export</Heading>
+### Removal of the `WebAppManifest` export
 
 This has been moved to the `@remix-pwa/manifest` package.
+
+### Support for Remix SPA mode and Single Fetch
+
+Remix PWA now supports both Remix SPA mode and Single Fetch. This drastically alters the behaviour of Remix PWA and how it handles the service worker.
+Check out the [SPA](/docs/next/spa) and [Single Fetch](/docs/next/single-fetch) docs for more information.
+
+Some of the less obvious changes include faster build times and smaller service worker sizes

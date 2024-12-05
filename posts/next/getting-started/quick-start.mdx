@@ -1,7 +1,65 @@
 ---
 title: Quick Start
-description: Discover how to get started with Remix PWA in a Remix project
+description: Learn how to set up a Progressive Web App (PWA) in your Remix project
 alternateTitle: Quick Start
 order: 1
-stub: true
 ---
+
+Remix PWA is a collection of libraries that makes it easy to integrate Progressive Web App (PWA) features into your Remix project. This guide would walk you through the process of setting up a PWA in your Remix project.
+
+## Prerequisites
+
+- Remix project that utilises Remix version 2.8 or higher
+- Node.js version 20 or higher
+- Vite
+
+## Installation
+
+Installing Remix PWA can be done via:
+
+```bash
+npm i --save-dev @remix-pwa/dev
+# main packages for service worker and manifest
+npm i --save @remix-pwa/worker-runtime @remix-pwa/manifest
+```
+
+<Info>
+  Remix PWA scaffolding CLI is still under development and would be released soon.
+</Info>
+
+Of course you would need to install some more packages to leverage the full power of PWAs but we are talking bare minimum here and that's it,
+that's all you need to get started.
+
+## Setting Up
+
+To add Remix PWA to your app, simply add it to your `vite.config.ts` file:
+
+```ts {{ filename: 'vite.config.ts' }}
+import { remixPWA } from '@remix-pwa/dev'
+
+export default defineConfig({
+  plugins: [
+    // other plugins,
+    remixPWA(),
+  ],
+})
+```
+
+The options for the `remixPWA` plugin can be found [here](/docs/next/vite-config).
+
+To create a service worker, you can use the `remix-pwa` CLI:
+
+```bash
+npx remix-pwa sw
+```
+
+This creates an `entry.worker.ts` file in your `app` folder. Although, the service worker is quite useless and doesn't do anything
+asides installing and activating itself, it is good to go 😄.
+
+To make your app installable, you would need to add a manifest file. You can use the `remix-pwa` CLI to generate one:
+
+```bash
+npx remix-pwa manifest
+```
+
+That's it! You have successfully set up a basic Remix PWA project.

@@ -3,6 +3,64 @@ title: Upgrading to v5
 description: Migrate your Remix PWA Application to v5
 alternateTitle: Upgrading to v5
 order: 3
-stub: true
 ---
 
+Remix PWA v5 is a major milestone built upon v4. It is built to work with Remix latest features, as well as prepare for React Router v7.
+
+Upgrading to v5 doesn't require a lot of work. The main thing you would need to do is to upgrade your `@remix-pwa/*` packages to the latest `v5.x.x` version. There are also a few breaking changes that you would need to be aware of.
+Check out the [changelog](/docs/next/changelog) for more details.
+
+## Upgrading from v4 to v5
+
+To upgrade from v4 to v5, you would first need to make sure your Remix application is a Vite one. That means no `remix.config.js` and
+a `@remix-run/*` version of at least `^2.8.1`.
+
+Once you've done that, upgrade your `@remix-pwa/*` packages to the latest `dev` tag with using Remix PWA CLI:
+
+```bash
+npx remix-pwa@latest upgrade -D
+```
+
+<Info>
+  Remix PWA v5 is still in nightly release, that means installing using the `dev` tag and not the `latest` tag to install.
+</Info>
+
+### Updating the Config
+
+In case you are using the `registerSW` option in your `vite.config.ts` file, you would need to update it to the new `injectSWRegister` option as it has been deprecated.
+
+```ts {{ filename: 'vite.config.ts' }}
+import { remixPWA } from '@remix-pwa/dev'
+
+export default defineConfig({
+  plugins: [
+    // other plugins,
+    remixPWA({
+      injectSWRegister: true, // boolean
+    }),
+  ],
+})
+```
+
+### Updating the Service Worker
+
+In v4, we had the `useSWEffect` hook that we used to link our service worker to the client. In v5, this has been replaced by the `installPWAGlobals` hook.
+
+A smaller, more efficient and less-bloated hook that does the same thing (and more).
+
+```ts {{ filename: 'app/root.tsx' }}
+// 🔥 Better tree-shaking!
+import { installPWAGlobals } from '@remix-pwa/sw/install-pwa-globals';
+
+export default function App() {
+  installPWAGlobals();
+  
+  // my app...
+}
+```
+
+Check out the rest of the docs for even more details.
+
+## Upgrading from older versions to v5
+
+Check out the [this doc](/docs/main/v4) for more details on migrating from v3 and below.

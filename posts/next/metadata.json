@@ -57,8 +57,8 @@
     "quick-start": {
       "title": "Quick Start",
       "alternateTitle": "Quick Start",
-      "description": "Discover how to get started with Remix PWA in a Remix project",
-      "stub": true,
+      "description": "Learn how to set up a Progressive Web App (PWA) in your Remix project",
+      "stub": false,
       "section": "Getting Started",
       "slug": "quick-start",
       "spacer": true
@@ -94,7 +94,7 @@
       "title": "Upgrading to v5",
       "alternateTitle": "Upgrading to v5",
       "description": "Migrate your Remix PWA Application to v5",
-      "stub": true,
+      "stub": false,
       "section": "Getting Started",
       "slug": "v5",
       "spacer": true
@@ -112,7 +112,7 @@
       "title": "Community",
       "alternateTitle": "Community",
       "description": "Getting help from friends in the community",
-      "stub": true,
+      "stub": false,
       "section": "Getting Started",
       "slug": "community",
       "spacer": true
@@ -121,7 +121,7 @@
       "title": "Changelog",
       "alternateTitle": "Changelog",
       "description": "What's new in Remix PWA v5?",
-      "stub": true,
+      "stub": false,
       "section": "Getting Started",
       "slug": "changelog"
     },
