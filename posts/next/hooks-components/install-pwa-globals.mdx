@@ -2,5 +2,25 @@
 title: installPWAGlobals
 description: "A hook to handle service worker-required utilities on the client-side 💻"
 alternateTitle: installPWAGlobals
-stub: true
 ---
+
+The `installPWAGlobals` hook is a hook that manages the service worker-client synchronization. It handles sending messages to the service worker on navigation
+events, also handling `workerLoader` and `workerAction` behaviour within SPA applications.
+
+It must be placed at the top of your root component.
+
+<Info>
+
+This hook is **required** in an SPA application. And also if you intend to use a service worker.
+
+</Info>
+
+```ts {{ filename:'app/root.tsx' }}
+import { installPWAGlobals } from "@remix-pwa/sw/install-pwa-globals";
+
+export default function App() {
+  installPWAGlobals();
+
+  return (...)
+}
+```

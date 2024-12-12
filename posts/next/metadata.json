@@ -170,7 +170,7 @@
       "title": "installPWAGlobals",
       "alternateTitle": "installPWAGlobals",
       "description": "A hook to handle service worker-required utilities on the client-side 💻",
-      "stub": true,
+      "stub": false,
       "section": "Hooks & Components",
       "slug": "install-pwa-globals",
       "spacer": true
@@ -179,7 +179,7 @@
       "title": "ManifestLink",
       "alternateTitle": "ManifestLink",
       "description": "A hook to handle linking to the web manifest file",
-      "stub": true,
+      "stub": false,
       "section": "Hooks & Components",
       "slug": "manifest-link"
     },
@@ -187,7 +187,7 @@
       "title": "PWAScripts",
       "alternateTitle": "PWAScripts",
       "description": "A component to handle the installation & registration of Service Worker scripts",
-      "stub": true,
+      "stub": false,
       "section": "Hooks & Components",
       "slug": "pwa-scripts"
     },

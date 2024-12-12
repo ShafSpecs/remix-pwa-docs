@@ -2,6 +2,30 @@
 title: PWAScripts
 description: "A component to handle the installation & registration of Service Worker scripts"
 alternateTitle: PWAScripts
-stub: true
 ---
 
+The `PWAScripts` component from `@remix-pwa/sw` is a component that allows for custom registration of service worker scripts. 
+
+<Info>
+
+`injectSWRegister` **must** be set to `false` in your Vite config for this component to work.
+
+</Info>
+
+It takes in the following optional props, in addition to the standard `HTMLProps<HTMLScriptElement>`:
+
+- `registrationScope` - The scope of the service worker registration.
+- `serviceWorkerType` - Wether the service worker is a classic or module worker.
+- `workerName` - The name of the worker, **without the `.js` extension**. Defaults to `entry.worker`.
+
+```ts {{ filename:'app/root.tsx' }}
+import { PWAScripts } from "@remix-pwa/sw/pwa-scripts";
+
+export default function App() {
+  return (
+    <head>
+      <PWAScripts />
+    </head>
+  )
+}
+```

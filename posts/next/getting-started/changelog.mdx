@@ -32,3 +32,141 @@ Remix PWA now supports both Remix SPA mode and Single Fetch. This drastically al
 Check out the [SPA](/docs/next/spa) and [Single Fetch](/docs/next/single-fetch) docs for more information.
 
 Some of the less obvious changes include faster build times and smaller service worker sizes
+
+## `@remix-pwa/worker-manifest`
+
+The main runtime of Remix PWA. Provides a common foundation for service worker to be built upon.
+
+### Support for SPA Mode
+
+Provides a different behaviour if the app is a Single-Page Application (SPA). This allows you to switch apps from SSR to SPA and vice-versa with very little overhead.
+
+### Support for Single Fetch
+
+Also provides in-built compatibility with single fetch behaviour. This includes disabling worker routes modules.
+
+### Incremental support for React Router
+
+> This is an unstable feature that's still a work-in-progress
+
+This is mainly by slowly pulling out of Remix internal modules and adopting more react-router-friendly approach when dealing with application's code.
+
+## `@remix-pwa/sw`
+
+The main toolbox of Remix PWA. Contains main modules, utilities and functions to supercharge your Remix app!
+
+### Better tree-shaking
+
+`sw` package now ships with more exports, to avoid importing the entire library when you require one or two features
+
+**For example:**
+
+```ts {{ filename:'app/exports.ts' }}
+// Before
+import { Logger } from "@remix-pwa/sw";
+
+// After
+import { Logger } from "@remix-pwa/sw/logger";
+```
+
+### `PWAScripts` component
+
+A requested feature, allowing you to register your service worker with custom script options. Ensure that `injectSWRegister` is set to false, else errors would be thrown.
+
+```ts {{ filename:'app/root.tsx' }}
+import { PWAScripts } from "@remix-pwa/sw/pwa-scripts"
+
+// within your app
+<head>
+  <Meta />
+  <Links />
+  // Custom options
+  <PWAScripts
+    nonce={undefined}
+    crossOrigin="use-credentials"
+    serviceWorkerType="module"
+  />
+</head>
+```
+
+### `installPWAGlobals` hook
+
+A new hook that replaces `useSWEffect` hook. All round, better, faster and more concise. Doesn't take in any options, ensure that it's at the top of your root component.
+
+```ts {{ filename:'app/root.tsx' }}
+import { installPWAGlobals } from "@remix-pwa/sw/install-pwa-globals";
+
+export default function App() {
+  installPWAGlobals();
+
+  return (...)
+}
+```
+
+### Removal of `useSWEffect` hook
+
+This has been replaced by the `installPWAGlobals` hook.
+
+### Removal of `ManifestLink` component
+
+This has been moved to the [`@remix-pwa/manifest`](/docs/next/changelog#remix-pwa-manifest) package.
+
+### Reoval of message sending utilities
+
+This includes `sendSkipWaitingMessage` and `SkipWaitHandler`. This have been trimmed entirely from the library, with you being responsible for handling the service worker updates yourself.
+
+### Removal of `loadServiceWorker`
+
+A deprecated method of Remix PWA, this has been removed entirely. Replaced with the `PWAScripts` component and the Vite plugin.
+
+## `@remix-pwa/manifest`
+
+A new package added to Remix PWA library collection. The reason for this was to provide a modular distinction between the manifest and the service worker.
+
+### `ManifestLink` component
+
+This component has been moved to this package from the `@remix-pwa/sw` package. With one crucial change, the `manifestUrl` prop has been replaced with `href` prop.
+
+```ts {{ filename:'app/root.tsx' }}
+import { ManifestLink } from "@remix-pwa/manifest/manifest-link";
+
+<ManifestLink href="/manifest.json" />
+```
+
+### `WebAppManifest` type export
+
+This has been moved to this package from the `@remix-pwa/dev` package. This is a type that allows you to type your manifest object.
+
+<Heading level={3} ignore>🥚 Schema Definition</Heading>
+
+An easter egg I sneaked in. This is a JSON schema definition for the manifest object. If you prefer to use a `manifest.json` file within the public directory but still
+want to benefit from the type safety of Remix PWA, this is for you.
+
+```json {{ filename:'public/manifest.json' }}
+{
+  "$schema": "https://remix-pwa.run/manifest.schema.json",
+  // Alternatively, you can use the schema from the package
+  "$schema": "@remix-pwa/manifest/schema.json",
+  "name": "Remix PWA",
+  "short_name": "Remix PWA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}
+```
+
+## `@remix-pwa/push`
+
+The push notification stop for Remix PWA. Nothing much happened here, jsut fixed a major blunder and a few utilities.
+
+### 🛠️ `sendNotifications` fix
+
+Thanks to [Alexandre](https://github.com/Superalexandre) for reporting this [issue](https://github.com/remix-pwa/monorepo/issues/271). Previously, when sending notifications,
+it was impossible to know which failed and which didn't. Also, when a subscription was expired or not found (non-existent user), the entire process would throw an error.
+
+This has been fixed by attempting each subscription individually, and returning a list of `NotificationResult` objects.
+
+### `getNotificationResults` function
+
+A utility to filter and refactor a list of `NotificationResult` objects into a more readable format.
