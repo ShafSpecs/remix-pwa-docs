@@ -1,0 +1,52 @@
+---
+title: Web Manifest
+description: "Web Manifests are the heart of PWAs. Explore how to create a Web Manifest for your Remix PWA in this guide."
+alternateTitle: Web Manifest
+---
+
+Web Manifests in Remix PWA are quite a trifle affair really. They are the heart of PWAs, and they are what makes your app installable on devices.
+
+## What is a Web Manifest?
+
+A Web Manifest is a JSON file that provides information about your web app. It tells the browser about your app's name, description, icon, and other details. It is what the browser uses to install your app on a device.
+
+## Creating a Web Manifest
+
+Creating aweb manifest can be done manually by creating a JSON file within the `public` directory, but why the hassle? Using Remix PWA cli, you can now generate a Web Manifest for your app with a single command.
+
+To generate a Web Manifest for your Remix PWA app, run the following command:
+
+```bash
+npx remix-pwa manifest
+```
+
+This command will generate a basic web manifest resource route within your application at `routes/manifest[.webmanifest].ts`. It comes with typings automatically, to generate a JavaScript file instead of TypeScript, you can pass the `--js` flag to the command. Note that you can customise the file destination by passing the `--dest` flag. Check out the CLI guide for more.
+
+## Customising the Web Manifest
+
+The generated Web Manifest is quite basic and actually missing one important thing. Icons. As `remix-pwa` no longer ships with placeholder icons, you would need to source and register them in your web manifest loader, no worries though, the typings are there to help you out. As well as any further customisation you might want to do like `screenshots`, `share_target`, `orientation` etc.
+
+## Registering the Web Manifest
+
+Remix PWA also comes shipped with a `ManifestLink` component that is a shorthand for registering the Web Manifest in your app. You can use it like so:
+
+```tsx {{filename:'root.tsx'}}
+import { ManifestLink } from '@remix-pwa/manifest/manifest-link';
+
+export default function App() {
+  return (
+    <html>
+      <head>
+        {/* Within your <head> tag */}
+        <ManifestLink />
+        <Links />
+      </head>
+      {/* Rest of the Remix application */}
+    </html>
+  );
+}
+```
+
+> Make sure to use above Remix's `<Links />` component.
+
+And that's it! You now have a Web Manifest for your Remix PWA app. 🎉

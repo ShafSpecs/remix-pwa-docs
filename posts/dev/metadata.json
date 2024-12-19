@@ -268,7 +268,7 @@
       "title": "Logger",
       "alternateTitle": "Logger",
       "description": "Logger is a logging utility build for better looking logs in the console.",
-      "stub": true,
+      "stub": false,
       "section": "Utilities",
       "slug": "logger"
     },
@@ -300,7 +300,7 @@
       "title": "vite.config.ts",
       "alternateTitle": "vite.config.ts",
       "description": "Remix PWA Vite plugin configurations",
-      "stub": true,
+      "stub": false,
       "section": "Utilities",
       "slug": "vite-config"
     },
@@ -357,7 +357,7 @@
       "title": "Environment Variables",
       "alternateTitle": "Environment Variables",
       "description": "Environment variables are a way to store app state and config data outside of your codebase. A guide to access them safely within Remix PWA",
-      "stub": true,
+      "stub": false,
       "section": "Guides",
       "slug": "env"
     },
@@ -413,7 +413,7 @@
       "title": "Web Manifest",
       "alternateTitle": "Web Manifest",
       "description": "Web Manifests are the heart of PWAs. Explore how to create a Web Manifest for your Remix PWA in this guide.",
-      "stub": true,
+      "stub": false,
       "section": "Guides",
       "slug": "web-manifest"
     }
