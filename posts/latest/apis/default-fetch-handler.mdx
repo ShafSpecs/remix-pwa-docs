@@ -12,7 +12,7 @@ In Remix PWA, the fetch event is handled implicitly (behind-the-scenes) by runti
 <Info>
   The `defaultFetchHandler` is basically a fallback handler that is used when no appropriate handler is found in a route.
 
-  Route handlers in this case, or as we like to call them: route worker apis, are simply [`workerAction`](/docs/main/worker-action) and [`workerLoader`](/docs/main/worker-loader) exports in your routes that handle non-`GET` and `GET` requests respectively.
+  Route handlers in this case, or as we like to call them: route worker apis, are simply [`workerAction`](/docs/latest/worker-action) and [`workerLoader`](/docs/latest/worker-loader) exports in your routes that handle non-`GET` and `GET` requests respectively.
 </Info>
 
 ## Usage
@@ -49,7 +49,7 @@ server that maps the same path as the request.
 </Warn>
 
 <Details title="What happens if I don't provide a default fetch handler?">
-  Well, in that case, it depends on the [runtime](/docs/main/runtimes). If you are using `@remix-pwa/worker-runtime`, the underlying behaviour is to just utilise a simple
+  Well, in that case, it depends on the [runtime](/docs/latest/runtimes). If you are using `@remix-pwa/worker-runtime`, the underlying behaviour is to just utilise a simple
   `fetch` call to the server. As you can see, this behaviour is heavily dependent on the runtime, so you can customise it to suit your needs.
 </Details>
 
@@ -75,7 +75,7 @@ The `context` object is a global context object being passed around your service
   sharing of data and state between them.
 </Info>
 
-Creation of the `context` object is handled via the [`getLoadContext`](/docs/main/get-load-context) function in your entry worker file.
+Creation of the `context` object is handled via the [`getLoadContext`](/docs/latest/get-load-context) function in your entry worker file.
 
 ### `params`
 

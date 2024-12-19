@@ -141,7 +141,7 @@ We create the base three caches: the pages (HTML), assets (CSS & JS) and finally
 We also created a version constant. This is to ensure cache cleanup, and to enforce it as we see fit (for example, when we have a major update that requires just cleaning our caches).
 
 <Info>
-  Read more about the `EnhancedCache` class [here](/docs/main/enhanced-cache)
+  Read more about the `EnhancedCache` class [here](/docs/latest/enhanced-cache)
 </Info>
 
 ### Fetching
@@ -183,7 +183,7 @@ We set some groundwork here. First of all, we check if the requests coming throu
 
 You might have noticed that even though `defaultFetchHandler` takes in a `request` object as a property of its lone parameter, we still went ahead to use `event.request` from the context. This is because the `request` object available via `context` is the raw request, without any modification, whereas the one available directly is a cleaned up version - the same as the one passed to loaders and actions. If we wanted to have access to the request as it was made, we would use the one from the `context`.
 
-Another thing is that we utilise the `__workerManifest` object to access our assets. The reason for that is simply that Remix PWA plugin under the hood gathers all assets after scouring the entire Remix App, and then via `@remix-pwa/worker-runtime`, inject it into the service worker scope. You can see a breakdown on the worker manifest [here](/docs/main/runtimes#implementing-the-runtime).
+Another thing is that we utilise the `__workerManifest` object to access our assets. The reason for that is simply that Remix PWA plugin under the hood gathers all assets after scouring the entire Remix App, and then via `@remix-pwa/worker-runtime`, inject it into the service worker scope. You can see a breakdown on the worker manifest [here](/docs/latest/runtimes#implementing-the-runtime).
 
 <Info>
   Fun fact, if you disable network right now and reload, you get an unstyled page, not an error. That's because some assets are missing (stylesheets, some logos located at resource routes, etc.) but the basics (documents, loader data, etc.) are still served.
@@ -222,7 +222,7 @@ self.addEventListener('message', (event: ExtendableMessageEvent) => {
 
 </Snippet>
 
-The first thing we did was to simply add the `useSWEffect` hook to our root. We don't need to tamper with it as the defaults are setup perfectly for our needs. The second thing we did was to create a `NavigationHandler` instance and then listen for messages. You can check out exactly what it does and more [here](/docs/main/messaging#navigation-handler). In short, it fetches the document on each client navigation and caches that document if it isn't found.
+The first thing we did was to simply add the `useSWEffect` hook to our root. We don't need to tamper with it as the defaults are setup perfectly for our needs. The second thing we did was to create a `NavigationHandler` instance and then listen for messages. You can check out exactly what it does and more [here](/docs/latest/messaging#navigation-handler). In short, it fetches the document on each client navigation and caches that document if it isn't found.
 
 ## Going Off The Grid
 
@@ -272,7 +272,7 @@ We can finally go ahead and save our service worker. We are done! If we go ahead
 
 ### UI Feedback
 
-If you were looking at the logs in preview mode (`npm run start`), you would notice that there were no logs. If you were on a mobile device, it would even be impossible to check! This is because [`Logger`](/docs/main/logger) only outputs in development mode. And we also can't be telling our users to keep an eye out for any new/interesting log coming in. We need to actually let them know when something goes wrong, an update comes in, connection goes off or on, etc. That's what we would be attempting in this section.
+If you were looking at the logs in preview mode (`npm run start`), you would notice that there were no logs. If you were on a mobile device, it would even be impossible to check! This is because [`Logger`](/docs/latest/logger) only outputs in development mode. And we also can't be telling our users to keep an eye out for any new/interesting log coming in. We need to actually let them know when something goes wrong, an update comes in, connection goes off or on, etc. That's what we would be attempting in this section.
 
 The amount of UI feedback possible is plenty. Gives your users better interaction with your app as well as reduce the chance of sudden "mishaps", we would be limiting ours to just two:
 
@@ -377,7 +377,7 @@ A very simple prompt that serves our purpose within the root so it is available 
 - `isUpdateAvailable`: A boolean that tells us if there is a new service worker waiting to take over.
 - `newWorker`: The new service worker that is waiting to take over or `null`, if `isUpdateAvailable` is `false`.
 
-If `isUpdateAvailable` is true, we display a prompt that tells the user an update is available. When the user clicks the 'Reload' button, we send a message to the service worker to skip waiting and then reload the page. Note, the [`sendSkipWaitingMessage`](/docs/main/misc#send-skip-waiting-message) function took in the new service worker as its lone argument instead of the current registration, that's because it is the new worker that is doing the skipping.
+If `isUpdateAvailable` is true, we display a prompt that tells the user an update is available. When the user clicks the 'Reload' button, we send a message to the service worker to skip waiting and then reload the page. Note, the [`sendSkipWaitingMessage`](/docs/latest/misc#send-skip-waiting-message) function took in the new service worker as its lone argument instead of the current registration, that's because it is the new worker that is doing the skipping.
 
 <Info>
   In case you are wondering why we are going through the hassle of sending a message instead of skipping directly, it's because there's no way to directly skip waiting from the client thread. The service worker has to do it itself. So we send a message to the service worker to skip waiting and then reload the page.

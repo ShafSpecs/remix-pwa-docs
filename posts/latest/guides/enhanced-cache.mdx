@@ -8,7 +8,7 @@ alternateTitle: EnhancedCache
 
 ## Features
 
-`EnhancedCache` is a class that wraps itself around a [strategy](/docs/main/cache-api#strategies). Let's go ahead and create an enhanced cache instance.
+`EnhancedCache` is a class that wraps itself around a [strategy](/docs/latest/cache-api#strategies). Let's go ahead and create an enhanced cache instance.
 
 ```ts {{filename:'entry.worker.ts'}}
 import { EnhancedCache } from '@remix-pwa/sw';
@@ -57,7 +57,7 @@ It takes in two parameters:
 2. `options`: An object that contains the following properties:
    - `version`: A string that represents the version of the cache. This allows for versioning of the cache.
    - `strategy`: A string that represents the strategy to be used. The available strategies are `CacheFirst`, `CacheOnly`, `NetworkFirst`, and `StaleWhileRevalidate` (the available strategies from `sw` package).
-   - `strategyOptions`: An object that contains the options for the strategy. The options are different for each strategy. Check out the strategy [page](/docs/main/cache-api#strategies) for more info.
+   - `strategyOptions`: An object that contains the options for the strategy. The options are different for each strategy. Check out the strategy [page](/docs/latest/cache-api#strategies) for more info.
 
 > Currently, `EnhancedCache` only supports the strategies provided by the `sw` package. Extending it to custom `BaseStrategy` sub-classes is underway.
 
