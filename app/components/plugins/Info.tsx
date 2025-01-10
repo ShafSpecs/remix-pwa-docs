@@ -1,11 +1,16 @@
-export const Info = ({ children }: any) => {
+interface InfoProps {
+  children: React.ReactNode;
+  title?: string;
+}
+
+export const Info = ({ children, title = "You should know!" }: InfoProps) => {
   return (
-    <div className="my-8 flex rounded-3xl bg-sky-50 p-6 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10">
+    <div className="flex p-6 my-8 rounded-3xl ring-1 ring-sky-100 shadow-sm backdrop-blur-sm transition-all bg-sky-50/80 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10">
       <svg
         aria-hidden="true"
         viewBox="0 0 32 32"
         fill="none"
-        className="h-8 w-8 flex-none [--icon-background:theme(colors.white)] [--icon-foreground:theme(colors.slate.900)]"
+        className="h-8 w-8 flex-none [--icon-background:theme(colors.sky.50)] [--icon-foreground:theme(colors.sky.900)] dark:[--icon-background:theme(colors.slate.800)] dark:[--icon-foreground:theme(colors.sky.400)]"
       >
         <defs>
           <radialGradient
@@ -60,9 +65,11 @@ export const Info = ({ children }: any) => {
           />
         </g>
       </svg>
-      <div className="ml-4 flex-auto">
-        <p className="font-display m-0 text-xl text-sky-900 dark:text-sky-400">You should know!</p>
-        <div className="prose mt-2.5 text-sky-800 [--tw-prose-background:theme(colors.sky.50)] prose-a:text-sky-900 prose-code:text-sky-900 dark:text-slate-300 dark:prose-code:text-slate-300">
+      <div className="flex-auto ml-4">
+        <p className="m-0 text-xl font-medium tracking-tight text-sky-900 font-display dark:text-sky-400">
+          {title}
+        </p>
+        <div className="prose mt-2.5 text-sky-800 [--tw-prose-background:theme(colors.sky.50)] prose-a:text-sky-900 prose-a:underline prose-a:decoration-sky-300/60 hover:prose-a:decoration-sky-300 prose-code:text-sky-900 prose-code:before:content-none prose-code:after:content-none dark:text-slate-300 dark:prose-code:text-slate-300">
           {children}
         </div>
       </div>

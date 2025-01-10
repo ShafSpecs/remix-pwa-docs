@@ -1,11 +1,16 @@
-export const Warn = ({ children }: any) => {
+interface WarnProps {
+  children: React.ReactNode;
+  title?: string;
+}
+
+export const Warn = ({ children, title = "Warning!" }: WarnProps) => {
   return (
-    <div className="my-8 flex rounded-3xl bg-amber-50 p-6 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10">
+    <div className="flex p-6 my-8 rounded-3xl ring-1 ring-amber-100 shadow-sm backdrop-blur-sm transition-all bg-amber-50/80 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10">
       <svg
         aria-hidden="true"
         viewBox="0 0 32 32"
         fill="none"
-        className="h-8 w-8 flex-none [--icon-background:theme(colors.amber.100)] [--icon-foreground:theme(colors.amber.900)]"
+        className="h-8 w-8 flex-none [--icon-background:theme(colors.amber.50)] [--icon-foreground:theme(colors.amber.900)] dark:[--icon-background:theme(colors.slate.800)] dark:[--icon-foreground:theme(colors.amber.500)]"
       >
         <defs>
           <radialGradient
@@ -67,9 +72,11 @@ export const Warn = ({ children }: any) => {
           />
         </g>
       </svg>
-      <div className="ml-4 flex-auto">
-        <p className="font-display m-0 text-xl text-amber-900 dark:text-amber-500">Oh no! Something bad happened!</p>
-        <div className="prose mt-2.5 text-amber-800 [--tw-prose-background:theme(colors.amber.50)] [--tw-prose-underline:theme(colors.amber.400)] prose-a:text-amber-900 prose-code:text-amber-900 dark:text-slate-300 dark:[--tw-prose-underline:theme(colors.sky.700)] dark:prose-code:text-slate-300">
+      <div className="flex-auto ml-4">
+        <p className="m-0 text-xl font-medium tracking-tight text-amber-900 font-display dark:text-amber-500">
+          {title}
+        </p>
+        <div className="prose mt-2.5 text-amber-800 [--tw-prose-background:theme(colors.amber.50)] prose-a:text-amber-900 prose-a:underline prose-a:decoration-amber-300/60 hover:prose-a:decoration-amber-300 prose-code:text-amber-900 prose-code:before:content-none prose-code:after:content-none dark:text-slate-300 dark:prose-code:text-slate-300">
           {children}
         </div>
       </div>

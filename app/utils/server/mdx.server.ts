@@ -14,14 +14,14 @@ import highlight from '../../remark/highlight'
 import toc from '../../remark/toc'
 
 let IMPORT_STATEMENT = `
-import Heading from './heading.tsx'
+import Heading from './Heading.tsx'
 import Editor from './Editor.tsx'
-import Warn from './warn.tsx'
-import Snippet from './snippet.tsx'
-import Info from './info.tsx'
-import Details from './details.tsx'
-import Tooltip from './tooltip.tsx'
-import Stub from './stub.tsx'
+import Warn from './Warn.tsx'
+import Snippet from './Snippet.tsx'
+import Info from './Info.tsx'
+import Details from './Details.tsx'
+import Tooltip from './Tooltip.tsx'
+import Stub from './Stub.tsx'
 `
 
 export async function mdxToHtml(source: string) {
@@ -45,14 +45,14 @@ export async function mdxToHtml(source: string) {
     const { code, frontmatter } = await bundleMDX<FrontMatterType>({
       source: injectHeading(source),
       files: {
-        './info.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Info.tsx')).toString(),
-        './stub.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Stub.tsx')).toString(),
-        './warn.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Warn.tsx')).toString(),
-        './heading.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Heading.tsx')).toString(),
-        './details.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Details.tsx')).toString(),
+        './Info.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Info.tsx')).toString(),
+        './Stub.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Stub.tsx')).toString(),
+        './Warn.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Warn.tsx')).toString(),
+        './Heading.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Heading.tsx')).toString(),
+        './Details.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Details.tsx')).toString(),
         './Editor.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Editor.tsx')).toString(),
-        './snippet.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Snippet.tsx')).toString(),
-        './tooltip.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Tooltip.tsx')).toString(),
+        './Snippet.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Snippet.tsx')).toString(),
+        './Tooltip.tsx': readFileSync(join(cwd(), 'app', 'components/plugins/Tooltip.tsx')).toString(),
       },
       mdxOptions(options) {
         options.rehypePlugins = [...(options.rehypePlugins || []), role, slug]
