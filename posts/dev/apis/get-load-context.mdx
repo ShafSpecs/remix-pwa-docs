@@ -1,6 +1,214 @@
 ---
 title: getLoadContext
-description: "Global context object for the worker thread. Share data globally between your workers in your routes and the entry service worker."
+description: "Power up your worker thread with a global context. Share data, utilities, and state seamlessly between your Remix routes and service worker."
 alternateTitle: getLoadContext
-stub: true
 ---
+
+## getLoadContext
+
+### Basic Usage
+
+The `getLoadContext` function is your gateway to sharing data across your worker thread. Think of it as a global state manager that lives in your service worker, 
+allowing you to share everything from simple values to complex utilities between your routes and worker thread.
+
+Let's start with a simple example to get our feet wet:
+
+```ts {{ filename:'entry.worker.ts' }}
+export const getLoadContext = () => {
+  return {
+    appVersion: '1.0.0',
+    isDevelopment: process.env.NODE_ENV === 'development',
+    timestamp: Date.now()
+  };
+};
+```
+
+```tsx {{ filename:'app/routes/about.tsx' }}
+export const workerLoader = async ({ context, request }) => {
+  const { appVersion, isDevelopment } = context;
+
+  return json({
+    version: appVersion,
+    environment: isDevelopment ? 'development' : 'production'
+  });
+};
+```
+
+This basic example shows how you can share configuration and environment data across your application. But let's dive deeper.
+
+### Real-World Usage
+
+Here's a more practical example that demonstrates managing a cache store with utilities:
+
+```ts {{ filename:'entry.worker.ts' }}
+import type { GetLoadContextFunction } from "@remix-pwa/sw";
+
+export const getLoadContext: GetLoadContextFunction = () => {
+  // Create our cache store
+  const cacheStore = {
+    async get(key: string) {
+      const cache = await caches.open('app-cache');
+      return cache.match(key);
+    },
+    async set(key: string, value: Response) {
+      const cache = await caches.open('app-cache');
+      return cache.put(key, value);
+    },
+    async clear() {
+      return caches.delete('app-cache');
+    }
+  };
+
+  // Analytics tracker
+  const analytics = {
+    trackEvent: (name: string, data: any) => {
+      if (process.env.NODE_ENV === 'production') {
+        // Send to your analytics service
+        fetch('https://analytics.example.com', {
+          method: 'POST',
+          body: JSON.stringify({ event: name, data })
+        });
+      }
+    }
+  };
+
+  return {
+    cache: cacheStore,
+    analytics,
+    utils: {
+      formatDate: (date: Date) => date.toLocaleDateString(),
+      generateId: () => crypto.randomUUID()
+    }
+  };
+};
+```
+
+```tsx {{ filename:'app/routes/dashboard.tsx' }}
+export const workerLoader = async ({ context, request }) => {
+  const { cache, analytics, utils } = context;
+  
+  // Check if we have cached data
+  const cachedData = await cache.get('/api/dashboard-stats');
+  if (cachedData) {
+    analytics.trackEvent('cache_hit', { path: '/dashboard' });
+    return cachedData;
+  }
+
+  // Fetch fresh data
+  const response = await fetch('/api/dashboard-stats');
+  
+  // Cache the response for future requests
+  await cache.set('/api/dashboard-stats', response.clone());
+  
+  analytics.trackEvent('cache_miss', { 
+    path: '/dashboard',
+    timestamp: utils.formatDate(new Date())
+  });
+
+  return response;
+};
+```
+
+### Real-Life Scenario: User Preferences
+
+Let's look at a practical scenario where `getLoadContext` shines - managing user preferences across your app:
+
+```ts {{ filename:'entry.worker.ts' }}
+import { openDB } from 'idb'; // IndexedDB wrapper
+
+export const getLoadContext: GetLoadContextFunction = async () => {
+  // Create/open our preferences database
+  const db = await openDB('user-prefs', 1, {
+    upgrade(db) {
+      db.createObjectStore('preferences');
+    }
+  });
+
+  const preferencesManager = {
+    async get(key: string) {
+      return db.get('preferences', key);
+    },
+    async set(key: string, value: any) {
+      await db.put('preferences', value, key);
+      // Broadcast change to all clients
+      const clients = await self.clients.matchAll();
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'PREFERENCE_UPDATED',
+          key,
+          value
+        });
+      });
+    }
+  };
+
+  return {
+    preferences: preferencesManager,
+    fetchWithPreferences: async (request: Request) => {
+      const theme = await preferencesManager.get('theme');
+      const lang = await preferencesManager.get('language');
+      
+      // Clone request and add preference headers
+      const newRequest = new Request(request, {
+        headers: {
+          ...Object.fromEntries(request.headers),
+          'X-User-Theme': theme || 'light',
+          'X-User-Lang': lang || 'en'
+        }
+      });
+
+      return fetch(newRequest);
+    }
+  };
+};
+```
+
+This setup allows you to manage user preferences in IndexedDB, broadcast changes to all open tabs, and automatically inject preferences into outgoing requests.
+
+---
+
+## API Reference
+
+The `context` object comes with some built-in utilities that Remix PWA provides:
+
+```ts
+interface AppLoadContext {
+  event: FetchEvent;                         // The original FetchEvent
+  fetchFromServer: () => Promise<Response>;  // Proxy request to server
+  // ... your custom context properties
+}
+```
+
+### Built-in Properties
+
+- `event` - The raw `FetchEvent` object, giving you access to the original service worker event
+- `fetchFromServer` - A utility function that proxies the current request to your server
+
+### Custom Context
+
+You can override or extend these defaults with your own properties:
+
+```ts {{ filename:'entry.worker.ts' }}
+import type { GetLoadContextFunction } from "@remix-pwa/sw/types";
+
+export const getLoadContext: GetLoadContextFunction = (event) => {
+  return {
+    // Override default fetchFromServer
+    fetchFromServer: async () => {
+      const response = await fetch(event.request.clone());
+      // Add custom header to all server responses
+      const newHeaders = new Headers(response.headers);
+      newHeaders.set('X-Powered-By', 'Remix PWA');
+      
+      return new Response(response.body, {
+        status: response.status,
+        headers: newHeaders
+      });
+    },
+    
+    // Add your custom properties
+    timestamp: Date.now(),
+    debug: process.env.NODE_ENV === 'development'
+  };
+};
+```

@@ -2,5 +2,79 @@
 title: errorHandler
 description: "Your last defence against unhandled errors in your worker routes. Gracefully handle errors without breaking your Remix app."
 alternateTitle: errorHandler
-stub: true
 ---
+
+First things first, we are humans. That means errors would occur and problems would arise. Smart people put this in mind when building anything
+and plan ahead for it. In programming it's called Error Handling. In Remix PWA, it's your safety net - the `errorHandler`.
+
+The `errorHandler` function is your service worker's last line of defense. It catches any errors that slip through the cracks during the 
+request-response cycle (whether that's during fetching, caching, or responding to requests). Think of it as your application's cleanup crew - 
+always ready to handle the unexpected.
+
+---
+
+## Error Handling
+
+Currently, the `errorHandler` is a straightforward function that takes in an error and returns `void` (it can return something, but it would be ignored). 
+The error is of type `Error`, and it's your ticket to understanding what went wrong. You can use this to log errors, ping error tracking services, or 
+handle the situation however you see fit.
+
+### Basic Error Handling
+
+```ts {{ filename:'entry.worker.ts' }}
+export function errorHandler(error: Error) {
+  console.error('⚡ Something went wrong in your worker:', error);
+}
+```
+
+### Advanced Error Handling
+
+Here's a more practical example that handles different types of errors and reports them accordingly:
+
+```ts {{ filename:'entry.worker.ts' }}
+export function errorHandler(error: Error) {
+  // You could use error types to handle different scenarios
+  if (error instanceof TypeError) {
+    // Handle network errors, failed fetches, etc
+    console.error('🌐 Network Error:', error.message);
+    // Maybe trigger a background sync
+    // registerSync('failed-requests');
+    return;
+  }
+
+  if (error instanceof CacheError) { // Your custom error type
+    // Handle cache-related errors
+    console.error('📦 Cache Error:', error.message);
+    // Maybe clear problematic cache
+    // caches.delete('problematic-cache');
+    return;
+  }
+
+  // You could integrate with error tracking services
+  if (process.env.NODE_ENV === 'production') {
+    reportErrorToService(error);
+  }
+
+  // Log all other errors
+  console.error('⚡ Worker Error:', {
+    name: error.name,
+    message: error.message,
+    stack: error.stack,
+    timestamp: new Date().toISOString()
+  });
+}
+
+// Helper function for production error reporting
+function reportErrorToService(error: Error) {
+  // Example with a hypothetical error service
+  fetch('https://your-error-service.com/api/errors', {
+    method: 'POST',
+    body: JSON.stringify({
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    })
+  }).catch(console.error); // Handle reporting errors silently
+}
+```

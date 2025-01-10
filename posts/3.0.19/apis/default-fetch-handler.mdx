@@ -10,8 +10,8 @@ In a default (, de-facto) Remix application, whenever you make a request to a UR
 That is simple a `fetch(request)` call. Service Workers are a middle layer between the browser and the server, so they intercept requests being made by the browser
 and can respond to them themselves. Meaning, the service worker determines how the browser makes calls and what it recieves.
 
-In comes `defaultFetchHandler`. This is a handler exported from your service worker that Remix PWA will use to handle all requests from routes without [`workerLoader`](/docs/worker-loader)
-or [`workerAction`](/docs/worker-action). If you have used Remix PWA before, think of this as your normal fetch handler that you pass to the Service Worker `fetch` event handler.
+In comes `defaultFetchHandler`. This is a handler exported from your service worker that Remix PWA will use to handle all requests from routes without [`workerLoader`](/docs/3.0.19/worker-loader)
+or [`workerAction`](/docs/3.0.19/worker-action). If you have used Remix PWA before, think of this as your normal fetch handler that you pass to the Service Worker `fetch` event handler.
 
 ---
 
@@ -60,7 +60,7 @@ idea of how this works, you can expand this to do much more crazy things; like c
 
 <Info>
 In summary, `defaultFetchHandler` is an exported handler from your service worker file that handles all incoming requests from your application
-and runs solely in the service worker. It is a fallback for all requests that are not handled by [`workerLoader`](/docs/worker-loader) or [`workerAction`](/docs/worker-action).
+and runs solely in the service worker. It is a fallback for all requests that are not handled by [`workerLoader`](/docs/3.0.19/worker-loader) or [`workerAction`](/docs/3.0.19/worker-action).
 </Info>
 
 ---
@@ -108,7 +108,7 @@ export const defaultFetchHandler = async ({ request, params }) => {
 
 ### `context`
 
-This is the context passed into your fetch handlers via Remix PWA's [`getLoadContext`](/docs/get-load-context) function. This is a very powerful tool that allows you to pass data
+This is the context passed into your fetch handlers via Remix PWA's [`getLoadContext`](/docs/3.0.19/get-load-context) function. This is a very powerful tool that allows you to pass data
 around the worker thread. A simple `getLoadContext` example:
 
 ```ts {{ filename: 'entry.worker.ts' }}
@@ -150,7 +150,7 @@ A few types to assist with `defaultFetchHandler` are shipped with the `@remix-pw
 
 ```ts
 // The type of the `defaultFetchHandler` handler itself
-type GetLoadContextFunction = (event: FetchEvent) => WorkerLoadContext;
+type DefaultFetchHandler = (event: FetchEvent) => WorkerLoadContext;
 ```
 
 <Info>

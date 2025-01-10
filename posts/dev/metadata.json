@@ -129,7 +129,7 @@
       "title": "defaultFetchHandler",
       "alternateTitle": "defaultFetchHandler",
       "description": "Your default handler for fetching requests in your Service Worker.",
-      "stub": true,
+      "stub": false,
       "section": "Route & Worker APIs",
       "slug": "default-fetch-handler",
       "spacer": true
@@ -138,23 +138,23 @@
       "title": "errorHandler",
       "alternateTitle": "errorHandler",
       "description": "Your last defence against unhandled errors in your worker routes. Gracefully handle errors without breaking your Remix app.",
-      "stub": true,
+      "stub": false,
       "section": "Route & Worker APIs",
       "slug": "error-handler"
     },
     "get-load-context": {
       "title": "getLoadContext",
       "alternateTitle": "getLoadContext",
-      "description": "Global context object for the worker thread. Share data globally between your workers in your routes and the entry service worker.",
-      "stub": true,
+      "description": "Power up your worker thread with a global context. Share data, utilities, and state seamlessly between your Remix routes and service worker.",
+      "stub": false,
       "section": "Route & Worker APIs",
       "slug": "get-load-context"
     },
     "worker-action": {
       "title": "workerAction",
       "alternateTitle": "workerAction",
-      "description": "Route Worker API for intercepting and handling non-GET request within a route.",
-      "stub": true,
+      "description": "Handle non-GET requests in your routes with service worker capabilities.",
+      "stub": false,
       "section": "Route & Worker APIs",
       "slug": "worker-action"
     },
@@ -162,7 +162,7 @@
       "title": "workerLoader",
       "alternateTitle": "workerLoader",
       "description": "Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes.",
-      "stub": true,
+      "stub": false,
       "section": "Route & Worker APIs",
       "slug": "worker-loader"
     },

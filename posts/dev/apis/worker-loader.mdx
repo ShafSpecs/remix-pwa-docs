@@ -1,6 +1,174 @@
 ---
 title: workerLoader
-description: "Worker route API for handling GET requests in the worker thread. Bring the power of Service Workers directly to your Remix routes."
+description: "Handle GET requests in your routes with service worker capabilities."
 alternateTitle: workerLoader
-stub: true
 ---
+
+`workerLoader` lets you handle GET requests right in your route files. Perfect for caching strategies, offline data handling, and request interception.
+
+## workerLoader
+
+### Basic Usage
+
+Here's a simple example showing data caching:
+
+```tsx {{filename:'app/routes/posts.$id.tsx'}}
+import { json } from "@remix-pwa/sw";
+import type { WorkerLoaderArgs } from "@remix-pwa/sw";
+
+export async function loader({ params }) {
+  const post = await db.posts.findUnique({
+    where: { id: params.id }
+  });
+  return json(post);
+}
+
+export async function workerLoader({ context, params }: WorkerLoaderArgs) {
+  const cache = await caches.open('posts');
+  const cached = await cache.match(`/posts/${params.id}`);
+
+  if (cached) return cached;
+
+  const { fetchFromServer } = context;
+  const response = await fetchFromServer();
+  
+  if (response.ok) {
+    await cache.put(`/posts/${params.id}`, response.clone());
+  }
+
+  return response;
+}
+```
+
+### SPA Mode
+
+In SPA mode, `workerLoader` becomes your primary data source. Here's how you might handle data loading:
+
+```tsx {{filename:'app/routes/posts.tsx'}}
+import { json } from "@remix-pwa/sw";
+
+export async function workerLoader({ request }: WorkerLoaderArgs) {
+  const db = await openDB('posts-db');
+  const posts = await db.getAll('posts');
+  
+  return json({ posts });
+}
+
+export async function clientLoader() {
+  const response = await fetch('/posts');
+  return response.json();
+}
+```
+
+### Single-Fetch Apps
+
+In single-fetch setups, `workerLoader` is disabled. All requests are handled by the `defaultFetchHandler`. This helps maintain the single-fetch pattern and prevents unnecessary request duplication.
+
+## API
+
+### `request`
+
+This is a [Fetch Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) instance that you can use for:
+
+```ts
+export const workerLoader = async ({ request }) => {
+  // Get request method
+  const method = request.method;
+
+  // Read cookies
+  const cookie = request.headers.get("Cookie");
+
+  // Parse search params
+  const url = new URL(request.url);
+  const query = url.searchParams.get("q");
+};
+```
+
+<Warn>
+Like Remix, Remix PWA strips the `_data` property from the request object.
+Need the original request? Use `context.event.request`.
+</Warn>
+
+### `params`
+
+Route params work just like in Remix - they're defined by route file names:
+
+```ts {{ filename: 'app/routes/posts.$postId.tsx' }}
+import type { WorkerLoaderArgs } from "@remix-pwa/sw";
+
+export const workerLoader = async ({ params }: WorkerLoaderArgs) => {
+  // URL: /posts/123
+  // params.postId will be "123"
+  const postId = params.postId;
+};
+```
+
+### `context`
+
+The context object comes from your [`getLoadContext`](/docs/dev/get-load-context) function:
+
+```ts {{ filename: 'entry.worker.ts' }}
+import type { GetLoadContextFunction } from "@remix-pwa/sw";
+
+export const getLoadContext: GetLoadContextFunction = (event) => {
+  return {
+    cache: {
+      posts: caches.open('posts'),
+      assets: caches.open('assets')
+    }
+  };
+};
+```
+
+Use it in your loader:
+
+```ts {{ filename: 'app/routes/posts.tsx' }}
+export const workerLoader = async ({ context }) => {
+  const { cache } = context;
+  const postsCache = await cache.posts;
+  
+  // Work with your cache
+};
+```
+
+<Info>
+Remix PWA's route APIs mirror Remix's own. The `context`, `params` and `request` objects work similarly to Remix's loaders and actions.
+</Info>
+
+## Returning Responses
+
+Always return a `Response` from your `workerLoader`. Use Remix PWA's `json` helper for JSON responses:
+
+```ts
+import { json } from "@remix-pwa/sw";
+
+export const workerLoader = async ({ request }) => {
+  return json({ message: "Hello from worker!" });
+};
+```
+
+## SSR Behaviour
+
+On first load, `workerLoader` gets bypassed. This is because the server builds the initial page and doesn't need to fetch data to
+populate the page. On subsequent loads, `workerLoader` intercepts requests and can then be used to fetch data from the server.
+
+## Error Handling
+
+You can throw responses or errors to trigger error boundaries:
+
+```ts {{ filename: 'app/routes/posts.$id.tsx' }}
+import { json, redirect } from "@remix-pwa/sw";
+
+export const workerLoader = async ({ params }) => {
+  if (!params.id) {
+    throw redirect("/posts");
+  }
+
+  const post = await getPost(params.id);
+  if (!post) {
+    throw json({ message: "Post not found" }, { status: 404 });
+  }
+
+  return json(post);
+};
+```

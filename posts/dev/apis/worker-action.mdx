@@ -1,6 +1,105 @@
 ---
 title: workerAction
-description: "Route Worker API for intercepting and handling non-GET request within a route."
+description: "Handle non-GET requests in your routes with service worker capabilities."
 alternateTitle: workerAction
-stub: true
 ---
+
+`workerAction` lets you handle non-GET requests right in your route files. Think of it as your route's personal service worker - perfect for offline-first features, request interception, or background syncing.
+
+## workerAction
+
+### Synopsis
+
+Need to queue up form submissions when offline? Want to sync data in the background? `workerAction` lets you handle these scenarios right where they belong - in your route files.
+
+### Usage
+
+Here's a practical example of handling offline form submissions:
+
+```tsx {{filename:'app/routes/todos.tsx'}}
+import type { WorkerActionArgs } from "@remix-pwa/sw";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { json as swJson } from "@remix-pwa/sw/utils";
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const todo = await db.todos.create({
+    title: formData.get("title")
+  });
+  return redirect(`/todos/${todo.id}`);
+}
+
+export async function workerAction({ context }: WorkerActionArgs) {
+  const { fetchFromServer } = context;
+
+  try {
+    const response = await fetchFromServer();
+    if (response.ok) return response;
+  } catch (err) {
+    // Queue for background sync when offline
+    await queueToServer({
+      name: "todoSync",
+      request: context.event.request.clone()
+    });
+
+    return swJson({ 
+      message: "We'll save this when you're back online!",
+      queued: true 
+    });
+  }
+}
+```
+
+### SPA Mode
+
+In SPA mode, `workerAction` becomes your primary data handler, they become actions to your `clientAction`. Here's a simple example of how you might handle a counter increment (a contrived example, but it shows the point):
+
+```tsx {{filename:'app/routes/counter.tsx'}}
+// Worker intercepts the request and adds 1
+export async function workerAction({ request }: WorkerActionArgs) {
+  const data = await request.json();
+  return json({ 
+    count: data.count + 1 
+  });
+}
+
+// Client makes a request that gets intercepted
+export async function clientAction({ request }: ClientActionFunctionArgs) {
+  const response = await fetch('/counter', {
+    method: 'POST',
+    body: JSON.stringify({ count: 5 })
+  });
+  
+  return response.json();
+}
+```
+
+### Single-Fetch Apps
+
+In single-fetch setups, `workerAction` does not work. It is disabled, and all requests intercepted are handled by the `defaultFetchHandler`.
+
+---
+
+## API
+
+### Arguments
+
+Your `workerAction` receives:
+
+```ts
+interface WorkerActionArgs {
+  context: AppLoadContext;  // Your worker's global context
+  params: Params;           // Route parameters
+  request: Request;         // The incoming request
+}
+```
+
+### `workerAction` vs `action`
+
+| Feature | `workerAction` | `action` |
+|:--------|:---------------|:---------|
+| Runs in | Service Worker | Server |
+| Access to | Browser APIs, Caches, IndexedDB | Server resources, Database |
+| Best for | Offline support, Request interception | Data mutations, Auth |
+| Can use | `fetch`, `cache`, Client APIs | Server-side code, Database queries |
