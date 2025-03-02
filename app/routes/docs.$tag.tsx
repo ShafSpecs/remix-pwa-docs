@@ -51,22 +51,22 @@ export default function TagRoute() {
 
   return (
     <Sidebar metadata={metadata}>
-      <ScrollProgress className="top-[69px]" />
+      <ScrollProgress className="top-[61px] lg:top-[69px]" />
       <GridPattern
         squares={[
           // Better generated squares
-          [3, 1],
-          [5, 0],
-          [8, 3],
-          [4, 4],
-          [7, 2],
-          [9, 0],
-          [6, 5],
-          [2, 3],
-          [10, 2],
-          [3, 7],
-          [11, 4],
-          [8, 6]
+          [1, 1],
+          [3, 0],
+          [6, 3],
+          [2, 4],
+          [5, 2],
+          [7, 0],
+          [4, 5],
+          [0, 3],
+          [8, 2],
+          [1, 7],
+          [9, 4],
+          [6, 6]
         ]}
         className="absolute inset-0"
         enableCurvedFade={true}

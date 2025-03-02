@@ -18,6 +18,11 @@
 
 :root {
   --background-color: #fff;
+  --color-1: 280 100% 63%;
+  --color-2: 320 100% 63%;
+  --color-3: 250 100% 63%;
+  --color-4: 210 100% 63%;
+  --color-5: 230 100% 63%;
 }
 
 :root.dark {

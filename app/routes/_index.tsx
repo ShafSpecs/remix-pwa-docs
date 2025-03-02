@@ -4,8 +4,11 @@ import { Link } from '@remix-run/react'
 import clsx from 'clsx'
 import { HeartIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { AuroraText } from '~/components/AuroraText'
+import { Particles } from '~/components/Particles'
 
 import { ThemeSwitcher } from '~/components/ThemeSwitcher'
+import { useTheme } from '~/hooks/useTheme'
 import { useWindowSize } from '~/hooks/useWindowSize'
 export const loader = () => {
   return null
@@ -160,12 +163,15 @@ function Header() {
 }
 
 function Hero() {
+  const theme = useTheme()
+
   return (
     <div className="relative py-24 mx-auto max-w-5xl sm:py-32 md:py-40">
       {/* Bg */}
       <div className="flex flex-col px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <Particles className='absolute inset-0 z-0 w-full' quantity={100} ease={80} color={theme === 'dark' ? '#ffffff' : '#000000'} />
         <div className="text-center text-slate-900 dark:text-white">
-          <h1 className="text-4xl font-bold tracking-tight font-benzin sm:text-5xl lg:text-6xl">Remix PWA</h1>
+          <h1 className="text-4xl font-bold tracking-tight font-benzin sm:text-5xl lg:text-6xl">Remix <AuroraText>PWA</AuroraText></h1>
           <h3 className="mb-2.5 mt-4 text-xl font-medium md:text-3xl lg:text-4xl">
             A PWA Framework that redefines web experiences.
           </h3>

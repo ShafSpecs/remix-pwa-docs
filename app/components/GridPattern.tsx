@@ -50,17 +50,17 @@ export function GridPattern({
           <>
             <radialGradient
               id={gradientId}
-              cx={rightAligned ? "85%" : "15%"}
-              cy="15%"
+              cx={rightAligned ? "58.99%" : "15%"}
+              cy={rightAligned ? "-7.2%" : "15%"}
               r="50%"
-              fx={rightAligned ? "95%" : "5%"}
-              fy="5%"
+              fx={rightAligned ? "58.99%" : "5%"}
+              fy={rightAligned ? "-7.2%" : "5%"}
               gradientUnits="userSpaceOnUse"
             >
               <stop offset="0%" stopColor="white" stopOpacity="1" />
               <stop offset="30%" stopColor="white" stopOpacity="0.7" />
               <stop offset="50%" stopColor="white" stopOpacity="0.4" />
-              <stop offset="60%" stopColor="white" stopOpacity="0.1" />
+              <stop offset="65%" stopColor="white" stopOpacity="0.1" />
               <stop offset="85%" stopColor="white" stopOpacity="0" />
             </radialGradient>
             
@@ -87,9 +87,9 @@ export function GridPattern({
           mask={enableCurvedFade ? `url(#${maskId})` : undefined}
         >
           {squares.map(([xPos, yPos]) => {
-            // When rightAligned is true, transform the x coordinate to be relative to the right edge
+            // When rightAligned is true, position squares relative to the 58.99% point horizontally
             const squareX = rightAligned 
-              ? `calc(100% - ${(xPos + 1.4) * width}px)` 
+              ? `calc(58.99% - ${(xPos - 2.64) * width}px)` 
               : xPos * width + 1;
               
             return (
