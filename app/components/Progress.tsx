@@ -29,7 +29,7 @@ export function Progress() {
       role="progressbar"
       aria-hidden={delayedPending ? undefined : true}
       aria-valuetext={delayedPending ? 'Loading' : undefined}
-      className="fixed inset-x-0 left-0 top-0 z-50 h-[0.25rem] animate-pulse"
+      className="fixed inset-x-0 left-0 top-0 z-50 h-[0.2rem] animate-pulse"
     >
       <div
         ref={ref}
